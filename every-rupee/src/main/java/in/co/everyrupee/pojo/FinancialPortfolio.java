@@ -1,6 +1,3 @@
-/**
- * 
- */
 package in.co.everyrupee.pojo;
 
 import java.io.Serializable;
@@ -10,11 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
 /**
+ * POJO for financial portfolio
+ * 
  * @author nagarjun
  *
  */
@@ -32,15 +31,15 @@ public class FinancialPortfolio implements Serializable {
 	@Column(name="CUSTOMER_ID")
 	private String customerId;	
 	
-	@NotBlank
+	@NotNull
 	@Column(name="CASH_AVAILABLE")
 	private Double cashAvailable;
 	
-	@NotBlank
+	@NotNull
 	@Column(name="CREDITCARD_BALANCE")
 	private Double creditcardBalance;
 	
-	@Column(name="HOME_LOAN_BALANCE")
+	@Column(name="HOMELOAN_BALANCE")
 	private Double homeLoanBalance;
 	
 	
