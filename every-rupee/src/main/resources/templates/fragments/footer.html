@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+<div th:fragment="footer">
+ <footer class="footer footer-default">
+    <div class="container">
+      <nav class="float-left">
+        <ul>
+          <li>
+            <a href="/about">
+              About EveryRupee
+            </a>
+          </li>
+          <li>
+            <a href="/privacy">
+              Privacy
+            </a>
+          </li>
+          <li>
+            <a href="http://readorb.com/blog">
+              Blog
+            </a>
+          </li>
+          <li>
+            <a href="/how-everyrupee-works/security">
+              Security
+            </a>
+          </li>
+          <li>
+            <a href="/terms-of-use">
+              Terms of Use
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="copyright float-right">
+        &copy;
+        <script>
+          document.write(new Date().getFullYear())
+        </script>, made with <i class="material-icons">favorite</i> by
+        <a href="https://www.readorb.com" target="_blank">Readorb</a>.
+      </div>
+    </div>
+  </footer>
+  <!--   Core JS Files   -->
+  <script src="../static/js/core/jquery.min.js" type="text/javascript" th:src="@{/js/core/jquery.min.js}"></script>
+  <script src="../static/js/core/popper.min.js" type="text/javascript" th:src="@{/js/core/popper.min.js}"></script>
+  <script src="../static/js/core/bootstrap-material-design.min.js" type="text/javascript" th:src="@{/js/core/bootstrap-material-design.min.js}"></script>
+  <script src="../static/js/plugins/moment.min.js" th:src="@{/js/plugins/moment.min.js}"></script>
+  <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <script src="../static/js/plugins/bootstrap-datetimepicker.js" type="text/javascript" th:src="@{/js/plugins/bootstrap-datetimepicker.js}"></script>
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="../static/js/plugins/nouislider.min.js" type="text/javascript" th:src="@{/js/plugins/nouislider.min.js}"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpt7zVCTwYbGQq4O9o5Ebp3QISDN1ubUM"></script>
+  <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+  <script src="../static/js/material-kit.js?v=2.0.5" type="text/javascript" th:src="@{/js/material-kit.js}"></script>
+ </div>
+</body>
+</html>

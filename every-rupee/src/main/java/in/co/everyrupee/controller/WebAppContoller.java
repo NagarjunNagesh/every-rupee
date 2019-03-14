@@ -37,4 +37,14 @@ public class WebAppContoller {
 
         return "about";
     }
+    
+    @RequestMapping("/login")
+    public String login(Model model){
+    	return "login";
+    }
+    
+    @RequestMapping("/sign-up")
+    public String signup(Model model){
+    	return "sign-up";
+    }
 }
