@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>
+    EveryRupee
+  </title>
+  <object th:include="fragments/head :: head" th:remove="tag" ></object>
+  
+</head>
+<body>
+<div th:replace="fragments/header :: header">&copy; EveryRupee header</div>
+
+<div th:replace="fragments/footer :: footer">&copy; 2019 EveryRupee</div>
+</body>
+</html>
