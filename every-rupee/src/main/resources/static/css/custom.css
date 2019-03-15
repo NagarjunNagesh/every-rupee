@@ -11,13 +11,71 @@
 */
 
 .btn-upsell {
-	color: #fff;
-	background: #ff8d30;
-	border: 2px solid #ff8d30;
+	border: 3px solid #f33527;
+	color: #f33527;
+	border-radius: 5px;
+	font-weight: 700;
+	transition: background-color .5s ease-out;
 }
 
 .btn-upsell:hover {
+	background-color: #f33527;
 	color: #fff;
-	background: #ff8000;
-	border-color: rgba(255,147,49,.1);
+}
+
+.top-login-link {
+	border: 3px solid #85c3e9;
+	color: #85c3e9;
+	border-radius: 5px;
+	font-weight: 700;
+	transition: background-color .5s ease-out;
+	margin: 0 10px;
+}
+
+.top-login-link:hover {
+	background-color: #85c3e9;
+	color: #fff;
+}
+
+.page-header-text {
+	text-align:center;
+	margin: 0 auto;
+	padding: 100px 10% 24px;
+}
+
+.home-description {
+	text-align:left;
+}
+
+.home-description .home-description-body {
+	margin-bottom: 2rem;
+}
+
+.home-description h2 {
+	font-family: "Roboto Slab", "Times New Roman", serif;
+	font-size: 36px;
+	font-weight: 900;
+	color: #585858;
+	text-align: left;
+	line-height: 1.1em;
+	margin-bottom: 24px;
+}
+
+/* Desktop only */
+@media (min-width: 1281px) {
+
+.page-header-text h1{
+	font-size: 72px;
+	font-weight: 900;
+}
+
+}
+
+/* Mobile only */
+@media (min-width: 600px) {
+
+	h1 {
+    font-size: 40px;
+	}
+
 }
