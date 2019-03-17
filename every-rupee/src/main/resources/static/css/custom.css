@@ -61,13 +61,173 @@
 	margin-bottom: 24px;
 }
 
+.every-rupee-logo {
+	font-family: 'Bree Serif', serif;
+	font-size: 1.5rem;
+}
+
+.navbar-transparent .every-rupee-logo .first-half {
+	color: inherit;
+}
+
+.navbar-transparent .every-rupee-logo .second-half {
+	color: inherit;
+}
+
+.every-rupee-logo .first-half {
+	color: #000066;
+}
+
+.every-rupee-logo .second-half {
+	color: rgb(255, 128, 0);
+}
+
+.home-icons8 {
+	display: block;
+	overflow: hidden;
+	margin-bottom: 24px;
+}
+
+.home-icons8 li {
+	display: block;
+	height: 68px;
+	background-size: auto 68px;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	text-indent: 120%;
+	white-space: nowrap;
+	box-sizing: border-box;
+	margin: 0;
+	    margin-right: 0px;
+	padding: 0;
+	float: left;
+	background-position: bottom;
+}
+
+/* Debt Icons */
+#icons8-car-64 {
+	background-image: url(../img/finance-icons/debt/icons8-car-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-chip-card-64 {
+	background-image: url(../img/finance-icons/debt/icons8-chip-card-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-home-64 {
+	background-image: url(../img/finance-icons/debt/icons8-home-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-reading-64 {
+	background-image: url(../img/finance-icons/debt/icons8-reading-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+
+/* Income Icons */
+#icons8-beach-64 {
+	background-image: url(../img/finance-icons/income/icons8-beach-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-bed-64 {
+	background-image: url(../img/finance-icons/income/icons8-bed-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-ingredients-64 {
+	background-image: url(../img/finance-icons/income/icons8-ingredients-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-money-box-64 {
+	background-image: url(../img/finance-icons/income/icons8-money-box-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+/* Savings Icons */
+#icons8-airport-64 {
+	background-image: url(../img/finance-icons/save/icons8-airport-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-gift-64 {
+	background-image: url(../img/finance-icons/save/icons8-gift-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-hospital-64 {
+	background-image: url(../img/finance-icons/save/icons8-hospital-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-school-64 {
+	background-image: url(../img/finance-icons/save/icons8-school-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+/* Investment Icons */
+#icons8-children-64 {
+	background-image: url(../img/finance-icons/invest/icons8-children-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-elderly-person-64 {
+	background-image: url(../img/finance-icons/invest/icons8-elderly-person-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-engagement-ring-64 {
+	background-image: url(../img/finance-icons/invest/icons8-engagement-ring-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-stethoscope-64 {
+	background-image: url(../img/finance-icons/invest/icons8-stethoscope-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
 /* Desktop only */
 @media (min-width: 1281px) {
 
-.page-header-text h1{
-	font-size: 72px;
-	font-weight: 900;
-}
+	.page-header-text h1{
+		font-size: 72px;
+		font-weight: 900;
+	}
 
 }
 
