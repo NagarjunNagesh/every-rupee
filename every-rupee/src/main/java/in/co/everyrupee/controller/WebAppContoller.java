@@ -19,7 +19,7 @@ public class WebAppContoller {
     @RequestMapping("/")
     public String index(Model model){
         model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "@omeryazir");
+        model.addAttribute("username", "NagarjunNagesh");
         model.addAttribute("projectname", "WebApp");
 
         model.addAttribute("mode", appMode);
@@ -30,7 +30,7 @@ public class WebAppContoller {
     @RequestMapping("/about")
     public String about(Model model){
         model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "@omeryazir");
+        model.addAttribute("username", "NagarjunNagesh");
         model.addAttribute("projectname", "WebApp");
 
         model.addAttribute("mode", appMode);
@@ -38,13 +38,4 @@ public class WebAppContoller {
         return "about";
     }
     
-    @RequestMapping("/login")
-    public String login(Model model){
-    	return "login";
-    }
-    
-    @RequestMapping("/sign-up")
-    public String signup(Model model){
-    	return "sign-up";
-    }
 }
