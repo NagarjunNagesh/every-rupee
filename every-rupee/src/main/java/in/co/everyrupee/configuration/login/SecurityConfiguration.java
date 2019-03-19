@@ -14,12 +14,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import in.co.everyrupee.constants.profile.ProfileConstants;
+import in.co.everyrupee.constants.profile.GenericConstants;
+import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 
 import javax.sql.DataSource;
 
 /**
- * @author nagarjun
+ * Implement Security Configuration for Web Application
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 @Configuration
@@ -32,10 +35,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    @Autowired
 	    private DataSource dataSource;
 
-	    @Value("${spring.queries.profile-query}")
+	    @Value(GenericConstants.PROFILE_QUERY_APPLICATION_PROPERTIES)
 	    private String profileQuery;
 
-	    @Value("${spring.queries.roles-query}")
+	    @Value(GenericConstants.ROLES_QUERY_APPLICATION_PROPERTIES)
 	    private String rolesQuery;
 
 	    @Override
@@ -54,26 +57,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	        http.
 	                authorizeRequests()
-	                .antMatchers("/").permitAll()
-	                .antMatchers("/login").permitAll()
-	                .antMatchers("/sign-up").permitAll()
-	                .antMatchers("/admin/**").hasAuthority(ProfileConstants.ADMIN_ROLE).anyRequest()
+	                .antMatchers(GenericConstants.HOME_URL).permitAll()
+	                .antMatchers(GenericConstants.LOGIN_URL).permitAll()
+	                .antMatchers(GenericConstants.SIGNUP_URL).permitAll()
+	                .antMatchers(GenericConstants.ADMIN_SECURITY_CONGIG_URL).hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest()
 	                .authenticated().and().csrf().disable().formLogin()
-	                .loginPage("/login").failureUrl("/login?error=true")
-	                .defaultSuccessUrl("/admin/admin-home")
-	                .usernameParameter("email")
-	                .passwordParameter("password")
+	                .loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
+	                .defaultSuccessUrl(GenericConstants.ADMIN_HOME_URL)
+	                .usernameParameter(ProfileServiceConstants.User.EMAIL)
+	                .passwordParameter(ProfileServiceConstants.User.PASSWORD)
 	                .and().logout()
-	                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	                .logoutSuccessUrl("/").and().exceptionHandling()
-	                .accessDeniedPage("/login?accessDenied=true");
+	                .logoutRequestMatcher(new AntPathRequestMatcher(GenericConstants.LOGOUT_URL))
+	                .logoutSuccessUrl(GenericConstants.HOME_URL).and().exceptionHandling()
+	                .accessDeniedPage(GenericConstants.LOGIN_ACCESS_DENIED_URL);
 	    }
 
 	    @Override
 	    public void configure(WebSecurity web) throws Exception {
 	        web
 	                .ignoring()
-	                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**");
+	                .antMatchers(GenericConstants.RESOURCES_ANT_MATCHER, GenericConstants.STATIC_ANT_MATCHER, GenericConstants.CSS_ANT_MATCHER, GenericConstants.JS_ANT_MATCHER, GenericConstants.IMG_ANT_MATCHER);
 	    }
 
 }

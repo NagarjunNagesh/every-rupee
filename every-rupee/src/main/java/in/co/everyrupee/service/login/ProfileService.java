@@ -1,6 +1,6 @@
 package in.co.everyrupee.service.login;
 
-import in.co.everyrupee.constants.profile.ProfileConstants;
+import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.pojo.login.Role;
 import in.co.everyrupee.repository.login.ProfileRepository;
@@ -41,7 +41,7 @@ public class ProfileService {
     public void saveUser(Profile profile) {
         profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
         profile.setActive(1);
-		Role userRole = roleRepository.findByRole(ProfileConstants.ADMIN_ROLE);
+		Role userRole = roleRepository.findByRole(ProfileServiceConstants.Role.ADMIN_ROLE);
         profile.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         profileRepository.save(profile);
     }

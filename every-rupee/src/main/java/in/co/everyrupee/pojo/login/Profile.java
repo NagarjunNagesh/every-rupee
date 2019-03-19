@@ -5,6 +5,8 @@ package in.co.everyrupee.pojo.login;
 
 import org.hibernate.validator.constraints.Length;
 
+import in.co.everyrupee.constants.profile.ProfileServiceConstants;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -18,28 +20,28 @@ import java.util.Set;
  *
  */
 @Entity
-@Table(name = "user")
+@Table(name = ProfileServiceConstants.User.USER_TABLE_NAME)
 public class Profile {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.AUTO)
-	    @Column(name = "user_id")
+	    @Column(name = ProfileServiceConstants.User.USER_ID)
 	    private int id;
-	    @Column(name = "email")
-	    @Email(message = "*Please provide a valid Email")
-	    @NotEmpty(message = "*Please provide an email")
+	    @Column(name = ProfileServiceConstants.User.EMAIL)
+	    @Email(message = ProfileServiceConstants.VALID_EMAIL_MESSAGE)
+	    @NotEmpty(message = ProfileServiceConstants.EMPTY_EMAIL_MESSAGE)
 	    private String email;
-	    @Column(name = "password")
-	    @Length(min = 5, message = "*Your password must have at least 5 characters")
-	    @NotEmpty(message = "*Please provide your password")
+	    @Column(name = ProfileServiceConstants.User.PASSWORD)
+	    @Length(min = 5, message = ProfileServiceConstants.PASSWORD_MINIMUM_CHARACTER_MESSAGE)
+	    @NotEmpty(message = ProfileServiceConstants.PASSWORD_EMPTY_MESSAGE)
 	    private String password;
-	    @Column(name = "name")
-	    @NotEmpty(message = "*Please provide your name")
+	    @Column(name = ProfileServiceConstants.User.NAME)
+	    @NotEmpty(message = ProfileServiceConstants.NAME_EMPTY_MESSAGE)
 	    private String name;
-	    @Column(name = "active")
+	    @Column(name = ProfileServiceConstants.User.ACTIVE)
 	    private int active;
 	    @ManyToMany(cascade = CascadeType.ALL)
-	    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	    @JoinTable(name = ProfileServiceConstants.UserRole.USER_ROLE, joinColumns = @JoinColumn(name = ProfileServiceConstants.User.USER_ID), inverseJoinColumns = @JoinColumn(name = ProfileServiceConstants.Role.ROLE_ID))
 	    private Set<Role> roles;
 	    
 		/**

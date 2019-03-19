@@ -5,6 +5,8 @@ package in.co.everyrupee.pojo.login;
 
 import javax.persistence.*;
 
+import in.co.everyrupee.constants.profile.ProfileServiceConstants;
+
 /**
  * Creating a bean to assign roles for a user
  * 
@@ -13,14 +15,14 @@ import javax.persistence.*;
  */
 
 @Entity
-@Table(name = "role")
+@Table(name = ProfileServiceConstants.Role.ROLE_TABLE_NAME)
 public class Role {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.AUTO)
-	    @Column(name = "role_id")
+	    @Column(name = ProfileServiceConstants.Role.ROLE_ID)
 	    private int id;
-	    @Column(name = "role")
+	    @Column(name = ProfileServiceConstants.Role.ROLE_PROPERTY)
 	    private String role;
 	    
 	    public Role() {
