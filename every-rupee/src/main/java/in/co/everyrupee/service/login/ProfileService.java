@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 
 
 /**
@@ -34,9 +35,13 @@ public class ProfileService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Profile findUserByEmail(String email) {
+    public Optional<Profile> findUserByEmail(String email) {
         return profileRepository.findByEmail(email);
     }
+    
+    public Optional<Profile> findUserByResetToken(String resetToken) {
+		return profileRepository.findByResetToken(resetToken);
+	}
 
     public void saveUser(Profile profile) {
         profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));

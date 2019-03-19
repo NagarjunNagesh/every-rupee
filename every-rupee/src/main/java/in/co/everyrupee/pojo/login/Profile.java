@@ -40,6 +40,8 @@ public class Profile {
 	    private String name;
 	    @Column(name = ProfileServiceConstants.User.ACTIVE)
 	    private int active;
+	    @Column(name = ProfileServiceConstants.User.RESET_TOKEN)
+	    private String resetToken;
 	    @ManyToMany(cascade = CascadeType.ALL)
 	    @JoinTable(name = ProfileServiceConstants.UserRole.USER_ROLE, joinColumns = @JoinColumn(name = ProfileServiceConstants.User.USER_ID), inverseJoinColumns = @JoinColumn(name = ProfileServiceConstants.Role.ROLE_ID))
 	    private Set<Role> roles;
@@ -115,6 +117,18 @@ public class Profile {
 		 */
 		public void setRoles(Set<Role> roles) {
 			this.roles = roles;
+		}
+		/**
+		 * @return the resetToken
+		 */
+		public String getResetToken() {
+			return resetToken;
+		}
+		/**
+		 * @param resetToken the resetToken to set
+		 */
+		public void setResetToken(String resetToken) {
+			this.resetToken = resetToken;
 		}
 		
 }

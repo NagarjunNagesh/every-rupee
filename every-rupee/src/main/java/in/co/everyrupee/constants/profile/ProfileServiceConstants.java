@@ -16,6 +16,7 @@ public class ProfileServiceConstants {
 		public static final String USER_ID = "user_id";
 		public static final String NAME = "name";
 		public static final String ACTIVE = "active";
+		public static final String RESET_TOKEN = "reset_token";
 	}
 
 	//Roles
@@ -38,6 +39,7 @@ public class ProfileServiceConstants {
 	public static final String SUCCESS_MESSAGE_OBJECT = "successMessage";
 	public static final String ADMIN_HOME_VIEWNAME_OBJECT = "admin/admin-home";
 	public static final String USERNAME_OBJECT = "userName";
+	public static final String REDIRECT_VIEW_NAME_OBJECT = "redirect:/";
 	
 	// Front End Messages
 	public static final String USER_REGISTERED_SUCCESSFULLY_MESSAGE = "User has been registered successfully";

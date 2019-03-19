@@ -57,11 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	        http.
 	                authorizeRequests()
-	                .antMatchers(GenericConstants.HOME_URL).permitAll()
-	                .antMatchers(GenericConstants.LOGIN_URL).permitAll()
-	                .antMatchers(GenericConstants.SIGNUP_URL).permitAll()
-	                .antMatchers(GenericConstants.ADMIN_SECURITY_CONGIG_URL).hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest()
-	                .authenticated().and().csrf().disable().formLogin()
+	                .antMatchers(GenericConstants.ADMIN_SECURITY_CONGIG_URL).hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE)
+	                .anyRequest().permitAll().and().csrf().disable().formLogin()
 	                .loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
 	                .defaultSuccessUrl(GenericConstants.ADMIN_HOME_URL)
 	                .usernameParameter(ProfileServiceConstants.User.EMAIL)

@@ -3,6 +3,8 @@
  */
 package in.co.everyrupee.repository.login;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +18,6 @@ import in.co.everyrupee.pojo.login.Profile;
  */
 @Repository("profileRepository")
 public interface ProfileRepository extends JpaRepository<Profile, Long>{
-	    Profile findByEmail(String email);
+	    Optional<Profile> findByEmail(String email);
+	    Optional<Profile> findByResetToken(String resetToken);
 }
