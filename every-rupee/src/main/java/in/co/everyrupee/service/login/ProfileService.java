@@ -46,6 +46,7 @@ public class ProfileService {
     public void saveUser(Profile profile) {
         profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
         profile.setActive(1);
+        //TODO Change the Admin role to User Role
 		Role userRole = roleRepository.findByRole(ProfileServiceConstants.Role.ADMIN_ROLE);
         profile.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
         profileRepository.save(profile);

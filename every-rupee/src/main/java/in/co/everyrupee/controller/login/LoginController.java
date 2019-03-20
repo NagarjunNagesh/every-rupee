@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,12 @@ import in.co.everyrupee.service.login.ProfileService;
 public class LoginController {
 		private static final String WELCOME_MESSAGE = "Welcome ";
 		private static final String ADMIN_MESSAGE = "adminMessage";
+		private static final String INVALID_PASSWORD_MESSAGE = "Oops!  This is an invalid password reset link.";
 		private static final String ADMIN_ONLY_MESSAGE = "Content Available Only for Users with Admin Role";
+		private static final String PASSWORD_RESET_MESSAGE = "A password reset link has been sent to ";
+		private static final String EMAIL_NOT_FOUND_MESSAGE = "We didn't find an account for that e-mail address.";
+		private static final String INVALID_RESET_LINK_MESSAGE = "Oops!  This is an invalid password reset link.";
+		private static final String SUCCESSFULLY_RESET_PASSWORD = "You have successfully reset your password.  You may now login.";
 
 	
 	    @Autowired
@@ -86,6 +92,7 @@ public class LoginController {
 	            modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
 	        } else {
 	            profileService.saveUser(profile);
+	            //TODO Redirect to Login Page
 	            modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT, ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
 	            modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, new Profile());
 	            modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
@@ -106,20 +113,20 @@ public class LoginController {
 	    }
 
 	    // Display forgotPassword page
-		@RequestMapping(value = "/forgot-password", method = RequestMethod.GET)
+		@RequestMapping(value = GenericConstants.FORGOT_PASSWORD_URL, method = RequestMethod.GET)
 		public ModelAndView displayForgotPasswordPage() {
-			return new ModelAndView("forgot-password");
+			return new ModelAndView(ProfileServiceConstants.FORGOT_PASSWORD_OBJECT);
 		}
 		
 		// Process form submission from forgotPassword page
-		@RequestMapping(value = "/forgot-password", method = RequestMethod.POST)
+		@RequestMapping(value = GenericConstants.FORGOT_PASSWORD_URL, method = RequestMethod.POST)
 		public ModelAndView processForgotPasswordForm(ModelAndView modelAndView, @RequestParam(ProfileServiceConstants.User.EMAIL) String userEmail, HttpServletRequest request) {
 		
 			// Lookup user in database by e-mail
 			Optional<Profile> optional = profileService.findUserByEmail(userEmail);
 		
 			if (!optional.isPresent()) {
-				modelAndView.addObject("errorMessage", "We didn't find an account for that e-mail address.");
+				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, EMAIL_NOT_FOUND_MESSAGE);
 			} else {
 				
 				// Generate random 36-character string token for reset password 
@@ -129,49 +136,49 @@ public class LoginController {
 				// Save token to database
 				profileService.saveUser(user);
 		
-				String appUrl = request.getScheme() + "://" + request.getServerName();
+				String appUrl = request.getScheme() + GenericConstants.HTTP_POSTFIX + request.getServerName();
 				
 				// Email message
 				SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-				passwordResetEmail.setFrom("support@demo.com");
+				passwordResetEmail.setFrom(GenericConstants.FROM_EMAIL);
 				passwordResetEmail.setTo(user.getEmail());
-				passwordResetEmail.setSubject("Password Reset Request");
-				passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl
-						+ "/reset-password?token=" + user.getResetToken());
+				passwordResetEmail.setSubject(GenericConstants.PASSWORD_RESET_SUBJECT);
+				passwordResetEmail.setText(GenericConstants.PASSWORD_RESET_BODY + appUrl
+						+ GenericConstants.RESET_PASSWORD_URL + GenericConstants.RESET_PASSWORD_TOKEN_PARAMETER + user.getResetToken());
 				
 				emailService.sendEmail(passwordResetEmail);
 		
 				// Add success message to view
-				modelAndView.addObject("successMessage", "A password reset link has been sent to " + userEmail);
+				modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT, PASSWORD_RESET_MESSAGE + userEmail);
 			}
 		
-			modelAndView.setViewName("forgot-password");
+			modelAndView.setViewName(ProfileServiceConstants.FORGOT_PASSWORD_OBJECT);
 			return modelAndView;
 		
 		}
 		
 		// Display form to reset password
-		@RequestMapping(value = "/reset-password", method = RequestMethod.GET)
-		public ModelAndView displayResetPasswordPage(ModelAndView modelAndView, @RequestParam("token") String token) {
+		@RequestMapping(value = GenericConstants.RESET_PASSWORD_URL, method = RequestMethod.GET)
+		public ModelAndView displayResetPasswordPage(ModelAndView modelAndView, @RequestParam(ProfileServiceConstants.TOKEN_PARAM) String token) {
 			
 			Optional<Profile> user = profileService.findUserByResetToken(token);
 		
 			if (user.isPresent()) { // Token found in DB
-				modelAndView.addObject("resetToken", token);
+				modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, token);
 			} else { // Token not found in DB
-				modelAndView.addObject("errorMessage", "Oops!  This is an invalid password reset link.");
+				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_RESET_LINK_MESSAGE);
 			}
 		
-			modelAndView.setViewName("reset-password");
+			modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);
 			return modelAndView;
 		}
 		
 		// Process reset password form
-		@RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+		@RequestMapping(value = GenericConstants.RESET_PASSWORD_URL, method = RequestMethod.POST)
 		public ModelAndView setNewPassword(ModelAndView modelAndView, @RequestParam Map<String, String> requestParams, RedirectAttributes redir) {
 		
 			// Find the user associated with the reset token
-			Optional<Profile> user = profileService.findUserByResetToken(requestParams.get("token"));
+			Optional<Profile> user = profileService.findUserByResetToken(requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 		
 			// This should always be non-null but we check just in case
 			if (user.isPresent()) {
@@ -179,7 +186,7 @@ public class LoginController {
 				Profile resetUser = user.get(); 
 		        
 				// Set new password    
-		        resetUser.setPassword(bCryptPasswordEncoder.encode(requestParams.get("password")));
+		        resetUser.setPassword(requestParams.get(ProfileServiceConstants.PASSWORD_PARAM));
 		        
 				// Set the reset token to null so it cannot be used again
 				resetUser.setResetToken(null);
@@ -189,14 +196,14 @@ public class LoginController {
 		
 				// In order to set a model attribute on a redirect, we must use
 				// RedirectAttributes
-				redir.addFlashAttribute("successMessage", "You have successfully reset your password.  You may now login.");
+				redir.addFlashAttribute(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT, SUCCESSFULLY_RESET_PASSWORD);
 		
-				modelAndView.setViewName("redirect:login");
+				modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
 				return modelAndView;
 				
 			} else {
-				modelAndView.addObject("errorMessage", "Oops!  This is an invalid password reset link.");
-				modelAndView.setViewName("reset-password");	
+				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_PASSWORD_MESSAGE);
+				modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);	
 				}
 				
 				return modelAndView;
@@ -205,6 +212,6 @@ public class LoginController {
 		// Going to reset page without a token redirects to login page
 		@ExceptionHandler(MissingServletRequestParameterException.class)
 		public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
-			return new ModelAndView("redirect:/login");
+			return new ModelAndView(ProfileServiceConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
 		}
 }
