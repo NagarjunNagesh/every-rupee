@@ -1,7 +1,9 @@
-package in.co.everyrupee.constants.profile;
+package in.co.everyrupee.constants;
 
 /**
- * @author nagarjun
+ * Constants that are present in the application layer
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 public class GenericConstants {
@@ -16,20 +18,25 @@ public class GenericConstants {
 		//URLS
 		public static final String HOME_URL = "/";
 		public static final String LOGIN_URL = "/login";
+		public static final String ABOUT_URL = "/about";
 		public static final String HTTP_POSTFIX = "://";
 		public static final String LOGOUT_URL = "/logout";
 		public static final String SIGNUP_URL = "/sign-up";
 		public static final String RESET_PASSWORD_URL = "/reset-password";
 		public static final String FORGOT_PASSWORD_URL = "/forgot-password";
 		public static final String RESET_PASSWORD_TOKEN_PARAMETER = "?token=";
-		public static final String ADMIN_SECURITY_CONGIG_URL = "/admin/**";
+		public static final String ADMIN_SECURITY_CONFIG_URL = "/admin/**";
 		public static final String LOGIN_ERROR_URL = "/login?error=true";
 		public static final String ADMIN_HOME_URL = "/admin/admin-home";
 		public static final String REDIRECT_VIEW_NAME_OBJECT = "redirect:";
 		public static final String LOGIN_ACCESS_DENIED_URL = "/login?accessDenied=true";
+		public static final String DASHBOARD_HOME_URL = "/dashboard/home";
+		public static final String DASHBOARD_CONFIG_URL = "/dashboard/**";
 		
 		//Objects
 		public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
+		public static final String INDEX_VIEW_NAME_OBJECT = "index";
+		public static final String ABOUT_VIEW_NAME_OBJECT = "about";
 		
 		// Queries
 		public static final String PROFILE_QUERY_APPLICATION_PROPERTIES = "${spring.queries.profile-query}";
@@ -38,6 +45,7 @@ public class GenericConstants {
 		// Mailing
 		public static final String FROM_EMAIL = "support@everyrupee.co.in";
 		public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
+		public static final String USER_REGISTERED_SUCCESSFULLY_SUBJECT = "User Registered Successfully";
 		public static final String PASSWORD_RESET_BODY = "To reset your password, click the link below:\n";
 		
 }

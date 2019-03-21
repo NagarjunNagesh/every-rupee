@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import in.co.everyrupee.constants.profile.GenericConstants;
+import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 
 import javax.sql.DataSource;
@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	    @Value(GenericConstants.ROLES_QUERY_APPLICATION_PROPERTIES)
 	    private String rolesQuery;
-
+	    
 	    @Override
 	    protected void configure(AuthenticationManagerBuilder auth)
 	            throws Exception {
@@ -57,7 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	        http.
 	                authorizeRequests()
-	                .antMatchers(GenericConstants.ADMIN_SECURITY_CONGIG_URL).hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE)
+	                .antMatchers(GenericConstants.DASHBOARD_CONFIG_URL).authenticated()
+	                .antMatchers(GenericConstants.ADMIN_SECURITY_CONFIG_URL).hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE)
 	                .anyRequest().permitAll().and().csrf().disable().formLogin()
 	                .loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
 	                .defaultSuccessUrl(GenericConstants.ADMIN_HOME_URL)

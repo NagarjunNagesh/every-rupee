@@ -21,13 +21,13 @@
               <div class="card-header card-header-primary text-center">
                 <h4 class="card-title">Login</h4>
                 <div class="social-line">
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Facebook">
                     <i class="fa fa-facebook-square"></i>
                   </a>
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Twitter">
                     <i class="fa fa-twitter"></i>
                   </a>
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Google">
                     <i class="fa fa-google-plus"></i>
                   </a>
                 </div>
@@ -53,6 +53,7 @@
               </div>
               <div class="text-center">
                  <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+                 <span th:utext="${successMessage}"></span>
               </div>
               <div align="center" th:if="${param.error}">
 				<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>

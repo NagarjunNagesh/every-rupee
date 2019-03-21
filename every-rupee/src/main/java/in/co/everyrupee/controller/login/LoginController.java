@@ -5,15 +5,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -24,14 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import in.co.everyrupee.constants.profile.GenericConstants;
+import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.service.email.EmailService;
 import in.co.everyrupee.service.login.ProfileService;
 
 /**
- * @author nagarjun
+ * Login & Registration Module
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 @Controller
@@ -51,10 +52,7 @@ public class LoginController {
 	    
 	    @Autowired
 		private EmailService emailService;
-
-		@Autowired
-		private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	    
 	    @RequestMapping(value = {GenericConstants.LOGIN_URL}, method = RequestMethod.GET)
 	    public ModelAndView login(){
 	        ModelAndView modelAndView = new ModelAndView();
@@ -62,7 +60,7 @@ public class LoginController {
 
 	        if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
 	            /* The user is logged in :) */
-	        	modelAndView.setViewName(ProfileServiceConstants.REDIRECT_VIEW_NAME_OBJECT + ProfileServiceConstants.ADMIN_HOME_VIEWNAME_OBJECT);
+	        	modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
 	        } else {
 	        	modelAndView.setViewName(ProfileServiceConstants.LOGIN_VIEWNAME_OBJECT);
 	        }
@@ -80,8 +78,11 @@ public class LoginController {
 	    }
 
 	    @RequestMapping(value = GenericConstants.SIGNUP_URL, method = RequestMethod.POST)
-	    public ModelAndView createNewUser(@Valid Profile profile, BindingResult bindingResult) {
+	    public ModelAndView createNewUser(@Valid Profile profile, BindingResult bindingResult, HttpServletRequest request, 
+	    	      HttpServletResponse response) {
 	        ModelAndView modelAndView = new ModelAndView();
+	        String email = profile.getEmail();
+	        String unencryptedPassword = profile.getPassword();
 	        Optional<Profile> userExists = profileService.findUserByEmail(profile.getEmail());
 	        if (userExists.isPresent()) {
 	            bindingResult
@@ -92,14 +93,28 @@ public class LoginController {
 	            modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
 	        } else {
 	            profileService.saveUser(profile);
-	            //TODO Redirect to Login Page
+	            
+	            profileService.autoLogin(request, email, unencryptedPassword);
+	            
+				
+				// Email message
+				SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+				passwordResetEmail.setFrom(GenericConstants.FROM_EMAIL);
+				passwordResetEmail.setTo(profile.getEmail());
+				passwordResetEmail.setSubject(GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT);
+				//TODO Email Template welcoming the user
+				passwordResetEmail.setText(ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
+				
+				emailService.sendEmail(passwordResetEmail);
+	            
 	            modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT, ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
 	            modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, new Profile());
-	            modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
+	            modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
 
 	        }
 	        return modelAndView;
 	    }
+	    
 
 	    @RequestMapping(value = GenericConstants.ADMIN_HOME_URL, method = RequestMethod.GET)
 	    public ModelAndView home(){
@@ -212,6 +227,6 @@ public class LoginController {
 		// Going to reset page without a token redirects to login page
 		@ExceptionHandler(MissingServletRequestParameterException.class)
 		public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
-			return new ModelAndView(ProfileServiceConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
+			return new ModelAndView(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
 		}
 }
