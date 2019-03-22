@@ -14,6 +14,6 @@ import in.co.everyrupee.pojo.FinancialPortfolio;
  *
  */
 @Repository
-public interface FinancialPortfoliioRepository extends JpaRepository<FinancialPortfolio, String> {
+public interface FinancialPortfolioRepository extends JpaRepository<FinancialPortfolio, String> {
 
 }

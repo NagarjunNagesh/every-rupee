@@ -138,24 +138,27 @@
           <div class="col-md-8 ml-auto mr-auto">
             <h2 id="signUpBottomHome" class="text-center title">Sign up for EveryRupee today</h2>
             <h4 class="text-center description">From tracking your expenses to fixing your debts and more, You'll find the effortless way to take control of it all.</h4>
-            <form class="contact-form">
+            <form class="contact-form" autocomplete="off" action="#" th:action="@{/sign-up}" th:object="${profile}" method="post" role="form">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">Your Name</label>
-                    <input type="email" class="form-control">
+                    <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message"></label>
+                  <input type="text" th:field="*{name}" class="form-control" /> 
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">Your Email</label>
-                    <input type="email" class="form-control">
+                    <input type="email" th:field="*{email}" class="form-control" /> 
+                  	<label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="validation-message"></label>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <label for="examplePassword" class="bmd-label-floating">Your Password</label>
-                <textarea type="email" class="form-control" id="examplePassword"></textarea>
+                <input type="password" th:field="*{password}" class="form-control" id="examplePassword"/> 
+                <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validation-message"></label>
               </div>
               <div class="row">
                 <div class="col-md-4 ml-auto mr-auto text-center">

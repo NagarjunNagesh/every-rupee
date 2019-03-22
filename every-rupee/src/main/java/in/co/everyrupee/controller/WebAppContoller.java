@@ -3,48 +3,34 @@ package in.co.everyrupee.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.Date;
+import org.springframework.web.servlet.ModelAndView;
+
+import in.co.everyrupee.constants.GenericConstants;
+import in.co.everyrupee.constants.profile.ProfileServiceConstants;
+import in.co.everyrupee.pojo.login.Profile;
 
 @Controller
 public class WebAppContoller {
-    private String appMode;
 
     @Autowired
     public WebAppContoller(Environment environment){
-        appMode = environment.getProperty("app-mode");
     }
 
-    @RequestMapping("/")
-    public String index(Model model){
-        model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "@omeryazir");
-        model.addAttribute("projectname", "WebApp");
-
-        model.addAttribute("mode", appMode);
-
-        return "index";
+    @RequestMapping(GenericConstants.HOME_URL)
+    public ModelAndView index(){
+    	ModelAndView modelAndView = new ModelAndView();
+    	Profile profile = new Profile();
+        modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, profile);
+        modelAndView.setViewName(GenericConstants.INDEX_VIEW_NAME_OBJECT);
+        return modelAndView;
     }
     
-    @RequestMapping("/about")
-    public String about(Model model){
-        model.addAttribute("datetime", new Date());
-        model.addAttribute("username", "@omeryazir");
-        model.addAttribute("projectname", "WebApp");
-
-        model.addAttribute("mode", appMode);
-
-        return "about";
+    @RequestMapping(GenericConstants.ABOUT_URL)
+    public ModelAndView about(){
+    	ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName(GenericConstants.ABOUT_VIEW_NAME_OBJECT);
+        return modelAndView;
     }
     
-    @RequestMapping("/login")
-    public String login(Model model){
-    	return "login";
-    }
-    
-    @RequestMapping("/sign-up")
-    public String signup(Model model){
-    	return "sign-up";
-    }
 }

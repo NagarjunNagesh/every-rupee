@@ -15,17 +15,17 @@
       <div class="row">
         <div class="col-lg-4 col-md-6 ml-auto mr-auto">
           <div class="card card-login">
-            <form class="form" method="" action="">
+            <form autocomplete="off" action="#" th:action="@{/sign-up}" th:object="${profile}" method="post" class="form" role="form">
               <div class="card-header card-header-primary text-center">
                 <h4 class="card-title">Signup</h4>
                 <div class="social-line">
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link"  rel="tooltip" data-placement="bottom" data-original-title="Signup with Facebook">
                     <i class="fa fa-facebook-square"></i>
                   </a>
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link"  rel="tooltip" data-placement="bottom" data-original-title="Signup with Twitter">
                     <i class="fa fa-twitter"></i>
                   </a>
-                  <a href="#pablo" class="btn btn-just-icon btn-link">
+                  <a href="#pablo" class="btn btn-just-icon btn-link"  rel="tooltip" data-placement="bottom" data-original-title="Signup with Google">
                     <i class="fa fa-google-plus"></i>
                   </a>
                 </div>
@@ -38,7 +38,8 @@
                       <i class="material-icons">face</i>
                     </span>
                   </div>
-                  <input type="text" class="form-control" placeholder="First Name...">
+                  <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message"></label>
+                  <input type="text" th:field="*{name}" placeholder="First Name..." class="form-control" /> 
                 </div>
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -46,7 +47,8 @@
                       <i class="material-icons">mail</i>
                     </span>
                   </div>
-                  <input type="email" class="form-control" placeholder="Email...">
+                  <input type="email" th:field="*{email}" placeholder="Email..." class="form-control" /> 
+                  <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="validation-message"></label>
                 </div>
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -54,11 +56,14 @@
                       <i class="material-icons">lock_outline</i>
                     </span>
                   </div>
-                  <input type="password" class="form-control" placeholder="Password...">
+                  <!-- TODO An Eye icon which shows the password -->
+                  <input type="password" th:field="*{password}" placeholder="Password..." class="form-control" /> 
+                  <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validation-message"></label>
                 </div>
               </div>
-              <div class="footer text-center">
-                <a href="#pablo" class="btn btn-primary btn-link btn-wd btn-lg">Get Started</a>
+              <div class="text-center">
+              	<button type="submit" class="btn btn-primary btn-raised">Register User</button>	
+              	<span th:utext="${successMessage}"></span>
               </div>
             </form>
           </div>

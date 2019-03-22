@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.FinancialPortfolio;
-import in.co.everyrupee.repository.FinancialPortfoliioRepository;
+import in.co.everyrupee.repository.FinancialPortfolioRepository;
 
 /**
  * @author nagarjun
@@ -28,24 +28,24 @@ import in.co.everyrupee.repository.FinancialPortfoliioRepository;
 public class FinancialPortfolioController {
 	
 	@Autowired
-	FinancialPortfoliioRepository financialPortfoliioRepository;
+	FinancialPortfolioRepository financialPortfolioRepository;
 	
 	// Get All Financial Portfolio
 	@RequestMapping(value = "/financial_portfolio", method = RequestMethod.GET)
 	public List<FinancialPortfolio> getAllFinancialPortfolio() {
-	    return financialPortfoliioRepository.findAll();
+	    return financialPortfolioRepository.findAll();
 	}
 	
 	// Create a Financial Portfolio
 	@RequestMapping(value = "/financial_portfolio", method = RequestMethod.PUT)
 	public FinancialPortfolio createFinancialPortfolio(@Valid @RequestBody FinancialPortfolio financialPortfolio) {
-	    return financialPortfoliioRepository.save(financialPortfolio);
+	    return financialPortfolioRepository.save(financialPortfolio);
 	}
 	
 	// Get a Single Financial Portfolio
 	@RequestMapping(value = "/financial_portfolio/{customerId}", method = RequestMethod.GET)
 	public FinancialPortfolio getFinancialPortfolioById(@PathVariable String customerId) {
-	    return financialPortfoliioRepository.findById(customerId)
+	    return financialPortfolioRepository.findById(customerId)
 	            .orElseThrow(() -> new ResourceNotFoundException("FinancialPortfolio", "customerId", customerId));
 	}
 	
@@ -54,23 +54,23 @@ public class FinancialPortfolioController {
 	public FinancialPortfolio updateFinancialPortfolio(@PathVariable String customerId,
 	                                        @Valid @RequestBody FinancialPortfolio financialPortfolioDetails) {
 
-		FinancialPortfolio financialPortfolio = financialPortfoliioRepository.findById(customerId)
+		FinancialPortfolio financialPortfolio = financialPortfolioRepository.findById(customerId)
 	            .orElseThrow(() -> new ResourceNotFoundException("FinancialPortfolio", "customerId", customerId));
 
 		financialPortfolio.setCashAvailable(financialPortfolioDetails.getCashAvailable());
 		financialPortfolio.setCreditcardBalance(financialPortfolioDetails.getCreditcardBalance());
 
-		FinancialPortfolio updatedFinancialPortfolio = financialPortfoliioRepository.save(financialPortfolio);
+		FinancialPortfolio updatedFinancialPortfolio = financialPortfolioRepository.save(financialPortfolio);
 	    return updatedFinancialPortfolio;
 	}
 	
 	// Delete a FinancialPortfolio
 	@RequestMapping(value = "/financial_portfolio/{customerId}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteFinancialPortfolio(@PathVariable String customerId) {
-		FinancialPortfolio financialPortfolio = financialPortfoliioRepository.findById(customerId)
+		FinancialPortfolio financialPortfolio = financialPortfolioRepository.findById(customerId)
 	            .orElseThrow(() -> new ResourceNotFoundException("FinancialPortfolio", "customerId", customerId));
 
-	    financialPortfoliioRepository.delete(financialPortfolio);
+	    financialPortfolioRepository.delete(financialPortfolio);
 
 	    return ResponseEntity.ok().build();
 	}
