@@ -17,13 +17,15 @@
       <div class="row">
         <div class="col-lg-4 col-md-6 ml-auto mr-auto">
           <div class="card card-login">
-            <form class="form" method="POST" th:action="@{/login}">
               <div class="card-header card-header-primary text-center">
                 <h4 class="card-title">Login</h4>
                 <div class="social-line">
-                  <a href="#pablo" class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Facebook">
-                    <i class="fa fa-facebook-square"></i>
-                  </a>
+                	<form action="/signin/facebook" method="POST">
+	                  <a class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Facebook">
+	                    <i class="fa fa-facebook-square"></i>
+	                  </a>
+	                 </form>
+                  
                   <a href="#pablo" class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Twitter">
                     <i class="fa fa-twitter"></i>
                   </a>
@@ -32,6 +34,7 @@
                   </a>
                 </div>
               </div>
+              <form class="form" method="POST" th:action="@{/login}">
               <p class="description text-center">Or Be Classical</p>
               <div class="card-body">
                 <div class="input-group">
