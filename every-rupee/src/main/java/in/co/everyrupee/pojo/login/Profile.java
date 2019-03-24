@@ -46,6 +46,14 @@ public class Profile {
 	    @JoinTable(name = ProfileServiceConstants.UserRole.USER_ROLE, joinColumns = @JoinColumn(name = ProfileServiceConstants.User.USER_ID), inverseJoinColumns = @JoinColumn(name = ProfileServiceConstants.Role.ROLE_ID))
 	    private Set<Role> roles;
 	    
+	    public Profile() {
+	    	
+	    }
+	    
+	    public Profile(int id) {
+	    	this.id = id;
+	    }
+	    
 		/**
 		 * @return the name
 		 */

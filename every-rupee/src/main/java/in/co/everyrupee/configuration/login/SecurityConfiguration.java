@@ -5,7 +5,6 @@ package in.co.everyrupee.configuration.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
-import org.springframework.social.connect.web.ProviderSignInController;
 
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
@@ -45,16 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	    @Value(GenericConstants.ROLES_QUERY_APPLICATION_PROPERTIES)
 	    private String rolesQuery;
-	    
-	    @Autowired
-	    private ConnectionFactoryLocator connectionFactoryLocator;
-	 
-	    @Autowired
-	    private UsersConnectionRepository usersConnectionRepository;
-	 
-	    @Autowired
-	    private FacebookConnectionSignUp facebookConnectionSignUp;
-	 
 	    
 	    @Override
 	    protected void configure(AuthenticationManagerBuilder auth)
@@ -90,17 +75,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	        web
 	                .ignoring()
 	                .antMatchers(GenericConstants.RESOURCES_ANT_MATCHER, GenericConstants.STATIC_ANT_MATCHER, GenericConstants.CSS_ANT_MATCHER, GenericConstants.JS_ANT_MATCHER, GenericConstants.IMG_ANT_MATCHER);
-	    }
-	    
-	    @Bean
-	    public ProviderSignInController providerSignInController() {
-	        ((InMemoryUsersConnectionRepository) usersConnectionRepository)
-	          .setConnectionSignUp(facebookConnectionSignUp);
-	         
-	        return new ProviderSignInController(
-	          connectionFactoryLocator, 
-	          usersConnectionRepository, 
-	          new FacebookSignInAdapter());
 	    }
 
 }

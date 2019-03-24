@@ -20,7 +20,9 @@ import in.co.everyrupee.pojo.FinancialPortfolio;
 import in.co.everyrupee.repository.FinancialPortfolioRepository;
 
 /**
- * @author nagarjun
+ * Manage API financial portfolio
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 @RestController
