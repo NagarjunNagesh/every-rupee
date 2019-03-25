@@ -196,7 +196,7 @@ public class LoginController {
 		
 			if(ERStringUtils.notEqualsIgnoreCase(requestParams.get(ProfileServiceConstants.PASSWORD_PARAM), requestParams.get(ProfileServiceConstants.CONFIRM_PASSWORD_PARAM))) {
 				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, PASSWORD_MISMATCH_MESSAGE);
-				modelAndView.addObject(ProfileServiceConstants.TOKEN_PARAM, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
+				modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 				modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);	
 				return modelAndView;
 			}
@@ -226,7 +226,7 @@ public class LoginController {
 				
 			} else {
 				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_PASSWORD_MESSAGE);
-				modelAndView.addObject(ProfileServiceConstants.TOKEN_PARAM, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
+				modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 				modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);	
 				}
 				

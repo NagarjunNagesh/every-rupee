@@ -17,12 +17,10 @@
       <div class="row">
         <div class="col-lg-4 col-md-6 ml-auto mr-auto">
           <div class="card card-login">
+          <form class="form" method="POST" th:action="@{/login}">
               <div class="card-header card-header-primary text-center">
                 <h4 class="card-title">Login</h4>
                 <div class="social-line">
-               	<button type="button" class="js-social-login" data-social-provider="facebook">
-				Sign in with Facebook
-				</button>
                   <a class="btn btn-just-icon btn-link" rel="tooltip" data-placement="bottom" data-original-title="Login with Facebook">
                     <i class="fa fa-facebook-square"></i>
                   </a>
@@ -34,7 +32,6 @@
                   </a>
                 </div>
               </div>
-              <form class="form" method="POST" th:action="@{/login}">
               <p class="description text-center">Or Be Classical</p>
               <div class="card-body">
                 <div class="input-group">
@@ -56,12 +53,11 @@
               </div>
               <div class="text-center">
                  <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
-                 <span th:utext="${successMessage}"></span>
+                 <span style="font-size: 20; color: #FF1C19;" th:utext="${successMessage}"></span>
               </div>
               <div align="center" th:if="${param.error}">
 				<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
 			  </div>
-			  <span style="font-size: 20; color: #FF1C19;" th:utext="${successMessage}"></span>
             </form>
            	<div class="footer text-center">
                <a href="/forgot-password" class="btn btn-primary btn-link btn-wd btn-lg">I Forgot My Password</a>
