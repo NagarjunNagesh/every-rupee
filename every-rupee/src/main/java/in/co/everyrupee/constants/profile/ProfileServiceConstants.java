@@ -47,6 +47,7 @@ public class ProfileServiceConstants {
 	// Parameters
 	public static final String TOKEN_PARAM = "token";
 	public static final String PASSWORD_PARAM = "password";
+	public static final String CONFIRM_PASSWORD_PARAM = "confirm-password";
 	
 	// Front End Messages
 	public static final String EMPTY_EMAIL_MESSAGE = "*Please provide an email";

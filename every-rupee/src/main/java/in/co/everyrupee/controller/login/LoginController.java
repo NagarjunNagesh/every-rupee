@@ -28,6 +28,7 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.service.email.EmailService;
 import in.co.everyrupee.service.login.ProfileService;
+import in.co.everyrupee.utils.ERStringUtils;
 
 /**
  * Login & Registration Module
@@ -44,6 +45,7 @@ public class LoginController {
 		private static final String PASSWORD_RESET_MESSAGE = "A password reset link has been sent to ";
 		private static final String EMAIL_NOT_FOUND_MESSAGE = "We didn't find an account for that e-mail address.";
 		private static final String INVALID_RESET_LINK_MESSAGE = "Oops!  This is an invalid password reset link.";
+		private static final String PASSWORD_MISMATCH_MESSAGE = "Oops!  The confirm password and password fields are different!";
 		private static final String SUCCESSFULLY_RESET_PASSWORD = "You have successfully reset your password.  You may now login.";
 
 	
@@ -192,6 +194,12 @@ public class LoginController {
 		@RequestMapping(value = GenericConstants.RESET_PASSWORD_URL, method = RequestMethod.POST)
 		public ModelAndView setNewPassword(ModelAndView modelAndView, @RequestParam Map<String, String> requestParams, RedirectAttributes redir) {
 		
+			if(ERStringUtils.notEqualsIgnoreCase(requestParams.get(ProfileServiceConstants.PASSWORD_PARAM), requestParams.get(ProfileServiceConstants.CONFIRM_PASSWORD_PARAM))) {
+				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, PASSWORD_MISMATCH_MESSAGE);
+				modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
+				modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);	
+				return modelAndView;
+			}
 			// Find the user associated with the reset token
 			Optional<Profile> user = profileService.findUserByResetToken(requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 		
@@ -218,6 +226,7 @@ public class LoginController {
 				
 			} else {
 				modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_PASSWORD_MESSAGE);
+				modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 				modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);	
 				}
 				
