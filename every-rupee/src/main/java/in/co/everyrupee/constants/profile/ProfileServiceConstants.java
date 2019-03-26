@@ -58,5 +58,11 @@ public class ProfileServiceConstants {
 	public static final String PASSWORD_MINIMUM_CHARACTER_MESSAGE = "*Your password must have at least 5 characters";
 	public static final String USER_ALREADY_REGISTERED_MESSAGE = "There is already a user registered with the email provided";
 	
+	// Application property variables
+	public static final String SECURITY_OAUTH2_GOOGLE_CLIENT = "security.oauth2.google.client";
+	public static final String SECURITY_OAUTH2_FACEBOOK_CLIENT = "security.oauth2.facebook.client";
+	public static final String SECURITY_OAUTH2_FACEBOOK_RESOURCE = "security.oauth2.facebook.resource";
+	public static final String SECURITY_OAUTH2_GOOGLE_RESOURCE = "security.oauth2.google.resource";
+	
 	
 }

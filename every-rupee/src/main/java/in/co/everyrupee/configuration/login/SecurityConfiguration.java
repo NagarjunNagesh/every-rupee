@@ -64,49 +64,54 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    private OAuth2ClientContext oauth2ClientContext;
 	    
 	    @Bean
-	    @ConfigurationProperties("security.oauth2.google.client")
+	    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_CLIENT)
 	    public AuthorizationCodeResourceDetails google() {
 	        return new AuthorizationCodeResourceDetails();
 	    }
 	    
 	    @Bean
-	    @ConfigurationProperties("security.oauth2.facebook.client")
+	    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_CLIENT)
 	    public AuthorizationCodeResourceDetails facebook() {
 	        return new AuthorizationCodeResourceDetails();
 	    }
 	     
 	    @Bean
-	    @ConfigurationProperties("security.oauth2.facebook.resource")
+	    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_RESOURCE)
 	    public ResourceServerProperties facebookResource() {
 	        return new ResourceServerProperties();
 	    }
 
 	    @Bean
-	    @ConfigurationProperties("security.oauth2.google.resource")
+	    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_RESOURCE)
 	    public ResourceServerProperties googleResource() {
 	        return new ResourceServerProperties();
 	    }
 
-	    private Filter ssoGoogleFilter() {
-	        OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
-	        OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oauth2ClientContext);
-	        googleFilter.setRestTemplate(googleTemplate);
-	        googleFilter.setTokenServices(new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId()));
-	        return googleFilter;
+	    /**
+	     * Generic Filter to identity Google & Facebook login
+	     * 
+	     * @param loginUrl
+	     * @param userInfoUri
+	     * @param resourceDetails
+	     * @return
+	     */
+	    private Filter ssoFilter(String loginUrl, String userInfoUri, AuthorizationCodeResourceDetails resourceDetails) {
+	        OAuth2ClientAuthenticationProcessingFilter socialFilter = new OAuth2ClientAuthenticationProcessingFilter(loginUrl);
+	        OAuth2RestTemplate socialTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
+	        socialFilter.setRestTemplate(socialTemplate);
+	        socialFilter.setTokenServices(new UserInfoTokenServices(userInfoUri, resourceDetails.getClientId()));
+	        return socialFilter;
 	    }
 	    
-	    private Filter ssoFacebookFilter() {
-	        OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
-	        OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook(), oauth2ClientContext);
-	        facebookFilter.setRestTemplate(facebookTemplate);
-	        facebookFilter.setTokenServices(new UserInfoTokenServices(facebookResource().getUserInfoUri(), facebook().getClientId()));
-	        return facebookFilter;
-	    }
-	    
+	    /**
+	     * A filter to consolidate both the filters into one.
+	     * 
+	     * @return
+	     */
 	    private Filter ssoFilter() {
 	        List<Filter> filters = new ArrayList<>();
-	        filters.add(ssoGoogleFilter());
-	        filters.add(ssoFacebookFilter());
+	        filters.add(ssoFilter(GenericConstants.GOOGLE_SOCIAL_LOGIN_URL, googleResource().getUserInfoUri(), google()));
+	        filters.add(ssoFilter(GenericConstants.FACEBOOK_SOCIAL_LOGIN_URL, facebookResource().getUserInfoUri(), facebook()));
 	    
 	        CompositeFilter filter = new CompositeFilter();
 	        filter.setFilters(filters);

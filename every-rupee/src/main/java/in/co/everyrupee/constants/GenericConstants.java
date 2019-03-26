@@ -32,6 +32,8 @@ public class GenericConstants {
 		public static final String LOGIN_ACCESS_DENIED_URL = "/login?accessDenied=true";
 		public static final String DASHBOARD_HOME_URL = "/dashboard/home";
 		public static final String DASHBOARD_CONFIG_URL = "/dashboard/**";
+		public static final String GOOGLE_SOCIAL_LOGIN_URL = "/login/google";
+		public static final String FACEBOOK_SOCIAL_LOGIN_URL = "/login/facebook";
 		
 		//Objects
 		public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
