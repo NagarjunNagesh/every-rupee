@@ -101,7 +101,8 @@
   </div>
   
 	<div th:replace="fragments/footer :: footer">&copy; 2019 EveryRupee</div>
-	<script>
+	<script defer  type="text/javascript">
+	window.onload = function () {
 		$(document).ready(function(){
 		   $.getJSON("http://localhost:8084/api/financial_portfolio", function(result){
 		      $.each(result, function(key,value) {
@@ -109,6 +110,7 @@
 		      }); 
 		   });
 		});
+	}
 	</script>
 </body>
 </html>
