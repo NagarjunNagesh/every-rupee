@@ -33,4 +33,11 @@ public class WebAppContoller {
         return modelAndView;
     }
     
+    @RequestMapping(GenericConstants.DASHBOARD_HOME_URL)
+    public ModelAndView dashboardHome(){
+    	ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName(GenericConstants.DASHBOARD_HOME_VIEW_NAME_OBJECT);
+        return modelAndView;
+    }
+    
 }

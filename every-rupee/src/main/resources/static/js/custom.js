@@ -6,6 +6,17 @@
  * Nagarjun Nagesh
  */
 
-$(document).ready(function() {
 	
-});
+window.onload = function () {
+	$(document).ready(function(){
+		
+		//	Load all user data for admin users
+	   $.getJSON("http://localhost:8084/api/financial_portfolio", function(result){
+	      $.each(result, function(key,value) {
+	         $("#productsJson").append(value.cashAvailable+" "+value.creditcardBalance+" ");
+	      }); 
+	   });
+	   
+	});
+}
+	
