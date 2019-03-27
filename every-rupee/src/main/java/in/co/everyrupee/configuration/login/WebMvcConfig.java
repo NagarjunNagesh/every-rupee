@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 /**
- * Configures the spring boot 
+ * Configures the spring boot
  * 
  * @author Nagarjun Nagesh
  *
@@ -15,13 +15,14 @@ import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	/**
-     * sec:authorize in HTML to function appropriately along with Thymeleaf springsecurity5
-     * 
-     * @return
-     */
+	 * sec:authorize in HTML to function appropriately along with Thymeleaf
+	 * springsecurity5
+	 * 
+	 * @return
+	 */
 	@Bean
-    public SpringSecurityDialect springSecurityDialect(){
-        return new SpringSecurityDialect();
-    }
+	public SpringSecurityDialect springSecurityDialect() {
+		return new SpringSecurityDialect();
+	}
 
 }

@@ -26,23 +26,22 @@ public class FinancialPortfolio implements Serializable {
 	 */
 	private static final long serialVersionUID = 4387424250638939980L;
 
-	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid", strategy = "uuid")
-	@Column(name="CUSTOMER_ID")
-	private String customerId;	
-	
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@Column(name = "CUSTOMER_ID")
+	private String customerId;
+
 	@NotNull
-	@Column(name="CASH_AVAILABLE")
+	@Column(name = "CASH_AVAILABLE")
 	private Double cashAvailable;
-	
+
 	@NotNull
-	@Column(name="CREDITCARD_BALANCE")
+	@Column(name = "CREDITCARD_BALANCE")
 	private Double creditcardBalance;
-	
-	@Column(name="HOMELOAN_BALANCE")
+
+	@Column(name = "HOMELOAN_BALANCE")
 	private Double homeLoanBalance;
-	
-	
 
 	/**
 	 * @return the customerId

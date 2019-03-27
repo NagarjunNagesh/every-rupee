@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import in.co.everyrupee.pojo.FinancialPortfolio;
 
-
 /**
  * @author nagarjun
  *
