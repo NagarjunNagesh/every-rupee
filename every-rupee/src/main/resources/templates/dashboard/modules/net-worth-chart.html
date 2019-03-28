@@ -11,41 +11,37 @@
 			<div class="row top_tiles">
 				<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="tile-stats">
-						<div class="icon">
-							<i class="fa fa-caret-square-o-right"></i>
+						<div class="icons-dashboard-home" id="icons8-paycheque-64">
 						</div>
 						<div class="count">179</div>
-						<h3>New Sign ups</h3>
+						<h3>Average Income / Month</h3>
 						<p>Lorem ipsum psdea itgum rixt.</p>
 					</div>
 				</div>
 				<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="tile-stats">
-						<div class="icon">
-							<i class="fa fa-comments-o"></i>
+						<div class="icons-dashboard-home" id="icons8-card-payment-64">
 						</div>
 						<div class="count">179</div>
-						<h3>New Sign ups</h3>
+						<h3>Average Spending / Month </h3>
 						<p>Lorem ipsum psdea itgum rixt.</p>
 					</div>
 				</div>
 				<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="tile-stats">
-						<div class="icon">
-							<i class="fa fa-sort-amount-desc"></i>
+						<div class="icons-dashboard-home" id="icons8-debt-64">
 						</div>
 						<div class="count">179</div>
-						<h3>New Sign ups</h3>
+						<h3>Total Debt</h3>
 						<p>Lorem ipsum psdea itgum rixt.</p>
 					</div>
 				</div>
 				<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
 					<div class="tile-stats">
-						<div class="icon">
-							<i class="fa fa-check-square-o"></i>
+						<div class="icons-dashboard-home" id="icons8-transaction-64">
 						</div>
 						<div class="count">179</div>
-						<h3>New Sign ups</h3>
+						<h3>Total Assets</h3>
 						<p>Lorem ipsum psdea itgum rixt.</p>
 					</div>
 				</div>
@@ -56,7 +52,7 @@
 					<div class="x_panel">
 						<div class="x_title">
 							<h2>
-								Transaction Summary <small>Weekly progress</small>
+								Net Income <small>Monthly progress</small>
 							</h2>
 							<div class="filter">
 								<div id="reportrange" class="pull-right"
@@ -70,11 +66,11 @@
 						<div class="x_content">
 							<div class="col-md-9 col-sm-12 col-xs-12">
 								<div class="demo-container" style="height: 280px">
-									<div id="chart_plot_02" class="demo-placeholder"></div>
+									<div id="chart_plot_01" class="demo-placeholder"></div>
 								</div>
 								<div class="tiles">
 									<div class="col-md-4 tile">
-										<span>Total Sessions</span>
+										<span>Income Over Time</span>
 										<h2>231,809</h2>
 										<span class="sparkline11 graph" style="height: 160px;">
 											<canvas width="200" height="60"
@@ -82,7 +78,7 @@
 										</span>
 									</div>
 									<div class="col-md-4 tile">
-										<span>Total Revenue</span>
+										<span>Spending Over Time</span>
 										<h2>$231,809</h2>
 										<span class="sparkline22 graph" style="height: 160px;">
 											<canvas width="200" height="60"
@@ -104,7 +100,7 @@
 							<div class="col-md-3 col-sm-12 col-xs-12">
 								<div>
 									<div class="x_title">
-										<h2>Top Profiles</h2>
+										<h2>Recent Transactions</h2>
 										<ul class="nav navbar-right panel_toolbox">
 											<li><a class="collapse-link"><i
 													class="fa fa-chevron-up"></i></a></li>
@@ -198,19 +194,19 @@
 	</div>
 	<div th:fragment="footer">
 			<!-- Chart.js -->
-		    <script src="../js/ChartJS/dist/Chart.min.js"></script>
+		    <script defer src="../js/ChartJS/dist/Chart.min.js"></script>
 		    <!-- jQuery Sparklines -->
-		    <script src="../js/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+		    <script defer src="../js/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
 			<!-- Flot -->
-		    <script src="../js/Flot/jquery.flot.js" th:src="@{/js/Flot/jquery.flot.js}"></script>
-		    <script src="../js/Flot/jquery.flot.pie.js" th:src="@{/js/Flot/jquery.flot.pie.js}"></script>
-		    <script src="../js/Flot/jquery.flot.time.js" th:src="@{/js/Flot/jquery.flot.time.js}"></script>
-		    <script src="../js/Flot/jquery.flot.stack.js" th:src="@{/js/Flot/jquery.flot.stack.js}"></script>
-		    <script src="../js/Flot/jquery.flot.resize.js" th:src="@{/js/Flot/jquery.flot.resize.js}"></script>
+		    <script defer src="../js/Flot/jquery.flot.js" th:src="@{/js/Flot/jquery.flot.js}"></script>
+		    <script defer src="../js/Flot/jquery.flot.pie.js" th:src="@{/js/Flot/jquery.flot.pie.js}"></script>
+		    <script defer src="../js/Flot/jquery.flot.time.js" th:src="@{/js/Flot/jquery.flot.time.js}"></script>
+		    <script defer src="../js/Flot/jquery.flot.stack.js" th:src="@{/js/Flot/jquery.flot.stack.js}"></script>
+		    <script defer src="../js/Flot/jquery.flot.resize.js" th:src="@{/js/Flot/jquery.flot.resize.js}"></script>
 		    <!-- Flot plugins -->
-		    <script src="../js/flot.orderbars/jquery.flot.orderBars.js" th:src="@{/js/flot.orderbars/jquery.flot.orderBars.js}"></script>
-		    <script src="../js/flot-spline/jquery.flot.spline.min.js" th:src="@{/js/flot-spline/jquery.flot.spline.min.js}"></script>
-		    <script src="../js/flot.curvedlines/curvedLines.js" th:src="@{/js/flot.curvedlines/curvedLines.js}"></script>
+		    <script defer src="../js/flot.orderbars/jquery.flot.orderBars.js" th:src="@{/js/flot.orderbars/jquery.flot.orderBars.js}"></script>
+		    <script defer src="../js/flot-spline/jquery.flot.spline.min.js" th:src="@{/js/flot-spline/jquery.flot.spline.min.js}"></script>
+		    <script defer src="../js/flot.curvedlines/curvedLines.js" th:src="@{/js/flot.curvedlines/curvedLines.js}"></script>
 			<!-- DateJS -->
     		<script defer src="../js/DateJS/build/date.js" th:src="@{/js/DateJS/build/date.js}"></script>
 			<!--  Bootstrap Date Picker -->

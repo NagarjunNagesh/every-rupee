@@ -4189,7 +4189,65 @@ ul.notifications {
    .dataTables_length { float:none; }
 }
 
+/* Custom Changes for Every Rupee */
 
+.icons-dashboard-home {
+	width: 64px;
+	height: 64px;
+	color: #BAB8B8;
+	position: absolute;
+	right: 20px;
+	top: 5px;
+	z-index: 1;	
+}
+
+/* Debt Icons */
+
+#icons8-debt-64 {
+	background-image: url(../../../img/finance-icons/debt/icons8-debt-64.png);
+	margin: 0;
+	line-height: 0;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+/* Income Icons  */
+
+#icons8-card-payment-64 {
+	background-image: url(../../../img/finance-icons/income/icons8-card-payment-64.png);
+	margin: 0;
+	line-height: 0;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+#icons8-paycheque-64 {
+	background-image: url(../../../img/finance-icons/income/icons8-paycheque-64.png);
+	margin: 0;
+	line-height: 0;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+/* Save Icons */
+
+#icons8-money-box-64 {
+	background-image: url(../../../img/finance-icons/save/icons8-money-box-64.png);
+	margin: 0;
+	line-height: 0;
+	vertical-align: bottom;
+	padding: 0;
+}
+
+/* Invest Icons */
+
+#icons8-transaction-64 {
+	background-image: url(../../../img/finance-icons/invest/icons8-transaction-64.png);
+	margin: 0;
+	line-height: 0;
+	vertical-align: bottom;
+	padding: 0;
+}
 
 
 /* CSS3 Checkbox */
