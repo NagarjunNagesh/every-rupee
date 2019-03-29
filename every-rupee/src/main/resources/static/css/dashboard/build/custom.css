@@ -4249,6 +4249,10 @@ ul.notifications {
 	padding: 0;
 }
 
+#dashboard-logo {
+	background: #fff;
+	border-radius: 50%;
+}
 
 /* CSS3 Checkbox */
 /*
