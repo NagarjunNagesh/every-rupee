@@ -50,5 +50,8 @@ public class GenericConstants {
 	public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
 	public static final String USER_REGISTERED_SUCCESSFULLY_SUBJECT = "User Registered Successfully";
 	public static final String PASSWORD_RESET_BODY = "To reset your password, click the link below:\n";
+	
+	// Characters
+	public static final String SPACE_CHARACTER = " ";
 
 }

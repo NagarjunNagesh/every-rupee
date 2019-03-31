@@ -1,0 +1,41 @@
+<configuration>
+	<property name="LOG_FILE" value="everyRupeeLogs" />
+	<property name="LOG_DIR" value="logs" />
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  	<file>${LOG_DIR}/${LOG_FILE}.log</file>
+  	<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>/media/sara/682AA7A32AA76D2E/study/ifkaarproject/articateInScala/log/akka.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+     </rollingPolicy>
+     <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+     </triggeringPolicy>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{0} %X{akkaSource} -%msg%n</pattern>
+        </encoder>
+    </appender>
+    
+  <appender name="ASYNC_FILE"
+        class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+       <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+        <queueSize>256</queueSize> <!-- default 256 -->
+        <includeCallerData>false</includeCallerData><!-- default false -->
+        <neverBlock>false</neverBlock><!-- default false, set to true to cause 
+            the Appender not block the application and just drop the messages -->
+    </appender>
+    
+    <root level="info">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+ 
+</configuration>

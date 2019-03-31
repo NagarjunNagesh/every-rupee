@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.Filter;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -47,6 +49,8 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 @EnableOAuth2Client
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+	
+	private static final String SOCIAL_LOGIN_ERROR_MESSAGE = "User logging in with Social Login with client id = ";
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -86,6 +90,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public ResourceServerProperties googleResource() {
 		return new ResourceServerProperties();
 	}
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * Generic Filter to identity Google & Facebook login
@@ -101,6 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		OAuth2RestTemplate socialTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
 		socialFilter.setRestTemplate(socialTemplate);
 		socialFilter.setTokenServices(new UserInfoTokenServices(userInfoUri, resourceDetails.getClientId()));
+		logger.info(loginUrl + SOCIAL_LOGIN_ERROR_MESSAGE + resourceDetails.getClientId());
 		return socialFilter;
 	}
 

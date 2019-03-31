@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -47,12 +49,15 @@ public class LoginController {
 	private static final String INVALID_RESET_LINK_MESSAGE = "Oops!  This is an invalid password reset link.";
 	private static final String PASSWORD_MISMATCH_MESSAGE = "Oops!  The confirm password and password fields are different!";
 	private static final String SUCCESSFULLY_RESET_PASSWORD = "You have successfully reset your password.  You may now login.";
+	private static final String MISSING_PARAMETER_IN_PAGE = "Missing parameters in the URL, redirecting to Login page.";
 
 	@Autowired
 	private ProfileService profileService;
 
 	@Autowired
 	private EmailService emailService;
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(value = { GenericConstants.LOGIN_URL }, method = RequestMethod.GET)
 	public ModelAndView login() {
@@ -87,9 +92,11 @@ public class LoginController {
 		if (userExists.isPresent()) {
 			bindingResult.rejectValue(ProfileServiceConstants.EMAIL_OBJECT, ProfileServiceConstants.EMAIL_USER_OBJECT,
 					ProfileServiceConstants.USER_ALREADY_REGISTERED_MESSAGE);
+			logger.warn(email + ProfileServiceConstants.USER_ALREADY_REGISTERED_MESSAGE);
 		}
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
+			logger.error(bindingResult.getAllErrors().toString());
 		} else {
 			profileService.saveUser(profile);
 
@@ -141,6 +148,7 @@ public class LoginController {
 
 		if (!optional.isPresent()) {
 			modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, EMAIL_NOT_FOUND_MESSAGE);
+			logger.error(optional.get() + GenericConstants.SPACE_CHARACTER + EMAIL_NOT_FOUND_MESSAGE);
 		} else {
 
 			// Generate random 36-character string token for reset password
@@ -183,6 +191,7 @@ public class LoginController {
 			modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, token);
 		} else { // Token not found in DB
 			modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_RESET_LINK_MESSAGE);
+			logger.error(user.get() + GenericConstants.SPACE_CHARACTER +INVALID_RESET_LINK_MESSAGE);
 		}
 
 		modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);
@@ -232,6 +241,7 @@ public class LoginController {
 			modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT,
 					requestParams.get(ProfileServiceConstants.TOKEN_PARAM));
 			modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);
+			logger.error(user.get() + GenericConstants.SPACE_CHARACTER + INVALID_PASSWORD_MESSAGE);
 		}
 
 		return modelAndView;
@@ -240,6 +250,7 @@ public class LoginController {
 	// Going to reset page without a token redirects to login page
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
+		logger.error(ex + MISSING_PARAMETER_IN_PAGE);
 		return new ModelAndView(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
 	}
 }
