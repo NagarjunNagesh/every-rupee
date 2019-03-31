@@ -22,20 +22,20 @@
         </encoder>
     </appender>
     
-  <appender name="ASYNC_FILE"
-        class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>0</discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
-       <appender-ref ref="FILE" />
-        <appender-ref ref="STDOUT" />
-        <queueSize>256</queueSize> <!-- default 256 -->
-        <includeCallerData>false</includeCallerData><!-- default false -->
-        <neverBlock>false</neverBlock><!-- default false, set to true to cause 
-            the Appender not block the application and just drop the messages -->
-    </appender>
+  <appender name="ASYNC500" class="ch.qos.logback.classic.AsyncAppender">
+	<queueSize>500</queueSize>
+	<discardingThreshold>0</discardingThreshold>
+	<appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
+  </appender>
+    
+    <logger name="com.app.boot.logback" level="INFO" additivity="false">
+    	<appender-ref ref="ASYNC500" />
+    </logger>
     
     <root level="info">
-        <appender-ref ref="FILE" />
-        <appender-ref ref="STDOUT" />
-    </root>
+    	<appender-ref ref="FILE" />
+    	<appender-ref ref="STDOUT" />
+	</root>
  
 </configuration>
