@@ -56,7 +56,7 @@ public class LoginController {
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(value = { GenericConstants.LOGIN_URL }, method = RequestMethod.GET)
@@ -66,6 +66,7 @@ public class LoginController {
 
 		if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
 			/* The user is logged in :) */
+			logger.info(ProfileServiceConstants.USER_REDIRECTED_TO_DASHBOARD_MESSAGE + auth.getPrincipal().toString());
 			modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
 		} else {
 			modelAndView.setViewName(ProfileServiceConstants.LOGIN_VIEWNAME_OBJECT);
@@ -191,7 +192,7 @@ public class LoginController {
 			modelAndView.addObject(ProfileServiceConstants.RESET_TOKEN_OBJECT, token);
 		} else { // Token not found in DB
 			modelAndView.addObject(GenericConstants.ERROR_MESSAGE_OBJECT, INVALID_RESET_LINK_MESSAGE);
-			logger.error(user.get() + GenericConstants.SPACE_CHARACTER +INVALID_RESET_LINK_MESSAGE);
+			logger.error(user.get() + GenericConstants.SPACE_CHARACTER + INVALID_RESET_LINK_MESSAGE);
 		}
 
 		modelAndView.setViewName(ProfileServiceConstants.RESET_PASSWORD_OBJECT);

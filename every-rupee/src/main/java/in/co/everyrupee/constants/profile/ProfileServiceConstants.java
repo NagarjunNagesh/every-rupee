@@ -57,6 +57,7 @@ public class ProfileServiceConstants {
 	public static final String USER_REGISTERED_SUCCESSFULLY_MESSAGE = "User has been registered successfully";
 	public static final String PASSWORD_MINIMUM_CHARACTER_MESSAGE = "*Your password must have at least 5 characters";
 	public static final String USER_ALREADY_REGISTERED_MESSAGE = "There is already a user registered with the email provided";
+	public static final String USER_REDIRECTED_TO_DASHBOARD_MESSAGE = "User is redirected to dashboard home page - ";
 
 	// Application property variables
 	public static final String SECURITY_OAUTH2_GOOGLE_CLIENT = "security.oauth2.google.client";

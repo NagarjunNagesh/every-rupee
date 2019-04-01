@@ -3,7 +3,6 @@ package in.co.everyrupee.service.login;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -70,11 +69,6 @@ public class ProfileService {
 		} catch (ServletException e) {
 			logger.error(ERROR_LOGIN_MESSAGE, e);
 		}
-	}
-
-	public String randomPasswordSocialLogin(int passwordLength) {
-		String randomPassword = UUID.randomUUID().toString().substring(0, passwordLength - 1);
-		return bCryptPasswordEncoder.encode(randomPassword);
 	}
 
 }
