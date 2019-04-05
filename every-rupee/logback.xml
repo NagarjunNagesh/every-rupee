@@ -8,7 +8,7 @@
   <appender name="SIFT_FILE" class="ch.qos.logback.classic.sift.SiftingAppender">
 	<discriminator>
 		<key>logid</key>
-		<defaultValue>unknown</defaultValue>
+		<defaultValue>default</defaultValue>
 	</discriminator>
 	<sift>
 		<appender name="FILE-${logid}" class="ch.qos.logback.core.FileAppender">
@@ -52,7 +52,16 @@
         <neverBlock>false</neverBlock><!-- default false, set to true to cause 
             the Appender not block the application and just drop the messages -->
   </appender>
-    
+    <logger name="org.baeldung" level="DEBUG" />
+
+	<!-- to view SQL statements, change to DEBUG -->
+	<logger name="org.hibernate.SQL" level="WARN" />
+
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.springframework.transaction" level="WARN" />
+
+	<!-- in order to debug some marshalling issues, this needs to be TRACE -->
+	<logger name="org.springframework.web.servlet.mvc" level="WARN" />
     <root level="info">
     	<appender-ref ref="ASYNC_CONSOLE" />
     	<appender-ref ref="ASYNC_FILE" />

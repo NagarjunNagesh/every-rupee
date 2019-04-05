@@ -1,7 +1,7 @@
 /**
  * 
  */
-package in.co.everyrupee.configuration.login;
+package in.co.everyrupee.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 @EnableOAuth2Client
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-	
+
 	private static final String SOCIAL_LOGIN_ERROR_MESSAGE = "User logging in with Social Login with client id = ";
 
 	@Autowired
@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public ResourceServerProperties googleResource() {
 		return new ResourceServerProperties();
 	}
-	
+
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
@@ -149,7 +149,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(GenericConstants.ADMIN_SECURITY_CONFIG_URL)
 				.hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest().permitAll().and().csrf().disable()
 				.formLogin().loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
-				.defaultSuccessUrl(GenericConstants.ADMIN_HOME_URL)
+				.defaultSuccessUrl(GenericConstants.DASHBOARD_HOME_URL)
 				.usernameParameter(ProfileServiceConstants.User.EMAIL)
 				.passwordParameter(ProfileServiceConstants.User.PASSWORD).and().logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher(GenericConstants.LOGOUT_URL))

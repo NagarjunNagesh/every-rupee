@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,7 +31,9 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.service.email.EmailService;
 import in.co.everyrupee.service.login.ProfileService;
+import in.co.everyrupee.service.recaptcha.CaptchaService;
 import in.co.everyrupee.utils.ERStringUtils;
+import in.co.everyrupee.utils.GenericResponse;
 
 /**
  * Login & Registration Module
@@ -56,6 +59,9 @@ public class LoginController {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private CaptchaService captchaService;
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -84,11 +90,17 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = GenericConstants.SIGNUP_URL, method = RequestMethod.POST)
-	public ModelAndView createNewUser(@Valid Profile profile, BindingResult bindingResult, HttpServletRequest request,
-			HttpServletResponse response) {
+	@ResponseBody
+	public GenericResponse createNewUser(@Valid Profile profile, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView modelAndView = new ModelAndView();
 		String email = profile.getEmail();
 		String unencryptedPassword = profile.getPassword();
+
+		// Validate Google Invisible Recaptcha
+		String googleResponse = request.getParameter(GenericConstants.GOOGLE_RECAPTCHA_RESPONSE);
+		captchaService.processResponse(googleResponse);
+
 		Optional<Profile> userExists = profileService.findUserByEmail(profile.getEmail());
 		if (userExists.isPresent()) {
 			bindingResult.rejectValue(ProfileServiceConstants.EMAIL_OBJECT, ProfileServiceConstants.EMAIL_USER_OBJECT,
@@ -98,6 +110,7 @@ public class LoginController {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
 			logger.error(bindingResult.getAllErrors().toString());
+			return new GenericResponse("failure");
 		} else {
 			profileService.saveUser(profile);
 
@@ -113,13 +126,13 @@ public class LoginController {
 
 			emailService.sendEmail(passwordResetEmail);
 
-			modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT,
-					ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
-			modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, new Profile());
-			modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
+//			modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT,
+//					ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
+//			modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, new Profile());
+//			modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
 
 		}
-		return modelAndView;
+		return new GenericResponse("success");
 	}
 
 	@RequestMapping(value = GenericConstants.ADMIN_HOME_URL, method = RequestMethod.GET)

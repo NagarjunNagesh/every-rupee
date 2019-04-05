@@ -40,6 +40,7 @@ public class GenericConstants {
 	public static final String INDEX_VIEW_NAME_OBJECT = "index";
 	public static final String ABOUT_VIEW_NAME_OBJECT = "about";
 	public static final String DASHBOARD_HOME_VIEW_NAME_OBJECT = "dashboard/home";
+	public static final String GOOGLE_RECAPTCHA_RESPONSE = "g-recaptcha-response";
 
 	// Queries
 	public static final String PROFILE_QUERY_APPLICATION_PROPERTIES = "${spring.queries.profile-query}";
@@ -50,8 +51,10 @@ public class GenericConstants {
 	public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
 	public static final String USER_REGISTERED_SUCCESSFULLY_SUBJECT = "User Registered Successfully";
 	public static final String PASSWORD_RESET_BODY = "To reset your password, click the link below:\n";
-	
+
 	// Characters
 	public static final String SPACE_CHARACTER = " ";
 
+	// application.properties variables
+	public static final String GOOGLE_RECAPTCHA_KEY = "google.recaptcha.key";
 }

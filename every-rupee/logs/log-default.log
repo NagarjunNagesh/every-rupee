@@ -1,0 +1,18 @@
+2019-Apr-05 09:35:13.387 INFO  [restartedMain] i.c.e.EveryRupeeApplication - Starting EveryRupeeApplication on nagarjun-HP-ProBook-450-G5 with PID 8397 (/home/nagarjun/eclipse-workspace-new/every-rupee/every-rupee/target/classes started by nagarjun in /home/nagarjun/eclipse-workspace-new/every-rupee/every-rupee)
+2019-Apr-05 09:35:13.400 INFO  [restartedMain] i.c.e.EveryRupeeApplication - No active profile set, falling back to default profiles: default
+2019-Apr-05 09:35:15.865 INFO  [restartedMain] o.a.c.h.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8084"]
+2019-Apr-05 09:35:15.874 INFO  [restartedMain] o.a.c.c.StandardService - Starting service [Tomcat]
+2019-Apr-05 09:35:15.874 INFO  [restartedMain] o.a.c.c.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-Apr-05 09:35:15.888 INFO  [restartedMain] o.a.c.c.AprLifecycleListener - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib]
+2019-Apr-05 09:35:15.963 INFO  [restartedMain] o.a.c.c.C.[.[.[/] - Initializing Spring embedded WebApplicationContext
+2019-Apr-05 09:35:16.282 INFO  [restartedMain] c.z.h.HikariDataSource - HikariPool-1 - Starting...
+2019-Apr-05 09:35:16.486 INFO  [restartedMain] c.z.h.HikariDataSource - HikariPool-1 - Start completed.
+2019-Apr-05 09:35:17.483 WARN  [restartedMain] o.h.i.UUIDHexGenerator - HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2019-Apr-05 09:35:20.340 INFO  [restartedMain] i.c.e.c.SecurityConfiguration$$EnhancerBySpringCGLIB$$9661d4c4 - /login/googleUser logging in with Social Login with client id = 587675711926-2v0n1vpg6cghtcgrjmedl7qd6vb3l772.apps.googleusercontent.com
+2019-Apr-05 09:35:20.370 INFO  [restartedMain] i.c.e.c.SecurityConfiguration$$EnhancerBySpringCGLIB$$9661d4c4 - /login/facebookUser logging in with Social Login with client id = 2153998961577929
+2019-Apr-05 09:35:21.140 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-Apr-05 09:35:21.818 INFO  [restartedMain] o.a.c.h.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8084"]
+2019-Apr-05 09:35:21.880 INFO  [restartedMain] i.c.e.EveryRupeeApplication - Started EveryRupeeApplication in 9.345 seconds (JVM running for 34.406)
+2019-Apr-05 09:36:58.491 INFO  [http-nio-8084-exec-2] o.a.c.c.C.[.[.[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-Apr-05 10:08:00.785 INFO  [Thread-11] c.z.h.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2019-Apr-05 10:08:00.796 INFO  [Thread-11] c.z.h.HikariDataSource - HikariPool-1 - Shutdown completed.
