@@ -9,17 +9,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 @EnableAuthorizationServer
 public class EveryRupeeApplication {
-	
+
 	/**
 	 * Password encryption for login and register
 	 * 
 	 * @return
 	 */
 	@Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
-    }
+	public BCryptPasswordEncoder passwordEncoder() {
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		return bCryptPasswordEncoder;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(EveryRupeeApplication.class, args);

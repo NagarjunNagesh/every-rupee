@@ -6,6 +6,7 @@
   </title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <object th:include="fragments/head :: head" th:remove="tag" ></object>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body class="login-page sidebar-collapse">
@@ -15,7 +16,7 @@
       <div class="row">
         <div class="col-lg-4 col-md-6 ml-auto mr-auto">
           <div class="card card-login">
-            <form autocomplete="off" action="#" th:action="@{/sign-up}" th:object="${profile}" method="post" class="form" role="form">
+            <form autocomplete="off" id="signUpForm" action="#" th:object="${profile}" method="post" class="form" role="form">
               <div class="card-header card-header-primary text-center">
                 <h4 class="card-title">Signup</h4>
                 <div class="social-line">
@@ -57,13 +58,17 @@
                     </span>
                   </div>
                   <!-- TODO An Eye icon which shows the password -->
-                  <input type="password" th:field="*{password}" placeholder="Password..." class="form-control" /> 
+                  <input type="password" id="password" th:field="*{password}" placeholder="Password..." class="form-control" /> 
                   <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validation-message"></label>
                 </div>
               </div>
               <div class="text-center">
-              	<button type="submit" class="btn btn-primary btn-raised">Register User</button>	
-              	<span th:utext="${successMessage}"></span>
+                <label class="col-sm-3">Captcha</label>
+                <div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@captchaService.getReCaptchaSite()}" data-callback="onReCaptchaSuccess" data-expired-callback="onReCaptchaExpired"></div>
+				<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
+				<button type="submit" class="btn btn-primary btn-raised">Register User</button>	
+              	<span style="font-size: 20; color: #FF1C19;" th:utext="${successMessage}"></span>
+              	<span id="errorMessage" style="font-size: 20; color: #FF1C19;" th:utext="${errorMessage}"></span>
               </div>
             </form>
           </div>
