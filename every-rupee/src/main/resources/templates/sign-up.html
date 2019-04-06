@@ -40,7 +40,7 @@
                     </span>
                   </div>
                   <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="validation-message"></label>
-                  <input type="text" th:field="*{name}" placeholder="First Name..." class="form-control" /> 
+                  <input id="nameSignUp" type="text" th:field="*{name}" placeholder="First Name..." class="form-control" /> 
                 </div>
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -48,7 +48,7 @@
                       <i class="material-icons">mail</i>
                     </span>
                   </div>
-                  <input type="email" th:field="*{email}" placeholder="Email..." class="form-control" /> 
+                  <input id="emailSignUp" type="email" th:field="*{email}" placeholder="Email..." class="form-control" /> 
                   <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="validation-message"></label>
                 </div>
                 <div class="input-group">
