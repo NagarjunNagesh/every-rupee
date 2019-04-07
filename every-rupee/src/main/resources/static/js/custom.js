@@ -100,6 +100,7 @@ window.onload = function () {
 		    grecaptcha.reset();
 	   };
 	   
+	   // LOGIN JS attempt
 	});
 }
 	
