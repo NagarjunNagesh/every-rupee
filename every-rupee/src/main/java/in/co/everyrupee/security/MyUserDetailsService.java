@@ -24,7 +24,9 @@ import in.co.everyrupee.pojo.login.Role;
 import in.co.everyrupee.repository.login.ProfileRepository;
 
 /**
- * @author Nagar
+ * Check if the user is blocked and / if the user is not found
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 @Service("userDetailsService")

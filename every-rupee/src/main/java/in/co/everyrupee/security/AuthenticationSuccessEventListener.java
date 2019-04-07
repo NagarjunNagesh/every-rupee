@@ -11,7 +11,9 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.stereotype.Component;
 
 /**
- * @author Nagar
+ * Login Successful listener for reseting cookie for login attempts
+ * 
+ * @author Nagarjun Nagesh
  *
  */
 @Component
