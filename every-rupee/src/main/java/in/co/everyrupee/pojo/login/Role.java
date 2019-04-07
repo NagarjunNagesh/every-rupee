@@ -3,6 +3,8 @@
  */
 package in.co.everyrupee.pojo.login;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

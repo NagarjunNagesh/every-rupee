@@ -122,7 +122,7 @@ public class Profile {
 	/**
 	 * @return the active
 	 */
-	public int getActive() {
+	public int isActive() {
 		return active;
 	}
 

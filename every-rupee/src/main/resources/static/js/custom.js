@@ -29,6 +29,7 @@ window.onload = function () {
 		   $("#errorMessage").html("").hide();
 		   var formValidation = true;
 		   
+		   // Form Validation
 		   var nameSignUp = $("#nameSignUp").val();
 		   if(!(nameRegularExpression.test(nameSignUp))){
 			   $("#errorMessage").show().html("Name field is empty <br/>");
@@ -40,6 +41,9 @@ window.onload = function () {
 			   $("#errorMessage").show().append("Email field is empty or not valid");
 			   formValidation = false;
 		   }
+		   
+		   var passwordSignUp = $("#password").val();
+		   
 		   
 		   if (typeof grecaptcha !== 'undefined') {
 		        var resp = grecaptcha.getResponse();

@@ -19,6 +19,7 @@ import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.pojo.login.Role;
 import in.co.everyrupee.repository.login.ProfileRepository;
 import in.co.everyrupee.repository.login.RoleRepository;
+import in.co.everyrupee.security.LoginAttemptService;
 
 /**
  * @author Nagarjun Nagesh
@@ -30,6 +31,13 @@ public class ProfileService {
 	private ProfileRepository profileRepository;
 	private RoleRepository roleRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private LoginAttemptService loginAttemptService;
+
+	@Autowired
+	private HttpServletRequest request;
+
 	private static final String ERROR_LOGIN_MESSAGE = "Error while login ";
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -42,6 +50,11 @@ public class ProfileService {
 	}
 
 	public Optional<Profile> findUserByEmail(String email) {
+		String ip = getClientIP();
+		if (loginAttemptService.isBlocked(ip)) {
+			throw new RuntimeException("blocked");
+		}
+
 		return profileRepository.findByEmail(email);
 	}
 
@@ -84,6 +97,14 @@ public class ProfileService {
 		} catch (ServletException e) {
 			logger.error(ERROR_LOGIN_MESSAGE, e);
 		}
+	}
+
+	private String getClientIP() {
+		String xfHeader = request.getHeader("X-Forwarded-For");
+		if (xfHeader == null) {
+			return request.getRemoteAddr();
+		}
+		return xfHeader.split(",")[0];
 	}
 
 }
