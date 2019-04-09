@@ -136,12 +136,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 
+	/**
+	 * Configure the Spring boot to use the authentication provider created by us.
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authProvider()).jdbcAuthentication().usersByUsernameQuery(profileQuery)
 				.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
 	}
 
+	/**
+	 * Configure oauth 2 for google and facebook login
+	 * 
+	 * @param filter
+	 * @return
+	 */
 	@Bean
 	public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(
 			OAuth2ClientContextFilter filter) {
@@ -176,6 +185,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	// beans
 
+	/**
+	 * Adding Authentication handler for login to prevent brute force login
+	 * 
+	 * @return
+	 */
 	@Bean
 	public DaoAuthenticationProvider authProvider() {
 		final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

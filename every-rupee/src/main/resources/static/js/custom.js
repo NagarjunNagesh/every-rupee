@@ -38,12 +38,20 @@ window.onload = function () {
 		   
 		   var emailSignUp = $("#emailSignUp").val();
 		   if (emailSignUp == '' || !emailValidationRegularExpression.test(emailSignUp)) {
-			   $("#errorMessage").show().append("Email field is empty or not valid");
+			   $("#errorMessage").show().append("Email field is empty or not valid <br/>");
 			   formValidation = false;
 		   }
 		   
-		   var passwordSignUp = $("#password").val();
+		   var passwordSignUp = $('#password').val();
+		   if(passwordSignUp.length < 8) {
+			   $("#errorMessage").show().append("Password field must be atleast 8 characters. <br/>");
+			   formValidation = false;
+		   }
 		   
+		   if(passwordSignUp.length > 30) {
+			   $("#errorMessage").show().append("Password field must be less than 30 characters. <br/>");
+			   formValidation = false;
+		   }
 		   
 		   if (typeof grecaptcha !== 'undefined') {
 		        var resp = grecaptcha.getResponse();
@@ -99,6 +107,26 @@ window.onload = function () {
 		    $("#captchaError").html("reCaptcha has expired.  Please solve a new reCaptcha").show();
 		    grecaptcha.reset();
 	   };
+	   
+	   // Show Password strength meter to with all password fields
+	   options = {
+			    common: {minChar:8},
+			    ui: {
+			    	showVerdictsInsideProgressBar:true,
+			    	showErrors:true,
+			    	errorMessages:{
+			    		/* They are reference to messages from spring boot refer PasswordConstraintValidator */
+			    		wordLength: '<spring:message code="error.wordLength"/>',
+		                wordNotEmail: '<spring:message code="error.wordNotEmail"/>',
+		                wordSequences: '<spring:message code="error.wordSequences"/>',
+		                wordLowercase: '<spring:message code="error.wordLowercase"/>',
+		                wordUppercase: '<spring:message code="error.wordUppercase"/>',
+		                wordOneNumber: '<spring:message code="error.wordOneNumber"/>',
+		                wordOneSpecialChar: '<spring:message code="error.wordOneSpecialChar"/>'
+			    		}
+			    	}
+			};
+	  $('.pwstrength_viewport_progress').pwstrength(options);
 	   
 	   // LOGIN JS attempt
 	});

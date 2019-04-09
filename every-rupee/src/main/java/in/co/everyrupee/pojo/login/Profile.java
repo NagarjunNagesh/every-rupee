@@ -1,6 +1,3 @@
-/**
- * 
- */
 package in.co.everyrupee.pojo.login;
 
 import java.util.Set;
@@ -21,6 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
+import in.co.everyrupee.validation.login.ValidPassword;
 
 /**
  * Creating a bean for a user
@@ -45,7 +43,7 @@ public class Profile {
 	@NotEmpty(message = ProfileServiceConstants.PASSWORD_EMPTY_MESSAGE)
 	private String password;
 	@Column(name = ProfileServiceConstants.User.NAME)
-	@NotEmpty(message = ProfileServiceConstants.NAME_EMPTY_MESSAGE)
+	@ValidPassword
 	private String name;
 	@Column(name = ProfileServiceConstants.User.ACTIVE)
 	private int active;
