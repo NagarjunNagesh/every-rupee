@@ -142,7 +142,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authProvider()).jdbcAuthentication().usersByUsernameQuery(profileQuery)
-				.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
+				.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource);
 	}
 
 	/**

@@ -12,6 +12,8 @@ window.onload = function () {
 	   
 	   var nameRegularExpression = /^[A-Za-z ]+$/;
 	   
+	   var passwordValidationRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\.*])(?=.{8,30})");
+	   
 		//	Load all user data for admin users
 	   $.getJSON("http://localhost:8084/api/financial_portfolio", function(result){
 	      $.each(result, function(key,value) {
@@ -31,7 +33,7 @@ window.onload = function () {
 		   
 		   // Form Validation
 		   var nameSignUp = $("#nameSignUp").val();
-		   if(!(nameRegularExpression.test(nameSignUp))){
+		   if(!nameRegularExpression.test(nameSignUp)){
 			   $("#errorMessage").show().html("Name field is empty <br/>");
 			   formValidation = false;
 		   }
@@ -50,6 +52,11 @@ window.onload = function () {
 		   
 		   if(passwordSignUp.length > 30) {
 			   $("#errorMessage").show().append("Password field must be less than 30 characters. <br/>");
+			   formValidation = false;
+		   }
+		   
+		   if(!passwordValidationRegex.test(passwordSignUp)) {
+			   $("#errorMessage").show().append("Password field conatin One Uppercase, One Number and One Specialcharacters allowed are (!@#\$%\^&\.*). <br/>");
 			   formValidation = false;
 		   }
 		   
@@ -98,16 +105,7 @@ window.onload = function () {
 		    });
 		   
 	   }
-	   
-	   var onReCaptchaSuccess = function(response) {
-		    $("#captchaError").html("").hide();
-	   };
-	   
-	   var onReCaptchaExpired = function(response) {
-		    $("#captchaError").html("reCaptcha has expired.  Please solve a new reCaptcha").show();
-		    grecaptcha.reset();
-	   };
-	   
+
 	   // Show Password strength meter to with all password fields
 	   options = {
 			    common: {minChar:8},
@@ -128,7 +126,19 @@ window.onload = function () {
 			};
 	  $('.pwstrength_viewport_progress').pwstrength(options);
 	   
-	   // LOGIN JS attempt
+	   // TODO LOGIN JS attempt
 	});
 }
+
+// Should be outside the On load and document ready in order to support ReCaptcha
+window.onReCaptchaSuccess = onReCaptchaSuccess;
+var onReCaptchaSuccess = function(response) {
+	    $("#captchaError").html("").hide();
+};
+
+window.onReCaptchaExpired = onReCaptchaExpired;
+var onReCaptchaExpired = function(response) {
+	    $("#captchaError").html("reCaptcha has expired.  Please solve a new reCaptcha").show();
+	    grecaptcha.reset();
+};
 	
