@@ -1,6 +1,3 @@
-/**
- * 
- */
 package in.co.everyrupee.pojo.login;
 
 import javax.persistence.Column;

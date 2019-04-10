@@ -19,11 +19,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -31,6 +33,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
@@ -66,6 +69,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private OAuth2ClientContext oauth2ClientContext;
+
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	@Bean
 	@ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_CLIENT)
@@ -127,12 +136,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 
+	/**
+	 * Configure the Spring boot to use the authentication provider created by us.
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().usersByUsernameQuery(profileQuery).authoritiesByUsernameQuery(rolesQuery)
-				.dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
+		auth.authenticationProvider(authProvider()).jdbcAuthentication().usersByUsernameQuery(profileQuery)
+				.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource);
 	}
 
+	/**
+	 * Configure oauth 2 for google and facebook login
+	 * 
+	 * @param filter
+	 * @return
+	 */
 	@Bean
 	public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(
 			OAuth2ClientContextFilter filter) {
@@ -149,7 +167,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(GenericConstants.ADMIN_SECURITY_CONFIG_URL)
 				.hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest().permitAll().and().csrf().disable()
 				.formLogin().loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
-				.defaultSuccessUrl(GenericConstants.DASHBOARD_HOME_URL)
+				.defaultSuccessUrl(GenericConstants.DASHBOARD_HOME_URL).failureHandler(authenticationFailureHandler)
 				.usernameParameter(ProfileServiceConstants.User.EMAIL)
 				.passwordParameter(ProfileServiceConstants.User.PASSWORD).and().logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher(GenericConstants.LOGOUT_URL))
@@ -163,6 +181,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers(GenericConstants.RESOURCES_ANT_MATCHER, GenericConstants.STATIC_ANT_MATCHER,
 				GenericConstants.CSS_ANT_MATCHER, GenericConstants.JS_ANT_MATCHER, GenericConstants.IMG_ANT_MATCHER);
+	}
+
+	// beans
+
+	/**
+	 * Adding Authentication handler for login to prevent brute force login
+	 * 
+	 * @return
+	 */
+	@Bean
+	public DaoAuthenticationProvider authProvider() {
+		final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(bCryptPasswordEncoder);
+		return authProvider;
 	}
 
 }

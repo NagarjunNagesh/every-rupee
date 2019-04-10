@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
+import in.co.everyrupee.events.registration.OnRegistrationCompleteEvent;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.service.email.EmailService;
 import in.co.everyrupee.service.login.ProfileService;
@@ -63,6 +65,9 @@ public class LoginController {
 	@Autowired
 	private CaptchaService captchaService;
 
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
+
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(value = { GenericConstants.LOGIN_URL }, method = RequestMethod.GET)
@@ -93,7 +98,6 @@ public class LoginController {
 	@ResponseBody
 	public GenericResponse createNewUser(@Valid Profile profile, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView modelAndView = new ModelAndView();
 		String email = profile.getEmail();
 		String unencryptedPassword = profile.getPassword();
 
@@ -101,37 +105,13 @@ public class LoginController {
 		String googleResponse = request.getParameter(GenericConstants.GOOGLE_RECAPTCHA_RESPONSE);
 		captchaService.processResponse(googleResponse);
 
-		Optional<Profile> userExists = profileService.findUserByEmail(profile.getEmail());
-		if (userExists.isPresent()) {
-			bindingResult.rejectValue(ProfileServiceConstants.EMAIL_OBJECT, ProfileServiceConstants.EMAIL_USER_OBJECT,
-					ProfileServiceConstants.USER_ALREADY_REGISTERED_MESSAGE);
-			logger.warn(email + ProfileServiceConstants.USER_ALREADY_REGISTERED_MESSAGE);
-		}
-		if (bindingResult.hasErrors()) {
-			modelAndView.setViewName(ProfileServiceConstants.SIGNUP_VIEWNAME_OBJECT);
-			logger.error(bindingResult.getAllErrors().toString());
-			return new GenericResponse("failure");
-		} else {
-			profileService.saveUser(profile);
+		Profile registeredUser = profileService.registerNewUserAccount(profile);
 
-			profileService.autoLogin(request, email, unencryptedPassword);
+		profileService.autoLogin(request, email, unencryptedPassword);
 
-			// Email message
-			SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-			passwordResetEmail.setFrom(GenericConstants.FROM_EMAIL);
-			passwordResetEmail.setTo(profile.getEmail());
-			passwordResetEmail.setSubject(GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT);
-			// TODO Email Template welcoming the user
-			passwordResetEmail.setText(ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
+		eventPublisher
+				.publishEvent(new OnRegistrationCompleteEvent(registeredUser, request.getLocale(), getAppUrl(request)));
 
-			emailService.sendEmail(passwordResetEmail);
-
-//			modelAndView.addObject(ProfileServiceConstants.SUCCESS_MESSAGE_OBJECT,
-//					ProfileServiceConstants.USER_REGISTERED_SUCCESSFULLY_MESSAGE);
-//			modelAndView.addObject(ProfileServiceConstants.PROFILE_MODEL_OBJECT, new Profile());
-//			modelAndView.setViewName(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.DASHBOARD_HOME_URL);
-
-		}
 		return new GenericResponse("success");
 	}
 
@@ -266,5 +246,9 @@ public class LoginController {
 	public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
 		logger.error(ex + MISSING_PARAMETER_IN_PAGE);
 		return new ModelAndView(GenericConstants.REDIRECT_VIEW_NAME_OBJECT + GenericConstants.LOGIN_URL);
+	}
+
+	private String getAppUrl(HttpServletRequest request) {
+		return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 	}
 }
