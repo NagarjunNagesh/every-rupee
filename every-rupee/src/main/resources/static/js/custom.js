@@ -105,26 +105,6 @@ window.onload = function () {
 		    });
 		   
 	   }
-
-	   // Show Password strength meter to with all password fields
-	   options = {
-			    common: {minChar:8},
-			    ui: {
-			    	showVerdictsInsideProgressBar:true,
-			    	showErrors:true,
-			    	errorMessages:{
-			    		/* They are reference to messages from spring boot refer PasswordConstraintValidator */
-			    		wordLength: '<spring:message code="error.wordLength"/>',
-		                wordNotEmail: '<spring:message code="error.wordNotEmail"/>',
-		                wordSequences: '<spring:message code="error.wordSequences"/>',
-		                wordLowercase: '<spring:message code="error.wordLowercase"/>',
-		                wordUppercase: '<spring:message code="error.wordUppercase"/>',
-		                wordOneNumber: '<spring:message code="error.wordOneNumber"/>',
-		                wordOneSpecialChar: '<spring:message code="error.wordOneSpecialChar"/>'
-			    		}
-			    	}
-			};
-	  $('.pwstrength_viewport_progress').pwstrength(options);
 	   
 	   // TODO LOGIN JS attempt
 	});

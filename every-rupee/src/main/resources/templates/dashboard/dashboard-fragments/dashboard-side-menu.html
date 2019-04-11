@@ -5,15 +5,15 @@
 <body>
 			<div th:fragment="dashboard-side-menu">
 			  <!-- Side Nav Start -->
-			  	<div class="sidebar" data-color="purple" data-background-color="white" data-image="../img/sidebar-1.jpg">
+			  	<div class="sidebar" data-color="purple" data-background-color="white" data-image="../img/dashboard/sidebar/sidebar-1.jpg">
 					      <!--
 					        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 					
 					        Tip 2: you can also add an image using data-image tag
 					    -->
 					      <div class="logo">
-					        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-					          Creative Tim
+					        <a href="/" class="simple-text logo-normal">
+					          <img src="/favicon.ico" > Every Rupee
 					        </a>
 					      </div>
 					      <div class="sidebar-wrapper">
@@ -66,30 +66,24 @@
 					              <p>RTL Support</p>
 					            </a>
 					          </li>
-					          <li class="nav-item active-pro ">
-					            <a class="nav-link" href="./upgrade.html">
-					              <i class="material-icons">unarchive</i>
-					              <p>Upgrade to PRO</p>
-					            </a>
+					          <li class="nav-item active-pro dashboard-sidebar-utils">
+					              <a data-toggle="tooltip" data-placement="top" title="Settings">
+					                <span class="fa fa-cog" aria-hidden="true"></span>
+						            </a>
+						            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+						                <span class="fa fa-arrows-alt" aria-hidden="true"></span>
+						            </a>
+						            <a data-toggle="tooltip" data-placement="top" title="Lock">
+						                <span class="fa fa-eye-slash" aria-hidden="true"></span>
+						            </a>
+						            <a href="/logout" data-toggle="tooltip" data-placement="top" title="Logout">
+						                <span class="fa fa-sign-out" aria-hidden="true"></span>
+					            	</a>
 					          </li>
 					        </ul>
 					      </div>
 					      
 					      <!-- side bar to easy logout -->
-					    <div class="sidebar-footer hidden-small">
-				            <a data-toggle="tooltip" data-placement="top" title="Settings">
-				                <span class="fa fa-cog" aria-hidden="true"></span>
-				            </a>
-				            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-				                <span class="fa fa-arrows-alt" aria-hidden="true"></span>
-				            </a>
-				            <a data-toggle="tooltip" data-placement="top" title="Lock">
-				                <span class="fa fa-eye-slash" aria-hidden="true"></span>
-				            </a>
-				            <a href="/logout" data-toggle="tooltip" data-placement="top" title="Logout">
-				                <span class="fa fa-sign-out" aria-hidden="true"></span>
-				            </a>
-				        </div>
 				        
 					    </div>
 					    <!-- Side Nav End -->
@@ -122,22 +116,22 @@
 				        <li class="header-title">Images</li>
 				        <li class="active">
 				          <a class="img-holder switch-trigger" href="javascript:void(0)">
-				            <img src="../img/sidebar-1.jpg" alt="">
+				            <img src="../img/dashboard/sidebar/sidebar-1.jpg" alt="">
 				          </a>
 				        </li>
 				        <li>
 				          <a class="img-holder switch-trigger" href="javascript:void(0)">
-				            <img src="../img/sidebar-2.jpg" alt="">
+				            <img src="../img/dashboard/sidebar/sidebar-2.jpg" alt="">
 				          </a>
 				        </li>
 				        <li>
 				          <a class="img-holder switch-trigger" href="javascript:void(0)">
-				            <img src="../img/sidebar-3.jpg" alt="">
+				            <img src="../img/dashboard/sidebar/sidebar-3.jpg" alt="">
 				          </a>
 				        </li>
 				        <li>
 				          <a class="img-holder switch-trigger" href="javascript:void(0)">
-				            <img src="../img/sidebar-4.jpg" alt="">
+				            <img src="../img/dashboard/sidebar/sidebar-4.jpg" alt="">
 				          </a>
 				        </li>
 				        <li class="button-container">
