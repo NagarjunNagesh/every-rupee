@@ -7,3 +7,31 @@
 .dashboard-sidebar-utils a { 
 	
 }
+
+#icons8-reading-64 {
+	background-image: url(../../img/finance-icons/debt/icons8-reading-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-paycheque-64 {
+	background-image: url(../../img/finance-icons/income/icons8-paycheque-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-transaction-64 {
+	background-image: url(../../img/finance-icons/invest/icons8-transaction-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-money-box-64.png {
+	background-image: url(../../img/finance-icons/save/icons8-money-box-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
