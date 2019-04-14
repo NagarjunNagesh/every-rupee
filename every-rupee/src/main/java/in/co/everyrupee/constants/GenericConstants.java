@@ -38,6 +38,7 @@ public class GenericConstants {
 	public static final String DASHBOARD_INCOME_URL = "/dashboard/income";
 	public static final String DASHBOARD_DEBT_URL = "/dashboard/debt";
 	public static final String DASHBOARD_INVESTMENT_URL = "/dashboard/investment";
+	public static final String DASHBOARD_SETTINGS_URL = "/dashboard/settings";
 
 	// Objects
 	public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
@@ -48,6 +49,7 @@ public class GenericConstants {
 	public static final String DASHBOARD_INCOME_VIEW_NAME_OBJECT = "dashboard/income";
 	public static final String DASHBOARD_DEBT_VIEW_NAME_OBJECT = "dashboard/debt";
 	public static final String DASHBOARD_INVESTMENT_VIEW_NAME_OBJECT = "dashboard/investment";
+	public static final String DASHBOARD_SETTINGS_VIEW_NAME_OBJECT = "dashboard/settings";
 	public static final String GOOGLE_RECAPTCHA_RESPONSE = "g-recaptcha-response";
 
 	// Queries

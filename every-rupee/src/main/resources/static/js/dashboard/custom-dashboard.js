@@ -26,6 +26,11 @@ window.onload = function () {
 			document.getElementById("investment-dashboard-sidebar").classList.add('active');
 		}
 		
+		if($('.settings-dashboard').length) {
+			document.getElementById("settings-dashboard-sidebar").classList.add('active');
+		}
+		
+		
 	});
 }
  

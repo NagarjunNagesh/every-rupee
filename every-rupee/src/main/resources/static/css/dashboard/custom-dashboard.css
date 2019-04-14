@@ -39,3 +39,113 @@
 	margin-right: 9px;
 	background-size: 37px auto;	
 }
+
+.sidebar li > a.active {
+   background-color: #9c27b0;
+   box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+   color: #fff;
+}
+
+/**  To prevent the color from disappearing once it is selected **/
+.sidebar .nav li:hover > a.active {
+   background-color: #9c27b0;
+   box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+   color: #fff;
+}
+
+/** User Siebar Dashboard **/
+.sidebar .user {
+    padding-bottom: 20px;
+    margin: 20px auto 0;
+    position: relative;
+}
+
+.sidebar .user .photo {
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    float: left;
+    z-index: 5;
+    margin-right: 11px;
+    border-radius: 50%;
+    margin-left: 23px;
+    box-shadow: 0 16px 38px -12px rgba(0,0,0,.56),0 4px 25px 0 rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2);
+    transition: all .3s linear;
+}
+
+.sidebar .user a {
+    margin: 0;
+    line-height: 30px;
+    font-size: 14px;
+    position: relative;
+    display: block;
+    height: auto;
+    padding: .5rem 15px;
+    white-space: nowrap;
+    transition: all .15s ease-in;
+}
+
+.sidebar .user::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+    height: 1px;
+    width: calc(100% - 30px);
+    background-color: hsla(0,0%,71%,.3);
+}
+
+.sidebar .user .user-info > a > span {
+    display: block;
+    position: relative;
+    opacity: 1;
+    color: #3C4858;
+    transition: all .3s linear;
+}
+
+.sidebar[data-background-color="black"] .simple-text, .sidebar[data-background-color="black"] .user a {
+  margin: 0;
+  line-height: 30px;
+  font-size: 14px;
+  position: relative;
+  display: block; 
+  height: auto;
+  white-space: nowrap;
+  
+}
+
+.sidebar .user .user-info > a {
+    display: block;
+    line-height: 18px;
+    font-size: 14px;
+}
+
+.sidebar .user .user-info .caret {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+}
+
+.sidebar .user .photo {
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    float: left;
+    z-index: 5;
+    margin-right: 11px;
+    border-radius: 50%;
+    margin-left: 23px;
+    box-shadow: 0 16px 38px -12px rgba(0,0,0,.56),0 4px 25px 0 rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2);
+}
+
+.sidebar .user .photo img {
+    width: 100%;
+    vertical-align: middle;
+    border-style: none;
+}
+

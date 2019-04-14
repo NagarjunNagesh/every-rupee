@@ -42,4 +42,11 @@ public class DashboardController {
 		modelAndView.setViewName(GenericConstants.DASHBOARD_INVESTMENT_VIEW_NAME_OBJECT);
 		return modelAndView;
 	}
+
+	@RequestMapping(GenericConstants.DASHBOARD_SETTINGS_URL)
+	public ModelAndView dashboardSettings() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName(GenericConstants.DASHBOARD_SETTINGS_VIEW_NAME_OBJECT);
+		return modelAndView;
+	}
 }
