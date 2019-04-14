@@ -34,12 +34,20 @@ public class GenericConstants {
 	public static final String DASHBOARD_CONFIG_URL = "/dashboard/**";
 	public static final String GOOGLE_SOCIAL_LOGIN_URL = "/login/google";
 	public static final String FACEBOOK_SOCIAL_LOGIN_URL = "/login/facebook";
+	public static final String DASHBOARD_SAVINGS_URL = "/dashboard/savings";
+	public static final String DASHBOARD_INCOME_URL = "/dashboard/income";
+	public static final String DASHBOARD_DEBT_URL = "/dashboard/debt";
+	public static final String DASHBOARD_INVESTMENT_URL = "/dashboard/investment";
 
 	// Objects
 	public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
 	public static final String INDEX_VIEW_NAME_OBJECT = "index";
 	public static final String ABOUT_VIEW_NAME_OBJECT = "about";
 	public static final String DASHBOARD_HOME_VIEW_NAME_OBJECT = "dashboard/home";
+	public static final String DASHBOARD_SAVINGS_VIEW_NAME_OBJECT = "dashboard/savings";
+	public static final String DASHBOARD_INCOME_VIEW_NAME_OBJECT = "dashboard/income";
+	public static final String DASHBOARD_DEBT_VIEW_NAME_OBJECT = "dashboard/debt";
+	public static final String DASHBOARD_INVESTMENT_VIEW_NAME_OBJECT = "dashboard/investment";
 	public static final String GOOGLE_RECAPTCHA_RESPONSE = "g-recaptcha-response";
 
 	// Queries

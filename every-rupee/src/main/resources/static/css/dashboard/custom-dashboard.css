@@ -4,8 +4,12 @@
 	margin-bottom: .5rem;
 }
 
-.dashboard-sidebar-utils a { 
-	
+#dashboard-util { 
+	margin-left:0;
+}
+
+#dashboard-util-fullscreen { 
+	margin-left:0;
 }
 
 #icons8-reading-64 {
