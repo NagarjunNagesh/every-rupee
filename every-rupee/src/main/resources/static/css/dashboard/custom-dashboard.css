@@ -103,7 +103,7 @@
     transition: all .3s linear;
 }
 
-.sidebar[data-background-color="black"] .simple-text, .sidebar[data-background-color="black"] .user a {
+.sidebar .simple-text, .sidebar .user a {
   margin: 0;
   line-height: 30px;
   font-size: 14px;
