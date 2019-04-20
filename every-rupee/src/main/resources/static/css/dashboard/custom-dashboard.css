@@ -195,6 +195,104 @@
 	margin-right: 3px;
 }
 
+/** Table for Transactions **/
+
+table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::before {
+    top: 2px;
+    right: 1em;
+    content: "\2191";
+}
 
 
+table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc_disabled::after {
 
+    top: 2px;
+    right: .5em;
+    content: "\2193";
+
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    max-width: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_desc_disabled {
+    cursor: pointer;
+    position: relative;
+}
+
+table.dataTable thead .sorting::after, table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::after, table.dataTable thead .sorting_desc_disabled::before {
+    position: absolute;
+    bottom: .9em;
+    display: block;
+    opacity: .3;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right;
+}
+
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+}
+
+ select.form-control-sm:not([size]):not([multiple]) {
+    height: calc(2.125rem + 2px);
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    width: auto;
+    display: inline-block;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: .85em;
+    white-space: nowrap;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    margin: 2px 0;
+    white-space: nowrap;
+    justify-content: flex-end;
+}
+
+.pagination > .page-item.active > a, .pagination > .page-item.active > a:focus, .pagination > .page-item.active > a:hover, .pagination > .page-item.active > span, .pagination > .page-item.active > span:focus, .pagination > .page-item.active > span:hover {
+    background-color: #9c27b0;
+    border-color: #9c27b0;
+    color: #fff;
+    box-shadow: 0 4px 5px 0 rgba(156,39,176,.14),0 1px 10px 0 rgba(156,39,176,.12),0 2px 4px -1px rgba(156,39,176,.2);
+}
+
+.material-datatables .dataTables_paginate .pagination .paginate_button .page-link {
+    padding: 0 5px;
+    margin: 0;
+}
+
+.pagination > .page-item > .page-link, .pagination > .page-item > span {
+    border: 0;
+        border-top-color: currentcolor;
+        border-right-color: currentcolor;
+        border-bottom-color: currentcolor;
+        border-left-color: currentcolor;
+    border-radius: 30px !important;
+    transition: all .3s;
+    padding: 0 11px;
+    margin: 0 3px;
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: #999;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: transparent;
+        background-color: transparent;
+    text-align: center;
+}

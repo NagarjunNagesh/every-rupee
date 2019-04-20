@@ -112,7 +112,7 @@ public class LoginController {
 		eventPublisher
 				.publishEvent(new OnRegistrationCompleteEvent(registeredUser, request.getLocale(), getAppUrl(request)));
 
-		return new GenericResponse("success");
+		return new GenericResponse(GenericConstants.GENERIC_SERVICE_SUCCESS);
 	}
 
 	@RequestMapping(value = GenericConstants.ADMIN_HOME_URL, method = RequestMethod.GET)
@@ -249,6 +249,7 @@ public class LoginController {
 	}
 
 	private String getAppUrl(HttpServletRequest request) {
-		return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		return GenericConstants.HTTP_PARAM + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath();
 	}
 }

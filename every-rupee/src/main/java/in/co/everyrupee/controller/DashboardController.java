@@ -56,4 +56,5 @@ public class DashboardController {
 	modelAndView.setViewName(GenericConstants.DASHBOARD_PROFILE_VIEW_NAME_OBJECT);
 	return modelAndView;
     }
+
 }

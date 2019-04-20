@@ -8,6 +8,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import in.co.everyrupee.constants.GenericConstants;
+
 /**
  * Configuration for Captcha
  * 
@@ -15,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Configuration
-@ComponentScan(basePackages = { "in.co.everyrupee" })
+@ComponentScan(basePackages = { GenericConstants.EVERYRUPEE_PACKAGE })
 public class CaptchaConfig {
 
 	@Bean

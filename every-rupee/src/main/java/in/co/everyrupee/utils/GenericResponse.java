@@ -6,7 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import in.co.everyrupee.constants.GenericConstants;
+
 public class GenericResponse {
+	private static final String FIELD = "{\"field\":\"";
+	private static final String DEFAULT_MESSAGE = "\",\"defaultMessage\":\"";
+	private static final String CURLY_BRACES = "\"}";
+	private static final String OBJECT = "{\"object\":\"";
+	private static final String OPEN_BRACES = "[";
+	private static final String CLOSED_BRACES = "]";
 	private String message;
 	private String error;
 
@@ -25,14 +33,12 @@ public class GenericResponse {
 		this.error = error;
 		String temp = allErrors.stream().map(e -> {
 			if (e instanceof FieldError) {
-				return "{\"field\":\"" + ((FieldError) e).getField() + "\",\"defaultMessage\":\""
-						+ e.getDefaultMessage() + "\"}";
+				return FIELD + ((FieldError) e).getField() + DEFAULT_MESSAGE + e.getDefaultMessage() + CURLY_BRACES;
 			} else {
-				return "{\"object\":\"" + e.getObjectName() + "\",\"defaultMessage\":\"" + e.getDefaultMessage()
-						+ "\"}";
+				return OBJECT + e.getObjectName() + DEFAULT_MESSAGE + e.getDefaultMessage() + CURLY_BRACES;
 			}
-		}).collect(Collectors.joining(","));
-		this.message = "[" + temp + "]";
+		}).collect(Collectors.joining(GenericConstants.COMMA));
+		this.message = OPEN_BRACES + temp + CLOSED_BRACES;
 	}
 
 	public String getMessage() {
