@@ -14,13 +14,6 @@ window.onload = function () {
 	   
 	   var passwordValidationRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\.*])(?=.{8,30})");
 	   
-		//	Load all user data for admin users
-	   $.getJSON("http://localhost:8084/api/financial_portfolio", function(result){
-	      $.each(result, function(key,value) {
-	         $("#productsJson").append(value.cashAvailable+" "+value.creditcardBalance+" ");
-	      }); 
-	   });
-	   
 	   $('#signUpForm').submit(function(event) {
 			register(event);
 		});
