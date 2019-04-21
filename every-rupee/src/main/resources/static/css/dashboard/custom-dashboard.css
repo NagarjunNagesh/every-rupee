@@ -1,0 +1,303 @@
+@charset "UTF-8";
+
+.dashboard-sidebar-utils {
+	margin-bottom: .5rem;
+}
+
+#dashboard-util { 
+	margin-left:0;
+}
+
+#dashboard-util-fullscreen { 
+	margin-left:0;
+}
+
+#icons8-reading-64 {
+	background-image: url(../../img/finance-icons/debt/icons8-reading-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-paycheque-64 {
+	background-image: url(../../img/finance-icons/income/icons8-paycheque-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-transaction-64 {
+	background-image: url(../../img/finance-icons/invest/icons8-transaction-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-money-box-64.png {
+	background-image: url(../../img/finance-icons/save/icons8-money-box-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+.sidebar li > a.active {
+   background-color: #9c27b0;
+   box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+   color: #fff;
+}
+
+/**  To prevent the color from disappearing once it is selected **/
+.sidebar .nav li:hover > a.active {
+   background-color: #9c27b0;
+   box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+   color: #fff;
+}
+
+/** User Siebar Dashboard **/
+.sidebar .user {
+    padding-bottom: 20px;
+    margin: 20px auto 0;
+    position: relative;
+}
+
+.sidebar .user .photo {
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    float: left;
+    z-index: 5;
+    margin-right: 11px;
+    border-radius: 50%;
+    margin-left: 23px;
+    box-shadow: 0 16px 38px -12px rgba(0,0,0,.56),0 4px 25px 0 rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2);
+    transition: all .3s linear;
+}
+
+.sidebar .user a {
+    margin: 0;
+    line-height: 30px;
+    font-size: 14px;
+    position: relative;
+    display: block;
+    height: auto;
+    padding: .5rem 15px;
+    white-space: nowrap;
+    transition: all .15s ease-in;
+}
+
+.sidebar .user::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+    height: 1px;
+    width: calc(100% - 30px);
+    background-color: hsla(0,0%,71%,.3);
+}
+
+.sidebar .user .user-info > a > span {
+    display: block;
+    position: relative;
+    opacity: 1;
+    color: #3C4858;
+    transition: all .3s linear;
+}
+
+.sidebar .simple-text, .sidebar .user a {
+  margin: 0;
+  line-height: 30px;
+  font-size: 14px;
+  position: relative;
+  display: block; 
+  height: auto;
+  white-space: nowrap;
+  
+}
+
+.sidebar .user .user-info > a {
+    display: block;
+    line-height: 18px;
+    font-size: 14px;
+}
+
+.sidebar .user .user-info .caret {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+}
+
+.sidebar .user .photo {
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    float: left;
+    z-index: 5;
+    margin-right: 11px;
+    border-radius: 50%;
+    margin-left: 23px;
+    box-shadow: 0 16px 38px -12px rgba(0,0,0,.56),0 4px 25px 0 rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2);
+}
+
+.sidebar .user .photo img {
+    width: 100%;
+    vertical-align: middle;
+    border-style: none;
+}
+
+/** Dashboard Logo Settings **/
+
+.sidebar .logo a.logo-mini {
+    opacity: 1;
+    float: left;
+    width: 64px;
+    text-align: center;
+    margin-left: 10px;
+    padding-top: 0px
+}
+
+.sidebar .logo a.logo-normal {
+    display: block;
+    opacity: 1;
+    transform: translateZ(0);
+    transition: all .3s linear;
+    text-align: left;
+    padding-top: 10px
+}
+
+.sidebar .logo a.logo-normal , .sidebar .logo a.logo-mini {
+	transition: all .3s linear;
+}
+
+/** Vertical align Image Helper **/
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+/** contact image **/
+
+#contact-dashboard-top-nav{
+	width: 34px;
+	height: 34px;
+	overflow: hidden;
+	z-index: 5;
+	border-radius: 50%;
+	box-shadow: 0 16px 38px -12px rgba(0,0,0,.56),0 4px 25px 0 rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2);
+	margin-top: -3px;
+	top: 0;
+	position: relative;
+	margin-right: 3px;
+}
+
+/** Table for Transactions **/
+
+table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::before {
+    top: 2px;
+    right: 1em;
+    content: "\2191";
+}
+
+
+table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc_disabled::after {
+
+    top: 2px;
+    right: .5em;
+    content: "\2193";
+
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    max-width: none;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_desc_disabled {
+    cursor: pointer;
+    position: relative;
+}
+
+table.dataTable thead .sorting::after, table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::after, table.dataTable thead .sorting_desc_disabled::before {
+    position: absolute;
+    bottom: .9em;
+    display: block;
+    opacity: .3;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right;
+}
+
+div.dataTables_wrapper div.dataTables_length label {
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+}
+
+ select.form-control-sm:not([size]):not([multiple]) {
+    height: calc(2.125rem + 2px);
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    width: auto;
+    display: inline-block;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: .85em;
+    white-space: nowrap;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    margin: 2px 0;
+    white-space: nowrap;
+    justify-content: flex-end;
+}
+
+.pagination > .page-item.active > a, .pagination > .page-item.active > a:focus, .pagination > .page-item.active > a:hover, .pagination > .page-item.active > span, .pagination > .page-item.active > span:focus, .pagination > .page-item.active > span:hover {
+    background-color: #9c27b0;
+    border-color: #9c27b0;
+    color: #fff;
+    box-shadow: 0 4px 5px 0 rgba(156,39,176,.14),0 1px 10px 0 rgba(156,39,176,.12),0 2px 4px -1px rgba(156,39,176,.2);
+}
+
+.material-datatables .dataTables_paginate .pagination .paginate_button .page-link {
+    padding: 0 5px;
+    margin: 0;
+}
+
+.pagination > .page-item > .page-link, .pagination > .page-item > span {
+    border: 0;
+        border-top-color: currentcolor;
+        border-right-color: currentcolor;
+        border-bottom-color: currentcolor;
+        border-left-color: currentcolor;
+    border-radius: 30px !important;
+    transition: all .3s;
+    padding: 0 11px;
+    margin: 0 3px;
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: #999;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: transparent;
+        background-color: transparent;
+    text-align: center;
+}
+
+/** Button CSS**/
+.button-right {
+	float: right;
+}

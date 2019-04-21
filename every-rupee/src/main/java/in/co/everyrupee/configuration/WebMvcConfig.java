@@ -25,61 +25,64 @@ import in.co.everyrupee.utils.RegexUtils;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
-    LoggerInterceptor loggerInterceptor;
+	public static final String LANG = "lang";
+	public static final String MESSAGES = "messages";
 
-    /**
-     * sec:authorize in HTML to function appropriately along with Thymeleaf
-     * springsecurity5
-     * 
-     * @return
-     */
-    @Bean
-    public SpringSecurityDialect springSecurityDialect() {
-	return new SpringSecurityDialect();
-    }
+	@Autowired
+	LoggerInterceptor loggerInterceptor;
 
-    /**
-     * Creates a new RegexUtils for Profileservice
-     * 
-     * @return
-     */
-    @Bean
-    public RegexUtils regexUtils() {
-	return new RegexUtils();
-    }
+	/**
+	 * sec:authorize in HTML to function appropriately along with Thymeleaf
+	 * springsecurity5
+	 * 
+	 * @return
+	 */
+	@Bean
+	public SpringSecurityDialect springSecurityDialect() {
+		return new SpringSecurityDialect();
+	}
 
-    /**
-     * Adding a logger interceptor to set the name of the log file
-     */
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-	final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-	localeChangeInterceptor.setParamName("lang");
-	registry.addInterceptor(localeChangeInterceptor);
-	registry.addInterceptor(loggerInterceptor);
-    }
+	/**
+	 * Creates a new RegexUtils for Profileservice
+	 * 
+	 * @return
+	 */
+	@Bean
+	public RegexUtils regexUtils() {
+		return new RegexUtils();
+	}
 
-    // beans
+	/**
+	 * Adding a logger interceptor to set the name of the log file
+	 */
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		final LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+		localeChangeInterceptor.setParamName(LANG);
+		registry.addInterceptor(localeChangeInterceptor);
+		registry.addInterceptor(loggerInterceptor);
+	}
 
-    @Bean
-    public LocaleResolver localeResolver() {
-	final CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
-	cookieLocaleResolver.setDefaultLocale(Locale.ENGLISH);
-	return cookieLocaleResolver;
-    }
+	// beans
 
-    /**
-     * Start Using Locale and Set up a default messages.properties file
-     * 
-     * @return
-     */
-    @Bean
-    public ResourceBundleMessageSource messageSource() {
-	ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-	source.setBasename("messages");
-	source.setCacheSeconds(3600); // Refresh cache once per hour.
-	return source;
-    }
+	@Bean
+	public LocaleResolver localeResolver() {
+		final CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
+		cookieLocaleResolver.setDefaultLocale(Locale.ENGLISH);
+		return cookieLocaleResolver;
+	}
+
+	/**
+	 * Start Using Locale and Set up a default messages.properties file
+	 * 
+	 * @return
+	 */
+	@Bean
+	public ResourceBundleMessageSource messageSource() {
+		ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+		source.setBasename(MESSAGES);
+		source.setCacheSeconds(3600); // Refresh cache once per hour.
+		return source;
+	}
 
 }

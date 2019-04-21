@@ -225,6 +225,11 @@
 	background-size: 37px auto;	
 }
 
+/** Button CSS**/
+.button-right {
+	float: right;
+}
+
 /* Desktop only */
 @media (min-width: 1281px) {
 
