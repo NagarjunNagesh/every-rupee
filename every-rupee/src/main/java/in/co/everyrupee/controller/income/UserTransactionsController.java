@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
+import in.co.everyrupee.service.income.IUserTransactionService;
 
 /**
  * Manage API User Transactions
@@ -36,13 +36,16 @@ public class UserTransactionsController {
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
 
+    @Autowired
+    IUserTransactionService userTransactionService;
+
     // Get a Single User Transaction
-    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
-    public List<UserTransaction> getUserTransactionByUserId(@PathVariable String customerId) {
-	Integer userId = Integer.parseInt(customerId);
-	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(userId);
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public List<UserTransaction> getUserTransactionByUserId() {
+	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(user.getId());
 	if (CollectionUtils.isEmpty(userTransactions)) {
-	    throw new ResourceNotFoundException("FinancialPortfolio", "customerId", customerId);
+	    throw new ResourceNotFoundException("UserTransactions", "userId", user.getId());
 	}
 	return userTransactions;
     }
@@ -51,21 +54,7 @@ public class UserTransactionsController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public UserTransaction update(@RequestBody MultiValueMap<String, String> formData) {
 
-	if (CollectionUtils.isEmpty(formData.get("amount")) || CollectionUtils.isEmpty(formData.get("description"))) {
-	    throw new ResourceNotFoundException("FinancialPortfolio", "formData", formData);
-	}
-
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	UserTransaction userTransaction = new UserTransaction();
-	Integer amount = Integer.parseInt(formData.get("amount").get(0));
-	userTransaction.setUserId(user.getId());
-	userTransaction.setDescription(formData.get("description").get(0));
-	userTransaction
-		.setCategory(CollectionUtils.isNotEmpty(formData.get("category")) ? formData.get("category").get(0)
-			: GenericConstants.EMPTY_CHARACTER);
-	userTransaction.setAmount(amount);
-
-	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
+	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData);
 	return userTransactionResponse;
     }
 
@@ -73,7 +62,7 @@ public class UserTransactionsController {
     @RequestMapping(value = "/{transactionId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUserTransactionById(@PathVariable String transactionId) {
 	UserTransaction userTransaction = userTransactionsRepository.findById(transactionId)
-		.orElseThrow(() -> new ResourceNotFoundException("FinancialPortfolio", "customerId", transactionId));
+		.orElseThrow(() -> new ResourceNotFoundException("UserTransactions", "customerId", transactionId));
 
 	userTransactionsRepository.delete(userTransaction);
 

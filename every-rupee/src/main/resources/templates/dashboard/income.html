@@ -45,101 +45,8 @@
                           <th class="text-right">Budgeted</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <td class="text-center">1</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="" checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td>Moleskine Agenda</td>
-                          <td><div id="productsJson"></div></td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 49</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 1,225</td>
-                        </tr>
-                        <tr>
-                          <td class="text-center">2</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="" checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td>Stabilo Pen</td>
-                          <td>Stabilo Pen</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 10</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 300</td>
-                        </tr>
-                        <tr>
-                          <td class="text-center">3</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="" checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td>A4 Paper Pack</td>
-                          <td>A4 Paper Pack</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 10.99</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 109</td>
-                        </tr>
-                        <tr>
-                          <td class="text-center">4</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td>Apple iPad</td>
-                          <td>Apple iPad</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 499.00</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 4,990</td>
-                        </tr>
-                        <tr>
-                          <td class="text-center">5</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                              </label>
-                            </div>
-                          </td>
-                          <td>Apple iPhone</td>
-                          <td>Apple iPhone</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 599.00</td>
-                          <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 5,999</td>
-                        </tr>
-                        <tr>
-                          <td colspan="4"></td>
-                          <td class="td-total">
-                            Total
-                          </td>
-                          <td class="td-price">
-                            <small><span th:text="#{message.currencySumbol}"></span></small>12,999
-                          </td>
-                        </tr>
+                      <tbody id="productsJson">
+                        <!-- Filled with Javascript dynamically -->
                       </tbody>
                     </table>
                   </div>
@@ -208,5 +115,6 @@
   <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
   <!-- Loads the custom class for every rupee -->
   <script defer src="../js/dashboard/income/transactions.js" th:src="@{/js/dashboard/income/transactions.js}" type="text/javascript"></script>
+  
 </body>
 </html>
