@@ -30,7 +30,6 @@ window.onload = function () {
 			document.getElementById("settings-dashboard-sidebar").classList.add('active');
 		}
 		
-		
 	});
 }
  

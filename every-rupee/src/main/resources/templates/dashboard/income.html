@@ -31,10 +31,11 @@
                   <div class="span4 proj-div" data-toggle="modal" data-target="#GSCCModal">
                   	<button class="btn btn-primary btn-raised button-right">Add Transactions</button>
                   </div>
+                  <button id="manageTransactionButton" class="btn btn-primary btn-raised button-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction" onClick="deleteTransactions()">Delete Transactions</button>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table id="eventsTable" class="table table-striped">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>

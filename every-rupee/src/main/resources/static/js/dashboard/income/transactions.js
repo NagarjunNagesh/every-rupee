@@ -57,6 +57,8 @@ $(document).ready(function(){
 		// Clear the div before appending
 		$(replaceTransactionsDiv).empty();
 		fetchJSONForTransactions();
+		// Clear form input fields inside the modal
+		$('#transactionsForm').get(0).reset();
 		
 	});
 	
@@ -72,35 +74,35 @@ $(document).ready(function(){
 	}
 	
 	// Building a HTML table for transactions
-	// Example :
-	//	<tr>
-	//    <td class="text-center">1</td>
-	//    <td>
-	//      <div class="form-check">
-	//        <label class="form-check-label">
-	//          <input class="form-check-input" type="checkbox" value="" checked>
-	//          <span class="form-check-sign">
-	//            <span class="check"></span>
-	//          </span>
-	//        </label>
-	//      </div>
-	//    </td>
-	//    <td>Moleskine Agenda</td>
-	//    <td><div id="productsJson"></div></td>
-	//    <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 49</td>
-	//    <td class="text-right"><span th:text="#{message.currencySumbol}"></span> 1,225</td>
-	//  </tr>
 	function createTableRows(userTransactionData, index){
 		var tableRows = '';
 		
-			tableRows += '<tr><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox" value="">';
+			tableRows += '<tr><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
 			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + userTransactionData.description + '</td>';
 			tableRows += '<td>' + userTransactionData.category + '</td>';
 			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>'; // TODO  have to be replaced with budget
+			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>';
+			// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
+	}
+	
+	// Disable Button if no check box is clicked and vice versa
+	$( "tbody" ).on( "click", ".number" ,function() {
+	  if($( ".number:checked" ).length > 0)
+	  {
+	    $('#manageTransactionButton').prop('disabled', false);
+	  }
+	  else
+	  {
+	    $('#manageTransactionButton').prop('disabled', true);
+	  }  
+	});
+	
+	// Delete transactions on click
+	function deleteTransactions(){
+		// TODO delete the checked transactions
 	}
 	
 });
