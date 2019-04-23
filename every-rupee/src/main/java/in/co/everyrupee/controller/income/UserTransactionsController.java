@@ -1,6 +1,3 @@
-/**
- * 
- */
 package in.co.everyrupee.controller.income;
 
 import java.util.List;
@@ -33,6 +30,8 @@ import in.co.everyrupee.service.income.IUserTransactionService;
 @RequestMapping("/api/transactions")
 public class UserTransactionsController {
 
+    // TODO secure the API endpoints
+
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
 
@@ -59,14 +58,11 @@ public class UserTransactionsController {
     }
 
     // Delete a User Transaction
-    @RequestMapping(value = "/{transactionId}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUserTransactionById(@PathVariable String transactionId) {
-	UserTransaction userTransaction = userTransactionsRepository.findById(transactionId)
-		.orElseThrow(() -> new ResourceNotFoundException("UserTransactions", "customerId", transactionId));
+    @RequestMapping(value = "/{transactionIds}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUserTransactionById(@PathVariable String transactionIds) {
 
-	userTransactionsRepository.delete(userTransaction);
+	userTransactionService.deleteUserTransactions(transactionIds);
 
 	return ResponseEntity.ok().build();
     }
-
 }

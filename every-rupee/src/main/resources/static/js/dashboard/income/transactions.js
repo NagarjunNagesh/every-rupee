@@ -90,19 +90,51 @@ $(document).ready(function(){
 	
 	// Disable Button if no check box is clicked and vice versa
 	$( "tbody" ).on( "click", ".number" ,function() {
-	  if($( ".number:checked" ).length > 0)
-	  {
-	    $('#manageTransactionButton').prop('disabled', false);
-	  }
-	  else
-	  {
-	    $('#manageTransactionButton').prop('disabled', true);
-	  }  
+		manageDeleteTransactionsButton()
 	});
 	
 	// Delete transactions on click
-	function deleteTransactions(){
-		// TODO delete the checked transactions
-	}
+	 $("#deleteTransaction").click(function(){
+		// Check all check boxes by default
+        var transactionIds = [];
+
+        $.each($("input[type=checkbox]:checked"), function(){   
+        	// To remove the select all check box values
+        	if($(this).val() != "on"){
+        		transactionIds.push($(this).val());
+        	}
+        });
+
+        transactionIds.join(", ")
+        
+        jQuery.ajax({
+            url: transactionAPIUrl + transactionIds,
+            type: 'DELETE',
+            success: function(data) {
+            	// Clear the div before appending
+        		$(replaceTransactionsDiv).empty();
+            	fetchJSONForTransactions();
+            	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
+            }
+        });
+	});
 	
+	// Select all check boxes for Transactions
+	$("#checkAll").click(function () {
+		$('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+		manageDeleteTransactionsButton();
+	});
+	
+	// Function to enable of disable the delete transactions button
+	function manageDeleteTransactionsButton(){
+		if($( ".number:checked" ).length > 0)
+		  {
+		    $('#manageTransactionButton').prop('disabled', false);
+		  }
+		  else
+		  {
+		    $('#manageTransactionButton').prop('disabled', true);
+		  }  
+	}
+	 
 });

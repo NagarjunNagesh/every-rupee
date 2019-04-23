@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,12 @@ import in.co.everyrupee.security.LoginAttemptService;
 import in.co.everyrupee.utils.RegexUtils;
 
 /**
+ * Handle requests related to user registration and login
+ * 
  * @author Nagarjun Nagesh
  *
  */
+@Transactional
 @Service("profileService")
 public class ProfileService {
 

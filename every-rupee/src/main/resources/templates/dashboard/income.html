@@ -31,7 +31,9 @@
                   <div class="span4 proj-div" data-toggle="modal" data-target="#GSCCModal">
                   	<button class="btn btn-primary btn-raised button-right">Add Transactions</button>
                   </div>
-                  <button id="manageTransactionButton" class="btn btn-primary btn-raised button-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction" onClick="deleteTransactions()">Delete Transactions</button>
+                  <div class="span4 proj-div" data-toggle="modal" data-target="#GSCCModalDelete">
+                  	<button id="manageTransactionButton" class="btn btn-danger button-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -39,7 +41,17 @@
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th></th>
+                          <th>
+                          	<div class="form-check">
+                          		<label class="form-check-label">
+                          		<input type="checkbox" class="form-check-input" id="checkAll">
+									<span class="form-check-sign">
+										<span class="check">
+										</span>
+									</span>
+								</label>
+							</div>
+						  </th>
                           <th>Description</th>
                           <th>Category</th>
                           <th class="text-right">Amount</th>
@@ -112,6 +124,26 @@
 	    </div>
 	  </div>
 	</div>
+	
+	 <!-- Delete Transaction Modal -->
+	  <div id="GSCCModalDelete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		 <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<h4 class="modal-title" id="myModalLabel">Delete Selected Transactions</h4>
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;  </button>
+		      </div>
+		      <div class="modal-body text-center">
+			      Are you sure?
+			   </div>
+			      <div class="modal-footer">
+			      	<button id="deleteTransaction" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+			        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+			      </div>
+		    </div>
+		  </div>
+		</div>
+  
   
   <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
   <!-- Loads the custom class for every rupee -->
