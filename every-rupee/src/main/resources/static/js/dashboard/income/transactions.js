@@ -137,5 +137,7 @@ $(document).ready(function(){
 		    $('#manageTransactionButton').prop('disabled', true);
 		  }  
 	}
+	
+	$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 	 
 });

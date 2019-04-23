@@ -5,7 +5,7 @@
 	    Income
 	  </title>
 	  <object th:include="dashboard/dashboard-fragments/dashboard-head :: dashboard-head" th:remove="tag" ></object>
-	  <script async defer src="https://buttons.github.io/buttons.js"></script>
+	  <link href="../css/plugins/bootstrap-datetimepicker.min.css" rel="stylesheet" th:href="@{/css/plugins/bootstrap-datetimepicker.min.css}">
 </head>
 
 
@@ -21,6 +21,13 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
+          	<div class="col-md-10 col-sm-10 ml-auto mr-auto">
+          		<div class="card">
+          			<div class="card-body text-center">
+          				    <input size="16" type="text" value="2012-06-15 14:45" readonly class="form_datetime">
+          			</div>
+          		</div>
+          	</div>
 			<div class="col-md-9 col-sm-9">
               <div class="card">
                 <div class="card-header card-header-rose card-header-icon">
@@ -146,6 +153,6 @@
   <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
   <!-- Loads the custom class for every rupee -->
   <script defer src="../js/dashboard/income/transactions.js" th:src="@{/js/dashboard/income/transactions.js}" type="text/javascript"></script>
-  
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
