@@ -115,6 +115,7 @@ $(document).ready(function(){
         		$(replaceTransactionsDiv).empty();
             	fetchJSONForTransactions();
             	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
+            	manageDeleteTransactionsButton() // disable the delete transactions button
             }
         });
 	});
