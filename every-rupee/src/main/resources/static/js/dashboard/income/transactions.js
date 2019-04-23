@@ -138,6 +138,36 @@ $(document).ready(function(){
 		  }  
 	}
 	
-	$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-	 
+	// Build calendar for transaction
+	$('#calendar').append(appendMonths());
+	
+	function appendMonths() {
+		var content = '';
+		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		months.forEach(function(entry) {
+			content += '<div class="month col-md-2 col-sm-2 ml-auto mr-auto"><div class="card"><div class="card-body text-center">';
+			content += entry;
+			content += '</div></div></div>';
+		});
+		
+		return content;
+	}
+	
+	$("#calendar .month").slice(0,3).show();
+
+	$(".more").click(function(event) {
+	    
+	    var items = $('#calendar .month:visible').hide().last();
+	    
+	    var nextItems = items.nextAll().slice(0, 3);
+	    
+	    if (nextItems.length === 0) {
+	        nextItems = $("#calendar .month").slice(0, 3);
+	    }
+	    
+	    nextItems.show();
+	    
+	    e.preventDefault();
+	});
+	
 });
