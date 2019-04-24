@@ -216,23 +216,36 @@
         border-right-color: currentcolor;
         border-bottom-color: currentcolor;
         border-left-color: currentcolor;
-    border-radius: 30px !important;
-    transition: all .3s;
-    padding: 0 11px;
-    margin: 0 3px;
-    min-width: 30px;
-    height: 30px;
-    line-height: 30px;
-    color: #999;
-    font-weight: 400;
-    font-size: 12px;
-    text-transform: uppercase;
-    background: transparent;
-        background-color: transparent;
-    text-align: center;
+	    border-radius: 30px !important;
+	    transition: all .3s;
+	    padding: 0 11px;
+	    margin: 0 3px;
+	    min-width: 30px;
+	    height: 30px;
+	    line-height: 30px;
+	    color: #999;
+	    font-weight: 400;
+	    font-size: 12px;
+	    text-transform: uppercase;
+	    background: transparent;
+	    background-color: transparent;
+	    text-align: center;
 }
 
 /** Button CSS**/
 .button-right {
 	float: right;
 }
+
+/** Align at absolute center **/
+.prevMonths, .nextMonths {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.prevMonths > i, .nextMonths > i {
+	font-size: 60px;
+}
+

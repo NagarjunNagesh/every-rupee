@@ -153,11 +153,16 @@ $(document).ready(function(){
 		return content;
 	}
 	
-	$("#calendar .month").slice(0,3).show();
-
-	$(".more").click(function(event) {
-	    
-	    var items = $('#calendar .month:visible').hide().last();
+	// Loop forward when clicking on more
+	$(".nextMonths").click(function(event) {
+		loopForwardThroughMonths(event);
+	});
+	
+	// Hide the other months and show only the first three
+	showFirstThreeMonths();
+	
+	function loopForwardThroughMonths(event){
+		var items = $('#calendar .month:visible').hide().last();
 	    
 	    var nextItems = items.nextAll().slice(0, 3);
 	    
@@ -167,7 +172,30 @@ $(document).ready(function(){
 	    
 	    nextItems.show();
 	    
-	    e.preventDefault();
+	    event.preventDefault();
+	}
+	
+	function showFirstThreeMonths(){
+		$('#calendar .month:visible').hide().last();
+		$("#calendar .month").slice(0, 3).show();
+	}
+	
+	// Loop previous months when clicking on prevMonths
+	$(".prevMonths").click(function(event) {
+		loopBackwardsThroughMonths(event);
 	});
+	
+	function loopBackwardsThroughMonths(event){
+		var items = $('#calendar .month:visible').hide().first();
+		var prevItems = items.prevAll().slice(0, 3);
+
+       if (prevItems.length === 0) {
+           prevItems = $("#calendar .month").slice($("#calendar .month").length-3, $("#calendar .month").length);
+       }
+
+       prevItems.show();
+	    
+	    event.preventDefault();
+	}
 	
 });
