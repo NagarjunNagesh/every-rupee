@@ -93,33 +93,6 @@ $(document).ready(function(){
 		manageDeleteTransactionsButton()
 	});
 	
-	// Delete transactions on click
-	 $("#deleteTransaction").click(function(){
-		// Check all check boxes by default
-        var transactionIds = [];
-
-        $.each($("input[type=checkbox]:checked"), function(){   
-        	// To remove the select all check box values
-        	if($(this).val() != "on"){
-        		transactionIds.push($(this).val());
-        	}
-        });
-
-        transactionIds.join(", ")
-        
-        jQuery.ajax({
-            url: transactionAPIUrl + transactionIds,
-            type: 'DELETE',
-            success: function(data) {
-            	// Clear the div before appending
-        		$(replaceTransactionsDiv).empty();
-            	fetchJSONForTransactions();
-            	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
-            	manageDeleteTransactionsButton() // disable the delete transactions button
-            }
-        });
-	});
-	
 	// Select all check boxes for Transactions
 	$("#checkAll").click(function () {
 		$('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
@@ -145,7 +118,7 @@ $(document).ready(function(){
 		var content = '';
 		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		months.forEach(function(entry) {
-			content += '<div class="month col-md-2 col-sm-2 ml-auto mr-auto"><div class="card"><div class="card-body text-center">';
+			content += '<div class="month col-md-3 col-sm-3 ml-auto mr-auto"><div class="card"><div class="card-body text-center">';
 			content += entry;
 			content += '</div></div></div>';
 		});
@@ -198,4 +171,62 @@ $(document).ready(function(){
 	    event.preventDefault();
 	}
 	
+	// Swal Sweetalerts
+	popup = {
+			showSwal: function(type) {
+				// Delete transactions On click
+				if (type == 'warning-message-and-confirmation') {
+					 swal({
+			                title: 'Are you sure?',
+			                text: 'You will not be able to recover these transactions!',
+			                type: 'warning',
+			                showCancelButton: true,
+			                confirmButtonText: 'Yes, delete it!',
+			                cancelButtonText: 'No, keep it',
+			                confirmButtonClass: "btn btn-success",
+			                cancelButtonClass: "btn btn-danger",
+			                buttonsStyling: false,
+			                closeOnCancel: true,
+			            }).then(function(result) {
+			            	
+			            	 if (result.value) {
+			             		// Check all check boxes by default
+			                     var transactionIds = [];
+
+			                     $.each($("input[type=checkbox]:checked"), function(){   
+			                     	// To remove the select all check box values
+			                     	if($(this).val() != "on"){
+			                     		transactionIds.push($(this).val());
+			                     	}
+			                     });
+
+			                     transactionIds.join(", ")
+			                     
+			                     jQuery.ajax({
+			                         url: transactionAPIUrl + transactionIds,
+			                         type: 'DELETE',
+			                         success: function(data) {
+			                         	// Clear the div before appending
+			                     		$(replaceTransactionsDiv).empty();
+			                         	fetchJSONForTransactions();
+			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
+			                         	manageDeleteTransactionsButton() // disable the delete transactions button
+			                         }
+			                     });
+			             	
+			                	 swal({
+			                         title: "Deleted!",
+			                         text: "Successfully deleted the selected transactions",
+			                         type: 'success',
+			                         timer: 1000,
+			                         showConfirmButton: false
+			                     }).catch(swal.noop)
+			                 }
+			            });
+			    } 
+			}
+	}
+
+	
 });
+
