@@ -28,13 +28,13 @@
 		                    <i id="font-25" class="fa fa-calendar" aria-hidden="true"></i>
 		                  </div>
 		             </div>
-		             <div class="card-body">
+		             <div class="padding-top-0 card-body">
 	          			<div class="container">
 	    					<div class="row">
 	    						<!-- Dynamically generate table contents -->
-	    						<div class="col-md-1 ml-auto mr-auto"><a class="prevMonths" href="#"><i class="material-icons">arrow_left</i></a></div>
+	    						<div class="col-md-1 ml-auto mr-auto"><a class="prevMonths green-icon" href="#"><i class="material-icons">arrow_left</i></a></div>
 	    						<div id="calendar" class="row col-md-10 ml-auto mr-auto"></div>
-	    						<div class="col-md-1 ml-auto mr-auto"><a class="nextMonths" href="#"><i class="material-icons">arrow_right</i></a></div>
+	    						<div class="col-md-1 ml-auto mr-auto"><a class="nextMonths green-icon" href="#"><i class="material-icons">arrow_right</i></a></div>
 	    					</div>
 	    				</div>
 	    			 </div>
@@ -47,9 +47,10 @@
                     <i class="material-icons">assignment</i>
                   </div>
                   <h4 class="card-title">Transactions</h4>
-                  <div class="span4 proj-div" data-toggle="modal" data-target="#GSCCModal">
-                  	<button class="btn btn-primary btn-raised button-right">Add Transactions</button>
-                  </div>
+                  <div id="showcase_table"><div id="showcase_cell">
+					<div class="bounce_in_animation">Hello world.</div>
+					</div></div>
+				  <button type="button" class="btn btn-primary btn-raised button-right" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
                   <button id="manageTransactionButton" class="btn btn-danger button-right" onclick="popup.showSwal('warning-message-and-confirmation')" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
                 </div>
                 <div class="card-body">
@@ -102,24 +103,27 @@
         </div>
       </div>
       
-      <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer">&copy; 2019 EveryRupee</div>
-      
     </div>
   </div>
   
-  <!-- Add Transaction Modal -->
-  <div id="GSCCModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	 <div class="modal-dialog">
+	<!-- Vertically Centered Modal -->
+	<div class="modal fade" id="GSCCModal" tabindex="-1" role="dialog" aria-labelledby="GSCCModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
 	    <div class="modal-content">
-	      <div class="modal-header">
-	      	<h4 class="modal-title" id="myModalLabel">Add Transactions</h4>
-	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;  </button>
+	      <div class="modal-header border-bottom-0 padding-bottom-none">
+              <div class="modal-card-icon">
+                <i class="material-icons">input</i>
+              </div>
+	        <h4 class="modal-title" id="myModalLabel">Add Transactions</h4>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
 	      </div>
 	      <div class="modal-body">
-		      <form autocomplete="off" id="transactionsForm" action="#" method="post" class="form-inline" role="form" >
+	        <form autocomplete="off" id="transactionsForm" action="#" method="post" role="form" >
 			      		<div class="form-group bmd-form-group">
 			      			<label class="bmd-label-floating" for="description">Description</label>
-			      			<input id="description" name="description" type="text" class="form-control" />
+			      			<input id="description" name="description" type="text" class="form-control" required/>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
 			      			<label class="bmd-label-floating" for="category">Category</label>
@@ -127,22 +131,20 @@
 			      		</div>
 			      		<div class="form-group bmd-form-group">
 			      			<label class="bmd-label-floating" for="amount">Amount</label>
-			      			<input id="amount" name="amount" type="number" class="form-control" />
-			      		</div>
-			      		<div class="form-group">
-			      			<button type="submit" class="btn btn-primary"><i class="material-icons">add_circle_outline</i></button>
+			      			<input id="amount" name="amount" type="number" class="form-control small-input" required/>
 			      		</div>
 			  </form>
-			  <span id="errorMessage" style="font-size: 20; color: #FF1C19;" th:utext="${errorMessage}"></span>
-		   </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		      </div>
+			  <span id="successMessage" th:utext="${successMessage}"></span>
+			  <span id="errorMessage" th:utext="${errorMessage}"></span>
+	      </div>
+	      <div class="modal-footer border-top-0 d-block padding-top-none">
+	      	<button type="submit" class="btn btn-primary" form="transactionsForm">Add Transaction</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
 	    </div>
 	  </div>
 	</div>
 	
-  
   <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
   <!-- Loads the custom class for every rupee -->
   <script defer src="../js/dashboard/income/transactions.js" th:src="@{/js/dashboard/income/transactions.js}" type="text/javascript"></script>

@@ -28,6 +28,24 @@ public class UserTransactionService implements IUserTransactionService {
     UserTransactionsRepository userTransactionsRepository;
 
     /**
+     * fetches User Transactions for a particular user
+     * 
+     * @param formData
+     * @return
+     */
+    @Override
+    public List<UserTransaction> fetchUserTransaction() {
+
+	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(user.getId());
+
+	if (CollectionUtils.isEmpty(userTransactions)) {
+	    throw new ResourceNotFoundException("UserTransactions", "userId", user.getId());
+	}
+	return userTransactions;
+    }
+
+    /**
      * Save User Transaction to the database
      * 
      * @param formData

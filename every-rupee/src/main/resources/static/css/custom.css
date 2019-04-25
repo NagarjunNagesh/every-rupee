@@ -230,6 +230,14 @@
 	float: right;
 }
 
+/** Disable button cursor for disabled buttons **/
+.btn[disabled]{
+  cursor:default;
+}
+.btn:not([disabled]) +label {
+  cursor:pointer;
+}
+
 /* Desktop only */
 @media (min-width: 1281px) {
 

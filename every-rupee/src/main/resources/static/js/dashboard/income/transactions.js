@@ -9,10 +9,17 @@ $(document).ready(function(){
 	var transactionAPIUrl = window.location.origin + "/api/transactions/";
 	var saveTransactionsUrl = "/api/transactions/save";
 	var replaceTransactionsDiv = "#productsJson";
-	
+	// Used to refresh the transactions only if new ones are added
+	var resiteredNewTransaction = false;
+	// Divs for error message while adding transactions
+	var errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
+	// Divs for success message while adding transactions
+	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
+	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
 	
+	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
 		registerTransaction(event);
 	});
@@ -20,18 +27,19 @@ $(document).ready(function(){
 	function registerTransaction(event){
 	   event.preventDefault();
 	   event.stopImmediatePropagation(); // necessary to prevent submitting the form twice
+	   $("#successMessage").html("").hide();
 	   $("#errorMessage").html("").hide();
 	   var formValidation = true;
 		
 	   var description = $("#description").val();
 	   if(description == null || description == ''){
-		   $("#errorMessage").show().html("description field is empty <br/>");
+		   fadeoutMessage('#errorMessage',errorAddingTransactionDiv + 'Description field is empty.</p></div> <br/>',2000);
 		   formValidation = false;
 	   }
 	   
 	   var amount = $("#amount").val();
 	   if(amount == null || amount == ''){
-		   $("#errorMessage").show().append("amount field is empty <br/>");
+		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Amount field is empty.</p></div> <br/>',2000);
 		   formValidation = false;
 	   }
 	   
@@ -41,29 +49,48 @@ $(document).ready(function(){
 	   
 		var formData= $('#transactionsForm').serialize();
 	    $.post(saveTransactionsUrl,formData ,function(data){
-	        if(data.message == "success"){
-	        }
 	        
 	    })
 	    .done(function(data) {
-	    	 if(data.message == "success"){
-		        }
+	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
+	    	let path = document.querySelector(".tick");
+	    	let length = path.getTotalLength();
+	    	resiteredNewTransaction=true;
 	    })
-	    .fail(function(data) {});
+	    .fail(function(data) {
+	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
+	    	resiteredNewTransaction=true;
+	    });
+	}
+	
+	// Use this function to fade the message out
+	function fadeoutMessage(divId, message, milliSeconds){
+		$(divId).show().append(message);
+    	setTimeout(function() {
+    		$(divId).fadeOut();
+    	}, milliSeconds);
 	}
 	
 	// refresh the transactions page on closing the modal
 	$('#GSCCModal').on('hidden.bs.modal', function () {
-		// Clear the div before appending
-		$(replaceTransactionsDiv).empty();
-		fetchJSONForTransactions();
-		// Clear form input fields inside the modal
+		// Clear form input fields inside the modal and the error or success messages.
 		$('#transactionsForm').get(0).reset();
+		$("#successMessage").html("").hide();
+		$("#errorMessage").html("").hide();
 		
+		if(resiteredNewTransaction) {
+			// Clear the div before appending
+			$(replaceTransactionsDiv).empty();
+			fetchJSONForTransactions();
+			// Disable delete Transactions button on refreshing the transactions
+			manageDeleteTransactionsButton();
+			// Do not refresh the transactions if no new transactions are added
+			resiteredNewTransaction = false;
+		}
 	});
 	
 	function fetchJSONForTransactions(){
-		//Load all user transaction from API
+		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
 			var count = 1;
 		   $.each(result, function(key,value) {
@@ -206,27 +233,36 @@ $(document).ready(function(){
 			                         url: transactionAPIUrl + transactionIds,
 			                         type: 'DELETE',
 			                         success: function(data) {
+			                        	 swal({
+					                         title: "Deleted!",
+					                         text: "Successfully deleted the selected transactions",
+					                         type: 'success',
+					                         timer: 1000,
+					                         showConfirmButton: false
+					                     }).catch(swal.noop)
+			                        	 
 			                         	// Clear the div before appending
 			                     		$(replaceTransactionsDiv).empty();
 			                         	fetchJSONForTransactions();
 			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
-			                         	manageDeleteTransactionsButton() // disable the delete transactions button
+			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
+			                         },
+			                         error: function (thrownError) {
+			                        	 swal({
+					                         title: "Unable to Delete!",
+					                         text: "Please try again",
+					                         type: 'error',
+					                         timer: 1000,
+					                         showConfirmButton: false
+					                     }).catch(swal.noop)
 			                         }
 			                     });
 			             	
-			                	 swal({
-			                         title: "Deleted!",
-			                         text: "Successfully deleted the selected transactions",
-			                         type: 'success',
-			                         timer: 1000,
-			                         showConfirmButton: false
-			                     }).catch(swal.noop)
 			                 }
 			            });
 			    } 
 			}
 	}
-
 	
 });
 
