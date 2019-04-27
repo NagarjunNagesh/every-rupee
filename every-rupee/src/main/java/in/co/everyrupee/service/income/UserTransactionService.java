@@ -63,9 +63,7 @@ public class UserTransactionService implements IUserTransactionService {
 	Integer amount = Integer.parseInt(formData.get("amount").get(0));
 	userTransaction.setUserId(user.getId());
 	userTransaction.setDescription(formData.get("description").get(0));
-	userTransaction
-		.setCategory(CollectionUtils.isNotEmpty(formData.get("category")) ? formData.get("category").get(0)
-			: GenericConstants.EMPTY_CHARACTER);
+	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
 	userTransaction.setAmount(amount);
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);

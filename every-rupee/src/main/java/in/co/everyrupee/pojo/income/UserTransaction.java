@@ -31,8 +31,8 @@ public class UserTransaction implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "category")
-    private String category;
+    @Column(name = "category_id")
+    private int categoryId;
 
     @NotNull
     @Column(name = "user_id")
@@ -58,12 +58,12 @@ public class UserTransaction implements Serializable {
 	this.description = description;
     }
 
-    public String getCategory() {
-	return category;
+    public int getCategoryId() {
+	return categoryId;
     }
 
-    public void setCategory(String category) {
-	this.category = category;
+    public void setCategoryId(int categoryId) {
+	this.categoryId = categoryId;
     }
 
     public int getUserId() {

@@ -27,8 +27,6 @@ import in.co.everyrupee.service.income.IUserTransactionService;
 @RequestMapping("/api/transactions")
 public class UserTransactionsController {
 
-    // TODO secure the API endpoints
-
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
 

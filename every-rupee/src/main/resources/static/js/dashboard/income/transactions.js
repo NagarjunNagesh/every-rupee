@@ -16,6 +16,12 @@ $(document).ready(function(){
 	// Divs for success message while adding transactions
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
+	var fetchCategoriesUrl = "/api/category/";
+	// Store map of categories
+	var categoryMap = {};
+	
+	// Fetch categories and append it to the select options (Load the categories first)
+	fetchJSONForCategories();
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
 	
@@ -93,23 +99,44 @@ $(document).ready(function(){
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
 			var count = 1;
-		   $.each(result, function(key,value) {
-		      $(replaceTransactionsDiv).append(createTableRows(value, count));
-		      count++;
+			var countGrouped = 1;
+			var grouped = _.groupBy(result, 'categoryId');
+		   $.each(grouped, function(key,value) {
+			   $(replaceTransactionsDiv).append(createTableCategoryRows(key, countGrouped));
+			   $.each(value, function(subKey,subValue) {
+				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, countGrouped));
+				   count++;
+			   });
+			   countGrouped++;
 		   }); 
 		});
 	}
 	
 	// Building a HTML table for transactions
-	function createTableRows(userTransactionData, index){
+	function createTableRows(userTransactionData, index, countGrouped){
 		var tableRows = '';
 		
-			tableRows += '<tr><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + userTransactionData.description + '</td>';
-			tableRows += '<td>' + userTransactionData.category + '</td>';
+			tableRows += '<tr class="collapse multi-collapse" id="multiCollapseExample' + countGrouped +'"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
+			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
+			tableRows += '<td>' + userTransactionData.description + '</td>';
 			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>';
+			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td></tr>';
 			// TODO  have to be replaced with budget
+		
+		return tableRows;
+		
+	}
+	
+	// TODO collapsable display multiple rows
+	// Building a HTML table for category header for transactions
+	function createTableCategoryRows(categoryId, countGrouped){
+		var tableRows = '';
+		
+			tableRows += '<tr data-toggle="collapse" href="#multiCollapseExample' + countGrouped + '" role="button" aria-expanded="false" aria-controls="multiCollapseExample' + countGrouped + '"><td class="text-center">' + '' + '</td><td>' + '';
+			tableRows += '</td><td>' + categoryMap[categoryId] + '</td>';
+			tableRows += '<td>' + '' + '</td>';
+			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td>';
+			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		
 		return tableRows;
 		
@@ -263,6 +290,27 @@ $(document).ready(function(){
 			    } 
 			}
 	}
+
+	// Load all categories from API
+	function fetchJSONForCategories(){
+		$.getJSON(fetchCategoriesUrl , function(result){
+			var count = 1;
+		   $.each(result, function(key,value) {
+		      $("#categoryOptions").append(createCategoryOption(value, count));
+		      count++;
+		   }); 
+		});
+	}
+	
+	// Create Category Options
+	function createCategoryOption(categoryData, index) {
+		var catgorySelectOptions = '';
+		categoryMap[categoryData.categoryId] = categoryData.categoryName;
+		catgorySelectOptions += '<option class="dropdown-menu inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
+		
+		return catgorySelectOptions;
+	}
+	
 	
 });
 
