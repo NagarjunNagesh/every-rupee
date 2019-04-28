@@ -98,15 +98,22 @@ $(document).ready(function(){
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
-			var count = 1;
-			var countGrouped = 1;
-			var grouped = _.groupBy(result, 'categoryId');
+			let count = 1;
+			let countGrouped = 1;
+			let grouped = _.groupBy(result, 'categoryId');
 		   $.each(grouped, function(key,value) {
+			   let totalCategoryAmount = 0;
+			   // Create category label table row
 			   $(replaceTransactionsDiv).append(createTableCategoryRows(key, countGrouped));
 			   $.each(value, function(subKey,subValue) {
+				   // Create transactions table row
 				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, countGrouped));
+				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
+			   // Load all the total category amount in the category section
+			   let categoryAmountDiv = '#amountCategory'+countGrouped;
+			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + totalCategoryAmount);
 			   countGrouped++;
 		   }); 
 		});
@@ -116,26 +123,25 @@ $(document).ready(function(){
 	function createTableRows(userTransactionData, index, countGrouped){
 		var tableRows = '';
 		
-			tableRows += '<tr class="collapse multi-collapse" id="multiCollapseExample' + countGrouped +'"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
+			tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
 			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
 			tableRows += '<td>' + userTransactionData.description + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + userTransactionData.amount + '</td></tr>';
+			tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + userTransactionData.amount + '</td>';
+			tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + userTransactionData.amount + '</td></tr>';
 			// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
 	}
 	
-	// TODO collapsable display multiple rows
 	// Building a HTML table for category header for transactions
 	function createTableCategoryRows(categoryId, countGrouped){
 		var tableRows = '';
 		
-			tableRows += '<tr data-toggle="collapse" href="#multiCollapseExample' + countGrouped + '" role="button" aria-expanded="false" aria-controls="multiCollapseExample' + countGrouped + '"><td class="text-center">' + '' + '</td><td>' + '';
+			tableRows += '<tr data-toggle="collapse" class="toggle" role="button"><td class="text-center">' + '' + '</td><td>' + '';
 			tableRows += '</td><td>' + categoryMap[categoryId] + '</td>';
 			tableRows += '<td>' + '' + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td>';
+			tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
 			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		
 		return tableRows;
@@ -310,6 +316,11 @@ $(document).ready(function(){
 		
 		return catgorySelectOptions;
 	}
+	
+	// Show or hide multiple rows in the transactions table
+	$( "tbody" ).on( "click", ".toggle" ,function() {
+	  	$('#productsJson .hideableRow').toggleClass('d-none');
+	 });
 	
 	
 });

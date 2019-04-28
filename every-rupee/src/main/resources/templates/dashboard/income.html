@@ -52,7 +52,7 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table id="transactionsTable" class="table table-striped">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -85,13 +85,13 @@
               <div class="card">
                 <div class="card-body text-center">
                 	<h4 class="card-title">Total Budgeted</h4>
-                	<h4 class="card-title">0.00</h4>
+                	<h4 class="card-title"><span id="currentCurrencySymbol" th:text="#{message.currencySumbol}"></span>0.00</h4>
                 	<hr>
                 	<h4 class="card-title">Total Income</h4>
-                	<h4 class="card-title">0.00</h4>
+                	<h4 class="card-title"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 	<hr>
                 	<h4 class="card-title">Total Spent</h4>
-                	<h4 class="card-title">0.00</h4>
+                	<h4 class="card-title"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 </div>
                </div>
             </div>           
