@@ -59,8 +59,6 @@ $(document).ready(function(){
 	    })
 	    .done(function(data) {
 	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
-	    	let path = document.querySelector(".tick");
-	    	let length = path.getTotalLength();
 	    	resiteredNewTransaction=true;
 	    })
 	    .fail(function(data) {
@@ -107,7 +105,7 @@ $(document).ready(function(){
 			   $(replaceTransactionsDiv).append(createTableCategoryRows(key, countGrouped));
 			   $.each(value, function(subKey,subValue) {
 				   // Create transactions table row
-				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, countGrouped));
+				   $(replaceTransactionsDiv).append(createTableRows(subValue, count));
 				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
@@ -120,7 +118,7 @@ $(document).ready(function(){
 	}
 	
 	// Building a HTML table for transactions
-	function createTableRows(userTransactionData, index, countGrouped){
+	function createTableRows(userTransactionData, index){
 		var tableRows = '';
 		
 			tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
@@ -300,16 +298,14 @@ $(document).ready(function(){
 	// Load all categories from API
 	function fetchJSONForCategories(){
 		$.getJSON(fetchCategoriesUrl , function(result){
-			var count = 1;
 		   $.each(result, function(key,value) {
-		      $("#categoryOptions").append(createCategoryOption(value, count));
-		      count++;
+		      $("#categoryOptions").append(createCategoryOption(value));
 		   }); 
 		});
 	}
 	
 	// Create Category Options
-	function createCategoryOption(categoryData, index) {
+	function createCategoryOption(categoryData) {
 		var catgorySelectOptions = '';
 		categoryMap[categoryData.categoryId] = categoryData.categoryName;
 		catgorySelectOptions += '<option class="dropdown-menu inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
