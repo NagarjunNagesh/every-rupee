@@ -197,71 +197,6 @@
 
 /** Table for Transactions **/
 
-table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::before {
-    top: 2px;
-    right: 1em;
-    content: "\2191";
-}
-
-
-table.dataTable thead .sorting::after, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc_disabled::after {
-
-    top: 2px;
-    right: .5em;
-    content: "\2193";
-
-}
-
-table.dataTable {
-    clear: both;
-    margin-top: 6px;
-    margin-bottom: 6px;
-    max-width: none;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_desc_disabled {
-    cursor: pointer;
-    position: relative;
-}
-
-table.dataTable thead .sorting::after, table.dataTable thead .sorting::before, table.dataTable thead .sorting_asc::after, table.dataTable thead .sorting_asc::before, table.dataTable thead .sorting_asc_disabled::after, table.dataTable thead .sorting_asc_disabled::before, table.dataTable thead .sorting_desc::after, table.dataTable thead .sorting_desc::before, table.dataTable thead .sorting_desc_disabled::after, table.dataTable thead .sorting_desc_disabled::before {
-    position: absolute;
-    bottom: .9em;
-    display: block;
-    opacity: .3;
-}
-
-div.dataTables_wrapper div.dataTables_filter {
-    text-align: right;
-}
-
-div.dataTables_wrapper div.dataTables_length label {
-    font-weight: 400;
-    text-align: left;
-    white-space: nowrap;
-}
-
- select.form-control-sm:not([size]):not([multiple]) {
-    height: calc(2.125rem + 2px);
-}
-
-div.dataTables_wrapper div.dataTables_length select {
-    width: auto;
-    display: inline-block;
-}
-
-div.dataTables_wrapper div.dataTables_info {
-    padding-top: .85em;
-    white-space: nowrap;
-}
-
-div.dataTables_wrapper div.dataTables_paginate ul.pagination {
-    margin: 2px 0;
-    white-space: nowrap;
-    justify-content: flex-end;
-}
 
 .pagination > .page-item.active > a, .pagination > .page-item.active > a:focus, .pagination > .page-item.active > a:hover, .pagination > .page-item.active > span, .pagination > .page-item.active > span:focus, .pagination > .page-item.active > span:hover {
     background-color: #9c27b0;
@@ -281,23 +216,180 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
         border-right-color: currentcolor;
         border-bottom-color: currentcolor;
         border-left-color: currentcolor;
-    border-radius: 30px !important;
-    transition: all .3s;
-    padding: 0 11px;
-    margin: 0 3px;
-    min-width: 30px;
-    height: 30px;
-    line-height: 30px;
-    color: #999;
-    font-weight: 400;
-    font-size: 12px;
-    text-transform: uppercase;
-    background: transparent;
-        background-color: transparent;
-    text-align: center;
+	    border-radius: 30px !important;
+	    transition: all .3s;
+	    padding: 0 11px;
+	    margin: 0 3px;
+	    min-width: 30px;
+	    height: 30px;
+	    line-height: 30px;
+	    color: #999;
+	    font-weight: 400;
+	    font-size: 12px;
+	    text-transform: uppercase;
+	    background: transparent;
+	    background-color: transparent;
+	    text-align: center;
 }
 
 /** Button CSS**/
 .button-right {
 	float: right;
 }
+
+/** Align at absolute center **/
+.prevMonths, .nextMonths {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.prevMonths > i, .nextMonths > i {
+	font-size: 60px;
+}
+
+/** set font size header **/
+#font-25 {
+	font-size: 25px;
+}
+
+/** Green Icon **/
+.green-icon, .green-icon:hover, .green-icon:focus{
+	color: #47a44b;
+	font-size: 20 px;
+}
+
+/** Set margin bottom to zero **/
+.margin-bottom-zero {
+	margin-bottom: 0px;
+}
+
+.red-icon {
+	color: #e53935;
+	font-size: 20 px;
+}
+
+.margin-left-five{
+	margin-left:5px;
+}
+
+.modal-card-icon {
+	border-radius: 3px;
+	background-color: #9124a3;
+	border-color: #701c7e;
+	padding: 15px;
+	margin-top: -40px;
+	margin-right: 15px;
+	float: left;
+	box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14), 0 3px 1px -2px rgba(156, 39, 176, 0.2), 0 1px 5px 0 rgba(156, 39, 176, 0.12);
+	box-sizing: border-box;
+	font-size: 25px;
+}
+
+.modal-card-icon > i {
+	width: 33px;
+	height: 33px;
+	text-align: center;
+	line-height: 33px;
+	color: #fff;
+	font-size: 25px;
+}
+
+.padding-top-none {
+	padding-top: 0;
+}
+
+.padding-top-0 {
+	padding-top: 0 !important;
+}
+
+.padding-bottom-none {
+	padding-bottom: 0;
+}
+
+/** Allow only numberic calues for firefox **/
+.small-input {
+  -moz-appearance: textfield;
+}
+.small-input::-webkit-inner-spin-button {
+  display: none;
+}
+.small-input::-webkit-outer-spin-button,
+.small-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/** Disable button cursor for disabled buttons **/
+.btn[disabled]{
+  cursor:default;
+}
+
+.btn:not([disabled]) +label {
+  cursor:pointer;
+}
+
+/** Tick Animation **/
+.tick {
+    stroke-dasharray: 29px;
+    stroke-dashoffset: 29px;
+    animation: draw .5s cubic-bezier(.25, .25, .25, 1) forwards;
+    animation-delay: .6s
+}
+
+.circle {
+    fill-opacity: 0;
+    stroke: #219a00;
+    stroke-width: 16px;
+    transform-origin: center;
+    transform: scale(0);
+    animation: grow 1s cubic-bezier(.25, .25, .25, 1.25) forwards;   
+}
+
+@keyframes grow {
+    60% {
+        transform: scale(.8);
+        stroke-width: 4px;
+        fill-opacity: 0;
+    }
+    100% {
+        transform: scale(.9);
+        stroke-width: 8px;
+        fill-opacity: 1;
+        fill: #219a00;
+    }
+}
+
+@keyframes draw {
+    100% { stroke-dashoffset: 0; }
+}
+
+/** Bounce In Text **/
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.15)
+  }
+  70% {
+    transform: scale(.9)
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+}
+  
+  

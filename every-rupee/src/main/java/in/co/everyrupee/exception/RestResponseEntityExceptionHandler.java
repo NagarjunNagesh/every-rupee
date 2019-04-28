@@ -133,4 +133,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
+    // 401
+    @ExceptionHandler({ SecurityException.class })
+    @ResponseBody
+    public ResponseEntity<Object> handleSecurityException(final RuntimeException ex, final WebRequest request) {
+	logger.error("401 Status Code", ex);
+	final GenericResponse bodyOfResponse = new GenericResponse(
+		messages.getMessage("message.unauth", null, request.getLocale()), "Unauthorized");
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
 }

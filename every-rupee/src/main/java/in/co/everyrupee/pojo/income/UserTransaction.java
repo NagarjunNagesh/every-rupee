@@ -5,14 +5,13 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.GenericGenerator;
-
 /**
- * POJO for financial portfolio
+ * POJO for User Transactions
  * 
  * @author nagarjun
  *
@@ -21,23 +20,19 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "user_transactions")
 public class UserTransaction implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 4387424250638939980L;
 
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "transaction_id")
-    private String transactionId;
+    private int transactionId;
 
     @NotNull
     @Column(name = "description")
     private String description;
 
-    @Column(name = "category")
-    private String category;
+    @Column(name = "category_id")
+    private int categoryId;
 
     @NotNull
     @Column(name = "user_id")
@@ -47,11 +42,11 @@ public class UserTransaction implements Serializable {
     @Column(name = "amount")
     private int amount;
 
-    public String getTransactionId() {
+    public int getTransactionId() {
 	return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(int transactionId) {
 	this.transactionId = transactionId;
     }
 
@@ -63,12 +58,12 @@ public class UserTransaction implements Serializable {
 	this.description = description;
     }
 
-    public String getCategory() {
-	return category;
+    public int getCategoryId() {
+	return categoryId;
     }
 
-    public void setCategory(String category) {
-	this.category = category;
+    public void setCategoryId(int categoryId) {
+	this.categoryId = categoryId;
     }
 
     public int getUserId() {
