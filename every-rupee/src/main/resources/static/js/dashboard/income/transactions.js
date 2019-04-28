@@ -67,6 +67,7 @@ $(document).ready(function(){
 	    });
 	}
 	
+	
 	// Use this function to fade the message out
 	function fadeoutMessage(divId, message, milliSeconds){
 		$(divId).show().append(message);
