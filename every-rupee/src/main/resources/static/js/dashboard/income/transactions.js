@@ -148,7 +148,7 @@ $(document).ready(function(){
 	function createTableCategoryRows(categoryId, countGrouped){
 		var tableRows = '';
 		
-			tableRows += '<tr data-toggle="collapse" class="toggle" role="button"><td class="text-center">' + '' + '</td><td>' + '';
+			tableRows += '<tr data-toggle="collapse" class="toggle table-danger" role="button"><td class="text-center">' + '' + '</td><td>' + '';
 			tableRows += '</td><td>' + categoryMap[categoryId] + '</td>';
 			tableRows += '<td>' + '' + '</td>';
 			tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
@@ -291,7 +291,7 @@ $(document).ready(function(){
 			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
 			                         },
 			                         error: function (thrownError) {
-			                        	 var responseError = JSON.parse(data.responseText);
+			                        	 var responseError = JSON.parse(thrownError.responseText);
 				                         	if(responseError.error.includes("Unauthorized")){
 				                         		sessionExpiredSwal(thrownError);
 				                         	} else{
@@ -331,7 +331,7 @@ $(document).ready(function(){
 	function createCategoryOption(categoryData) {
 		let catgorySelectOptions = '';
 		categoryMap[categoryData.categoryId] = categoryData.categoryName;
-		catgorySelectOptions += '<option class="dropdown-menu inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
+		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
 	}
