@@ -40,7 +40,7 @@ public class UserTransaction implements Serializable {
 
     @NotNull
     @Column(name = "amount")
-    private int amount;
+    private double amount;
 
     public int getTransactionId() {
 	return transactionId;
@@ -74,11 +74,11 @@ public class UserTransaction implements Serializable {
 	this.userId = userId;
     }
 
-    public int getAmount() {
+    public double getAmount() {
 	return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
 	this.amount = amount;
     }
 

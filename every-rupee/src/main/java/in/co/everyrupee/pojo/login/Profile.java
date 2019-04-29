@@ -51,6 +51,8 @@ public class Profile {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = ProfileServiceConstants.UserRole.USER_ROLE, joinColumns = @JoinColumn(name = ProfileServiceConstants.User.USER_ID), inverseJoinColumns = @JoinColumn(name = ProfileServiceConstants.Role.ROLE_ID))
     private Set<Role> roles;
+    @Column(name = ProfileServiceConstants.User.LOCALE)
+    private String locale;
 
     public Profile() {
 
@@ -156,6 +158,20 @@ public class Profile {
      */
     public void setResetToken(String resetToken) {
 	this.resetToken = resetToken;
+    }
+
+    /**
+     * @return the locale
+     */
+    public String getLocale() {
+	return locale;
+    }
+
+    /**
+     * @param locale the locale to set
+     */
+    public void setLocale(String locale) {
+	this.locale = locale;
     }
 
 }

@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class UserTransactionService implements IUserTransactionService {
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * fetches User Transactions for a particular user
      * 
@@ -40,7 +44,7 @@ public class UserTransactionService implements IUserTransactionService {
 	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(user.getId());
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
-	    throw new ResourceNotFoundException("UserTransactions", "userId", user.getId());
+	    logger.warn("user transactions data is empty for user ", user.getUsername());
 	}
 	return userTransactions;
     }
@@ -60,23 +64,22 @@ public class UserTransactionService implements IUserTransactionService {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	UserTransaction userTransaction = new UserTransaction();
-	Integer amount = Integer.parseInt(formData.get("amount").get(0));
 	userTransaction.setUserId(user.getId());
 	userTransaction.setDescription(formData.get("description").get(0));
 	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
-	userTransaction.setAmount(amount);
+	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
 	return userTransactionResponse;
     }
 
-    @Override
     /**
      * Deletes all the transactions with the id separated with commas
      * 
      * @param transactionalIds
      * @return
      */
+    @Override
     public void deleteUserTransactions(String transactionalIds) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	List<String> transactionIdsAsList = Arrays.asList(arrayOfTransactionIds);

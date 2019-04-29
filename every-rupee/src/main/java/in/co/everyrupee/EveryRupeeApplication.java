@@ -14,19 +14,19 @@ import in.co.everyrupee.constants.GenericConstants;
 @ComponentScan(GenericConstants.EVERYRUPEE_PACKAGE)
 public class EveryRupeeApplication {
 
-	/**
-	 * Password encryption for login and register
-	 * 
-	 * @return
-	 */
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		return bCryptPasswordEncoder;
-	}
+    /**
+     * Password encryption for login and register
+     * 
+     * @return
+     */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+	BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	return bCryptPasswordEncoder;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(EveryRupeeApplication.class, args);
-	}
+    public static void main(String[] args) {
+	SpringApplication.run(EveryRupeeApplication.class, args);
+    }
 
 }
