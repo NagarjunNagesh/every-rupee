@@ -34,7 +34,7 @@ public class Category implements Serializable {
     private String categoryName;
 
     @NotNull
-    @Value("${category.parentCategory:}")
+    @Value("${category.parentCategory}")
     @Column(name = "parent_category")
     private String parentCategory;
 

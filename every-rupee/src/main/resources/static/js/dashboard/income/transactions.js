@@ -17,9 +17,14 @@ $(document).ready(function(){
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	var fetchCategoriesUrl = "/api/category/";
-	// Store map of categories
-	var categoryMap = {};
+	// Store map of categories (promises require LET for maps)
+	let categoryMap = {};
+	var fetchCurrentLoogedInUserUrl = "/api/user/";
+	//Stores the Loggedin User
+	let currentUser = '';
 	
+	// Loads the current Logged in User
+	fetchJSONForLoggedInUser();
 	// Fetch categories and append it to the select options (Load the categories first)
 	fetchJSONForCategories();
 	// Call the transaction API to fetch information.
@@ -62,8 +67,13 @@ $(document).ready(function(){
 	    	resiteredNewTransaction=true;
 	    })
 	    .fail(function(data) {
+	    	var responseError = JSON.parse(data.responseText);
+         	if(responseError.error.includes("Unauthorized")){
+		    	$('#GSCCModal').modal('hide');
+		    	sessionExpiredSwal(data);
+         	}
 	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
-	    	resiteredNewTransaction=true;
+	    	resiteredNewTransaction=false;
 	    });
 	}
 	
@@ -112,7 +122,8 @@ $(document).ready(function(){
 			   });
 			   // Load all the total category amount in the category section
 			   let categoryAmountDiv = '#amountCategory'+countGrouped;
-			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + totalCategoryAmount);
+			   // TODO set Locale fr currency formating in the profile database
+			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + formatNumber(totalCategoryAmount, currentUser.locale));
 			   countGrouped++;
 		   }); 
 		});
@@ -125,8 +136,8 @@ $(document).ready(function(){
 			tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
 			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
 			tableRows += '<td>' + userTransactionData.description + '</td>';
-			tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + userTransactionData.amount + '</td>';
-			tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + userTransactionData.amount + '</td></tr>';
+			tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+			tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
 			// TODO  have to be replaced with budget
 		
 		return tableRows;
@@ -280,13 +291,18 @@ $(document).ready(function(){
 			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
 			                         },
 			                         error: function (thrownError) {
-			                        	 swal({
-					                         title: "Unable to Delete!",
-					                         text: "Please try again",
-					                         type: 'error',
-					                         timer: 1000,
-					                         showConfirmButton: false
-					                     }).catch(swal.noop)
+			                        	 var responseError = JSON.parse(data.responseText);
+				                         	if(responseError.error.includes("Unauthorized")){
+				                         		sessionExpiredSwal(thrownError);
+				                         	} else{
+				                         		swal({
+							                         title: "Unable to Delete!",
+							                         text: "Please try again",
+							                         type: 'error',
+							                         timer: 1000,
+							                         showConfirmButton: false
+							                     }).catch(swal.noop)
+				                         	}
 			                         }
 			                     });
 			             	
@@ -296,18 +312,24 @@ $(document).ready(function(){
 			}
 	}
 
-	// Load all categories from API
+	// Load all categories from API (Call synchronously to set global variable)
 	function fetchJSONForCategories(){
-		$.getJSON(fetchCategoriesUrl , function(result){
-		   $.each(result, function(key,value) {
-		      $("#categoryOptions").append(createCategoryOption(value));
-		   }); 
-		});
+		$.ajax({
+	          async: false,
+	          type: "GET",
+	          url: fetchCategoriesUrl,
+	          dataType: "json",
+	          success : function(data) {
+	        	  $.each(data, function(key,value) {
+	    		      $("#categoryOptions").append(createCategoryOption(value));
+	    		   }); 
+	           }
+	        });
 	}
 	
 	// Create Category Options
 	function createCategoryOption(categoryData) {
-		var catgorySelectOptions = '';
+		let catgorySelectOptions = '';
 		categoryMap[categoryData.categoryId] = categoryData.categoryName;
 		catgorySelectOptions += '<option class="dropdown-menu inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
 		
@@ -319,6 +341,43 @@ $(document).ready(function(){
 	  	$('#productsJson .hideableRow').toggleClass('d-none');
 	 });
 	
+	// Throw a session expired error and reload the page.
+	function sessionExpiredSwal(data){
+		var responseError = JSON.parse(data.responseText);
+    	if(responseError.error.includes("Unauthorized")){
+    		swal({
+                title: "Session Expired!",
+                text: 'You will be redirected to the Login Page',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: "btn btn-success"
+            }).then(function() {
+            	location.reload(); 
+            }).catch(swal.noop);
+    		
+    	}
+	}
+	
+	// Format numbers in Indian Currency
+	function formatNumber(num, locale) {
+		if(_.isEmpty(locale)){
+			locale = "en-IN";
+		}
+		  return num.toLocaleString(locale);
+	}
+	
+	// Loads the currenct logged in user from API (Call synchronously to set global variable)
+	function fetchJSONForLoggedInUser(){
+		$.ajax({
+	          async: false,
+	          type: "GET",
+	          url: fetchCurrentLoogedInUserUrl,
+	          dataType: "json",
+	          success : function(data) {
+	        	  currentUser = data;
+	           }
+	        });
+	}
 	
 });
 

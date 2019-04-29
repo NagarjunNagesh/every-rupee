@@ -11,10 +11,10 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 
 @Controller
-public class WebAppContoller {
+public class WebAppController {
 
 	@Autowired
-	public WebAppContoller(Environment environment) {
+	public WebAppController(Environment environment) {
 	}
 
 	@RequestMapping(GenericConstants.HOME_URL)
