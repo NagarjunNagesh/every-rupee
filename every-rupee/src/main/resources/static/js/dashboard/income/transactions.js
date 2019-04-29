@@ -19,8 +19,6 @@ $(document).ready(function(){
 	var fetchCategoriesUrl = "/api/category/";
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
-	// Indian Currency REGEX
-	var curINRRegExp = /^(?:0|[1-9]\d*)(?:\.(?!.*000)\d+)?$/;
 	var fetchCurrentLoogedInUserUrl = "/api/user/";
 	//Stores the Loggedin User
 	let currentUser = '';
@@ -125,7 +123,6 @@ $(document).ready(function(){
 			   // Load all the total category amount in the category section
 			   let categoryAmountDiv = '#amountCategory'+countGrouped;
 			   // TODO set Locale fr currency formating in the profile database
-			   var empty = '';
 			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + formatNumber(totalCategoryAmount, currentUser.locale));
 			   countGrouped++;
 		   }); 
@@ -354,7 +351,7 @@ $(document).ready(function(){
                 type: 'warning',
                 buttonsStyling: false,
                 confirmButtonClass: "btn btn-success"
-            }).then(function(result) {
+            }).then(function() {
             	location.reload(); 
             }).catch(swal.noop);
     		
