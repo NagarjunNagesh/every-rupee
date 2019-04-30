@@ -175,7 +175,6 @@ $(document).ready(function(){
 	   } else {
 		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
 	   }
-		tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
 		tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		// TODO  have to be replaced with budget
 		
