@@ -149,6 +149,7 @@ $(document).ready(function(){
 			   countGrouped++;
 		   }); 
 		   
+		   // Update table with empty message if the transactions are empty
 		   if(result.length == 0) {
 			  $(replaceTransactionsDiv).append(emptyTable);
 		   }
