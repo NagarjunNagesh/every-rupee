@@ -16,6 +16,8 @@ $(document).ready(function(){
 	// Divs for success message while adding transactions
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
+	// empty table message
+	let emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
 	var fetchCategoriesUrl = "/api/category/";
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
@@ -26,6 +28,8 @@ $(document).ready(function(){
 	var expenseCategory = "1";
 	// Income Category
 	var incomeCategory = "2";
+	// Bills & Fees Options selection
+	var selectedOption = '4';
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -100,6 +104,9 @@ $(document).ready(function(){
 		if(resiteredNewTransaction) {
 			// Clear the div before appending
 			$(replaceTransactionsDiv).empty();
+			$("#totalIncomeTransactions").html("");
+			$("#totalExpensesTransactions").html("");
+			
 			fetchJSONForTransactions();
 			// Disable delete Transactions button on refreshing the transactions
 			manageDeleteTransactionsButton();
@@ -110,10 +117,14 @@ $(document).ready(function(){
 	
 	// Populates the transaction table
 	function fetchJSONForTransactions(){
+		let currentCurrencyPreference = $('#currentCurrencySymbol').text();
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
 			let count = 1;
 			let countGrouped = 1;
+			let totalExpensesTransactions = 0.00;
+			let totalIncomeTransactions = 0.00;
+			// Grouping the transactions based on their category ID
 			let grouped = _.groupBy(result, 'categoryId');
 		   $.each(grouped, function(key,value) {
 			   let totalCategoryAmount = 0;
@@ -127,15 +138,30 @@ $(document).ready(function(){
 			   });
 			   // Load all the total category amount in the category section
 			   let categoryAmountDiv = '#amountCategory'+ countGrouped;
-			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + formatNumber(totalCategoryAmount, currentUser.locale));
+			   $(categoryAmountDiv).append(currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale));
+			   
+			   // Total Expenses and Total Income
+			   if(categoryMap[key].parentCategory == expenseCategory) {
+				   totalExpensesTransactions += totalCategoryAmount;
+			   } else if (categoryMap[key].parentCategory == incomeCategory) {
+				   totalIncomeTransactions += totalCategoryAmount;
+			   }
 			   countGrouped++;
 		   }); 
+		   
+		   if(result.length == 0) {
+			  $(replaceTransactionsDiv).append(emptyTable);
+		   }
+		   
+		   $("#totalIncomeTransactions").append(currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
+		   $("#totalExpensesTransactions").append(currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
+		   
 		});
 	}
 	
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, index, categoryId){
-		var tableRows = '';
+		let tableRows = '';
 		
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
 		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
@@ -157,7 +183,7 @@ $(document).ready(function(){
 	
 	// Building a HTML table for category header for transactions
 	function createTableCategoryRows(categoryId, countGrouped){
-		var tableRows = '';
+		let tableRows = '';
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
@@ -310,6 +336,8 @@ $(document).ready(function(){
 			                        	 
 			                         	// Clear the div before appending
 			                     		$(replaceTransactionsDiv).empty();
+			                        	$("#totalIncomeTransactions").html("");
+			                 			$("#totalExpensesTransactions").html("");
 			                         	fetchJSONForTransactions();
 			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
 			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
@@ -359,8 +387,12 @@ $(document).ready(function(){
 	// Create Category Options
 	function createCategoryOption(categoryData) {
 		let catgorySelectOptions = '';
+		let isSelected = '';
 		categoryMap[categoryData.categoryId] = categoryData;
-		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
+		if(categoryData.categoryId == selectedOption){
+			isSelected = 'selected';
+		}
+		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '"' + isSelected +'>' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
 	}
@@ -392,7 +424,7 @@ $(document).ready(function(){
 		if(_.isEmpty(locale)){
 			locale = "en-IN";
 		}
-		  return num.toLocaleString(locale);
+		  return num.toLocaleString(locale, { minimumFractionDigits: 2 });
 	}
 	
 	// Loads the currenct logged in user from API (Call synchronously to set global variable)
