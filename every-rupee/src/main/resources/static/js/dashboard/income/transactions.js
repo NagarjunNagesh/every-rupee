@@ -16,12 +16,20 @@ $(document).ready(function(){
 	// Divs for success message while adding transactions
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
+	// empty table message
+	let emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
 	var fetchCategoriesUrl = "/api/category/";
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
 	var fetchCurrentLoogedInUserUrl = "/api/user/";
 	//Stores the Loggedin User
 	let currentUser = '';
+	// Expense Category
+	var expenseCategory = "1";
+	// Income Category
+	var incomeCategory = "2";
+	// Bills & Fees Options selection
+	var selectedOption = '4';
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -96,6 +104,9 @@ $(document).ready(function(){
 		if(resiteredNewTransaction) {
 			// Clear the div before appending
 			$(replaceTransactionsDiv).empty();
+			$("#totalIncomeTransactions").html("");
+			$("#totalExpensesTransactions").html("");
+			
 			fetchJSONForTransactions();
 			// Disable delete Transactions button on refreshing the transactions
 			manageDeleteTransactionsButton();
@@ -104,11 +115,16 @@ $(document).ready(function(){
 		}
 	});
 	
+	// Populates the transaction table
 	function fetchJSONForTransactions(){
+		let currentCurrencyPreference = $('#currentCurrencySymbol').text();
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
 			let count = 1;
 			let countGrouped = 1;
+			let totalExpensesTransactions = 0.00;
+			let totalIncomeTransactions = 0.00;
+			// Grouping the transactions based on their category ID
 			let grouped = _.groupBy(result, 'categoryId');
 		   $.each(grouped, function(key,value) {
 			   let totalCategoryAmount = 0;
@@ -116,29 +132,50 @@ $(document).ready(function(){
 			   $(replaceTransactionsDiv).append(createTableCategoryRows(key, countGrouped));
 			   $.each(value, function(subKey,subValue) {
 				   // Create transactions table row
-				   $(replaceTransactionsDiv).append(createTableRows(subValue, count));
+				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, key));
 				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
 			   // Load all the total category amount in the category section
-			   let categoryAmountDiv = '#amountCategory'+countGrouped;
-			   // TODO set Locale fr currency formating in the profile database
-			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + formatNumber(totalCategoryAmount, currentUser.locale));
+			   let categoryAmountDiv = '#amountCategory'+ countGrouped;
+			   $(categoryAmountDiv).append(currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale));
+			   
+			   // Total Expenses and Total Income
+			   if(categoryMap[key].parentCategory == expenseCategory) {
+				   totalExpensesTransactions += totalCategoryAmount;
+			   } else if (categoryMap[key].parentCategory == incomeCategory) {
+				   totalIncomeTransactions += totalCategoryAmount;
+			   }
 			   countGrouped++;
 		   }); 
+		   
+		   if(result.length == 0) {
+			  $(replaceTransactionsDiv).append(emptyTable);
+		   }
+		   
+		   $("#totalIncomeTransactions").append(currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
+		   $("#totalExpensesTransactions").append(currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
+		   
 		});
 	}
 	
 	// Building a HTML table for transactions
-	function createTableRows(userTransactionData, index){
-		var tableRows = '';
+	function createTableRows(userTransactionData, index, categoryId){
+		let tableRows = '';
 		
-			tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
-			tableRows += '<td>' + userTransactionData.description + '</td>';
-			tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
-			tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
-			// TODO  have to be replaced with budget
+		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
+		tableRows += '<td>' + userTransactionData.description + '</td>';
+		
+		// Append a - sign if it is an expense
+	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		   tableRows += '<td class="text-right">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+	   } else {
+		   tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+	   }
+			
+		tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
+		// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
@@ -146,13 +183,26 @@ $(document).ready(function(){
 	
 	// Building a HTML table for category header for transactions
 	function createTableCategoryRows(categoryId, countGrouped){
-		var tableRows = '';
+		let tableRows = '';
 		
-			tableRows += '<tr data-toggle="collapse" class="toggle" role="button"><td class="text-center">' + '' + '</td><td>' + '';
-			tableRows += '</td><td>' + categoryMap[categoryId] + '</td>';
-			tableRows += '<td>' + '' + '</td>';
-			tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
+		// Change the table color if for expense vs income
+		if(categoryMap[categoryId].parentCategory == expenseCategory) {
+			tableRows += '<tr data-toggle="collapse" class="toggle table-danger" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+		} else {
+			tableRows += '<tr data-toggle="collapse" class="toggle table-success" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+		}
+		
+		tableRows += '</td><td>' + categoryMap[categoryId].categoryName + '</td>';
+		tableRows += '<td>' + '' + '</td>';
+		
+		// Append a - sign for the category if it is an expense
+	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '-' + '</td>';
+	   } else {
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
+	   }
+		tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
+		// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
@@ -286,12 +336,14 @@ $(document).ready(function(){
 			                        	 
 			                         	// Clear the div before appending
 			                     		$(replaceTransactionsDiv).empty();
+			                        	$("#totalIncomeTransactions").html("");
+			                 			$("#totalExpensesTransactions").html("");
 			                         	fetchJSONForTransactions();
 			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
 			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
 			                         },
 			                         error: function (thrownError) {
-			                        	 var responseError = JSON.parse(data.responseText);
+			                        	 var responseError = JSON.parse(thrownError.responseText);
 				                         	if(responseError.error.includes("Unauthorized")){
 				                         		sessionExpiredSwal(thrownError);
 				                         	} else{
@@ -321,7 +373,12 @@ $(document).ready(function(){
 	          dataType: "json",
 	          success : function(data) {
 	        	  $.each(data, function(key,value) {
-	    		      $("#categoryOptions").append(createCategoryOption(value));
+	        		  if(value.parentCategory == expenseCategory){
+	        			  $("#expenseSelection").append(createCategoryOption(value));  
+	        		  } else if(value.parentCategory == incomeCategory) {
+	        			  $("#incomeSelection").append(createCategoryOption(value));  
+	        		  }
+	    		      
 	    		   }); 
 	           }
 	        });
@@ -330,8 +387,12 @@ $(document).ready(function(){
 	// Create Category Options
 	function createCategoryOption(categoryData) {
 		let catgorySelectOptions = '';
-		categoryMap[categoryData.categoryId] = categoryData.categoryName;
-		catgorySelectOptions += '<option class="dropdown-menu inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
+		let isSelected = '';
+		categoryMap[categoryData.categoryId] = categoryData;
+		if(categoryData.categoryId == selectedOption){
+			isSelected = 'selected';
+		}
+		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '"' + isSelected +'>' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
 	}
@@ -363,7 +424,7 @@ $(document).ready(function(){
 		if(_.isEmpty(locale)){
 			locale = "en-IN";
 		}
-		  return num.toLocaleString(locale);
+		  return num.toLocaleString(locale, { minimumFractionDigits: 2 });
 	}
 	
 	// Loads the currenct logged in user from API (Call synchronously to set global variable)
@@ -378,6 +439,7 @@ $(document).ready(function(){
 	           }
 	        });
 	}
+	
 	
 });
 
