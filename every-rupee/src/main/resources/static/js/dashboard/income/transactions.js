@@ -22,6 +22,10 @@ $(document).ready(function(){
 	var fetchCurrentLoogedInUserUrl = "/api/user/";
 	//Stores the Loggedin User
 	let currentUser = '';
+	// Expense Category
+	var expenseCategory = "1";
+	// Income Category
+	var incomeCategory = "2";
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -104,6 +108,7 @@ $(document).ready(function(){
 		}
 	});
 	
+	// Populates the transaction table
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl , function(result){
@@ -116,13 +121,12 @@ $(document).ready(function(){
 			   $(replaceTransactionsDiv).append(createTableCategoryRows(key, countGrouped));
 			   $.each(value, function(subKey,subValue) {
 				   // Create transactions table row
-				   $(replaceTransactionsDiv).append(createTableRows(subValue, count));
+				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, key));
 				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
 			   // Load all the total category amount in the category section
-			   let categoryAmountDiv = '#amountCategory'+countGrouped;
-			   // TODO set Locale fr currency formating in the profile database
+			   let categoryAmountDiv = '#amountCategory'+ countGrouped;
 			   $(categoryAmountDiv).append($('#currentCurrencySymbol').text() + formatNumber(totalCategoryAmount, currentUser.locale));
 			   countGrouped++;
 		   }); 
@@ -130,15 +134,22 @@ $(document).ready(function(){
 	}
 	
 	// Building a HTML table for transactions
-	function createTableRows(userTransactionData, index){
+	function createTableRows(userTransactionData, index, categoryId){
 		var tableRows = '';
 		
-			tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-			tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
-			tableRows += '<td>' + userTransactionData.description + '</td>';
-			tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
-			tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
-			// TODO  have to be replaced with budget
+		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
+		tableRows += '<td>' + userTransactionData.description + '</td>';
+		
+		// Append a - sign if it is an expense
+	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		   tableRows += '<td class="text-right">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+	   } else {
+		   tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+	   }
+			
+		tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
+		// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
@@ -148,11 +159,25 @@ $(document).ready(function(){
 	function createTableCategoryRows(categoryId, countGrouped){
 		var tableRows = '';
 		
-			tableRows += '<tr data-toggle="collapse" class="toggle table-danger" role="button"><td class="text-center">' + '' + '</td><td>' + '';
-			tableRows += '</td><td>' + categoryMap[categoryId] + '</td>';
-			tableRows += '<td>' + '' + '</td>';
-			tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
-			tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
+		// Change the table color if for expense vs income
+		if(categoryMap[categoryId].parentCategory == expenseCategory) {
+			tableRows += '<tr data-toggle="collapse" class="toggle table-danger" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+		} else {
+			tableRows += '<tr data-toggle="collapse" class="toggle table-success" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+		}
+		
+		tableRows += '</td><td>' + categoryMap[categoryId].categoryName + '</td>';
+		tableRows += '<td>' + '' + '</td>';
+		
+		// Append a - sign for the category if it is an expense
+	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '-' + '</td>';
+	   } else {
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
+	   }
+		tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
+		tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
+		// TODO  have to be replaced with budget
 		
 		return tableRows;
 		
@@ -321,7 +346,12 @@ $(document).ready(function(){
 	          dataType: "json",
 	          success : function(data) {
 	        	  $.each(data, function(key,value) {
-	    		      $("#categoryOptions").append(createCategoryOption(value));
+	        		  if(value.parentCategory == expenseCategory){
+	        			  $("#expenseSelection").append(createCategoryOption(value));  
+	        		  } else if(value.parentCategory == incomeCategory) {
+	        			  $("#incomeSelection").append(createCategoryOption(value));  
+	        		  }
+	    		      
 	    		   }); 
 	           }
 	        });
@@ -330,7 +360,7 @@ $(document).ready(function(){
 	// Create Category Options
 	function createCategoryOption(categoryData) {
 		let catgorySelectOptions = '';
-		categoryMap[categoryData.categoryId] = categoryData.categoryName;
+		categoryMap[categoryData.categoryId] = categoryData;
 		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '">' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
@@ -378,6 +408,7 @@ $(document).ready(function(){
 	           }
 	        });
 	}
+	
 	
 });
 

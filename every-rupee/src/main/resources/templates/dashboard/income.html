@@ -23,7 +23,7 @@
           <div class="row">
           	<div class="col-md-10 col-sm-10 ml-auto mr-auto">
           		<div class="card">
-          			 <div class="card-header card-header-success card-header-icon">
+          			 <div class="card-header card-header-primary card-header-icon">
 		                  <div class="card-icon">
 		                    <i id="font-25" class="fa fa-calendar" aria-hidden="true"></i>
 		                  </div>
@@ -32,9 +32,9 @@
 	          			<div class="container">
 	    					<div class="row">
 	    						<!-- Dynamically generate table contents -->
-	    						<div class="col-md-1 ml-auto mr-auto"><a class="prevMonths green-icon" href="#"><i class="material-icons">arrow_left</i></a></div>
+	    						<div class="col-md-1 ml-auto mr-auto"><a class="prevMonths" href="#"><i class="material-icons">arrow_left</i></a></div>
 	    						<div id="calendar" class="row col-md-10 ml-auto mr-auto"></div>
-	    						<div class="col-md-1 ml-auto mr-auto"><a class="nextMonths green-icon" href="#"><i class="material-icons">arrow_right</i></a></div>
+	    						<div class="col-md-1 ml-auto mr-auto"><a class="nextMonths" href="#"><i class="material-icons">arrow_right</i></a></div>
 	    					</div>
 	    				</div>
 	    			 </div>
@@ -42,12 +42,12 @@
           	</div>
 			<div class="col-md-9 col-sm-9">
               <div class="card">
-                <div class="card-header card-header-danger card-header-icon">
+                <div class="card-header card-header-success card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">assignment</i>
                   </div>
                   <h4 class="card-title">Transactions</h4>
-				  <button type="button" class="btn btn-primary btn-raised button-right" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
+				  <button type="button" class="btn btn-success btn-raised button-right" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
                   <button id="manageTransactionButton" class="btn btn-danger button-right" onclick="popup.showSwal('warning-message-and-confirmation')" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
                 </div>
                 <div class="card-body">
@@ -75,7 +75,6 @@
                       </thead>
                       <tbody id="productsJson">
                         <!-- Filled with Javascript dynamically -->
-                        <!-- TODO change color of categories -->
                          <!-- TODO Assign a - sign to transactions -->
                          <!-- TODO Enable individual Category expansion -->
                          <!-- TODO Update total budget, spending and income -->
@@ -137,7 +136,12 @@
 			      			<input id="description" name="description" type="text" class="form-control" required/>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
-			      			<select id="categoryOptions" name="categoryOptions" class="dropdown-toggle bootstrap-select form-control"></select>
+			      			<select id="categoryOptions" name="categoryOptions" class="dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			      				<optgroup id="expenseSelection" label="Expenses">
+			      				</optgroup>
+			      				<optgroup id="incomeSelection" label="Income">
+			      				</optgroup>
+			      			</select>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
 			      			<label class="bmd-label-floating" for="amount">Amount</label>
@@ -148,7 +152,7 @@
 			  <span id="errorMessage" th:utext="${errorMessage}"></span>
 	      </div>
 	      <div class="modal-footer border-top-0 d-block padding-top-none">
-	      	<button type="submit" class="btn btn-primary" form="transactionsForm">Add Transaction</button>
+	      	<button type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
