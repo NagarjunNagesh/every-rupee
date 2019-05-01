@@ -38,10 +38,11 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public List<UserTransaction> fetchUserTransaction() {
+    public List<UserTransaction> fetchUserTransaction(String pFinancialPortfolioId) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(user.getId());
+	List<UserTransaction> userTransactions = userTransactionsRepository
+		.findByFinancialPortfolioId(pFinancialPortfolioId);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
@@ -56,15 +57,14 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData) {
+    public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get("amount")) || CollectionUtils.isEmpty(formData.get("description"))) {
 	    throw new ResourceNotFoundException("UserTransactions", "formData", formData);
 	}
 
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	UserTransaction userTransaction = new UserTransaction();
-	userTransaction.setUserId(user.getId());
+	userTransaction.setFinancialPortfolioId(pFinancialPortfolioId);
 	userTransaction.setDescription(formData.get("description").get(0));
 	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
 	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));

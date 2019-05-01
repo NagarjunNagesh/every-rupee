@@ -34,23 +34,26 @@ public class UserTransactionsController {
     IUserTransactionService userTransactionService;
 
     // Get a Single User Transaction
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<UserTransaction> getUserTransactionByUserId(Principal userPrincipal) {
+    @RequestMapping(value = "/{financialPortfolioId}", method = RequestMethod.GET)
+    public List<UserTransaction> getUserTransactionByUserId(@PathVariable String financialPortfolioId,
+	    Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	return userTransactionService.fetchUserTransaction();
+	return userTransactionService.fetchUserTransaction(financialPortfolioId);
     }
 
     // Update a UserTransaction
-    @RequestMapping(value = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public UserTransaction update(@RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
+    @RequestMapping(value = "/save/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public UserTransaction update(@PathVariable String financialPortfolioId,
+	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData);
+	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData,
+		financialPortfolioId);
 	return userTransactionResponse;
     }
 

@@ -6,8 +6,8 @@
 $(document).ready(function(){
 		
 	// Constructs transaction API url
-	var transactionAPIUrl = window.location.origin + "/api/transactions/";
-	var saveTransactionsUrl = "/api/transactions/save";
+	var transactionAPIUrl =  "/api/transactions/";
+	var saveTransactionsUrl = "/api/transactions/save/";
 	var replaceTransactionsDiv = "#productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -49,12 +49,6 @@ $(document).ready(function(){
 	   $("#successMessage").html("").hide();
 	   $("#errorMessage").html("").hide();
 	   var formValidation = true;
-		
-	   var description = $("#description").val();
-	   if(description == null || description == ''){
-		   fadeoutMessage('#errorMessage',errorAddingTransactionDiv + 'Description field is empty.</p></div> <br/>',2000);
-		   formValidation = false;
-	   }
 	   
 	   var amount = $("#amount").val();
 	   if(amount == null || amount == ''){
@@ -67,7 +61,7 @@ $(document).ready(function(){
 	   }
 	   
 		var formData= $('#transactionsForm').serialize();
-	    $.post(saveTransactionsUrl,formData ,function(data){
+	    $.post(saveTransactionsUrl + currentUser.financialPortfolioId,formData ,function(data){
 	        
 	    })
 	    .done(function(data) {
@@ -106,6 +100,7 @@ $(document).ready(function(){
 			$(replaceTransactionsDiv).empty();
 			$("#totalIncomeTransactions").html("");
 			$("#totalExpensesTransactions").html("");
+			$("#totalAvailableTransactions").html("");
 			
 			fetchJSONForTransactions();
 			// Disable delete Transactions button on refreshing the transactions
@@ -119,11 +114,12 @@ $(document).ready(function(){
 	function fetchJSONForTransactions(){
 		let currentCurrencyPreference = $('#currentCurrencySymbol').text();
 		// Load all user transaction from API
-		$.getJSON(transactionAPIUrl , function(result){
+		$.getJSON(transactionAPIUrl + currentUser.financialPortfolioId, function(result){
 			let count = 1;
 			let countGrouped = 1;
 			let totalExpensesTransactions = 0.00;
 			let totalIncomeTransactions = 0.00;
+			let totalAvailableTransactions = 0.00;
 			// Grouping the transactions based on their category ID
 			let grouped = _.groupBy(result, 'categoryId');
 		   $.each(grouped, function(key,value) {
@@ -154,8 +150,14 @@ $(document).ready(function(){
 			  $(replaceTransactionsDiv).append(emptyTable);
 		   }
 		   
+		   totalAvailableTransactions = totalIncomeTransactions - totalExpensesTransactions;
+		   if(totalAvailableTransactions < 0) {
+			   $("#totalAvailableTransactions").append( '-' + currentCurrencyPreference + formatNumber(Math.abs(totalAvailableTransactions), currentUser.locale));
+		   } else {
+			   $("#totalAvailableTransactions").append(currentCurrencyPreference + formatNumber(totalAvailableTransactions, currentUser.locale));
+		   }
 		   $("#totalIncomeTransactions").append(currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
-		   $("#totalExpensesTransactions").append(currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
+		   $("#totalExpensesTransactions").append('-' + currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
 		   
 		});
 	}
@@ -193,7 +195,7 @@ $(document).ready(function(){
 			tableRows += '<tr data-toggle="collapse" class="toggle table-success" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		}
 		
-		tableRows += '</td><td>' + categoryMap[categoryId].categoryName + '</td>';
+		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
 		tableRows += '<td>' + '' + '</td>';
 		
 		// Append a - sign for the category if it is an expense
@@ -339,6 +341,7 @@ $(document).ready(function(){
 			                     		$(replaceTransactionsDiv).empty();
 			                        	$("#totalIncomeTransactions").html("");
 			                 			$("#totalExpensesTransactions").html("");
+			                 			$("#totalAvailableTransactions").html("");
 			                         	fetchJSONForTransactions();
 			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
 			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
@@ -440,6 +443,26 @@ $(document).ready(function(){
 	           }
 	        });
 	}
+	
+	// Sortable table for transactions
+	$("#transactionsTable tbody").sortable({
+	  cursor: "move",
+	  placeholder: "sortable-placeholder",
+	  helper: function(e, tr)
+	  {
+	    var $originals = tr.children();
+	    var $helper = tr.clone();
+	    $helper.children().each(function(index)
+	    {
+	    // Set helper cell sizes to match the original sizes
+	    $(this).width($originals.eq(index).width());
+	    });
+	    return $helper;
+	  },
+	  stop: function(event,ui){ 
+		  alert("here"); 
+	  }
+	}).disableSelection();
 	
 	
 });

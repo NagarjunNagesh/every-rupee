@@ -18,11 +18,13 @@ public class ProfileServiceConstants {
 	public static final String ACTIVE = "active";
 	public static final String RESET_TOKEN = "reset_token";
 	public static final String LOCALE = "locale";
+	public static final String FINANCIAL_PORTFOLIO_ID = "financial_portfolio_id";
     }
 
     // Roles
     public class Role {
 	public static final String ADMIN_ROLE = "ADMIN";
+	public static final String USER_ROLE = "USER";
 	public static final String ROLE_ID = "role_id";
 	public static final String ROLE_TABLE_NAME = "role";
 	public static final String ROLE_PROPERTY = "role";

@@ -107,8 +107,7 @@ public class ProfileService {
 	profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
 	profile.setActive(1);
 	profile.setLocale(messages.getMessage("message.defaultCurrencyFormat", null, request.getLocale()));
-	// TODO Change the Admin role to User Role Add script to add roles
-	Role userRole = roleRepository.findByRole(ProfileServiceConstants.Role.ADMIN_ROLE);
+	Role userRole = roleRepository.findByRole(ProfileServiceConstants.Role.USER_ROLE);
 	profile.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 	return profileRepository.save(profile);
     }

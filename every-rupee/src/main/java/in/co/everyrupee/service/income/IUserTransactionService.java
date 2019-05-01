@@ -8,9 +8,9 @@ import in.co.everyrupee.pojo.income.UserTransaction;
 
 public interface IUserTransactionService {
 
-    List<UserTransaction> fetchUserTransaction();
+    List<UserTransaction> fetchUserTransaction(String financialPortfolioId);
 
-    UserTransaction saveUserTransaction(MultiValueMap<String, String> formData);
+    UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String financialPortfolioId);
 
     void deleteUserTransactions(String transactionalIds);
 }

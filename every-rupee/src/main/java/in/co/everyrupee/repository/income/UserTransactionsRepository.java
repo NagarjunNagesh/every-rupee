@@ -20,7 +20,7 @@ import in.co.everyrupee.pojo.income.UserTransaction;
  */
 @Repository
 public interface UserTransactionsRepository extends JpaRepository<UserTransaction, Integer> {
-    List<UserTransaction> findByUserId(Integer userId);
+    List<UserTransaction> findByFinancialPortfolioId(String financialPortfolioId);
 
     /**
      * Delete all user with ids specified in {@code ids} parameter
