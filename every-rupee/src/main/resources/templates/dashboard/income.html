@@ -40,6 +40,8 @@
 	    			 </div>
           		</div>
           	</div>
+          </div>
+          <div class="row">
 			<div class="col-md-9 col-sm-9">
               <div class="card">
                 <div class="card-header card-header-success card-header-icon">
@@ -76,19 +78,8 @@
                       <tbody id="productsJson">
                         <!-- Filled with Javascript dynamically -->
                          <!-- TODO Enable individual Category expansion -->
-                         <!-- TODO Update total budget, spending and income -->
                          <!-- TODO OptGroup selection displays the optgroup heading for the selected categories as well -->
                       </tbody>
-                      <tfoot>
-                        <tr>
-                          <th class="text-center">#</th>
-                          <th></th>
-						  <th>Category</th>
-                          <th>Description</th>
-                          <th class="text-right">Amount</th>
-                          <th class="text-right">Budgeted</th>
-                        </tr>
-                      </tfoot>
                     </table>
                   </div>
                 </div>
@@ -97,14 +88,15 @@
             <div class="col-md-3 col-sm-3">
               <div class="card">
                 <div class="card-body text-center">
-                	<h4 class="card-title">Total Budgeted</h4>
-                	<h4 class="card-title"><span id="currentCurrencySymbol" th:text="#{message.currencySumbol}"></span>0.00</h4>
+                	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
+                	<h4 class="card-title headings-font-weight">Total Available</h4>
+                	<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
                 	<hr>
-                	<h4 class="card-title">Total Income</h4>
-                	<h4 id="totalIncomeTransactions" class="card-title"></h4>
+                	<h4 class="card-title headings-font-weight">Total Income</h4>
+                	<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
                 	<hr>
-                	<h4 class="card-title">Total Spent</h4>
-                	<h4 id="totalExpensesTransactions" class="card-title"></h4>
+                	<h4 class="card-title headings-font-weight">Total Spent</h4>
+                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
                 </div>
                </div>
             </div>           
@@ -131,12 +123,12 @@
 	      </div>
 	      <div class="modal-body">
 	        <form autocomplete="off" id="transactionsForm" action="#" method="post" role="form" >
-			      		<div class="form-group bmd-form-group">
-			      			<label class="bmd-label-floating" for="description">Description</label>
-			      			<input id="description" name="description" type="text" class="form-control" required/>
+	        			<div class="form-group bmd-form-group">
+			      			<label class="bmd-label-floating" for="amount">Amount</label>
+			      			<input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true"/>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
-			      			<select id="categoryOptions" name="categoryOptions" class="dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+			      			<select id="categoryOptions" name="categoryOptions" class="dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			      				<optgroup id="expenseSelection" label="Expenses">
 			      				</optgroup>
 			      				<optgroup id="incomeSelection" label="Income">
@@ -144,8 +136,8 @@
 			      			</select>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
-			      			<label class="bmd-label-floating" for="amount">Amount</label>
-			      			<input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true"/>
+			      			<label class="bmd-label-floating" for="description">Description</label>
+			      			<input id="description" name="description" type="text" class="form-control"/>
 			      		</div>
 			  </form>
 			  <span id="successMessage" th:utext="${successMessage}"></span>
@@ -164,5 +156,6 @@
   <!-- Loads the custom class for every rupee -->
   <script defer src="../js/dashboard/income/transactions.js" th:src="@{/js/dashboard/income/transactions.js}" type="text/javascript"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 </body>
 </html>

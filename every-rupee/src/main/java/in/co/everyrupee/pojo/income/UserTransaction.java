@@ -27,7 +27,6 @@ public class UserTransaction implements Serializable {
     @Column(name = "transaction_id")
     private int transactionId;
 
-    @NotNull
     @Column(name = "description")
     private String description;
 
@@ -35,8 +34,8 @@ public class UserTransaction implements Serializable {
     private int categoryId;
 
     @NotNull
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "financial_portfolio_id")
+    private String financialPortfolioId;
 
     @NotNull
     @Column(name = "amount")
@@ -66,20 +65,20 @@ public class UserTransaction implements Serializable {
 	this.categoryId = categoryId;
     }
 
-    public int getUserId() {
-	return userId;
-    }
-
-    public void setUserId(int userId) {
-	this.userId = userId;
-    }
-
     public double getAmount() {
 	return amount;
     }
 
     public void setAmount(double amount) {
 	this.amount = amount;
+    }
+
+    public String getFinancialPortfolioId() {
+	return financialPortfolioId;
+    }
+
+    public void setFinancialPortfolioId(String financialPortfolioId) {
+	this.financialPortfolioId = financialPortfolioId;
     }
 
 }

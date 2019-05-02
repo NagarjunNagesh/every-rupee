@@ -2,6 +2,7 @@ package in.co.everyrupee.service.income;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -38,10 +39,11 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public List<UserTransaction> fetchUserTransaction() {
+    public List<UserTransaction> fetchUserTransaction(String pFinancialPortfolioId) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	List<UserTransaction> userTransactions = userTransactionsRepository.findByUserId(user.getId());
+	List<UserTransaction> userTransactions = userTransactionsRepository
+		.findByFinancialPortfolioId(pFinancialPortfolioId);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
@@ -56,15 +58,14 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData) {
+    public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get("amount")) || CollectionUtils.isEmpty(formData.get("description"))) {
 	    throw new ResourceNotFoundException("UserTransactions", "formData", formData);
 	}
 
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	UserTransaction userTransaction = new UserTransaction();
-	userTransaction.setUserId(user.getId());
+	userTransaction.setFinancialPortfolioId(pFinancialPortfolioId);
 	userTransaction.setDescription(formData.get("description").get(0));
 	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
 	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));
@@ -87,6 +88,16 @@ public class UserTransactionService implements IUserTransactionService {
 		.collect(Collectors.toList());
 
 	userTransactionsRepository.deleteUsersWithIds(transactionIdsAsIntegerList);
+
+    }
+
+    @Override
+    public void updateCategoriesForTransactions(MultiValueMap<String, String> formData) {
+
+	Optional<UserTransaction> userTransaction = userTransactionsRepository
+		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
+	userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
+	userTransactionsRepository.save(userTransaction.get());
 
     }
 

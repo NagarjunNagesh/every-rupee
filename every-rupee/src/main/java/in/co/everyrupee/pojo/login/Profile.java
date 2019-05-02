@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -53,6 +54,14 @@ public class Profile {
     private Set<Role> roles;
     @Column(name = ProfileServiceConstants.User.LOCALE)
     private String locale;
+    @Column(name = ProfileServiceConstants.User.FINANCIAL_PORTFOLIO_ID)
+    private int financialPortfolioId;
+
+    // Set Financial Portfolio id equal to user id
+    @PostPersist
+    private void postPersist() {
+	this.setFinancialPortfolioId(getId());
+    }
 
     public Profile() {
 
@@ -172,6 +181,14 @@ public class Profile {
      */
     public void setLocale(String locale) {
 	this.locale = locale;
+    }
+
+    public int getFinancialPortfolioId() {
+	return financialPortfolioId;
+    }
+
+    public void setFinancialPortfolioId(int financialPortfolioId) {
+	this.financialPortfolioId = financialPortfolioId;
     }
 
 }
