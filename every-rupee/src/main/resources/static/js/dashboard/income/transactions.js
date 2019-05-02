@@ -8,6 +8,7 @@ $(document).ready(function(){
 	// Constructs transaction API url
 	var transactionAPIUrl =  "/api/transactions/";
 	var saveTransactionsUrl = "/api/transactions/save/";
+	var categoriesTransactionsUrl = "/api/transactions/categoryUpdate/";
 	var replaceTransactionsDiv = "#productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -21,7 +22,7 @@ $(document).ready(function(){
 	var fetchCategoriesUrl = "/api/category/";
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
-	var fetchCurrentLoogedInUserUrl = "/api/user/";
+	var fetchCurrentLoggedInUserUrl = "/api/user/";
 	//Stores the Loggedin User
 	let currentUser = '';
 	// Expense Category
@@ -167,14 +168,14 @@ $(document).ready(function(){
 		let tableRows = '';
 		
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td>' + '' + '</td>';
-		tableRows += '<td>' + userTransactionData.description + '</td>';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '"class="dropdown-toggle bootstrap-select form-control tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + createCategoryOptions(categoryId, categoryMap) + '</select></td>';
+		tableRows += '<td contenteditable="true">' + userTransactionData.description + '</td>';
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td class="text-right">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td class="text-right" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   } else {
-		   tableRows += '<td class="text-right">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td class="text-right" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   }
 			
 		tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
@@ -195,7 +196,7 @@ $(document).ready(function(){
 			tableRows += '<tr data-toggle="collapse" class="toggle table-success" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		}
 		
-		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
+		tableRows += '</td><td class="font-weight-bold" contenteditable="true">' + categoryMap[categoryId].categoryName + '</td>';
 		tableRows += '<td>' + '' + '</td>';
 		
 		// Append a - sign for the category if it is an expense
@@ -389,13 +390,16 @@ $(document).ready(function(){
 	}
 	
 	// Create Category Options
-	function createCategoryOption(categoryData) {
+	function createCategoryOption(categoryData, selectedCategoryId) {
 		let catgorySelectOptions = '';
 		let isSelected = '';
 		categoryMap[categoryData.categoryId] = categoryData;
-		if(categoryData.categoryId == selectedOption){
+		if(_.isEmpty(selectedCategoryId) && categoryData.categoryId == selectedOption){
+			isSelected = 'selected';
+		} else if(!_.isEmpty(selectedCategoryId) && categoryData.categoryId == selectedCategoryId){
 			isSelected = 'selected';
 		}
+		
 		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '"' + isSelected +'>' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
@@ -436,7 +440,7 @@ $(document).ready(function(){
 		$.ajax({
 	          async: false,
 	          type: "GET",
-	          url: fetchCurrentLoogedInUserUrl,
+	          url: fetchCurrentLoggedInUserUrl,
 	          dataType: "json",
 	          success : function(data) {
 	        	  currentUser = data;
@@ -445,24 +449,56 @@ $(document).ready(function(){
 	}
 	
 	// Sortable table for transactions
-	$("#transactionsTable tbody").sortable({
-	  cursor: "move",
-	  placeholder: "sortable-placeholder",
-	  helper: function(e, tr)
-	  {
-	    var $originals = tr.children();
-	    var $helper = tr.clone();
-	    $helper.children().each(function(index)
-	    {
-	    // Set helper cell sizes to match the original sizes
-	    $(this).width($originals.eq(index).width());
-	    });
-	    return $helper;
-	  },
-	  stop: function(event,ui){ 
-		  alert("here"); 
-	  }
-	}).disableSelection();
+	//	$("#transactionsTable tbody").sortable({
+	//	  cursor: "move",
+	//	  placeholder: "sortable-placeholder",
+	//	  helper: function(e, tr)
+	//	  {
+	//	    var $originals = tr.children();
+	//	    var $helper = tr.clone();
+	//	    $helper.children().each(function(index)
+	//	    {
+	//	    // Set helper cell sizes to match the original sizes
+	//	    $(this).width($originals.eq(index).width());
+	//	    });
+	//	    return $helper;
+	//	  },
+	//	  stop: function(event,ui){ 
+	//		  alert("here"); 
+	//	  }
+	//	}).disableSelection();
+	
+	// Load category as a select option
+	function createCategoryOptions(selectedCategory, categoryList){
+		var categoryOptions = '';
+		 $.each(categoryList, function(key,value) {
+			  if(value.parentCategory == expenseCategory){
+				  categoryOptions += createCategoryOption(value, selectedCategory);  
+			  } else if(value.parentCategory == incomeCategory) {
+				  categoryOptions += createCategoryOption(value, selectedCategory);  
+			  }
+		      
+		   }); 
+		 return categoryOptions;
+	}
+	
+	// Change trigger on select
+	$( "tbody" ).on( "change", ".tableRowSelectCategory" ,function() {
+		let selectCategoryId = _.split($(this).attr('id'),'-');
+		var values = {};
+		values['categoryId'] = $(this).val();
+		values['transactionId'] = selectCategoryId[selectCategoryId.length - 1];
+		$.ajax({
+	          async: false,
+	          type: "POST",
+	          url: categoriesTransactionsUrl,
+	          dataType: "json",
+	          data : values,
+	          success : function(data) {
+	        	  currentUser = data;
+	           }
+	        });
+	});
 	
 	
 });

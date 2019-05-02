@@ -2,6 +2,7 @@ package in.co.everyrupee.service.income;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -87,6 +88,16 @@ public class UserTransactionService implements IUserTransactionService {
 		.collect(Collectors.toList());
 
 	userTransactionsRepository.deleteUsersWithIds(transactionIdsAsIntegerList);
+
+    }
+
+    @Override
+    public void updateCategoriesForTransactions(MultiValueMap<String, String> formData) {
+
+	Optional<UserTransaction> userTransaction = userTransactionsRepository
+		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
+	userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
+	userTransactionsRepository.save(userTransaction.get());
 
     }
 

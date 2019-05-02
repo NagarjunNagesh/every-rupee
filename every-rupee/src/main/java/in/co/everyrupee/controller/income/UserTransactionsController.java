@@ -68,4 +68,17 @@ public class UserTransactionsController {
 
 	return ResponseEntity.ok().build();
     }
+
+    // Update Categories in user transactions
+    @RequestMapping(value = "/categoryUpdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> updateCategoriesUserTransactionById(@RequestBody MultiValueMap<String, String> formData,
+	    Principal userPrincipal) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	userTransactionService.updateCategoriesForTransactions(formData);
+
+	return ResponseEntity.ok().build();
+    }
 }
