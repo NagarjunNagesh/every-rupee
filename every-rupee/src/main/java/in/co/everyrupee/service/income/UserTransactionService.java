@@ -101,4 +101,14 @@ public class UserTransactionService implements IUserTransactionService {
 
     }
 
+    @Override
+    public void updateDescriptionForTransactions(MultiValueMap<String, String> formData) {
+
+	Optional<UserTransaction> userTransaction = userTransactionsRepository
+		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
+	userTransaction.get().setDescription(formData.get("description").get(0));
+	userTransactionsRepository.save(userTransaction.get());
+
+    }
+
 }

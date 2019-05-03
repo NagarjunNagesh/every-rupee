@@ -81,4 +81,17 @@ public class UserTransactionsController {
 
 	return ResponseEntity.ok().build();
     }
+
+    // Update description in user transactions
+    @RequestMapping(value = "/descriptionUpdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> updateDescriptionByUserTransactionById(@RequestBody MultiValueMap<String, String> formData,
+	    Principal userPrincipal) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	userTransactionService.updateDescriptionForTransactions(formData);
+
+	return ResponseEntity.ok().build();
+    }
 }
