@@ -8,7 +8,7 @@ $(document).ready(function(){
 	// Constructs transaction API url
 	var transactionAPIUrl =  "/api/transactions/";
 	var saveTransactionsUrl = "/api/transactions/save/";
-	var categoriesTransactionsUrl = "/api/transactions/categoryUpdate/";
+	var transactionsUpdateUrl = "/api/transactions/update/";
 	var replaceTransactionsDiv = "#productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -31,6 +31,10 @@ $(document).ready(function(){
 	var incomeCategory = "2";
 	// Bills & Fees Options selection
 	var selectedOption = '4';
+	// Description Text
+	let descriptionTextEdited = '';
+	// Amount Text
+	let amountEditedTransaction = '';
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -50,6 +54,8 @@ $(document).ready(function(){
 	   $("#successMessage").html("").hide();
 	   $("#errorMessage").html("").hide();
 	   var formValidation = true;
+	   // disable button after successful submission
+	   $('#transactionsFormButtonSubmission').prop('disabled', true);
 	   
 	   var amount = $("#amount").val();
 	   if(amount == null || amount == ''){
@@ -68,6 +74,8 @@ $(document).ready(function(){
 	    .done(function(data) {
 	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
 	    	resiteredNewTransaction=true;
+	    	// enable button after successful submission
+	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    })
 	    .fail(function(data) {
 	    	var responseError = JSON.parse(data.responseText);
@@ -77,6 +85,8 @@ $(document).ready(function(){
          	}
 	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
 	    	resiteredNewTransaction=false;
+	    	// enable button after successful submission
+	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    });
 	}
 	
@@ -166,20 +176,21 @@ $(document).ready(function(){
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, index, categoryId){
 		let tableRows = '';
+		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '"class="dropdown-toggle bootstrap-select form-control tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + createCategoryOptions(categoryId, categoryMap) + '</select></td>';
-		tableRows += '<td contenteditable="true">' + userTransactionData.description + '</td>';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><div class="dropdown"><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="custom-select tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></div></td>';
+		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription">' + userTransactionData.description + '</td>';
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td class="text-right" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   } else {
-		   tableRows += '<td class="text-right" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   }
 			
-		tableRows += '<td class="text-right">' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td></tr>';
-		// TODO  have to be replaced with budget
+		tableRows += '<td class="text-right"></td></tr>';
 		
 		return tableRows;
 		
@@ -205,7 +216,7 @@ $(document).ready(function(){
 	   } else {
 		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
 	   }
-		tableRows += '<td class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
+		tableRows += '<td id="budgetCategory" class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		// TODO  have to be replaced with budget
 		
 		return tableRows;
@@ -372,7 +383,7 @@ $(document).ready(function(){
 	// Load all categories from API (Call synchronously to set global variable)
 	function fetchJSONForCategories(){
 		$.ajax({
-	          async: false,
+			  async: false,
 	          type: "GET",
 	          url: fetchCategoriesUrl,
 	          dataType: "json",
@@ -448,37 +459,21 @@ $(document).ready(function(){
 	        });
 	}
 	
-	// Sortable table for transactions
-	//	$("#transactionsTable tbody").sortable({
-	//	  cursor: "move",
-	//	  placeholder: "sortable-placeholder",
-	//	  helper: function(e, tr)
-	//	  {
-	//	    var $originals = tr.children();
-	//	    var $helper = tr.clone();
-	//	    $helper.children().each(function(index)
-	//	    {
-	//	    // Set helper cell sizes to match the original sizes
-	//	    $(this).width($originals.eq(index).width());
-	//	    });
-	//	    return $helper;
-	//	  },
-	//	  stop: function(event,ui){ 
-	//		  alert("here"); 
-	//	  }
-	//	}).disableSelection();
-	
 	// Load category as a select option
 	function createCategoryOptions(selectedCategory, categoryList){
-		var categoryOptions = '';
+		let categoryOptions = {};
+		let expenseCategoryDiv = '';
+		let incomeCategoryDiv = '';
 		 $.each(categoryList, function(key,value) {
 			  if(value.parentCategory == expenseCategory){
-				  categoryOptions += createCategoryOption(value, selectedCategory);  
+				  expenseCategoryDiv += createCategoryOption(value, selectedCategory);  
 			  } else if(value.parentCategory == incomeCategory) {
-				  categoryOptions += createCategoryOption(value, selectedCategory);  
+				  incomeCategoryDiv += createCategoryOption(value, selectedCategory);  
 			  }
 		      
 		   }); 
+		 categoryOptions['expense'] = expenseCategoryDiv;
+		 categoryOptions['income'] = incomeCategoryDiv;
 		 return categoryOptions;
 	}
 	
@@ -489,17 +484,111 @@ $(document).ready(function(){
 		values['categoryId'] = $(this).val();
 		values['transactionId'] = selectCategoryId[selectCategoryId.length - 1];
 		$.ajax({
-	          async: false,
 	          type: "POST",
-	          url: categoriesTransactionsUrl,
+	          url: transactionsUpdateUrl + 'category',
 	          dataType: "json",
 	          data : values,
-	          success : function(data) {
-	        	  currentUser = data;
-	           }
+	          error: function (thrownError) {
+              	 var responseError = JSON.parse(thrownError.responseText);
+                   	if(responseError.error.includes("Unauthorized")){
+                   		sessionExpiredSwal(thrownError);
+                   	} else{
+                   		swal({
+		                         title: "Unable to Change Category!",
+		                         text: "Please try again",
+		                         type: 'error',
+		                         timer: 1000,
+		                         showConfirmButton: false
+		                     }).catch(swal.noop)
+                   	}
+               }
+	           
 	        });
 	});
 	
+	// Catch the description when the user focuses on the description
+	$( "tbody" ).on( "focusin", ".transactionsTableDescription" ,function() {
+		descriptionTextEdited = this.innerText;
+	});
+	
+	// Process the description to find out if the user has changed the description
+	$( "tbody" ).on( "focusout", ".transactionsTableDescription" ,function() {
+		
+		// If the text is not changed then do nothing
+		let enteredText = _.trim(this.innerText);
+		if(_.isEqual(descriptionTextEdited, enteredText)){
+			// replace the text with a trimmed version 
+			$(this).html(enteredText);
+			return;
+		}
+		
+		let changedDescription = _.split($(this).attr('id'),'-');
+		var values = {};
+		values['description'] = enteredText;
+		values['transactionId'] = changedDescription[changedDescription.length - 1];
+		$.ajax({
+	          type: "POST",
+	          url: transactionsUpdateUrl + 'description',
+	          dataType: "json",
+	          data : values,
+	          error: function (thrownError) {
+              	 var responseError = JSON.parse(thrownError.responseText);
+                   	if(responseError.error.includes("Unauthorized")){
+                   		sessionExpiredSwal(thrownError);
+                   	} else{
+                   		swal({
+		                         title: "Unable to Change Category!",
+		                         text: "Please try again",
+		                         type: 'error',
+		                         timer: 1000,
+		                         showConfirmButton: false
+		                     }).catch(swal.noop)
+                   	}
+               }
+	        });
+	});
+	
+	// Catch the amount when the user focuses on the transaction
+	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
+		amountEditedTransaction = _.last(_.split(this.innerText,'₹'));
+	});
+	
+	// Process the amount to find out if the user has changed the transaction amount
+	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
+		
+		// If the text is not changed then do nothing
+		let enteredText = _.last(_.split(this.innerText,'₹'));
+		if(amountEditedTransaction == enteredText){
+			// replace the text with a trimmed version 
+			$(this).html(_.trim(this.innerText));
+			return;
+		}
+		
+		let changedDescription = _.split($(this).attr('id'),'-');
+		var values = {};
+		values['amount'] = enteredText;
+		values['transactionId'] = changedDescription[changedDescription.length - 1];
+		$.ajax({
+	          type: "POST",
+	          url: transactionsUpdateUrl + 'transaction',
+	          dataType: "json",
+	          data : values,
+	          error: function (thrownError) {
+              	 var responseError = JSON.parse(thrownError.responseText);
+                   	if(responseError.error.includes("Unauthorized")){
+                   		sessionExpiredSwal(thrownError);
+                   	} else{
+                   		swal({
+		                         title: "Unable to Change Category!",
+		                         text: "Please try again",
+		                         type: 'error',
+		                         timer: 1000,
+		                         showConfirmButton: false
+		                     }).catch(swal.noop)
+                   	}
+               }
+	        });
+	});
 	
 });
 

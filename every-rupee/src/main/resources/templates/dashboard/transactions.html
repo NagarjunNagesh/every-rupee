@@ -71,8 +71,8 @@
 						  </th>
 						  <th>Category</th>
                           <th>Description</th>
-                          <th class="text-right">Amount</th>
-                          <th class="text-right">Budgeted</th>
+                          <th class="text-right">Transaction</th>
+                          <th class="text-right">Budget</th>
                         </tr>
                       </thead>
                       <tbody id="productsJson">
@@ -89,14 +89,21 @@
               <div class="card">
                 <div class="card-body text-center">
                 	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
-                	<h4 class="card-title headings-font-weight">Total Available</h4>
-                	<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
+                	<div class="row">
+                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Income:</p></div>
+                		<div class="col-md-7 padding-left-0"><h5 id="totalIncomeTransactions" class="card-title font-weight-bold text-right"></h5></div>
+                	</div>
+                	<div class="row">
+                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Spent:</p></div>
+	                	<div class="col-md-7 padding-left-0"><h5 id="totalExpensesTransactions" class="card-title font-weight-bold text-right"></h5></div>
+                	</div>
                 	<hr>
-                	<h4 class="card-title headings-font-weight">Total Income</h4>
-                	<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
-                	<hr>
-                	<h4 class="card-title headings-font-weight">Total Spent</h4>
-                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
+                	<div class="row">
+						<div class="col-md-5 padding-right-0"><p class="card-title small">Total Available:</p></div>
+                		<div class="col-md-7 padding-left-0"><h5 id="totalAvailableTransactions" class="card-title font-weight-bold text-right"></h5></div>
+                	</div>
+                	<br/>
+                	<p class="small">You can use the amount available to <a href="/dashboard/goals">add goals</a></p>
                 </div>
                </div>
             </div>           
@@ -128,7 +135,7 @@
 			      			<input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true"/>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
-			      			<select id="categoryOptions" name="categoryOptions" class="dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			      			<select id="categoryOptions" name="categoryOptions" class="dropdown dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			      				<optgroup id="expenseSelection" label="Expenses">
 			      				</optgroup>
 			      				<optgroup id="incomeSelection" label="Income">
@@ -144,7 +151,7 @@
 			  <span id="errorMessage" th:utext="${errorMessage}"></span>
 	      </div>
 	      <div class="modal-footer border-top-0 d-block padding-top-none">
-	      	<button type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
+	      	<button id="transactionsFormButtonSubmission" type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>

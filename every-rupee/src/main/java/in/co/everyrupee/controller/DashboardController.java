@@ -15,24 +15,24 @@ public class DashboardController {
     public DashboardController(Environment environment) {
     }
 
-    @RequestMapping(GenericConstants.DASHBOARD_INCOME_URL)
+    @RequestMapping(GenericConstants.DASHBOARD_TRANSACTIONS_URL)
     public ModelAndView dashboardIncome() {
 	ModelAndView modelAndView = new ModelAndView();
-	modelAndView.setViewName(GenericConstants.DASHBOARD_INCOME_VIEW_NAME_OBJECT);
+	modelAndView.setViewName(GenericConstants.DASHBOARD_TRANSACTIONS_VIEW_NAME_OBJECT);
 	return modelAndView;
     }
 
-    @RequestMapping(GenericConstants.DASHBOARD_SAVINGS_URL)
+    @RequestMapping(GenericConstants.DASHBOARD_GOALS_URL)
     public ModelAndView dashboardSavings() {
 	ModelAndView modelAndView = new ModelAndView();
-	modelAndView.setViewName(GenericConstants.DASHBOARD_SAVINGS_VIEW_NAME_OBJECT);
+	modelAndView.setViewName(GenericConstants.DASHBOARD_GOALS_VIEW_NAME_OBJECT);
 	return modelAndView;
     }
 
-    @RequestMapping(GenericConstants.DASHBOARD_DEBT_URL)
+    @RequestMapping(GenericConstants.DASHBOARD_BUDGET_URL)
     public ModelAndView dashboardDebt() {
 	ModelAndView modelAndView = new ModelAndView();
-	modelAndView.setViewName(GenericConstants.DASHBOARD_DEBT_VIEW_NAME_OBJECT);
+	modelAndView.setViewName(GenericConstants.DASHBOARD_BUDGET_VIEW_NAME_OBJECT);
 	return modelAndView;
     }
 

@@ -34,9 +34,9 @@ public class GenericConstants {
     public static final String DASHBOARD_CONFIG_URL = "/dashboard/**";
     public static final String GOOGLE_SOCIAL_LOGIN_URL = "/login/google";
     public static final String FACEBOOK_SOCIAL_LOGIN_URL = "/login/facebook";
-    public static final String DASHBOARD_SAVINGS_URL = "/dashboard/savings";
-    public static final String DASHBOARD_INCOME_URL = "/dashboard/income";
-    public static final String DASHBOARD_DEBT_URL = "/dashboard/debt";
+    public static final String DASHBOARD_GOALS_URL = "/dashboard/goals";
+    public static final String DASHBOARD_TRANSACTIONS_URL = "/dashboard/transactions";
+    public static final String DASHBOARD_BUDGET_URL = "/dashboard/budget";
     public static final String DASHBOARD_INVESTMENT_URL = "/dashboard/investment";
     public static final String DASHBOARD_SETTINGS_URL = "/dashboard/settings";
     public static final String DASHBOARD_PROFILE_URL = "/dashboard/profile";
@@ -46,9 +46,9 @@ public class GenericConstants {
     public static final String INDEX_VIEW_NAME_OBJECT = "index";
     public static final String ABOUT_VIEW_NAME_OBJECT = "about";
     public static final String DASHBOARD_HOME_VIEW_NAME_OBJECT = "dashboard/home";
-    public static final String DASHBOARD_SAVINGS_VIEW_NAME_OBJECT = "dashboard/savings";
-    public static final String DASHBOARD_INCOME_VIEW_NAME_OBJECT = "dashboard/income";
-    public static final String DASHBOARD_DEBT_VIEW_NAME_OBJECT = "dashboard/debt";
+    public static final String DASHBOARD_GOALS_VIEW_NAME_OBJECT = "dashboard/goals";
+    public static final String DASHBOARD_TRANSACTIONS_VIEW_NAME_OBJECT = "dashboard/transactions";
+    public static final String DASHBOARD_BUDGET_VIEW_NAME_OBJECT = "dashboard/budget";
     public static final String DASHBOARD_INVESTMENT_VIEW_NAME_OBJECT = "dashboard/investment";
     public static final String DASHBOARD_SETTINGS_VIEW_NAME_OBJECT = "dashboard/settings";
     public static final String DASHBOARD_PROFILE_VIEW_NAME_OBJECT = "/dashboard/profile";

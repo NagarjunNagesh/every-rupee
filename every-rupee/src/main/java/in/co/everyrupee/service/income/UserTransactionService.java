@@ -20,6 +20,7 @@ import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
+import in.co.everyrupee.utils.ERStringUtils;
 
 @Transactional
 @Service
@@ -97,6 +98,28 @@ public class UserTransactionService implements IUserTransactionService {
 	Optional<UserTransaction> userTransaction = userTransactionsRepository
 		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
 	userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
+	userTransactionsRepository.save(userTransaction.get());
+
+    }
+
+    @Override
+    public void updateTransactions(MultiValueMap<String, String> formData, String formFieldName) {
+
+	Optional<UserTransaction> userTransaction = userTransactionsRepository
+		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
+
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, "description")) {
+	    userTransaction.get().setDescription(formData.get("description").get(0));
+	}
+
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, "transaction")) {
+	    userTransaction.get().setAmount(Double.parseDouble(formData.get("amount").get(0)));
+	}
+
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, "category")) {
+	    userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
+	}
+
 	userTransactionsRepository.save(userTransaction.get());
 
     }
