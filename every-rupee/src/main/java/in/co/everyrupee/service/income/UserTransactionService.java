@@ -93,16 +93,6 @@ public class UserTransactionService implements IUserTransactionService {
     }
 
     @Override
-    public void updateCategoriesForTransactions(MultiValueMap<String, String> formData) {
-
-	Optional<UserTransaction> userTransaction = userTransactionsRepository
-		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
-	userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
-	userTransactionsRepository.save(userTransaction.get());
-
-    }
-
-    @Override
     public void updateTransactions(MultiValueMap<String, String> formData, String formFieldName) {
 
 	Optional<UserTransaction> userTransaction = userTransactionsRepository
