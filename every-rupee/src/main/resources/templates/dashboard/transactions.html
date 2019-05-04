@@ -90,17 +90,17 @@
                 <div class="card-body text-center">
                 	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
                 	<div class="row">
-                		<div class="col-md-6"><p class="card-title small">Total Income:</p></div>
-                		<div class="col-md-6"><h4 id="totalIncomeTransactions" class="card-title font-weight-bold text-right"></h4></div>
+                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Income:</p></div>
+                		<div class="col-md-7 padding-left-0"><h5 id="totalIncomeTransactions" class="card-title font-weight-bold text-right"></h5></div>
                 	</div>
                 	<div class="row">
-                		<div class="col-md-6"><p class="card-title small">Total Spent:</p></div>
-	                	<div class="col-md-6"><h4 id="totalExpensesTransactions" class="card-title font-weight-bold text-right"></h4></div>
+                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Spent:</p></div>
+	                	<div class="col-md-7 padding-left-0"><h5 id="totalExpensesTransactions" class="card-title font-weight-bold text-right"></h5></div>
                 	</div>
                 	<hr>
                 	<div class="row">
-						<div class="col-md-6"><p class="card-title small">Total Available:</p></div>
-                		<div class="col-md-6"><h4 id="totalAvailableTransactions" class="card-title font-weight-bold text-right"></h4></div>
+						<div class="col-md-5 padding-right-0"><p class="card-title small">Total Available:</p></div>
+                		<div class="col-md-7 padding-left-0"><h5 id="totalAvailableTransactions" class="card-title font-weight-bold text-right"></h5></div>
                 	</div>
                 	<br/>
                 	<p class="small">You can use the amount available to <a href="/dashboard/goals">add goals</a></p>
@@ -151,7 +151,7 @@
 			  <span id="errorMessage" th:utext="${errorMessage}"></span>
 	      </div>
 	      <div class="modal-footer border-top-0 d-block padding-top-none">
-	      	<button type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
+	      	<button id="transactionsFormButtonSubmission" type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>

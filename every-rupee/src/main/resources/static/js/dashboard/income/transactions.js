@@ -8,8 +8,7 @@ $(document).ready(function(){
 	// Constructs transaction API url
 	var transactionAPIUrl =  "/api/transactions/";
 	var saveTransactionsUrl = "/api/transactions/save/";
-	var categoriesTransactionsUrl = "/api/transactions/categoryUpdate/";
-	var descriptionTransactionsUrl = "/api/transactions/descriptionUpdate/";
+	var transactionsUpdateUrl = "/api/transactions/update/";
 	var replaceTransactionsDiv = "#productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -34,6 +33,8 @@ $(document).ready(function(){
 	var selectedOption = '4';
 	// Description Text
 	let descriptionTextEdited = '';
+	// Amount Text
+	let amountEditedTransaction = '';
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -53,6 +54,8 @@ $(document).ready(function(){
 	   $("#successMessage").html("").hide();
 	   $("#errorMessage").html("").hide();
 	   var formValidation = true;
+	   // disable button after successful submission
+	   $('#transactionsFormButtonSubmission').prop('disabled', true);
 	   
 	   var amount = $("#amount").val();
 	   if(amount == null || amount == ''){
@@ -71,6 +74,8 @@ $(document).ready(function(){
 	    .done(function(data) {
 	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
 	    	resiteredNewTransaction=true;
+	    	// enable button after successful submission
+	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    })
 	    .fail(function(data) {
 	    	var responseError = JSON.parse(data.responseText);
@@ -80,6 +85,8 @@ $(document).ready(function(){
          	}
 	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
 	    	resiteredNewTransaction=false;
+	    	// enable button after successful submission
+	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    });
 	}
 	
@@ -178,9 +185,9 @@ $(document).ready(function(){
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   } else {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
 	   }
 			
 		tableRows += '<td class="text-right"></td></tr>';
@@ -376,6 +383,7 @@ $(document).ready(function(){
 	// Load all categories from API (Call synchronously to set global variable)
 	function fetchJSONForCategories(){
 		$.ajax({
+			  async: false,
 	          type: "GET",
 	          url: fetchCategoriesUrl,
 	          dataType: "json",
@@ -477,7 +485,7 @@ $(document).ready(function(){
 		values['transactionId'] = selectCategoryId[selectCategoryId.length - 1];
 		$.ajax({
 	          type: "POST",
-	          url: categoriesTransactionsUrl,
+	          url: transactionsUpdateUrl + 'category',
 	          dataType: "json",
 	          data : values,
 	          error: function (thrownError) {
@@ -520,7 +528,49 @@ $(document).ready(function(){
 		values['transactionId'] = changedDescription[changedDescription.length - 1];
 		$.ajax({
 	          type: "POST",
-	          url: descriptionTransactionsUrl,
+	          url: transactionsUpdateUrl + 'description',
+	          dataType: "json",
+	          data : values,
+	          error: function (thrownError) {
+              	 var responseError = JSON.parse(thrownError.responseText);
+                   	if(responseError.error.includes("Unauthorized")){
+                   		sessionExpiredSwal(thrownError);
+                   	} else{
+                   		swal({
+		                         title: "Unable to Change Category!",
+		                         text: "Please try again",
+		                         type: 'error',
+		                         timer: 1000,
+		                         showConfirmButton: false
+		                     }).catch(swal.noop)
+                   	}
+               }
+	        });
+	});
+	
+	// Catch the amount when the user focuses on the transaction
+	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
+		amountEditedTransaction = _.last(_.split(this.innerText,'₹'));
+	});
+	
+	// Process the amount to find out if the user has changed the transaction amount
+	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
+		
+		// If the text is not changed then do nothing
+		let enteredText = _.last(_.split(this.innerText,'₹'));
+		if(amountEditedTransaction == enteredText){
+			// replace the text with a trimmed version 
+			$(this).html(_.trim(this.innerText));
+			return;
+		}
+		
+		let changedDescription = _.split($(this).attr('id'),'-');
+		var values = {};
+		values['amount'] = enteredText;
+		values['transactionId'] = changedDescription[changedDescription.length - 1];
+		$.ajax({
+	          type: "POST",
+	          url: transactionsUpdateUrl + 'transaction',
 	          dataType: "json",
 	          data : values,
 	          error: function (thrownError) {

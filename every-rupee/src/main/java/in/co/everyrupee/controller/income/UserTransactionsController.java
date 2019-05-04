@@ -69,29 +69,17 @@ public class UserTransactionsController {
 	return ResponseEntity.ok().build();
     }
 
-    // Update Categories in user transactions
-    @RequestMapping(value = "/categoryUpdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<?> updateCategoriesUserTransactionById(@RequestBody MultiValueMap<String, String> formData,
-	    Principal userPrincipal) {
+    // Update description, transaction & category in user transactions
+    @RequestMapping(value = "/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> updateDescriptionByUserTransactionById(@PathVariable String formFieldName,
+	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	userTransactionService.updateCategoriesForTransactions(formData);
+	userTransactionService.updateTransactions(formData, formFieldName);
 
 	return ResponseEntity.ok().build();
     }
 
-    // Update description in user transactions
-    @RequestMapping(value = "/descriptionUpdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<?> updateDescriptionByUserTransactionById(@RequestBody MultiValueMap<String, String> formData,
-	    Principal userPrincipal) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
-
-	userTransactionService.updateDescriptionForTransactions(formData);
-
-	return ResponseEntity.ok().build();
-    }
 }

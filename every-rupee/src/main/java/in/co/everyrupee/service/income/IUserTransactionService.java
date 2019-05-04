@@ -16,5 +16,5 @@ public interface IUserTransactionService {
 
     void updateCategoriesForTransactions(MultiValueMap<String, String> formData);
 
-    void updateDescriptionForTransactions(MultiValueMap<String, String> formData);
+    void updateTransactions(MultiValueMap<String, String> formData, String formFieldName);
 }
