@@ -14,5 +14,5 @@ public interface IUserTransactionService {
 
     void deleteUserTransactions(String transactionalIds);
 
-    void updateTransactions(MultiValueMap<String, String> formData, String formFieldName);
+    UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName);
 }

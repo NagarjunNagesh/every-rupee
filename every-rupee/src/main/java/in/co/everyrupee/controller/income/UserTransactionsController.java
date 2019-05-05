@@ -71,15 +71,15 @@ public class UserTransactionsController {
 
     // Update description, transaction & category in user transactions
     @RequestMapping(value = "/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<?> updateDescriptionByUserTransactionById(@PathVariable String formFieldName,
+    public UserTransaction updateDescriptionByUserTransactionById(@PathVariable String formFieldName,
 	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	userTransactionService.updateTransactions(formData, formFieldName);
+	UserTransaction userTransactionSaved = userTransactionService.updateTransactions(formData, formFieldName);
 
-	return ResponseEntity.ok().build();
+	return userTransactionSaved;
     }
 
 }
