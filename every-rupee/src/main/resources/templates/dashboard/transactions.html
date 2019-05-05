@@ -49,16 +49,16 @@
                     <i class="material-icons">assignment</i>
                   </div>
                   <h4 class="card-title">Transactions</h4>
-				  <button type="button" class="btn btn-success btn-raised button-right" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
-                  <button id="manageTransactionButton" class="btn btn-danger button-right" onclick="popup.showSwal('warning-message-and-confirmation')" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
+				  <button type="button" class="btn btn-success btn-raised button-right btn-sm" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
+                  <button id="manageTransactionButton" class="btn btn-danger button-right btn-sm" onclick="popup.showSwal('warning-message-and-confirmation')" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table id="transactionsTable" class="table table-hover">
+                    <table id="transactionsTable" class="table fixed">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
-                          <th>
+                          <th class="text-center width-5">#</th>
+                          <th class="width-5">
                           	<div class="form-check">
                           		<label class="form-check-label">
                           		<input type="checkbox" class="form-check-input" id="checkAll">
@@ -69,10 +69,10 @@
 								</label>
 							</div>
 						  </th>
-						  <th>Category</th>
-                          <th>Description</th>
-                          <th class="text-right">Transaction</th>
-                          <th class="text-right">Budget</th>
+						  <th class="width-30">Category</th>
+                          <th class="width-30">Description</th>
+                          <th class="text-right width-15">Transaction</th>
+                          <th class="text-right width-15">Budget</th>
                         </tr>
                       </thead>
                       <tbody id="productsJson">
@@ -89,21 +89,15 @@
               <div class="card">
                 <div class="card-body text-center">
                 	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
-                	<div class="row">
-                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Income:</p></div>
-                		<div class="col-md-7 padding-left-0"><h5 id="totalIncomeTransactions" class="card-title font-weight-bold text-right"></h5></div>
-                	</div>
-                	<div class="row">
-                		<div class="col-md-5 padding-right-0"><p class="card-title small">Total Spent:</p></div>
-	                	<div class="col-md-7 padding-left-0"><h5 id="totalExpensesTransactions" class="card-title font-weight-bold text-right"></h5></div>
-                	</div>
-                	<hr>
-                	<div class="row">
-						<div class="col-md-5 padding-right-0"><p class="card-title small">Total Available:</p></div>
-                		<div class="col-md-7 padding-left-0"><h5 id="totalAvailableTransactions" class="card-title font-weight-bold text-right"></h5></div>
-                	</div>
-                	<br/>
-                	<p class="small">You can use the amount available to <a href="/dashboard/goals">add goals</a></p>
+                		<h6 class="card-title font-weight-normal">Total Income</h6>
+                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
+                		<hr>
+                		<h6 class="card-title font-weight-normal">Total Spent</h6>
+	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
+                		<hr>
+						<h6 class="card-title font-weight-normal">Total Available</h6>
+                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
+                		<button id="totalAvailableTransactions" class="btn btn-success btn-sm">add goals</button>
                 </div>
                </div>
             </div>           

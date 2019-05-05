@@ -35,6 +35,8 @@ $(document).ready(function(){
 	let descriptionTextEdited = '';
 	// Amount Text
 	let amountEditedTransaction = '';
+	// Currency Preference
+	let currentCurrencyPreference = $('#currentCurrencySymbol').text();
 	
 	// Loads the current Logged in User
 	fetchJSONForLoggedInUser();
@@ -42,6 +44,8 @@ $(document).ready(function(){
 	fetchJSONForCategories();
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
+	// Sidebar 
+	$sidebar = $('.sidebar');
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -179,15 +183,15 @@ $(document).ready(function(){
 		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><div class="dropdown"><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="custom-select tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></div></td>';
-		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription">' + userTransactionData.description + '</td>';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
+		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription"><div class="descriptionDivCentering">' + userTransactionData.description + '</div></td>';
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true"><div class="text-right amountDivCentering">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   } else {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true"><div class="text-right amountDivCentering">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   }
 			
 		tableRows += '<td class="text-right"></td></tr>';
@@ -202,17 +206,17 @@ $(document).ready(function(){
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRows += '<tr data-toggle="collapse" class="toggle table-danger" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		} else {
-			tableRows += '<tr data-toggle="collapse" class="toggle table-success" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr data-toggle="collapse" class="toggle table-success categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		}
 		
-		tableRows += '</td><td class="font-weight-bold" contenteditable="true">' + categoryMap[categoryId].categoryName + '</td>';
+		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
 		tableRows += '<td>' + '' + '</td>';
 		
 		// Append a - sign for the category if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '-' + '</td>';
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + '">' + '-' + '</td>';
 	   } else {
 		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
 	   }
@@ -537,7 +541,7 @@ $(document).ready(function(){
                    		sessionExpiredSwal(thrownError);
                    	} else{
                    		swal({
-		                         title: "Unable to Change Category!",
+		                         title: "Unable to Change Description!",
 		                         text: "Please try again",
 		                         type: 'error',
 		                         timer: 1000,
@@ -550,17 +554,18 @@ $(document).ready(function(){
 	
 	// Catch the amount when the user focuses on the transaction
 	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
-		amountEditedTransaction = _.last(_.split(this.innerText,'₹'));
+		amountEditedTransaction = this.innerText;
 	});
 	
-	// Process the amount to find out if the user has changed the transaction amount
+	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
 	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		
 		// If the text is not changed then do nothing
-		let enteredText = _.last(_.split(this.innerText,'₹'));
-		if(amountEditedTransaction == enteredText){
+		let enteredText = _.last(_.split(this.innerText,currentCurrencyPreference));
+		let previousText = _.last(_.split(amountEditedTransaction,currentCurrencyPreference));
+		if(previousText == enteredText){
 			// replace the text with a trimmed version 
-			$(this).html(_.trim(this.innerText));
+			appendCurrencyToAmount(this);
 			return;
 		}
 		
@@ -568,18 +573,30 @@ $(document).ready(function(){
 		var values = {};
 		values['amount'] = enteredText;
 		values['transactionId'] = changedDescription[changedDescription.length - 1];
+		let totalAddedOrRemovedFromAmount = enteredText - previousText;
 		$.ajax({
+			  async: false,
 	          type: "POST",
 	          url: transactionsUpdateUrl + 'transaction',
 	          dataType: "json",
 	          data : values,
+	          success: function(userTransaction){
+	        	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
+	        	  let previousCategoryTotal = parseFloat(_.last(_.split(categoryTotal,currentCurrencyPreference)));
+	        	  let minusSign = '';
+	        	  if(_.includes(categoryTotal,'-')){
+	        		  minusSign = '-';
+	        	  }
+	        	  let newCategoryTotal = (previousCategoryTotal+totalAddedOrRemovedFromAmount).toFixed(2);
+	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + newCategoryTotal);
+	          },
 	          error: function (thrownError) {
               	 var responseError = JSON.parse(thrownError.responseText);
                    	if(responseError.error.includes("Unauthorized")){
                    		sessionExpiredSwal(thrownError);
                    	} else{
                    		swal({
-		                         title: "Unable to Change Category!",
+		                         title: "Unable to Change Transaction Amount!",
 		                         text: "Please try again",
 		                         type: 'error',
 		                         timer: 1000,
@@ -588,7 +605,33 @@ $(document).ready(function(){
                    	}
                }
 	        });
+		
+		// replace the text with a trimmed version
+		appendCurrencyToAmount(this);
 	});
+	
+	// Append currency to amount if it exist and a '-' sign if it is a transaction
+	function appendCurrencyToAmount(element){
+		if(!_.includes(element.innerText,currentCurrencyPreference) && _.includes(amountEditedTransaction,currentCurrencyPreference)){
+			let changeInnerTextAmount = '';
+			if(_.includes(amountEditedTransaction,'-')){
+				changeInnerTextAmount = '-';
+			}
+			changeInnerTextAmount += currentCurrencyPreference + element.innerText;
+			$(element).html(_.trim(changeInnerTextAmount));
+		} else {
+			$(element).html(_.trim(element.innerText));
+		}
+	}
+	
+	// Change side bar color to green
+	changeColorOfSidebar();
+	
+	function changeColorOfSidebar(){
+		if ($sidebar.length != 0) {
+			 $sidebar.attr('data-color', 'green');
+		 }
+	}
 	
 });
 
