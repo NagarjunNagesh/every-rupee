@@ -185,13 +185,14 @@ $(document).ready(function(){
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
 		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
-		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription"><div class="descriptionDivCentering">' + userTransactionData.description + '</div></td>';
+		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription" data-gramm_editor="false"><div class="descriptionDivCentering">' + userTransactionData.description + '</div></td>';
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true"><div class="text-right amountDivCentering">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   // data-gramm_editor="false" is used to disable grammarly
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true" data-gramm_editor="false"><div class="text-right amountDivCentering">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   } else {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true"><div class="text-right amountDivCentering">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true" data-gramm_editor="false"><div class="text-right amountDivCentering">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   }
 			
 		tableRows += '<td class="text-right"></td></tr>';
@@ -512,7 +513,7 @@ $(document).ready(function(){
 	
 	// Catch the description when the user focuses on the description
 	$( "tbody" ).on( "focusin", ".transactionsTableDescription" ,function() {
-		descriptionTextEdited = this.innerText;
+		descriptionTextEdited = _.trim(this.innerText);
 	});
 	
 	// Process the description to find out if the user has changed the description
@@ -522,7 +523,7 @@ $(document).ready(function(){
 		let enteredText = _.trim(this.innerText);
 		if(_.isEqual(descriptionTextEdited, enteredText)){
 			// replace the text with a trimmed version 
-			$(this).html(enteredText);
+			$(this).html('<div class="descriptionDivCentering">' + enteredText + '</div>');
 			return;
 		}
 		
@@ -612,15 +613,18 @@ $(document).ready(function(){
 	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
 	function appendCurrencyToAmount(element){
+		// if the currency or the minus sign is removed then replace it back when the focus is lost
 		if(!_.includes(element.innerText,currentCurrencyPreference) && _.includes(amountEditedTransaction,currentCurrencyPreference)){
 			let changeInnerTextAmount = '';
 			if(_.includes(amountEditedTransaction,'-')){
 				changeInnerTextAmount = '-';
 			}
 			changeInnerTextAmount += currentCurrencyPreference + element.innerText;
-			$(element).html(_.trim(changeInnerTextAmount));
+			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount) + '</div>';
+			$(element).html(enteredText);
 		} else {
-			$(element).html(_.trim(element.innerText));
+			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount) + '</div>';
+			$(element).html(enteredText);
 		}
 	}
 	
