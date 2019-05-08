@@ -109,7 +109,7 @@ $('#minimizeSidebar').click(function () {
     expirationDate.setMonth(expirationDate.getMonth()+2);
     
     /* Create a cookie to store user preference */
-    document.cookie = "sidebarMini=active; expires=" + expirationDate.toGMTString();
+    document.cookie =  (1 == md.misc.sidebar_mini_active ? "sidebarMini=active; expires=" + expirationDate.toGMTString() : "sidebarMini=inActive; expires=" + expirationDate.toGMTString() );
     
   });
 
