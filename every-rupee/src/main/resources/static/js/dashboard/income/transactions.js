@@ -46,6 +46,10 @@ $(document).ready(function(){
 	fetchJSONForTransactions();
 	// Sidebar 
 	$sidebar = $('.sidebar');
+	// Regex to check if the entered value is a float
+	var regexForFloat = /^[+-]?\d+(\.\d+)?$/;
+	// Delete Transaction Button Inside TD
+	var deleteButton = '<button class="btn btn-danger btn-sm btn-round removeRowTransaction"><i class="material-icons">close</i> Remove</button>';
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -194,8 +198,10 @@ $(document).ready(function(){
 	   } else {
 		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true" data-gramm_editor="false"><div class="text-right amountDivCentering">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   }
-			
-		tableRows += '<td class="text-right"></td></tr>';
+		
+	    // append button to remove the transaction if the amount is zero
+	   	let buttonDelete = userTransactionData.amount == 0 ? deleteButton : '';
+		tableRows += '<td id="budgetTransactionsRow-' + userTransactionData.transactionId + '" class="text-right">' + buttonDelete + '</td></tr>';
 		
 		return tableRows;
 		
@@ -388,7 +394,7 @@ $(document).ready(function(){
 		if(_.isEmpty(locale)){
 			locale = "en-IN";
 		}
-		  return num.toLocaleString(locale, { minimumFractionDigits: 2 });
+		  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	}
 	
 	// Loads the currenct logged in user from API (Call synchronously to set global variable)
@@ -433,6 +439,10 @@ $(document).ready(function(){
 	          url: transactionsUpdateUrl + 'category',
 	          dataType: "json",
 	          data : values,
+	          success: function(userTransaction){
+	        	  updateCategoryAmount(userTransaction, userTransaction.amount);
+	        	  
+	          },
 	          error: function (thrownError) {
               	 var responseError = JSON.parse(thrownError.responseText);
                    	if(responseError.error.includes("Unauthorized")){
@@ -504,11 +514,29 @@ $(document).ready(function(){
 		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals)
 		let enteredText = parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,""));
 		let previousText = parseFloat(_.last(_.split(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
+		
+		let selectTransactionId = _.split($(this).attr('id'),'-');
+		
+		// Test if the entered value is the same as the previous one
 		if(previousText == enteredText){
 			// replace the text with a trimmed version 
 			appendCurrencyToAmount(this, enteredText);
+			
+			// Handles the addition of buttons in the budget column for the row
+			appendButtonForAmountEdition(enteredText, selectTransactionId);
 			return;
 		}
+		
+		// Test if the entered value is valid
+		if(isNaN(enteredText) || !regexForFloat.test(enteredText)) {
+			// Replace the text with 0 and update the categories total
+			appendCurrencyToAmount(this, 0);
+			// Replace the entered text with 0 inorder for the code to progress.
+			enteredText = 0;
+		}
+		
+		// Handles the addition of buttons in the budget column for the row
+		appendButtonForAmountEdition(enteredText, selectTransactionId);
 		
 		// obtain the transaction id of the table row
 		let changedAmount = _.split($(this).attr('id'),'-');
@@ -523,17 +551,7 @@ $(document).ready(function(){
 	          dataType: "json",
 	          data : values,
 	          success: function(userTransaction){
-	        	  let newCategoryTotal = 0;
-	        	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
-	        	  // Convert to number regex
-	        	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
-	        	  previousCategoryTotal = _.last(_.split(previousCategoryTotal, '-'));
-	        	  let minusSign = '';
-	        	  if(_.includes(categoryTotal,'-')){
-	        		  minusSign = '-';
-	        	  }
-	        	  newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
-	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	        	  updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount);
 	          },
 	          error: function (thrownError) {
               	 var responseError = JSON.parse(thrownError.responseText);
@@ -555,6 +573,28 @@ $(document).ready(function(){
 		appendCurrencyToAmount(this, enteredText);
 	});
 	
+	// Append appropriate buttons when the amount is edited
+	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
+		// append remove button if the transaction amount is zero
+		enteredText == 0 ? $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html(deleteButton) : $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html('');
+	}
+	
+	// Update the category amount
+	function updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount){
+		  let newCategoryTotal = 0;
+	  	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
+	  	  // Convert to number regex
+	  	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
+	  	  previousCategoryTotal = _.last(_.split(previousCategoryTotal, '-'));
+	  	  let minusSign = '';
+	  	  if(_.includes(categoryTotal,'-')){
+	  		  minusSign = '-';
+	  	  }
+	  	  newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
+	  	  // Format the newCategoryTotal to number and format the number as currency
+	  	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	}
+	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
 	function appendCurrencyToAmount(element, enteredText){
 		// if the currency or the minus sign is removed then replace it back when the focus is lost
@@ -564,8 +604,8 @@ $(document).ready(function(){
 				minusSign = '-';
 			}
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
-			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
-			$(element).html(enteredText);
+			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
+			$(element).html(replaceEnteredText);
 		} else {
 			let minusSign = '';
 			if(_.includes(amountEditedTransaction,'-')){
@@ -586,6 +626,49 @@ $(document).ready(function(){
 			 $sidebar.attr('data-color', 'green');
 		 }
 	}
+	
+	// Dynamically generated button click
+	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
+		var id = _.last(_.split($(this).closest('td').attr('id'),'-'));
+		
+		// Handle delete for individual row
+		jQuery.ajax({
+            url: transactionAPIUrl + id,
+            type: 'DELETE',
+            success: function(data) {
+           	 swal({
+                    title: "Deleted!",
+                    text: "Successfully deleted the selected transactions",
+                    type: 'success',
+                    timer: 1000,
+                    showConfirmButton: false
+                }).catch(swal.noop)
+           	 
+            	// Clear the div before appending
+        		$(replaceTransactionsDiv).empty();
+           	 	$("#totalIncomeTransactions").html("");
+    			$("#totalExpensesTransactions").html("");
+    			$("#totalAvailableTransactions").html("");
+            	fetchJSONForTransactions();
+            	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
+            	manageDeleteTransactionsButton(); // disable the delete transactions button
+            },
+            error: function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+                	if(responseError.error.includes("Unauthorized")){
+                		sessionExpiredSwal(thrownError);
+                	} else{
+                		swal({
+	                         title: "Unable to Delete!",
+	                         text: "Please try again",
+	                         type: 'error',
+	                         timer: 1000,
+	                         showConfirmButton: false
+	                     }).catch(swal.noop)
+                	}
+            }
+        });
+	});
 	
 });
 

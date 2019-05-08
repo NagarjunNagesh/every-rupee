@@ -30,6 +30,39 @@ window.onload = function () {
 			document.getElementById("settings-dashboard-sidebar").classList.add('active');
 		}
 		
+		// Read Cookies
+		readCookie();
+		
+		/* Read Cookies */
+		function readCookie() {
+				// make sure that the cookies exists
+		        if (document.cookie != "") { 
+		        		//Get the value from the name=value pair
+		                var sidebarActiveCookie = getCookie('sidebarMini');
+		                
+		                if(_.includes(sidebarActiveCookie, 'active')) {
+		                	 minimizeSidebar();
+		                }
+		        }
+		}
+		
+		// Gets the cookie with the name
+		function getCookie(cname) {
+			  var name = cname + "=";
+			  var decodedCookie = decodeURIComponent(document.cookie);
+			  var ca = decodedCookie.split(';');
+			  for(var i = 0; i <ca.length; i++) {
+			    var c = ca[i];
+			    while (c.charAt(0) == ' ') {
+			      c = c.substring(1);
+			    }
+			    if (c.indexOf(name) == 0) {
+			      return c.substring(name.length, c.length);
+			    }
+			  }
+			  return "";
+			}
+		
 	});
 }
 
@@ -65,3 +98,28 @@ function toggleFullscreen() {
 document.getElementById('dashboard-util-fullscreen').addEventListener('click', function() {
 	  toggleFullscreen();
 });
+
+/* Minimize sidebar */
+$('#minimizeSidebar').click(function () {
+    $(this);
+    minimizeSidebar();
+    
+    /* Create a cookie to store user preference */
+    var expirationDate = new Date;
+    expirationDate.setMonth(expirationDate.getMonth()+2);
+    
+    /* Create a cookie to store user preference */
+    document.cookie = "sidebarMini=active; expires=" + expirationDate.toGMTString();
+    
+  });
+
+/* Minimise sidebar*/
+function minimizeSidebar(){
+	 1 == md.misc.sidebar_mini_active ? ($('body').removeClass('sidebar-mini'), md.misc.sidebar_mini_active = !1)  : ($('body').addClass('sidebar-mini'), md.misc.sidebar_mini_active = !0);
+ 	var e = setInterval(function () {
+ 	      window.dispatchEvent(new Event('resize'))
+ 	    }, 180);
+ 	    setTimeout(function () {
+ 	      clearInterval(e)
+ 	    }, 1000)
+}
