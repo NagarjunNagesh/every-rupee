@@ -523,6 +523,7 @@ $(document).ready(function(){
 	          dataType: "json",
 	          data : values,
 	          success: function(userTransaction){
+	        	  let newCategoryTotal = 0;
 	        	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
 	        	  // Convert to number regex
 	        	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
@@ -531,8 +532,8 @@ $(document).ready(function(){
 	        	  if(_.includes(categoryTotal,'-')){
 	        		  minusSign = '-';
 	        	  }
-	        	  let newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
-	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(newCategoryTotal, currentUser.locale));
+	        	  newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
+	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
 	          },
 	          error: function (thrownError) {
               	 var responseError = JSON.parse(thrownError.responseText);
@@ -562,7 +563,7 @@ $(document).ready(function(){
 			if(_.includes(amountEditedTransaction,'-')){
 				minusSign = '-';
 			}
-			let changeInnerTextAmount = minusSign + currentCurrencyPreference + enteredText;
+			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
 			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(enteredText);
 		} else {
@@ -570,7 +571,7 @@ $(document).ready(function(){
 			if(_.includes(amountEditedTransaction,'-')){
 				minusSign = '-';
 			}
-			let changeInnerTextAmount = minusSign + currentCurrencyPreference + enteredText;
+			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
 			// replace the space inbetween and trim the text
 			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(replaceEnteredText);
