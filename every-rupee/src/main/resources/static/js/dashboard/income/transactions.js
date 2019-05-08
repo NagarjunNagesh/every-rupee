@@ -219,7 +219,7 @@ $(document).ready(function(){
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
 		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + '">' + '-' + '</td>';
 	   } else {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right">' + '' + '</td>';
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + '">' + '' + '</td>';
 	   }
 		tableRows += '<td id="budgetCategory" class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		// TODO  have to be replaced with budget
@@ -249,66 +249,6 @@ $(document).ready(function(){
 		  {
 		    $('#manageTransactionButton').prop('disabled', true);
 		  }  
-	}
-	
-	// Build calendar for transaction
-	$('#calendar').append(appendMonths());
-	
-	function appendMonths() {
-		var content = '';
-		var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-		months.forEach(function(entry) {
-			content += '<div class="month col-md-3 col-sm-3 ml-auto mr-auto"><div class="card"><div class="card-body text-center">';
-			content += entry;
-			content += '</div></div></div>';
-		});
-		
-		return content;
-	}
-	
-	// Loop forward when clicking on more
-	$(".nextMonths").click(function(event) {
-		loopForwardThroughMonths(event);
-	});
-	
-	// Hide the other months and show only the first three
-	showFirstThreeMonths();
-	
-	function loopForwardThroughMonths(event){
-		var items = $('#calendar .month:visible').hide().last();
-	    
-	    var nextItems = items.nextAll().slice(0, 3);
-	    
-	    if (nextItems.length === 0) {
-	        nextItems = $("#calendar .month").slice(0, 3);
-	    }
-	    
-	    nextItems.show();
-	    
-	    event.preventDefault();
-	}
-	
-	function showFirstThreeMonths(){
-		$('#calendar .month:visible').hide().last();
-		$("#calendar .month").slice(0, 3).show();
-	}
-	
-	// Loop previous months when clicking on prevMonths
-	$(".prevMonths").click(function(event) {
-		loopBackwardsThroughMonths(event);
-	});
-	
-	function loopBackwardsThroughMonths(event){
-		var items = $('#calendar .month:visible').hide().first();
-		var prevItems = items.prevAll().slice(0, 3);
-
-       if (prevItems.length === 0) {
-           prevItems = $("#calendar .month").slice($("#calendar .month").length-3, $("#calendar .month").length);
-       }
-
-       prevItems.show();
-	    
-	    event.preventDefault();
 	}
 	
 	// Swal Sweetalerts
@@ -555,26 +495,27 @@ $(document).ready(function(){
 	
 	// Catch the amount when the user focuses on the transaction
 	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
-		amountEditedTransaction = this.innerText;
+		amountEditedTransaction = _.trim(this.innerText);
 	});
 	
 	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
 	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		
-		// If the text is not changed then do nothing
-		let enteredText = _.last(_.split(this.innerText,currentCurrencyPreference));
-		let previousText = _.last(_.split(amountEditedTransaction,currentCurrencyPreference));
+		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals)
+		let enteredText = parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,""));
+		let previousText = parseFloat(_.last(_.split(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
 		if(previousText == enteredText){
 			// replace the text with a trimmed version 
-			appendCurrencyToAmount(this);
+			appendCurrencyToAmount(this, enteredText);
 			return;
 		}
 		
-		let changedDescription = _.split($(this).attr('id'),'-');
+		// obtain the transaction id of the table row
+		let changedAmount = _.split($(this).attr('id'),'-');
 		var values = {};
 		values['amount'] = enteredText;
-		values['transactionId'] = changedDescription[changedDescription.length - 1];
-		let totalAddedOrRemovedFromAmount = enteredText - previousText;
+		values['transactionId'] = changedAmount[changedAmount.length - 1];
+		let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
 		$.ajax({
 			  async: false,
 	          type: "POST",
@@ -583,13 +524,15 @@ $(document).ready(function(){
 	          data : values,
 	          success: function(userTransaction){
 	        	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
-	        	  let previousCategoryTotal = parseFloat(_.last(_.split(categoryTotal,currentCurrencyPreference)));
+	        	  // Convert to number regex
+	        	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
+	        	  previousCategoryTotal = _.last(_.split(previousCategoryTotal, '-'));
 	        	  let minusSign = '';
 	        	  if(_.includes(categoryTotal,'-')){
 	        		  minusSign = '-';
 	        	  }
-	        	  let newCategoryTotal = (previousCategoryTotal+totalAddedOrRemovedFromAmount).toFixed(2);
-	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + newCategoryTotal);
+	        	  let newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
+	        	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(newCategoryTotal, currentUser.locale));
 	          },
 	          error: function (thrownError) {
               	 var responseError = JSON.parse(thrownError.responseText);
@@ -608,23 +551,29 @@ $(document).ready(function(){
 	        });
 		
 		// replace the text with a trimmed version
-		appendCurrencyToAmount(this);
+		appendCurrencyToAmount(this, enteredText);
 	});
 	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
-	function appendCurrencyToAmount(element){
+	function appendCurrencyToAmount(element, enteredText){
 		// if the currency or the minus sign is removed then replace it back when the focus is lost
 		if(!_.includes(element.innerText,currentCurrencyPreference) && _.includes(amountEditedTransaction,currentCurrencyPreference)){
-			let changeInnerTextAmount = '';
+			let minusSign = '';
 			if(_.includes(amountEditedTransaction,'-')){
-				changeInnerTextAmount = '-';
+				minusSign = '-';
 			}
-			changeInnerTextAmount += currentCurrencyPreference + element.innerText;
-			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount) + '</div>';
+			let changeInnerTextAmount = minusSign + currentCurrencyPreference + enteredText;
+			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(enteredText);
 		} else {
-			let enteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount) + '</div>';
-			$(element).html(enteredText);
+			let minusSign = '';
+			if(_.includes(amountEditedTransaction,'-')){
+				minusSign = '-';
+			}
+			let changeInnerTextAmount = minusSign + currentCurrencyPreference + enteredText;
+			// replace the space inbetween and trim the text
+			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
+			$(element).html(replaceEnteredText);
 		}
 	}
 	
