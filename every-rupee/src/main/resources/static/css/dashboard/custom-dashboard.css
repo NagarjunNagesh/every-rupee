@@ -1,15 +1,21 @@
 @charset "UTF-8";
 
+#settings-dashboard-sidebar {
+	margin: auto 20px auto 25px;
+}
+
 .dashboard-sidebar-utils {
 	margin-bottom: .5rem;
 }
 
 #dashboard-util { 
 	margin-left:0;
+	margin-right: 20px;
 }
 
 #dashboard-util-fullscreen { 
 	margin-left:0;
+	margin-right: 20px;
 }
 
 #icons8-reading-64 {
@@ -558,5 +564,18 @@
     display: block;
     height: auto;
     white-space: nowrap;
+}
+
+#loader-remove {
+  margin: 10px auto;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #f33527;
+  border-radius: 50%;
+  animation: spin 0.5s linear infinite;
+  background-color: #fff;
+  text-align: center;
+  line-height: 120px;
 }
   

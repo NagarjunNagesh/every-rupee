@@ -109,17 +109,26 @@ $('#minimizeSidebar').click(function () {
     expirationDate.setMonth(expirationDate.getMonth()+2);
     
     /* Create a cookie to store user preference */
-    document.cookie = "sidebarMini=active; expires=" + expirationDate.toGMTString();
+    document.cookie =  (1 == md.misc.sidebar_mini_active ? "sidebarMini=active; expires=" + expirationDate.toGMTString() : "sidebarMini=inActive; expires=" + expirationDate.toGMTString() );
     
   });
 
 /* Minimise sidebar*/
 function minimizeSidebar(){
 	 1 == md.misc.sidebar_mini_active ? ($('body').removeClass('sidebar-mini'), md.misc.sidebar_mini_active = !1)  : ($('body').addClass('sidebar-mini'), md.misc.sidebar_mini_active = !0);
- 	var e = setInterval(function () {
+ 	
+	 var e = setInterval(function () {
  	      window.dispatchEvent(new Event('resize'))
  	    }, 180);
  	    setTimeout(function () {
  	      clearInterval(e)
  	    }, 1000)
+   
+ 	    // hide the active pro bottom pane
+   if(1 == md.misc.sidebar_mini_active){
+    	$('.active-pro').addClass('d-none').removeClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){ 
+        });
+    } else {
+    	$('.active-pro').removeClass('d-none').addClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){});
+    }
 }
