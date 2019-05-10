@@ -116,10 +116,21 @@ $('#minimizeSidebar').click(function () {
 /* Minimise sidebar*/
 function minimizeSidebar(){
 	 1 == md.misc.sidebar_mini_active ? ($('body').removeClass('sidebar-mini'), md.misc.sidebar_mini_active = !1)  : ($('body').addClass('sidebar-mini'), md.misc.sidebar_mini_active = !0);
- 	var e = setInterval(function () {
+ 	
+	 var e = setInterval(function () {
  	      window.dispatchEvent(new Event('resize'))
  	    }, 180);
  	    setTimeout(function () {
  	      clearInterval(e)
  	    }, 1000)
+   
+ 	    // hide the active pro bottom pane
+   if(1 == md.misc.sidebar_mini_active){
+    	$('.active-pro').animate({ height: '20px' }, 'easeOutQuad', function(){ 
+            /* animation comlete */ 
+        	$('.active-pro').addClass('d-none'); 
+        });
+    } else {
+    			$('.active-pro').removeClass('d-none').animate({ height: '20px' }, 'easeOutQuad', function(){});;
+    }
 }
