@@ -126,11 +126,9 @@ function minimizeSidebar(){
    
  	    // hide the active pro bottom pane
    if(1 == md.misc.sidebar_mini_active){
-    	$('.active-pro').animate({ height: '20px' }, 'easeOutQuad', function(){ 
-            /* animation comlete */ 
-        	$('.active-pro').addClass('d-none'); 
+    	$('.active-pro').addClass('d-none').removeClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){ 
         });
     } else {
-    			$('.active-pro').removeClass('d-none').animate({ height: '20px' }, 'easeOutQuad', function(){});;
+    	$('.active-pro').removeClass('d-none').addClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){});
     }
 }

@@ -49,7 +49,8 @@ $(document).ready(function(){
 	// Regex to check if the entered value is a float
 	var regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
-	var deleteButton = '<button class="btn btn-danger btn-sm btn-round removeRowTransaction"><i class="material-icons">close</i> Remove</button>';
+	var deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
+	var loaderBudgetSection = '<div id="loader-remove"></div>';
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -517,60 +518,52 @@ $(document).ready(function(){
 		
 		let selectTransactionId = _.split($(this).attr('id'),'-');
 		
-		// Test if the entered value is the same as the previous one
-		if(previousText == enteredText){
-			// replace the text with a trimmed version 
-			appendCurrencyToAmount(this, enteredText);
-			
-			// Handles the addition of buttons in the budget column for the row
-			appendButtonForAmountEdition(enteredText, selectTransactionId);
-			return;
-		}
-		
 		// Test if the entered value is valid
 		if(isNaN(enteredText) || !regexForFloat.test(enteredText)) {
-			// Replace the text with 0 and update the categories total
-			appendCurrencyToAmount(this, 0);
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
 		}
 		
-		// Handles the addition of buttons in the budget column for the row
-		appendButtonForAmountEdition(enteredText, selectTransactionId);
+		// Test if the entered value is the same as the previous one
+		if(previousText != enteredText){
 		
-		// obtain the transaction id of the table row
-		let changedAmount = _.split($(this).attr('id'),'-');
-		var values = {};
-		values['amount'] = enteredText;
-		values['transactionId'] = changedAmount[changedAmount.length - 1];
-		let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
-		$.ajax({
-			  async: false,
-	          type: "POST",
-	          url: transactionsUpdateUrl + 'transaction',
-	          dataType: "json",
-	          data : values,
-	          success: function(userTransaction){
-	        	  updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount);
-	          },
-	          error: function (thrownError) {
-              	 var responseError = JSON.parse(thrownError.responseText);
-                   	if(responseError.error.includes("Unauthorized")){
-                   		sessionExpiredSwal(thrownError);
-                   	} else{
-                   		swal({
-		                         title: "Unable to Change Transaction Amount!",
-		                         text: "Please try again",
-		                         type: 'error',
-		                         timer: 1000,
-		                         showConfirmButton: false
-		                     }).catch(swal.noop)
-                   	}
-               }
-	        });
+			// obtain the transaction id of the table row
+			let changedAmount = _.split($(this).attr('id'),'-');
+			var values = {};
+			values['amount'] = enteredText;
+			values['transactionId'] = changedAmount[changedAmount.length - 1];
+			let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
+			$.ajax({
+				  async: false,
+		          type: "POST",
+		          url: transactionsUpdateUrl + 'transaction',
+		          dataType: "json",
+		          data : values,
+		          success: function(userTransaction){
+		        	  updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount);
+		          },
+		          error: function (thrownError) {
+	              	 var responseError = JSON.parse(thrownError.responseText);
+	                   	if(responseError.error.includes("Unauthorized")){
+	                   		sessionExpiredSwal(thrownError);
+	                   	} else{
+	                   		swal({
+			                         title: "Unable to Change Transaction Amount!",
+			                         text: "Please try again",
+			                         type: 'error',
+			                         timer: 1000,
+			                         showConfirmButton: false
+			                     }).catch(swal.noop)
+	                   	}
+	               }
+		        });
+		}
 		
 		// replace the text with a trimmed version
 		appendCurrencyToAmount(this, enteredText);
+		
+		// Handles the addition of buttons in the budget column for the row
+		appendButtonForAmountEdition(enteredText, selectTransactionId);
 	});
 	
 	// Append appropriate buttons when the amount is edited
@@ -630,19 +623,15 @@ $(document).ready(function(){
 	// Dynamically generated button click
 	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = _.last(_.split($(this).closest('td').attr('id'),'-'));
+		// Remove the button and append the loader
+		$('#budgetTransactionsRow-' + id).html(loaderBudgetSection);
+		
 		
 		// Handle delete for individual row
 		jQuery.ajax({
             url: transactionAPIUrl + id,
             type: 'DELETE',
             success: function(data) {
-           	 swal({
-                    title: "Deleted!",
-                    text: "Successfully deleted the selected transactions",
-                    type: 'success',
-                    timer: 1000,
-                    showConfirmButton: false
-                }).catch(swal.noop)
            	 
             	// Clear the div before appending
         		$(replaceTransactionsDiv).empty();
@@ -658,6 +647,8 @@ $(document).ready(function(){
                 	if(responseError.error.includes("Unauthorized")){
                 		sessionExpiredSwal(thrownError);
                 	} else{
+                		$('#budgetTransactionsRow-' + id).html(deleteButton);
+                		
                 		swal({
 	                         title: "Unable to Delete!",
 	                         text: "Please try again",
@@ -665,6 +656,7 @@ $(document).ready(function(){
 	                         timer: 1000,
 	                         showConfirmButton: false
 	                     }).catch(swal.noop)
+                		
                 	}
             }
         });
