@@ -512,14 +512,14 @@ $(document).ready(function(){
 	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
 	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		
-		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals)
-		let enteredText = parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,""));
+		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
+		let enteredText = round(parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 		let previousText = parseFloat(_.last(_.split(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
 		
 		let selectTransactionId = _.split($(this).attr('id'),'-');
 		
 		// Test if the entered value is valid
-		if(isNaN(enteredText) || !regexForFloat.test(enteredText)) {
+		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText <= 0) {
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
 		}
@@ -569,7 +569,7 @@ $(document).ready(function(){
 	// Append appropriate buttons when the amount is edited
 	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
 		// append remove button if the transaction amount is zero
-		enteredText == 0 ? $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html(deleteButton) : $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html('');
+		enteredText == 0 ? $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html(deleteButton).hide().children().fadeIn('slow', function(){ $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).show('slow'); }) : $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).children().fadeOut('slow', function(){ $(this).html(''); });
 	}
 	
 	// Update the category amount

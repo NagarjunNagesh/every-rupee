@@ -114,4 +114,9 @@ var onReCaptchaExpired = function(response) {
 	    $("#captchaError").html("reCaptcha has expired.  Please solve a new reCaptcha").show();
 	    grecaptcha.reset();
 };
+
+//Minimize the decimals to a set variable
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
 	
