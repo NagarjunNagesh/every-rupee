@@ -102,7 +102,7 @@ $(document).ready(function(){
 	
 	// Use this function to fade the message out
 	function fadeoutMessage(divId, message, milliSeconds){
-		$(divId).show().append(message);
+		$(divId).fadeIn('slow').show().append(message);
     	setTimeout(function() {
     		$(divId).fadeOut();
     	}, milliSeconds);
@@ -519,9 +519,14 @@ $(document).ready(function(){
 		let selectTransactionId = _.split($(this).attr('id'),'-');
 		
 		// Test if the entered value is valid
-		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText <= 0) {
+		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
+		}
+		
+		// Replace negative sign to positive sign if entered by the user
+		if(enteredText < 0){
+			enteredText = parseFloat(_.last(_.split(enteredText,'-')),2);
 		}
 		
 		// Test if the entered value is the same as the previous one
@@ -623,8 +628,8 @@ $(document).ready(function(){
 	// Dynamically generated button click
 	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = _.last(_.split($(this).closest('td').attr('id'),'-'));
-		// Remove the button and append the loader
-		$('#budgetTransactionsRow-' + id).html(loaderBudgetSection);
+		// Remove the button and append the loader with fade out
+		$('#budgetTransactionsRow-' + id).children().fadeOut('slow', function(){ $(this).html(loaderBudgetSection); });
 		
 		
 		// Handle delete for individual row
