@@ -230,7 +230,7 @@ $(document).ready(function(){
 		
 		// Append a - sign for the category if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' sendingCategory">' + '-' + '</td>';
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' spendingCategory">' + '-' + '</td>';
 	   } else {
 		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' incomeCategory">' + '' + '</td>';
 	   }
@@ -615,7 +615,7 @@ $(document).ready(function(){
 	  	  if(_.includes(categoryTotal,'-')){
 	  		  minusSign = '-';
 	  	  }
-	  	  newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
+	  	  newCategoryTotal = round(parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)),2);
 	  	  // Format the newCategoryTotal to number and format the number as currency
 	  	  $('.amountCategoryId-' + categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
 	  	  
@@ -629,23 +629,44 @@ $(document).ready(function(){
 	// Updates the final amount section with the current value
 	function updateTotalCalculations(categoryForCalculation , totalAddedOrRemovedFromAmount){
 		
-		if(_.includes(categoryForCalculation, 'sendingCategory')) {
+		if(_.includes(categoryForCalculation, 'spendingCategory')) {
 			let currentValueExpense = round(parseFloat(_.trim(_.last(_.split($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			$("#totalExpensesTransactions").html('-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
 			
 			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountAvailable = currentValueAvailable - round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			$("#totalAvailableTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
+			let totalAmountAvailable = 0;
+			let minusSign = '';
+			
+			if(_.includes($("#totalAvailableTransactions")[0].innerText,'-')){
+				totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+				minusSign = '-';
+			} else {
+				totalAmountAvailable = currentValueAvailable - round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			}
+			
+			$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
 			
 		} else if(_.includes(categoryForCalculation, 'incomeCategory')) {
 			let currentValueIncome = round(parseFloat(_.trim(_.last(_.split($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			$("#totalIncomeTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
 			
+			let minusSign = '';
 			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			$("#totalAvailableTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
+			let totalAmountAvailable = 0;
+			if(_.includes($("#totalAvailableTransactions")[0].innerText,'-')){
+				totalAmountAvailable = parseFloat('-' + currentValueAvailable) + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			} else {
+				totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			}
+			
+			if(totalAmountAvailable < 0){
+				totalAmountAvailable = _.last(_.split(totalAmountAvailable,'-'));
+				minusSign = '-';
+			}
+			
+			$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
 		}
 		
 	}
