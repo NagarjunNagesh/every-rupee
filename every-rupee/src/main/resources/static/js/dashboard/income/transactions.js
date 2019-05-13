@@ -62,29 +62,34 @@ $(document).ready(function(){
 	   event.stopImmediatePropagation(); // necessary to prevent submitting the form twice
 	   $("#successMessage").html("").hide();
 	   $("#errorMessage").html("").hide();
-	   var formValidation = true;
+	   let formValidation = true;
 	   // disable button after successful submission
 	   $('#transactionsFormButtonSubmission').prop('disabled', true);
 	   
-	   var amount = $("#amount").val();
+	   let amount = $("#amount").val();
 	   if(amount == null || amount == ''){
-		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Amount field is empty.</p></div> <br/>',2000);
+		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Please fill the Amount.</p></div> <br/>',2000);
+		   formValidation = false;
+	   }
+	   
+	   if(convertToNumberFromCurrency(amount) == 0){
+		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Amount cannot be zero.</p></div> <br/>',2000);
 		   formValidation = false;
 	   }
 	   
 	   if(!formValidation){
+		   // enable button after successful submission
+		   $('#transactionsFormButtonSubmission').prop('disabled', false);
 		   return;
 	   }
 	   
-		var formData= $('#transactionsForm').serialize();
+		let formData= $('#transactionsForm').serialize();
 	    $.post(saveTransactionsUrl + currentUser.financialPortfolioId,formData ,function(data){
 	        
 	    })
 	    .done(function(data) {
 	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
 	    	resiteredNewTransaction=true;
-	    	// enable button after successful submission
-	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    })
 	    .fail(function(data) {
 	    	var responseError = JSON.parse(data.responseText);
@@ -94,15 +99,16 @@ $(document).ready(function(){
          	}
 	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
 	    	resiteredNewTransaction=false;
-	    	// enable button after successful submission
-	    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	    });
+	    
+	    // enable button after successful submission
+    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	}
 	
 	
 	// Use this function to fade the message out
 	function fadeoutMessage(divId, message, milliSeconds){
-		$(divId).show().append(message);
+		$(divId).fadeIn('slow').show().append(message);
     	setTimeout(function() {
     		$(divId).fadeOut();
     	}, milliSeconds);
@@ -188,7 +194,7 @@ $(document).ready(function(){
 		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
 		tableRows += '<tr class="hideableRow"><td class="text-center">' + index + '</td><td><div class="form-check"><label class="form-check-label"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'">';
-		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		tableRows += '<span class="form-check-sign"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory categoryIdForSelect-' + categoryId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
 		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription" data-gramm_editor="false"><div class="descriptionDivCentering">' + userTransactionData.description + '</div></td>';
 		
@@ -202,7 +208,7 @@ $(document).ready(function(){
 		
 	    // append button to remove the transaction if the amount is zero
 	   	let buttonDelete = userTransactionData.amount == 0 ? deleteButton : '';
-		tableRows += '<td id="budgetTransactionsRow-' + userTransactionData.transactionId + '" class="text-right">' + buttonDelete + '</td></tr>';
+		tableRows += '<td id="budgetTransactionsRow-' + userTransactionData.transactionId + '" class="text-right categoryIdForBudget-' + categoryId + '">' + buttonDelete + '</td></tr>';
 		
 		return tableRows;
 		
@@ -224,9 +230,9 @@ $(document).ready(function(){
 		
 		// Append a - sign for the category if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + '">' + '-' + '</td>';
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' sendingCategory">' + '-' + '</td>';
 	   } else {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + '">' + '' + '</td>';
+		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' incomeCategory">' + '' + '</td>';
 	   }
 		tableRows += '<td id="budgetCategory" class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
 		// TODO  have to be replaced with budget
@@ -431,17 +437,32 @@ $(document).ready(function(){
 	
 	// Change trigger on select
 	$( "tbody" ).on( "change", ".tableRowSelectCategory" ,function() {
-		let selectCategoryId = _.split($(this).attr('id'),'-');
-		var values = {};
+		let categoryId = $(this).attr('id');
+		let selectedTransactionId = _.split(categoryId,'-');
+		let classList = $('#' + categoryId)[0].classList;
+		let values = {};
 		values['categoryId'] = $(this).val();
-		values['transactionId'] = selectCategoryId[selectCategoryId.length - 1];
+		values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
 		$.ajax({
 	          type: "POST",
 	          url: transactionsUpdateUrl + 'category',
 	          dataType: "json",
 	          data : values,
 	          success: function(userTransaction){
-	        	  updateCategoryAmount(userTransaction, userTransaction.amount);
+	        	  let previousCategoryId ='';
+	        	  // Update the current category
+	        	  classList.forEach(function (classItem) {
+	        		  if(_.includes(classItem,'categoryIdForSelect')){
+	        			// Remove amount from current Category
+	        			  previousCategoryId = _.last(_.split(classItem,'-'));
+	    	        	  updateCategoryAmount(previousCategoryId , parseFloat('-' + userTransaction.amount), false);
+	        		  }
+	        	  });
+	        	  
+	        	  // Remove previous class related to category id and add the new one
+	        	  $('#' + categoryId).removeClass('categoryIdForSelect-' + previousCategoryId).addClass('categoryIdForSelect-'+ userTransaction.categoryId);
+	        	  // Add to the new category
+	        	  updateCategoryAmount(userTransaction.categoryId, userTransaction.amount, false);
 	        	  
 	          },
 	          error: function (thrownError) {
@@ -512,16 +533,21 @@ $(document).ready(function(){
 	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
 	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		
-		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals)
-		let enteredText = parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,""));
+		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
+		let enteredText = round(parseFloat(_.trim(_.last(_.split(this.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 		let previousText = parseFloat(_.last(_.split(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
 		
 		let selectTransactionId = _.split($(this).attr('id'),'-');
 		
 		// Test if the entered value is valid
-		if(isNaN(enteredText) || !regexForFloat.test(enteredText)) {
+		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
+		}
+		
+		// Replace negative sign to positive sign if entered by the user
+		if(enteredText < 0){
+			enteredText = parseFloat(_.last(_.split(enteredText,'-')),2);
 		}
 		
 		// Test if the entered value is the same as the previous one
@@ -540,7 +566,7 @@ $(document).ready(function(){
 		          dataType: "json",
 		          data : values,
 		          success: function(userTransaction){
-		        	  updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount);
+		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -569,13 +595,19 @@ $(document).ready(function(){
 	// Append appropriate buttons when the amount is edited
 	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
 		// append remove button if the transaction amount is zero
-		enteredText == 0 ? $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html(deleteButton) : $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html('');
+		enteredText == 0 ? $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).html(deleteButton).hide().children().fadeIn('slow', function(){ $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).show('slow'); }) : $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]).children().fadeOut('slow', function(){ $(this).html(''); });
 	}
 	
 	// Update the category amount
-	function updateCategoryAmount(userTransaction, totalAddedOrRemovedFromAmount){
+	function updateCategoryAmount(categoryId, totalAddedOrRemovedFromAmount, updateTotal){
+		
+			// if the category has not been added yet
+			if(_.isEmpty($('.amountCategoryId-' + categoryId))){
+				return;
+			}
+			
 		  let newCategoryTotal = 0;
-	  	  let categoryTotal = $('.amountCategoryId-' + userTransaction.categoryId)[0].innerText;
+	  	  let categoryTotal = $('.amountCategoryId-' + categoryId)[0].innerText;
 	  	  // Convert to number regex
 	  	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
 	  	  previousCategoryTotal = _.last(_.split(previousCategoryTotal, '-'));
@@ -585,7 +617,37 @@ $(document).ready(function(){
 	  	  }
 	  	  newCategoryTotal = parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)).toFixed(2);
 	  	  // Format the newCategoryTotal to number and format the number as currency
-	  	  $('.amountCategoryId-' + userTransaction.categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	  	  $('.amountCategoryId-' + categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	  	  
+	  	  if(updateTotal){
+	  		  // Obtain the class list of the category table row
+		  	  let categoryForCalculation = $('.amountCategoryId-' + categoryId)[0].classList;
+		  	  updateTotalCalculations(categoryForCalculation, totalAddedOrRemovedFromAmount);
+	  	  }
+	}
+	
+	// Updates the final amount section with the current value
+	function updateTotalCalculations(categoryForCalculation , totalAddedOrRemovedFromAmount){
+		
+		if(_.includes(categoryForCalculation, 'sendingCategory')) {
+			let currentValueExpense = round(parseFloat(_.trim(_.last(_.split($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			$("#totalExpensesTransactions").html('-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
+			
+			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+			let totalAmountAvailable = currentValueAvailable - round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			$("#totalAvailableTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
+			
+		} else if(_.includes(categoryForCalculation, 'incomeCategory')) {
+			let currentValueIncome = round(parseFloat(_.trim(_.last(_.split($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			$("#totalIncomeTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
+			
+			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+			let totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			$("#totalAvailableTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
+		}
+		
 	}
 	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
@@ -605,7 +667,7 @@ $(document).ready(function(){
 				minusSign = '-';
 			}
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
-			// replace the space inbetween and trim the text
+			// Replace the space in between and trim the text
 			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(replaceEnteredText);
 		}
@@ -623,8 +685,8 @@ $(document).ready(function(){
 	// Dynamically generated button click
 	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = _.last(_.split($(this).closest('td').attr('id'),'-'));
-		// Remove the button and append the loader
-		$('#budgetTransactionsRow-' + id).html(loaderBudgetSection);
+		// Remove the button and append the loader with fade out
+		$('#budgetTransactionsRow-' + id).children().fadeOut('slow', function(){ $(this).html(loaderBudgetSection); });
 		
 		
 		// Handle delete for individual row
@@ -632,18 +694,28 @@ $(document).ready(function(){
             url: transactionAPIUrl + id,
             type: 'DELETE',
             success: function(data) {
-           	 
-            	// Clear the div before appending
-        		$(replaceTransactionsDiv).empty();
-           	 	$("#totalIncomeTransactions").html("");
-    			$("#totalExpensesTransactions").html("");
-    			$("#totalAvailableTransactions").html("");
-            	fetchJSONForTransactions();
-            	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
-            	manageDeleteTransactionsButton(); // disable the delete transactions button
+            	
+            	let classListBudget = $('#budgetTransactionsRow-' + id)[0].classList;
+            	classListBudget.forEach(function(classItem) {
+            		if(_.includes(classItem, 'categoryIdForBudget')) {
+            			// Remove amount from current Category
+	        			previousCategoryId = _.last(_.split(classItem,'-'));
+	        			let categoryAmount = convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText);
+	        			
+	        			if(categoryAmount == 0) {
+	        				$('.amountCategoryId-' + previousCategoryId).closest('tr').fadeOut('slow', function(){ $(this).remove(); });
+	        			}
+	        			
+            		}
+            	});
+            	
+            	// Remove the table row (No need to update category amount or total values as the value of the TR is already 0 )
+            	let closestTr = $('#budgetTransactionsRow-' + id).closest('tr');
+            	$(closestTr).fadeOut('slow', function(){ $(this).remove(); });
+            	
             },
             error: function (thrownError) {
-           	 var responseError = JSON.parse(thrownError.responseText);
+           	 let responseError = JSON.parse(thrownError.responseText);
                 	if(responseError.error.includes("Unauthorized")){
                 		sessionExpiredSwal(thrownError);
                 	} else{
@@ -661,6 +733,11 @@ $(document).ready(function(){
             }
         });
 	});
+	
+	// convert from currency format to number
+	function convertToNumberFromCurrency(amount){
+		return round(parseFloat(_.trim(_.last(_.split(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+	}
 	
 });
 

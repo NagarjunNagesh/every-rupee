@@ -132,3 +132,8 @@ function minimizeSidebar(){
     	$('.active-pro').removeClass('d-none').addClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){});
     }
 }
+
+// Minimize the decimals to a set variable
+function round(value, decimals) {
+  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
