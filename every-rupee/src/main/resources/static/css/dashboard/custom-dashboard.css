@@ -581,4 +581,8 @@
 
 /** Fix firefox from adding br at the first editable content **/
 br[type="_moz"]{display: none;}
+
+.sidebar-mini .sidebar .sidebar-wrapper {
+	overflow-x:hidden;
+}
   

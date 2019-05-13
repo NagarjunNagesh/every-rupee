@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.context.annotation.Lazy;
+
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 
 /**
@@ -15,51 +17,51 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
  * @author nagarjun
  *
  */
-
+@Lazy
 @Entity
 @Table(name = ProfileServiceConstants.Role.ROLE_TABLE_NAME)
 public class Role {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = ProfileServiceConstants.Role.ROLE_ID)
-	private int id;
-	@Column(name = ProfileServiceConstants.Role.ROLE_PROPERTY)
-	private String role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = ProfileServiceConstants.Role.ROLE_ID)
+    private int id;
+    @Column(name = ProfileServiceConstants.Role.ROLE_PROPERTY)
+    private String role;
 
-	public Role() {
-	}
+    public Role() {
+    }
 
-	public Role(String role) {
-		this.role = role;
-	}
+    public Role(String role) {
+	this.role = role;
+    }
 
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
+    /**
+     * @return the id
+     */
+    public int getId() {
+	return id;
+    }
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+	this.id = id;
+    }
 
-	/**
-	 * @return the role
-	 */
-	public String getRole() {
-		return role;
-	}
+    /**
+     * @return the role
+     */
+    public String getRole() {
+	return role;
+    }
 
-	/**
-	 * @param role the role to set
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
+    /**
+     * @param role the role to set
+     */
+    public void setRole(String role) {
+	this.role = role;
+    }
 
 }

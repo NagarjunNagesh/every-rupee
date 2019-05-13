@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 public class Profile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ProfileServiceConstants.User.USER_ID)
     private int id;
     @Column(name = ProfileServiceConstants.User.EMAIL)
@@ -49,7 +50,7 @@ public class Profile {
     private int active;
     @Column(name = ProfileServiceConstants.User.RESET_TOKEN)
     private String resetToken;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = ProfileServiceConstants.UserRole.USER_ROLE, joinColumns = @JoinColumn(name = ProfileServiceConstants.User.USER_ID), inverseJoinColumns = @JoinColumn(name = ProfileServiceConstants.Role.ROLE_ID))
     private Set<Role> roles;
     @Column(name = ProfileServiceConstants.User.LOCALE)
