@@ -703,7 +703,7 @@ $(document).ready(function(){
 	        			let categoryAmount = convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText);
 	        			
 	        			if(categoryAmount == 0) {
-	        				$('.amountCategoryId-' + previousCategoryId).closest('tr').fadeOut('slow', function(){ $(this).remove(); });;
+	        				$('.amountCategoryId-' + previousCategoryId).closest('tr').fadeOut('slow', function(){ $(this).remove(); });
 	        			}
 	        			
             		}
