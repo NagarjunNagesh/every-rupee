@@ -643,9 +643,21 @@ $(document).ready(function(){
 			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			$("#totalIncomeTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
 			
+			let minusSign = '';
 			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			$("#totalAvailableTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
+			let totalAmountAvailable = 0;
+			if(_.includes($("#totalAvailableTransactions")[0].innerText,'-')){
+				totalAmountAvailable = parseFloat('-' + currentValueAvailable) + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			} else {
+				totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			}
+			
+			if(totalAmountAvailable < 0){
+				totalAmountAvailable = _.last(_.split(totalAmountAvailable,'-'));
+				minusSign = '-';
+			}
+			
+			$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
 		}
 		
 	}
