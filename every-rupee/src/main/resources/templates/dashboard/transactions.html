@@ -21,7 +21,30 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-			<div class="col-md-9 col-sm-9">
+          	 <div class="col-md-12 col-sm-12">
+              <div class="card">
+                <div class="card-body text-center">
+                	<!-- input with datetimepicker -->
+					<div class="card-title col-md-2 col-sm-2 form-group">
+					    <label class="card-title label-control">Datetime Picker</label>
+					    <input type="text" class="card-title form-control datetimepicker" id="monthYearOnlyPicker"/>
+					</div>
+                	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
+                		<h6 class="card-title font-weight-normal">Total Income</h6>
+                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
+                		<hr>
+                		<h6 class="card-title font-weight-normal">Total Spent</h6>
+	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
+                		<hr>
+						<h6 class="card-title font-weight-normal">Total Available</h6>
+                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
+                		<button id="totalAvailableTransactions" class="btn btn-success btn-sm">add goals</button>
+                </div>
+               </div>
+            </div>           
+          </div>
+          <div class="row">
+			<div class="col-md-12 col-sm-12">
               <div class="card">
                 <div class="card-header card-header-success card-header-icon">
                   <div class="card-icon">
@@ -64,22 +87,6 @@
                 </div>
               </div>
             </div> 
-            <div class="col-md-3 col-sm-3">
-              <div class="card">
-                <div class="card-body text-center">
-                	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
-                		<h6 class="card-title font-weight-normal">Total Income</h6>
-                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
-                		<hr>
-                		<h6 class="card-title font-weight-normal">Total Spent</h6>
-	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
-                		<hr>
-						<h6 class="card-title font-weight-normal">Total Available</h6>
-                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
-                		<button id="totalAvailableTransactions" class="btn btn-success btn-sm">add goals</button>
-                </div>
-               </div>
-            </div>           
           </div>
           <!-- end row -->
         </div>

@@ -7,9 +7,32 @@
   <object th:include="fragments/head :: head" th:remove="tag" ></object>
   
 </head>
-<body>
+<body class="off-canvas-sidebar">
 <div th:replace="fragments/header :: header">&copy; EveryRupee header</div>
 
-<div th:replace="fragments/footer :: footer">&copy; 2019 EveryRupee</div>
+<div class="wrapper wrapper-full-page">
+    <div class="page-header error-page header-filter" style="background-image: url('../../img/lost-mountains.jpg')">
+      <!--   you can change the color of the filter page using: data-color="blue | green | orange | red | purple" -->
+      <div class="content-center">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="title">Oops!</h1>
+            <h2>Looks like you got lost :(</h2>
+			<!--   TODO add functionality-->
+            <div class="input-group no-border">
+                <input type="text" value="" class="form-control" placeholder="Search...">
+                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                  <i class="material-icons">search</i>
+                  <div class="ripple-container"></div>
+                </button>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+      
+	<div th:replace="fragments/footer :: footer">&copy; 2019 EveryRupee</div>
+    </div>
+  </div>
 </body>
 </html>

@@ -178,7 +178,7 @@ $(document).ready(function(){
 		   
 		   totalAvailableTransactions = totalIncomeTransactions - totalExpensesTransactions;
 		   if(totalAvailableTransactions < 0) {
-			   $("#totalAvailableTransactions").append( '-' + currentCurrencyPreference + formatNumber(Math.abs(totalAvailableTransactions), currentUser.locale));
+			   $("#totalAvailableTransactions").append('-' + currentCurrencyPreference + formatNumber(Math.abs(totalAvailableTransactions), currentUser.locale));
 		   } else {
 			   $("#totalAvailableTransactions").append(currentCurrencyPreference + formatNumber(totalAvailableTransactions, currentUser.locale));
 		   }
@@ -759,6 +759,13 @@ $(document).ready(function(){
 	function convertToNumberFromCurrency(amount){
 		return round(parseFloat(_.trim(_.last(_.split(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 	}
+	
+	/** 
+	 * 
+	 * Build progress bars
+	 * 
+	 */
+	
 	
 });
 

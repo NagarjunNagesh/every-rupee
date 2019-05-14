@@ -256,3 +256,40 @@
 	}
 
 }
+
+.page-header .content-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    color: #fff;
+    padding: 0 15px;
+    width: 100%;
+    max-width: 880px;
+}
+
+.off-canvas-sidebar .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.error-page .title {
+    font-size: 12em;
+    color: #fff;
+    letter-spacing: 14px;
+    font-weight: 700;
+}
+
+.error-page .footer ul li a, .error-page .footer .copyright {
+    color: #fff;
+    padding: .9375rem;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    position: relative;
+    display: block;
+}
