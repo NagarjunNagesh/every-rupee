@@ -64,6 +64,7 @@ window.onload = function () {
 			}
 		
 	});
+	
 }
 
 /* When the toggleFullscreen() function is executed, open the video in fullscreen.

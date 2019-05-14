@@ -493,13 +493,16 @@ $(document).ready(function(){
 	// Catch the description when the user focuses on the description
 	$( "tbody" ).on( "focusin", ".transactionsTableDescription" ,function() {
 		descriptionTextEdited = _.trim(this.innerText);
+		// Remove BR appended by mozilla
+		$('.transactionsTableDescription br[type="_moz"]').remove();
+		$(this).closest('tr').addClass('tableRowTransactionHighlight');
 	});
 	
 	// Process the description to find out if the user has changed the description
 	$( "tbody" ).on( "focusout", ".transactionsTableDescription" ,function() {
 		
 		postNewDescriptionToUserTransactions(this);
-		
+		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
 	});
 	
 	// Description - disable enter key and submit request
@@ -559,11 +562,13 @@ $(document).ready(function(){
 	// Catch the amount when the user focuses on the transaction
 	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
 		amountEditedTransaction = _.trim(this.innerText);
+		$(this).closest('tr').addClass('tableRowTransactionHighlight');
 	});
 	
 	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
 	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		postNewAmountToUserTransactions(this);
+		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
 	});
 	
 	// Amount - disable enter key and submit request
