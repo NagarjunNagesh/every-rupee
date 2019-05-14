@@ -2,20 +2,24 @@
 
 #settings-dashboard-sidebar {
 	margin: auto 20px auto 25px;
+	color: #a9afbb;
 }
 
 .dashboard-sidebar-utils {
 	margin-bottom: .5rem;
+	color: #a9afbb;
 }
 
 #dashboard-util { 
 	margin-left:0;
 	margin-right: 20px;
+	color: #a9afbb;
 }
 
 #dashboard-util-fullscreen { 
 	margin-left:0;
 	margin-right: 20px;
+	color: #a9afbb;
 }
 
 #icons8-reading-64 {
@@ -436,7 +440,7 @@
 	appearance: none;
 }
 
-.hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus, .descriptionDivCentering:active, .descriptionDivCentering:focus {
+.hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus {
 	display: block;
 	width: 100%;
 	padding: 0.375rem 1.75rem 0.375rem 0.75rem;
@@ -446,9 +450,10 @@
 	border-radius: 0.25rem;
 	appearance: none;
 	height: 33px;
+	background-color: #fff;
 }
 
-.hideableRow:hover .amountDivCentering, .amountDivCentering:active, .amountDivCentering:focus {
+.hideableRow:hover .amountDivCentering, .hideableRow:focus .amountDivCentering, .hideableRow:active .amountDivCentering, .amountDivCentering:active, .amountDivCentering:focus {
 	display: block;
 	text-align: right;
 	padding: 0.375rem 0.375rem 0.375rem 0.75rem;
@@ -457,6 +462,7 @@
 	border: 1px solid #d2d2d2;
 	border-radius: 0.25rem;
 	appearance: none;
+	background-color: #fff;
 }
 
 .width-5{
@@ -1116,4 +1122,17 @@ br[type="_moz"]{display: none;}
 	-webkit-transition: ease-out 1s width 1s;
 	transition: ease-out 1s width 1s;
 	height: 4rem;
+}
+
+.background-snow:hover .tableRowSelectCategory, .background-snow:hover  .descriptionDivCentering, .background-snow:hover .amountDivCentering, .hideableRow:hover .check, .check {
+	background-color: #fff;
+}
+
+.background-snow, .background-snow .tableRowSelectCategory, .hideableRow:hover {
+	background-color: snow;
+}
+
+.hideableRow:hover, .background-snow {
+	border-bottom: 2px solid #fff1f1;
+	border-top: 2px solid #fff1f1;
 }
