@@ -193,17 +193,17 @@ $(document).ready(function(){
 		let tableRows = '';
 		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
-		tableRows += '<tr class="hideableRow"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
+		tableRows += '<tr class="hideableRow-' + categoryId + ' hideableRow"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
 		tableRows += '<span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory categoryIdForSelect-' + categoryId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
-		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" contenteditable="true" class="transactionsTableDescription" data-gramm_editor="false"><div class="descriptionDivCentering">' + userTransactionData.description + '</div></td>';
+		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" class="transactionsTableDescription" data-gramm_editor="false" tabindex="-1"><div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + userTransactionData.description + '</div></td>';
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
 		   // data-gramm_editor="false" is used to disable grammarly
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true" data-gramm_editor="false"><div class="text-right amountDivCentering">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" data-gramm_editor="false" tabindex="-1"><div class="text-right amountDivCentering" contenteditable="true" tabindex="0">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   } else {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" contenteditable="true" data-gramm_editor="false"><div class="text-right amountDivCentering">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" data-gramm_editor="false" tabindex="-1"><div class="text-right amountDivCentering" contenteditable="true" tabindex="0">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
 	   }
 		
 	    // append button to remove the transaction if the amount is zero
@@ -220,9 +220,9 @@ $(document).ready(function(){
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRows += '<tr data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		} else {
-			tableRows += '<tr data-toggle="collapse" class="toggle table-success categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-success categoryTableRow-' + categoryId + '" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
 		}
 		
 		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
@@ -246,11 +246,7 @@ $(document).ready(function(){
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
-		if($(this).prop("checked") == true){
-			$(this).closest('tr').addClass('background-snow');
-		} else {
-			$(this).closest('tr').removeClass('background-snow');
-		}
+		$(this).closest('tr').toggleClass('background-snow', 300);
 	});
 	
 	// Select all check boxes for Transactions
@@ -383,7 +379,10 @@ $(document).ready(function(){
 	
 	// Show or hide multiple rows in the transactions table
 	$( "tbody" ).on( "click", ".toggle" ,function() {
-	  	$('#productsJson .hideableRow').toggleClass('d-none');
+		let categoryId = _.split($(this).attr('id'),'-');
+		let classToHide = '.hideableRow-' + _.last(categoryId);
+	  	$(classToHide).toggleClass('d-none');
+	  	$($(this)[0].children[0]).toggleClass('dropdown-toggle', 1000, 'easeInQuad').toggleClass('dropdown-toggle-right', 1000, 'easeInQuad');
 	 });
 	
 	// Throw a session expired error and reload the page.
@@ -442,6 +441,25 @@ $(document).ready(function(){
 		 return categoryOptions;
 	}
 	
+	// Catch the description when the user focuses on the description
+	$( "tbody" ).on( "focusin", ".tableRowSelectCategory" ,function() {
+		let closestTableRow = $(this).closest('tr');
+		// Remove BR appended by mozilla
+		if(closestTableRow != null && closestTableRow.length > 0 && closestTableRow[0] != null) {
+			if(closestTableRow[0].children != null && closestTableRow[0].children.length >= 4) {
+				if(closestTableRow[0].children[3] != null && closestTableRow[0].children[3].children != null && closestTableRow[0].children[3].children[1] != null) {
+					closestTableRow[0].children[3].children[1].remove();
+				}
+			}
+		}
+		closestTableRow.addClass('tableRowTransactionHighlight');
+	});
+	
+	// Process the description to find out if the user has changed the description
+	$( "tbody" ).on( "focusout", ".tableRowSelectCategory" ,function() {
+		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
+	});
+	
 	// Change trigger on select
 	$( "tbody" ).on( "change", ".tableRowSelectCategory" ,function() {
 		let categoryId = $(this).attr('id');
@@ -492,9 +510,9 @@ $(document).ready(function(){
 	
 	// Catch the description when the user focuses on the description
 	$( "tbody" ).on( "focusin", ".transactionsTableDescription" ,function() {
-		descriptionTextEdited = _.trim(this.innerText);
 		// Remove BR appended by mozilla
 		$('.transactionsTableDescription br[type="_moz"]').remove();
+		descriptionTextEdited = _.trim(this.innerText);
 		$(this).closest('tr').addClass('tableRowTransactionHighlight');
 	});
 	
