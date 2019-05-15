@@ -28,12 +28,17 @@
                     <i class="material-icons">assignment</i>
                   </div>
                   <h4 class="card-title">Transactions</h4>
+                  <!-- input with date time picker -->
+				  <div class="form-group">
+				    <label class="card-title label-control">Datetime Picker</label>
+				    <input type="text" class="card-title form-control datetimepicker" id="monthYearOnlyPicker"/>
+				  </div>
 				  <button type="button" class="btn btn-success btn-raised button-right btn-sm" data-toggle="modal" data-target="#GSCCModal">Add Transactions</button>
                   <button id="manageTransactionButton" class="btn btn-danger button-right btn-sm" onclick="popup.showSwal('warning-message-and-confirmation')" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one transaction">Delete Transactions</button>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table id="transactionsTable" class="table fixed">
+                    <table id="transactionsTable" class="table table-fixed">
                       <thead>
                         <tr>
                           <th class="text-center width-5">#</th>
@@ -48,10 +53,10 @@
 								</label>
 							</div>
 						  </th>
-						  <th class="width-30">Category</th>
-                          <th class="width-30">Description</th>
-                          <th class="text-right width-15">Transaction</th>
-                          <th class="text-right width-15">Budget</th>
+						  <th class="width-30" title="Category assigned to the transactions">Category</th>
+                          <th class="width-30" title="Description for the transaction">Description</th>
+                          <th class="text-right width-15" title="The amount spent or received">Transaction</th>
+                          <th class="text-right width-15" title="Budget assigned for this category">Budget</th>
                         </tr>
                       </thead>
                       <tbody id="productsJson">
@@ -64,7 +69,7 @@
                 </div>
               </div>
             </div> 
-            <div class="col-md-3 col-sm-3">
+             <div class="col-md-3 col-sm-3">
               <div class="card">
                 <div class="card-body text-center">
                 	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
@@ -79,7 +84,7 @@
                 		<button id="totalAvailableTransactions" class="btn btn-success btn-sm">add goals</button>
                 </div>
                </div>
-            </div>           
+            </div>          
           </div>
           <!-- end row -->
         </div>
