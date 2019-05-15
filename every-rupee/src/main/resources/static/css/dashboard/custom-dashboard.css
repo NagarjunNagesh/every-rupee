@@ -1146,7 +1146,7 @@ br[type="_moz"]{display: none;}
 	table-layout: fixed;
 }
 
-.descriptionDivCentering, .amountDivCentering {
+.descriptionDivCentering, .amountDivCentering, .categoryTableRow {
 	overflow: hidden;
 	white-space: nowrap;
     text-overflow: ellipsis;

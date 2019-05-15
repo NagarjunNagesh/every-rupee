@@ -61,13 +61,15 @@ public class UserTransactionService implements IUserTransactionService {
     @Override
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
-	if (CollectionUtils.isEmpty(formData.get("amount")) || CollectionUtils.isEmpty(formData.get("description"))) {
+	if (CollectionUtils.isEmpty(formData.get("amount"))) {
 	    throw new ResourceNotFoundException("UserTransactions", "formData", formData);
 	}
 
 	UserTransaction userTransaction = new UserTransaction();
 	userTransaction.setFinancialPortfolioId(pFinancialPortfolioId);
-	userTransaction.setDescription(formData.get("description").get(0));
+	if (CollectionUtils.isNotEmpty(formData.get("description"))) {
+	    userTransaction.setDescription(formData.get("description").get(0));
+	}
 	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
 	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));
 

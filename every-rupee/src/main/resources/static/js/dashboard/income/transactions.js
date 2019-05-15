@@ -83,23 +83,33 @@ $(document).ready(function(){
 		   return;
 	   }
 	   
-		let formData= $('#transactionsForm').serialize();
-	    $.post(saveTransactionsUrl + currentUser.financialPortfolioId,formData ,function(data){
-	        
-	    })
-	    .done(function(data) {
-	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
-	    	resiteredNewTransaction=true;
-	    })
-	    .fail(function(data) {
-	    	var responseError = JSON.parse(data.responseText);
-         	if(responseError.error.includes("Unauthorized")){
-		    	$('#GSCCModal').modal('hide');
-		    	sessionExpiredSwal(data);
-         	}
-	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
-	    	resiteredNewTransaction=false;
-	    });
+	    amount = convertToNumberFromCurrency(amount);
+	    amount = _.last(_.split(amount,'-'));
+	    let description = $('#description').val();
+	    let categoryOptions = $('#categoryOptions').val();
+		let values = {};
+		values['amount'] = amount;
+		values['description'] = description;
+		values['categoryOptions'] = categoryOptions;
+		$.ajax({
+	          type: "POST",
+	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          data : values,
+	          success: function(data) {
+	  	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
+	  	    	resiteredNewTransaction=true;
+	  	      },
+	  	      error: function(data) {
+	  	    	var responseError = JSON.parse(data.responseText);
+	           	if(responseError.error.includes("Unauthorized")){
+	  		    	$('#GSCCModal').modal('hide');
+	  		    	sessionExpiredSwal(data);
+	           	}
+	  	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
+	  	    	resiteredNewTransaction=false;
+	  	    }
+		});
 	    
 	    // enable button after successful submission
     	$('#transactionsFormButtonSubmission').prop('disabled', false);
@@ -193,7 +203,7 @@ $(document).ready(function(){
 		let tableRows = '';
 		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
-		tableRows += '<tr class="hideableRow-' + categoryId + ' hideableRow"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
+		tableRows += '<tr class="hideableRow-' + categoryId + ' hideableRow d-none"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
 		tableRows += '<span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory categoryIdForSelect-' + categoryId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
 		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" class="transactionsTableDescription" data-gramm_editor="false" tabindex="-1"><div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + userTransactionData.description + '</div></td>';
@@ -220,9 +230,9 @@ $(document).ready(function(){
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle-right font-17">' + '' + '</td><td>' + '';
 		} else {
-			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-success categoryTableRow-' + categoryId + '" role="button"><td class="text-center dropdown-toggle font-17">' + '' + '</td><td>' + '';
+			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-success categoryTableRow-' + categoryId + '" role="button"><td class="text-center dropdown-toggle-right font-17">' + '' + '</td><td>' + '';
 		}
 		
 		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
@@ -541,7 +551,7 @@ $(document).ready(function(){
 		let enteredText = _.trim(element.innerText);
 		if(_.isEqual(descriptionTextEdited, enteredText)){
 			// replace the text with a trimmed version 
-			$(element).html('<div class="descriptionDivCentering">' + enteredText + '</div>');
+			$(element).html('<div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + enteredText + '</div>');
 			return;
 		}
 		
@@ -763,7 +773,7 @@ $(document).ready(function(){
 				minusSign = '-';
 			}
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
-			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
+			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(replaceEnteredText);
 		} else {
 			let minusSign = '';
@@ -772,7 +782,7 @@ $(document).ready(function(){
 			}
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
 			// Replace the space in between and trim the text
-			let replaceEnteredText = '<div class="text-right amountDivCentering">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
+			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + _.trim(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
 			$(element).html(replaceEnteredText);
 		}
 	}
