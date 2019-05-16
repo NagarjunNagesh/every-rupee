@@ -130,6 +130,8 @@ $(document).ready(function(){
 		$('#transactionsForm').get(0).reset();
 		$("#successMessage").html("").hide();
 		$("#errorMessage").html("").hide();
+		$("#categoryOptions").val('4');
+		$("#categoryOptions").selectpicker("refresh");
 		
 		if(resiteredNewTransaction) {
 			// Clear the div before appending
@@ -165,6 +167,7 @@ $(document).ready(function(){
 			   $.each(value, function(subKey,subValue) {
 				   // Create transactions table row
 				   $(replaceTransactionsDiv).append(createTableRows(subValue, count, key));
+				   $('#selectCategoryRow-' + subValue.transactionId).selectpicker("refresh");
 				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
@@ -204,7 +207,7 @@ $(document).ready(function(){
 		var categoryOptions = createCategoryOptions(categoryId, categoryMap)
 		
 		tableRows += '<tr class="hideableRow-' + categoryId + ' hideableRow d-none"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
-		tableRows += '<span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowSelectCategory categoryIdForSelect-' + categoryId + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		tableRows += '<span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowForSelectCategory selectpicker categoryIdForSelect-' + categoryId + '" data-toggle="" data-style="tableRowSelectCategory" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body">';
 		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
 		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" class="transactionsTableDescription" data-gramm_editor="false" tabindex="-1"><div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + userTransactionData.description + '</div></td>';
 		
@@ -367,6 +370,8 @@ $(document).ready(function(){
 	        		  }
 	    		      
 	    		   }); 
+	        	  
+	        	  $('#categoryOptions').selectpicker("refresh");
 	           }
 	        });
 	}
@@ -382,7 +387,7 @@ $(document).ready(function(){
 			isSelected = 'selected';
 		}
 		
-		catgorySelectOptions += '<option class="dropdown-item inner show" value="' + categoryData.categoryId + '"' + isSelected +'>' + categoryData.categoryName + '</option>';
+		catgorySelectOptions += '<option class="" value="' + categoryData.categoryId + '"' + isSelected +' data-icon="">' + categoryData.categoryName + '</option>';
 		
 		return catgorySelectOptions;
 	}
@@ -452,7 +457,7 @@ $(document).ready(function(){
 	}
 	
 	// Catch the description when the user focuses on the description
-	$( "tbody" ).on( "focusin", ".tableRowSelectCategory" ,function() {
+	$( "tbody" ).on( "focusin", ".tableRowForSelectCategory" ,function() {
 		let closestTableRow = $(this).closest('tr');
 		// Remove BR appended by mozilla
 		if(closestTableRow != null && closestTableRow.length > 0 && closestTableRow[0] != null) {
@@ -466,56 +471,59 @@ $(document).ready(function(){
 	});
 	
 	// Process the description to find out if the user has changed the description
-	$( "tbody" ).on( "focusout", ".tableRowSelectCategory" ,function() {
+	$( "tbody" ).on( "focusout", ".tableRowForSelectCategory" ,function() {
 		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
 	});
 	
 	// Change trigger on select
-	$( "tbody" ).on( "change", ".tableRowSelectCategory" ,function() {
+	$( "tbody" ).on( "change", ".tableRowForSelectCategory" ,function() {
 		let categoryId = $(this).attr('id');
 		let selectedTransactionId = _.split(categoryId,'-');
-		let classList = $('#' + categoryId)[0].classList;
-		let values = {};
-		values['categoryId'] = $(this).val();
-		values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
-		$.ajax({
-	          type: "POST",
-	          url: transactionsUpdateUrl + 'category',
-	          dataType: "json",
-	          data : values,
-	          success: function(userTransaction){
-	        	  let previousCategoryId ='';
-	        	  // Update the current category
-	        	  classList.forEach(function (classItem) {
-	        		  if(_.includes(classItem,'categoryIdForSelect')){
-	        			// Remove amount from current Category
-	        			  previousCategoryId = _.last(_.split(classItem,'-'));
-	    	        	  updateCategoryAmount(previousCategoryId , parseFloat('-' + userTransaction.amount), false);
-	        		  }
-	        	  });
-	        	  
-	        	  // Remove previous class related to category id and add the new one
-	        	  $('#' + categoryId).removeClass('categoryIdForSelect-' + previousCategoryId).addClass('categoryIdForSelect-'+ userTransaction.categoryId);
-	        	  // Add to the new category
-	        	  updateCategoryAmount(userTransaction.categoryId, userTransaction.amount, false);
-	        	  
-	          },
-	          error: function (thrownError) {
-              	 var responseError = JSON.parse(thrownError.responseText);
-                   	if(responseError.error.includes("Unauthorized")){
-                   		sessionExpiredSwal(thrownError);
-                   	} else{
-                   		swal({
-		                         title: "Unable to Change Category!",
-		                         text: "Please try again",
-		                         type: 'error',
-		                         timer: 1000,
-		                         showConfirmButton: false
-		                     }).catch(swal.noop)
-                   	}
-               }
-	           
-	        });
+		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
+		
+		if(!_.isEmpty(classList)) {
+			let values = {};
+			values['categoryId'] = $(this).val();
+			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
+			$.ajax({
+		          type: "POST",
+		          url: transactionsUpdateUrl + 'category',
+		          dataType: "json",
+		          data : values,
+		          success: function(userTransaction){
+		        	  let previousCategoryId ='';
+		        	  
+		        		// Update the current category
+			        	  classList.forEach(function (classItem) {
+			        		  if(_.includes(classItem,'categoryIdForSelect')){
+			        			// Remove amount from current Category
+			        			  previousCategoryId = _.last(_.split(classItem,'-'));
+			    	        	  updateCategoryAmount(previousCategoryId , parseFloat('-' + userTransaction.amount), false);
+			        		  }
+			        	  });
+			        	  
+			        	// Remove previous class related to category id and add the new one
+			        	  $('#' + categoryId).removeClass('categoryIdForSelect-' + previousCategoryId).addClass('categoryIdForSelect-'+ userTransaction.categoryId);
+			        	  // Add to the new category
+			        	  updateCategoryAmount(userTransaction.categoryId, userTransaction.amount, false);
+		          },
+		          error: function (thrownError) {
+	              	 var responseError = JSON.parse(thrownError.responseText);
+	                   	if(responseError.error.includes("Unauthorized")){
+	                   		sessionExpiredSwal(thrownError);
+	                   	} else{
+	                   		swal({
+			                         title: "Unable to Change Category!",
+			                         text: "Please try again",
+			                         type: 'error',
+			                         timer: 1000,
+			                         showConfirmButton: false
+			                     }).catch(swal.noop)
+	                   	}
+	               }
+		           
+		        });
+		}
 	});
 	
 	// Catch the description when the user focuses on the description
