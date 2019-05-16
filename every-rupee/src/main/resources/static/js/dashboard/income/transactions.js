@@ -735,40 +735,24 @@ $(document).ready(function(){
 			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			$("#totalExpensesTransactions").html('-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
 			
-			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountAvailable = 0;
-			let minusSign = '';
-			
-			if(_.includes($("#totalAvailableTransactions")[0].innerText,'-')){
-				totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-				minusSign = '-';
-			} else {
-				totalAmountAvailable = currentValueAvailable - round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			}
-			
-			$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
-			
 		} else if(_.includes(categoryForCalculation, 'incomeCategory')) {
 			let currentValueIncome = round(parseFloat(_.trim(_.last(_.split($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			$("#totalIncomeTransactions").html(currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
-			
-			let minusSign = '';
-			let currentValueAvailable = round(parseFloat(_.trim(_.last(_.split($("#totalAvailableTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountAvailable = 0;
-			if(_.includes($("#totalAvailableTransactions")[0].innerText,'-')){
-				totalAmountAvailable = parseFloat('-' + currentValueAvailable) + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			} else {
-				totalAmountAvailable = currentValueAvailable + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			}
-			
-			if(totalAmountAvailable < 0){
-				totalAmountAvailable = _.last(_.split(totalAmountAvailable,'-'));
-				minusSign = '-';
-			}
-			
-			$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(totalAmountAvailable), currentUser.locale));
 		}
+		
+		// Update the total available 
+		let income = convertToNumberFromCurrency(_.first($("#totalIncomeTransactions")).innerText);
+		let expense = convertToNumberFromCurrency(_.first($("#totalExpensesTransactions")).innerText);
+
+		let minusSign = '';
+		let availableCash = income-expense;
+		if (availableCash < 0){
+			minusSign = '-';
+			availableCash = _.last(_.split(availableCash, '-'));
+		}
+		
+		$("#totalAvailableTransactions").html(minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
 		
 	}
 	
