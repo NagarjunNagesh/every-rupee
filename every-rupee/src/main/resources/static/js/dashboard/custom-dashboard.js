@@ -40,7 +40,7 @@ window.onload = function () {
 		        		//Get the value from the name=value pair
 		                var sidebarActiveCookie = getCookie('sidebarMini');
 		                
-		                if(_.includes(sidebarActiveCookie, 'active')) {
+		                if(includesStr(sidebarActiveCookie, 'active')) {
 		                	 minimizeSidebar();
 		                }
 		        }
@@ -187,3 +187,44 @@ $('#monthYearOnlyPicker').datetimepicker().on('dp.show dp.update', function () {
             e.stopPropagation();
         });
 });
+
+function showNotification(message, from, align, colorCode){
+
+	  $.notify({
+	      icon: "add_alert",
+	      message: message
+
+	  },{
+	      type: colorCode,
+	      timer: 4000,
+	      placement: {
+	          from: from,
+	          align: align
+	      }
+	  });
+}
+
+er = {
+		startAnimationForLineChart: function (e) {
+		    e.on('draw', function (e) {
+		      'line' === e.type || 'area' === e.type ? e.element.animate({
+		        d: {
+		          begin: 600,
+		          dur: 700,
+		          from: e.path.clone().scale(1, 0).translate(0, e.chartRect.height()).stringify(),
+		          to: e.path.clone().stringify(),
+		          easing: Chartist.Svg.Easing.easeOutQuint
+		        }
+		      })  : 'point' === e.type && (seq++, e.element.animate({
+		        opacity: {
+		          begin: seq * delays,
+		          dur: durations,
+		          from: 0,
+		          to: 1,
+		          easing: 'ease'
+		        }
+		      }))
+		    }),
+		    seq = 0
+		}
+}
