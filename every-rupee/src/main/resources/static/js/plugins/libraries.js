@@ -3,7 +3,10 @@
  */
 
 function lastElement(arr){
-	return isEmpty(arr) ? null : arr[arr.length-1];
+	if(Array.isArray(arr)){
+		return isEmpty(arr) ? arr : arr[arr.length-1];
+	}
+	return arr;
 }
 
 function  isEmpty(obj) {
@@ -19,7 +22,11 @@ function trimElement(str) {
 }
 
 function splitElement(str, splitString){
-	return isEmpty(str) ? null : str.split(splitString);;
+	if(includesStr(str, splitString)){
+		return isEmpty(str) ? str : str.split(splitString);
+	}
+	
+	return str;
 }
 
 function includesStr(arr, val){
@@ -27,7 +34,10 @@ function includesStr(arr, val){
 }
 
 function fetchFirstElement(arr){
-	return isEmpty(arr) ? null : arr[0];
+	if(Array.isArray(arr)){
+		return isEmpty(arr) ? null : arr[0];
+	}
+	return arr;
 }
 
 function isEqual(obj1,obj2){

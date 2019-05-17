@@ -1,7 +1,6 @@
 package in.co.everyrupee.controller.income;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.co.everyrupee.pojo.income.UserTransaction;
@@ -35,13 +35,13 @@ public class UserTransactionsController {
 
     // Get a Single User Transaction
     @RequestMapping(value = "/{financialPortfolioId}", method = RequestMethod.GET)
-    public List<UserTransaction> getUserTransactionByUserId(@PathVariable String financialPortfolioId,
-	    Principal userPrincipal) {
+    public Object getUserTransactionByUserId(@PathVariable String financialPortfolioId, Principal userPrincipal,
+	    @RequestParam(required = false) String format, @RequestParam(required = false) String page) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	return userTransactionService.fetchUserTransaction(financialPortfolioId);
+	return userTransactionService.fetchUserTransaction(financialPortfolioId, format, page);
     }
 
     // Update a UserTransaction

@@ -1,7 +1,10 @@
 package in.co.everyrupee.service.income;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public List<UserTransaction> fetchUserTransaction(String pFinancialPortfolioId) {
+    public Object fetchUserTransaction(String pFinancialPortfolioId, String format, String page) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	List<UserTransaction> userTransactions = userTransactionsRepository
@@ -48,8 +51,33 @@ public class UserTransactionService implements IUserTransactionService {
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    return userTransactions;
 	}
+
+	if (ERStringUtils.equalsIgnoreCase(format, GenericConstants.FORMAT_HTML_PARAMETER)
+		&& ERStringUtils.equalsIgnoreCase(page, GenericConstants.TRANSACTIONS_PAGE_PARAMETER)) {
+	    return sortByCategoryIdForHtmlTransactionsPage(userTransactions);
+	}
+
 	return userTransactions;
+    }
+
+    private Map<Integer, List<UserTransaction>> sortByCategoryIdForHtmlTransactionsPage(
+	    List<UserTransaction> userTransactions) {
+	Map<Integer, List<UserTransaction>> userTransactionsMap = new HashMap<Integer, List<UserTransaction>>();
+
+	for (UserTransaction userTransaction : userTransactions) {
+	    if (!userTransactionsMap.containsKey(userTransaction.getCategoryId())) {
+		List<UserTransaction> list = new ArrayList<UserTransaction>();
+		list.add(userTransaction);
+
+		userTransactionsMap.put(userTransaction.getCategoryId(), list);
+	    } else {
+		userTransactionsMap.get(userTransaction.getCategoryId()).add(userTransaction);
+	    }
+	}
+
+	return userTransactionsMap;
     }
 
     /**

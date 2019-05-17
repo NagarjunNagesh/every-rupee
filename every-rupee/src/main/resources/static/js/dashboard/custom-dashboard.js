@@ -139,55 +139,6 @@ function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
-// Datetime Picker
-<!-- javascript for init -->
-$('.datetimepicker').datetimepicker({
-	viewMode: 'months',
-	viewDate: false,
-    format: 'MMM YYYY',
-    useCurrent: true,
-    icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-    },
-    tooltips: {
-        today: 'Go to today',
-        clear: 'Clear selection',
-        close: 'Close the picker',
-        selectMonth: 'Select Month',
-        prevMonth: 'Previous Month',
-        nextMonth: 'Next Month',
-        selectYear: 'Select Year',
-        prevYear: 'Previous Year',
-        nextYear: 'Next Year',
-        selectDecade: 'Select Decade',
-        prevDecade: 'Previous Decade',
-        nextDecade: 'Next Decade',
-        prevCentury: 'Previous Century',
-        nextCentury: 'Next Century'
-    }
-});
-
-$("#monthYearOnlyPicker").on("dp.show", function(e) {
-	   $(e.target).data("DateTimePicker").viewMode("months"); 
-});
-
-$('#monthYearOnlyPicker').datetimepicker().on('dp.show dp.update', function () {
-    $(".datepicker-years .picker-switch").removeAttr('title')
-        //.css('cursor', 'default')
-        //.css('background', 'inherit')
-        .on('click', function (e) {
-            e.stopPropagation();
-        });
-});
-
 function showNotification(message, from, align, colorCode){
 
 	  $.notify({
@@ -204,27 +155,16 @@ function showNotification(message, from, align, colorCode){
 	  });
 }
 
-er = {
-		startAnimationForLineChart: function (e) {
-		    e.on('draw', function (e) {
-		      'line' === e.type || 'area' === e.type ? e.element.animate({
-		        d: {
-		          begin: 600,
-		          dur: 700,
-		          from: e.path.clone().scale(1, 0).translate(0, e.chartRect.height()).stringify(),
-		          to: e.path.clone().stringify(),
-		          easing: Chartist.Svg.Easing.easeOutQuint
-		        }
-		      })  : 'point' === e.type && (seq++, e.element.animate({
-		        opacity: {
-		          begin: seq * delays,
-		          dur: durations,
-		          from: 0,
-		          to: 1,
-		          easing: 'ease'
-		        }
-		      }))
-		    }),
-		    seq = 0
-		}
+function replaceHtml(el, html) {
+    var oldEl = typeof el === "string" ? document.getElementById(el) : el;
+    /*@cc_on // Pure innerHTML is slightly faster in IE
+        oldEl.innerHTML = html;
+        return oldEl;
+    @*/
+    var newEl = oldEl.cloneNode(false);
+    newEl.innerHTML = html;
+    oldEl.parentNode.replaceChild(newEl, oldEl);
+    /* Since we just removed the old element from the DOM, return a reference
+    to the new element, which can be used to restore variable references. */
+    return newEl;
 }

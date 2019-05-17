@@ -78,4 +78,8 @@ public class GenericConstants {
 
     // Generic Service
     public static final String GENERIC_SERVICE_SUCCESS = "success";
+
+    // Parameters
+    public static final String FORMAT_HTML_PARAMETER = "HTML";
+    public static final String TRANSACTIONS_PAGE_PARAMETER = "TransactionsPage";
 }
