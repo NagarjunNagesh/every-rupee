@@ -139,8 +139,6 @@ $(document).ready(function(){
 		
 		if(resiteredNewTransaction) {
 			fetchJSONForTransactions();
-			// Disable delete Transactions button on refreshing the transactions
-			manageDeleteTransactionsButton();
 			// Do not refresh the transactions if no new transactions are added
 			resiteredNewTransaction = false;
 		}
@@ -160,6 +158,10 @@ $(document).ready(function(){
 			let grouped = groupByKey(result, 'categoryId');
 			// Clear the div before appending
 			$(replaceTransactionsDiv).empty();
+			// uncheck the select all checkbox if checked
+			$("#checkAll").prop("checked", false); 
+			// Disable delete Transactions button on refreshing the transactions
+         	manageDeleteTransactionsButton();
 		   $.each(grouped, function(key,value) {
 			   let totalCategoryAmount = 0;
 			   // Create category label table row
@@ -330,8 +332,6 @@ $(document).ready(function(){
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	 
 			                         	fetchJSONForTransactions();
-			                         	$("#checkAll").prop("checked", false); // uncheck the select all checkbox if checked
-			                         	manageDeleteTransactionsButton(); // disable the delete transactions button
 			                         },
 			                         error: function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
