@@ -4,6 +4,25 @@
  * Nagarjun Nagesh
  */
 $(document).ready(function(){
+	
+	// Change side bar color to green
+	changeColorOfSidebar();
+	
+	
+	//Stores the Loggedin User
+	let currentUser = '';
+	var fetchCurrentLoggedInUserUrl = "/api/user/";
+	// Loads the current Logged in User
+	fetchJSONForLoggedInUser();
+	
+	// Store map of categories (promises require LET for maps)
+	let categoryMap = {};
+	var fetchCategoriesUrl = "/api/category/";
+	// Load Expense category and income category
+	let expenseSelectionOptGroup = document.createDocumentFragment();
+	let incomeSelectionOptGroup = document.createDocumentFragment();
+	// Fetch categories and append it to the select options (Load the categories first)
+	fetchJSONForCategories();
 		
 	// Constructs transaction API url
 	var transactionAPIUrl =  "/api/transactions/";
@@ -20,12 +39,6 @@ $(document).ready(function(){
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// empty table message
 	let emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
-	var fetchCategoriesUrl = "/api/category/";
-	// Store map of categories (promises require LET for maps)
-	let categoryMap = {};
-	var fetchCurrentLoggedInUserUrl = "/api/user/";
-	//Stores the Loggedin User
-	let currentUser = '';
 	// Expense Category
 	var expenseCategory = "1";
 	// Income Category
@@ -48,10 +61,6 @@ $(document).ready(function(){
 	var deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	var loaderBudgetSection = '<div id="loader-remove"></div>';
 	
-	// Loads the current Logged in User
-	fetchJSONForLoggedInUser();
-	// Fetch categories and append it to the select options (Load the categories first)
-	fetchJSONForCategories();
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
 	
@@ -154,27 +163,26 @@ $(document).ready(function(){
 			let countGrouped = 1;
 			let totalExpensesTransactions = 0.00;
 			let totalIncomeTransactions = 0.00;
-			let transactionsTableDiv = [];
-			// Clear the div before appending
-			$(replaceTransactionsDiv).empty();
+			let transactionsTableDiv = document.createDocumentFragment();
+			let documentTbody = document.getElementById('productsJson');
 			// uncheck the select all checkbox if checked
 			$("#checkAll").prop("checked", false); 
 			// Disable delete Transactions button on refreshing the transactions
          	manageDeleteTransactionsButton();
 		   $.each(result, function(key,value) {
+			   let transactionsRowDocumentFragment = document.createDocumentFragment();
 			   let totalCategoryAmount = 0;
-			   let transactionsTableRow = [];
 			   $.each(value, function(subKey,subValue) {
 				   // Create transactions table row
-				   transactionsTableRow.push(createTableRows(subValue, count, key));
+				   transactionsRowDocumentFragment.appendChild(createTableRows(subValue, count, key));
 				   totalCategoryAmount += subValue.amount;
 				   count++;
 			   });
 			   // Load all the total category amount in the category section
 			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
 			   // Create category label table row
-			   transactionsTableDiv.push(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
-			   transactionsTableDiv.push(transactionsTableRow.join(""));
+			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
+			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
 			   // Total Expenses and Total Income
 			   if(categoryMap[key].parentCategory == expenseCategory) {
 				   totalExpensesTransactions += totalCategoryAmount;
@@ -188,7 +196,8 @@ $(document).ready(function(){
 		   if(result.length == 0) {
 			   replaceHtml(replaceTransactionsId, emptyTable);
 		   } else {
-			   document.getElementById(replaceTransactionsId).innerHTML = transactionsTableDiv.join("");
+			   documentTbody.innerHTML = '';
+			   documentTbody.appendChild(transactionsTableDiv);
 		   }
 		   
 		  // update the Total Available Section
@@ -210,25 +219,94 @@ $(document).ready(function(){
 	
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, index, categoryId){
-		let tableRows = '';
-		let categoryOptions = createCategoryOptions(categoryId, categoryMap)
+		let tableRows = document.createElement("tr");
+		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow d-none';
 		
-		tableRows += '<tr class="hideableRow-' + categoryId + ' hideableRow d-none"><td class="text-center" tabindex="-1">' + index + '</td><td tabindex="-1"><div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1">';
-		tableRows += '<span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div></td><td><select id="selectCategoryRow-' + userTransactionData.transactionId + '" class="tableRowForSelectCategory categoryIdForSelect-' + categoryId + ' tableRowSelectCategory" data-toggle="" data-style="" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body" data-size="5">';
-		tableRows += '<optgroup label="Expenses">' + categoryOptions['expense'] + '</optgroup><optgroup label="Income">' + categoryOptions['income'] + '</select></td>';
-		tableRows += '<td id="descriptionTransactionsRow-' + userTransactionData.transactionId + '" class="transactionsTableDescription" data-gramm_editor="false" tabindex="-1"><div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + userTransactionData.description + '</div></td>';
+		// Row 1
+		let indexTableCell = document.createElement('td');
+		indexTableCell.className = 'text-center';
+		indexTableCell.tabIndex = -1;
+		indexTableCell.innerHTML = index;
+		tableRows.appendChild(indexTableCell);
+		
+		// Table Row 2
+		let htmlString = '<div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1"><span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div>';
+		let checkboxCell = document.createElement('td');
+		checkboxCell.tabIndex = -1;
+		checkboxCell.innerHTML = htmlString.trim();
+		tableRows.appendChild(checkboxCell);
+		
+		// Table Row 3
+		let selectCategoryRow = document.createElement('td');
+		
+		// Build Select
+		let selectCategory = document.createElement('select');
+		selectCategoryRow.setAttribute("id", 'selectCategoryRow-' + userTransactionData.transactionId);
+		selectCategoryRow.className = 'tableRowForSelectCategory categoryIdForSelect-' + categoryId + ' tableRowSelectCategory';
+		selectCategoryRow.setAttribute('aria-haspopup', true);
+		selectCategoryRow.setAttribute('aria-expanded', false);
+		
+		let optGroupExpense = document.createElement('optgroup');
+		optGroupExpense.label = 'Expenses';
+		optGroupExpense.appendChild(expenseSelectionOptGroup);
+		selectCategory.appendChild(optGroupExpense);
+		
+		let optGroupIncome = document.createElement('optgroup');
+		optGroupIncome.label = 'Income';
+		optGroupIncome.appendChild(incomeSelectionOptGroup);
+		selectCategory.appendChild(optGroupIncome);
+		selectCategoryRow.appendChild(selectCategory);
+		tableRows.appendChild(selectCategoryRow);
+		
+		// Table Row 4
+		let descriptionTableRow = document.createElement('td');
+		descriptionTableRow.setAttribute('id', 'descriptionTransactionsRow-' + userTransactionData.transactionId);
+		descriptionTableRow.className = 'transactionsTableDescription';
+		descriptionTableRow.setAttribute('data-gramm_editor' , false);
+		descriptionTableRow.tabIndex = -1;
+		
+		let descriptionDiv = document.createElement('div');
+		descriptionDiv.setAttribute('contenteditable', true);
+		descriptionDiv.tabIndex = 0;
+		descriptionDiv.innerHTML = userTransactionData.description;
+		
+		descriptionTableRow.appendChild(descriptionDiv);
+		tableRows.appendChild(descriptionTableRow);
+		
+		// Table Row 5
+		let amountTransactionsRow = document.createElement('td');
+		amountTransactionsRow.setAttribute('id', 'amountTransactionsRow-' + userTransactionData.transactionId);
+		amountTransactionsRow.className = 'text-right amountTransactionsRow';
+		amountTransactionsRow.setAttribute('data-gramm_editor', false);
+		amountTransactionsRow.tabIndex = -1;
+		
+		// Append Amount To Div
+		let amountDiv = document.createElement('div');
+		amountDiv.setAttribute('contenteditable', true);
+		amountDiv.tabIndex = 0;
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   // data-gramm_editor="false" is used to disable grammarly
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" data-gramm_editor="false" tabindex="-1"><div class="text-right amountDivCentering" contenteditable="true" tabindex="0">'  + '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   amountDiv.innerHTML = '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
 	   } else {
-		   tableRows += '<td id="amountTransactionsRow-' + userTransactionData.transactionId + '" class="text-right amountTransactionsRow" data-gramm_editor="false" tabindex="-1"><div class="text-right amountDivCentering" contenteditable="true" tabindex="0">'  + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale) + '</div></td>';
+		   amountDiv.innerHTML = $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
 	   }
 		
+	   amountTransactionsRow.appendChild(amountDiv);
+	   tableRows.appendChild(amountTransactionsRow);
+	   
+	   // Table Row 6
+	   let budgetTransactionRow = document.createElement('td');
+	   budgetTransactionRow.setAttribute('id', 'budgetTransactionsRow-' + userTransactionData.transactionId);
+	   budgetTransactionRow.className = 'text-right categoryIdForBudget-' + categoryId;
+	   budgetTransactionRow.tabIndex = -1;
+	   
 	    // append button to remove the transaction if the amount is zero
 	   	let buttonDelete = userTransactionData.amount == 0 ? deleteButton : '';
-		tableRows += '<td id="budgetTransactionsRow-' + userTransactionData.transactionId + '" class="text-right categoryIdForBudget-' + categoryId + '" tabindex="-1">' + buttonDelete + '</td></tr>';
+	   	
+	   	budgetTransactionRow.innerHTML = buttonDelete;
+	   	tableRows.appendChild(budgetTransactionRow);
+	   	
 		
 		return tableRows;
 		
@@ -236,28 +314,60 @@ $(document).ready(function(){
 	
 	// Building a HTML table for category header for transactions
 	function createTableCategoryRows(categoryId, countGrouped, categoryAmountTotal){
-		let tableRows = '';
+		let tableRow = document.createElement("tr");
+		tableRow.setAttribute('id', 'categoryTableRow-' + categoryId);
+		tableRow.setAttribute('data-toggle', 'collapse');
+		tableRow.setAttribute('role' , 'button');
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-danger categoryTableRow" role="button"><td class="text-center dropdown-toggle-right font-17">' + '' + '</td><td>' + '';
+			tableRow.className = 'toggle table-danger categoryTableRow-' + categoryId;
 		} else {
-			tableRows += '<tr id="categoryTableRow-' + categoryId + '" data-toggle="collapse" class="toggle table-success categoryTableRow-' + categoryId + '" role="button"><td class="text-center dropdown-toggle-right font-17">' + '' + '</td><td>' + '';
+			tableRow.className = 'toggle table-success categoryTableRow-' + categoryId;
 		}
 		
-		tableRows += '</td><td class="font-weight-bold">' + categoryMap[categoryId].categoryName + '</td>';
-		tableRows += '<td>' + '' + '</td>';
+		// Row 1
+		let indexTableCell = document.createElement('td');
+		indexTableCell.className = 'text-center dropdown-toggle-right font-17';
+		tableRow.appendChild(indexTableCell);
+		
+		// Table Row 2
+		let checkboxCell = document.createElement('td');
+		checkboxCell.tabIndex = -1;
+		tableRow.appendChild(checkboxCell);
+		
+		
+		// Table Row 3
+		let selectCategoryRow = document.createElement('td');
+		selectCategoryRow.className = 'font-weight-bold';
+		selectCategoryRow.innerHTML = categoryMap[categoryId].categoryName;
+		tableRow.appendChild(selectCategoryRow);
+		
+		// Table Row 4
+		let descriptionTableRow = document.createElement('td');
+		tableRow.appendChild(descriptionTableRow);
+		
+		// Table Row 5
+		let amountTransactionsRow = document.createElement('td');
+		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
+		amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' spendingCategory';
 		
 		// Append a - sign for the category if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' spendingCategory">' + '-' + categoryAmountTotal + '</td>';
+		   amountTransactionsRow.innerHTML = '-' + categoryAmountTotal;
 	   } else {
-		   tableRows += '<td id="amountCategory' + countGrouped + '" class="text-right amountCategoryId-' + categoryId + ' incomeCategory">' + categoryAmountTotal + '</td>';
+		   amountTransactionsRow.innerHTML = categoryAmountTotal;
 	   }
-		tableRows += '<td id="budgetCategory" class="text-right"><span th:text="#{message.currencySumbol}"></span>' + '' + '</td></tr>';
-		// TODO  have to be replaced with budget
+	   tableRow.appendChild(amountTransactionsRow);
+	   
+	   // Table Row 6
+	   let budgetTransactionsRow = document.createElement('td');
+	   budgetTransactionsRow.setAttribute('id', 'budgetCategory-' + categoryId);
+	   budgetTransactionsRow.className = 'text-right';
+	   tableRow.appendChild(budgetTransactionsRow);
+	   // TODO  have to be replaced with budget
 		
-		return tableRows;
+		return tableRow;
 		
 	}
 	
@@ -351,32 +461,22 @@ $(document).ready(function(){
 	          dataType: "json",
 	          success : function(data) {
 	        	  $.each(data, function(key,value) {
+	        		  categoryMap[value.categoryId] = value;
+	        		  let option = document.createElement('option');
+        			  option.className = 'categoruOption-' + value.categoryId;
+        			  option.value = value.categoryId;
+        			  option.text = value.categoryName;
 	        		  if(value.parentCategory == expenseCategory){
-	        			  $("#expenseSelection").append(createCategoryOption(value));  
+	        			  expenseSelectionOptGroup.appendChild(option);
 	        		  } else if(value.parentCategory == incomeCategory) {
-	        			  $("#incomeSelection").append(createCategoryOption(value));  
+	        			  incomeSelectionOptGroup.appendChild(option);
 	        		  }
-	    		      
 	    		   }); 
 	        	  
+	        	  document.getElementById('expenseSelection').appendChild(expenseSelectionOptGroup);
+	        	  document.getElementById('incomeSelection').appendChild(incomeSelectionOptGroup);
 	           }
 	        });
-	}
-	
-	// Create Category Options
-	function createCategoryOption(categoryData, selectedCategoryId) {
-		let catgorySelectOptions = '';
-		let isSelected = '';
-		categoryMap[categoryData.categoryId] = categoryData;
-		if(isEmpty(selectedCategoryId) && categoryData.categoryId == selectedOption){
-			isSelected = 'selected';
-		} else if(!isEmpty(selectedCategoryId) && categoryData.categoryId == selectedCategoryId){
-			isSelected = 'selected';
-		}
-		
-		catgorySelectOptions += '<option class="" value="' + categoryData.categoryId + '"' + isSelected +' data-icon="">' + categoryData.categoryName + '</option>';
-		
-		return catgorySelectOptions;
 	}
 	
 	// Show or hide multiple rows in the transactions table
@@ -423,24 +523,6 @@ $(document).ready(function(){
 	        	  currentUser = data;
 	           }
 	        });
-	}
-	
-	// Load category as a select option
-	function createCategoryOptions(selectedCategory, categoryList){
-		let categoryOptions = {};
-		let expenseCategoryDiv = '';
-		let incomeCategoryDiv = '';
-		 $.each(categoryList, function(key,value) {
-			  if(value.parentCategory == expenseCategory){
-				  expenseCategoryDiv += createCategoryOption(value, selectedCategory);  
-			  } else if(value.parentCategory == incomeCategory) {
-				  incomeCategoryDiv += createCategoryOption(value, selectedCategory);  
-			  }
-		      
-		   }); 
-		 categoryOptions['expense'] = expenseCategoryDiv;
-		 categoryOptions['income'] = incomeCategoryDiv;
-		 return categoryOptions;
 	}
 	
 	// Catch the description when the user focuses on the description
@@ -748,8 +830,6 @@ $(document).ready(function(){
 		}
 	}
 	
-	// Change side bar color to green
-	changeColorOfSidebar();
 	
 	function changeColorOfSidebar(){
 		if ($sidebar.length != 0) {
