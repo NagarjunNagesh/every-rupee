@@ -43,7 +43,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public Object fetchUserTransaction(String pFinancialPortfolioId, String format, String page) {
+    public Object fetchUserTransaction(String pFinancialPortfolioId) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	List<UserTransaction> userTransactions = userTransactionsRepository
@@ -54,12 +54,7 @@ public class UserTransactionService implements IUserTransactionService {
 	    return userTransactions;
 	}
 
-	if (ERStringUtils.equalsIgnoreCase(format, GenericConstants.FORMAT_HTML_PARAMETER)
-		&& ERStringUtils.equalsIgnoreCase(page, GenericConstants.TRANSACTIONS_PAGE_PARAMETER)) {
-	    return sortByCategoryIdForHtmlTransactionsPage(userTransactions);
-	}
-
-	return userTransactions;
+	return sortByCategoryIdForHtmlTransactionsPage(userTransactions);
     }
 
     private Map<Integer, List<UserTransaction>> sortByCategoryIdForHtmlTransactionsPage(

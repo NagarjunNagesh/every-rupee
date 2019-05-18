@@ -17,6 +17,10 @@ $(document).ready(function(){
 	
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
+	// Expense Category
+	const expenseCategory = "1";
+	// Income Category
+	const incomeCategory = "2";
 	var fetchCategoriesUrl = "/api/category/";
 	// Load Expense category and income category
 	let expenseSelectionOptGroup = document.createDocumentFragment();
@@ -25,11 +29,11 @@ $(document).ready(function(){
 	fetchJSONForCategories();
 		
 	// Constructs transaction API url
-	var transactionAPIUrl =  "/api/transactions/";
-	var saveTransactionsUrl = "/api/transactions/save/";
-	var transactionsUpdateUrl = "/api/transactions/update/";
-	var replaceTransactionsDiv = "#productsJson";
-	var replaceTransactionsId = "productsJson";
+	const transactionAPIUrl =  "/api/transactions/";
+	const saveTransactionsUrl = "/api/transactions/save/";
+	const transactionsUpdateUrl = "/api/transactions/update/";
+	const replaceTransactionsDiv = "#productsJson";
+	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
 	// Divs for error message while adding transactions
@@ -38,28 +42,22 @@ $(document).ready(function(){
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// empty table message
-	let emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
-	// Expense Category
-	var expenseCategory = "1";
-	// Income Category
-	var incomeCategory = "2";
+	const emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
 	// Bills & Fees Options selection
-	var selectedOption = '4';
+	const selectedOption = '4';
 	// Description Text
 	let descriptionTextEdited = '';
 	// Amount Text
 	let amountEditedTransaction = '';
 	// Currency Preference
-	let currentCurrencyPreference = $('#currentCurrencySymbol').text();
-	// provide table for transactions html
-	let transactionsHtmlParameter = '?format=html&page=TransactionsPage';
+	const currentCurrencyPreference = $('#currentCurrencySymbol').text();
 	// Sidebar 
 	$sidebar = $('.sidebar');
 	// Regex to check if the entered value is a float
-	var regexForFloat = /^[+-]?\d+(\.\d+)?$/;
+	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
-	var deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
-	var loaderBudgetSection = '<div id="loader-remove"></div>';
+	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
+	const loaderBudgetSection = '<div id="loader-remove"></div>';
 	
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -158,7 +156,7 @@ $(document).ready(function(){
 	// Populates the transaction table
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
-		$.getJSON(transactionAPIUrl + currentUser.financialPortfolioId + transactionsHtmlParameter, function(result){
+		$.getJSON(transactionAPIUrl + currentUser.financialPortfolioId, function(result){
 			let count = 1;
 			let countGrouped = 1;
 			let totalExpensesTransactions = 0.00;
@@ -241,10 +239,10 @@ $(document).ready(function(){
 		
 		// Build Select
 		let selectCategory = document.createElement('select');
-		selectCategoryRow.setAttribute("id", 'selectCategoryRow-' + userTransactionData.transactionId);
-		selectCategoryRow.className = 'tableRowForSelectCategory categoryIdForSelect-' + categoryId + ' tableRowSelectCategory';
-		selectCategoryRow.setAttribute('aria-haspopup', true);
-		selectCategoryRow.setAttribute('aria-expanded', false);
+		selectCategory.setAttribute("id", 'selectCategoryRow-' + userTransactionData.transactionId);
+		selectCategory.className = 'tableRowForSelectCategory categoryIdForSelect-' + categoryId + ' tableRowSelectCategory';
+		selectCategory.setAttribute('aria-haspopup', true);
+		selectCategory.setAttribute('aria-expanded', false);
 		
 		let optGroupExpense = document.createElement('optgroup');
 		optGroupExpense.label = 'Expenses';
@@ -268,6 +266,7 @@ $(document).ready(function(){
 		let descriptionDiv = document.createElement('div');
 		descriptionDiv.setAttribute('contenteditable', true);
 		descriptionDiv.tabIndex = 0;
+		descriptionDiv.className = 'descriptionDivCentering';
 		descriptionDiv.innerHTML = userTransactionData.description;
 		
 		descriptionTableRow.appendChild(descriptionDiv);
@@ -283,6 +282,7 @@ $(document).ready(function(){
 		// Append Amount To Div
 		let amountDiv = document.createElement('div');
 		amountDiv.setAttribute('contenteditable', true);
+		amountDiv.className = 'amountDivCentering';
 		amountDiv.tabIndex = 0;
 		
 		// Append a - sign if it is an expense
@@ -484,7 +484,7 @@ $(document).ready(function(){
 		let categoryId = splitElement($(this).attr('id'),'-');
 		let classToHide = '.hideableRow-' + lastElement(categoryId);
 	  	$(classToHide).toggleClass('d-none');
-	  	$($(this)[0].children[0]).toggleClass('dropdown-toggle', 1000, 'easeInQuad').toggleClass('dropdown-toggle-right', 1000, 'easeInQuad');
+	  	$($(this)[0].children[0]).toggleClass('dropdown-toggle', 100, 'easeInQuad').toggleClass('dropdown-toggle-right', 100, 'easeInQuad');
 	 });
 	
 	// Throw a session expired error and reload the page.
@@ -622,7 +622,13 @@ $(document).ready(function(){
 		let enteredText = trimElement(element.innerText);
 		if(isEqual(descriptionTextEdited, enteredText)){
 			// replace the text with a trimmed version 
-			 document.getElementById(element).innerHTML = '<div class="descriptionDivCentering" contenteditable="true" tabindex="0">' + enteredText + '</div>';
+			let documentDescription = document.createElement('div');
+			documentDescription.setAttribute('contenteditable', true);
+			documentDescription.tabIndex = 0;
+			documentDescription.className = 'descriptionDivCentering';
+			documentDescription.innerHTML = enteredText;
+			element.innerHTML = '';
+			element.appendChild(documentDescription);
 			return;
 		}
 		
@@ -817,7 +823,7 @@ $(document).ready(function(){
 			}
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
 			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + trimElement(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
-			document.getElementById(element).innerHTML = replaceEnteredText;
+			element.innerHTML = replaceEnteredText;
 		} else {
 			let minusSign = '';
 			if(includesStr(amountEditedTransaction,'-')){
@@ -826,7 +832,7 @@ $(document).ready(function(){
 			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
 			// Replace the space in between and trim the text
 			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + trimElement(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
-			document.getElementById(element).innerHTML = replaceEnteredText;
+			element.innerHTML = replaceEnteredText;
 		}
 	}
 	
