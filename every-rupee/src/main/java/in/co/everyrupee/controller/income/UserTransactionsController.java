@@ -4,7 +4,6 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.service.income.IUserTransactionService;
+import in.co.everyrupee.utils.GenericResponse;
 
 /**
  * Manage API User Transactions
@@ -57,14 +57,14 @@ public class UserTransactionsController {
 
     // Delete a User Transaction
     @RequestMapping(value = "/{transactionIds}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUserTransactionById(@PathVariable String transactionIds, Principal userPrincipal) {
+    public GenericResponse deleteUserTransactionById(@PathVariable String transactionIds, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
 	userTransactionService.deleteUserTransactions(transactionIds);
 
-	return ResponseEntity.ok().build();
+	return new GenericResponse("success");
     }
 
     // Update description, transaction & category in user transactions

@@ -414,7 +414,6 @@ $(document).ready(function(){
 			                confirmButtonClass: "btn btn-success",
 			                cancelButtonClass: "btn btn-danger",
 			                buttonsStyling: false,
-			                closeOnCancel: true,
 			            }).then(function(result) {
 			            	
 			            	 if (result.value) {
@@ -433,11 +432,40 @@ $(document).ready(function(){
 			                     jQuery.ajax({
 			                         url: transactionAPIUrl + transactionIds,
 			                         type: 'DELETE',
-			                         success: function(data) {
+			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	 
-			                        	let totalCheckBoxes = $( ".number:checked" ).closest('tr').fadeOut('slow', function(){ $(this).remove(); })
-
+			                        	let elementsToDelete = $( ".number:checked" ).closest('tr');
+			                        	let clonedElementsToDelete = elementsToDelete.clone();
+			                        	
+			                        	// Remove all the elements
+			                        	elementsToDelete.fadeOut('slow', function(){ 
+			                        		$(this).remove(); 
+			                        		
+			                        		// uncheck the select all checkbox if checked
+				                			$("#checkAll").prop("checked", false); 
+			                        		// Disable delete Transactions button on refreshing the transactions
+				                         	manageDeleteTransactionsButton();
+			                        	});
+			                        	
+			                        	let mapCategoryAndTransactions = {};
+			                        	
+			                        	// Update the Category Amount
+			                        	for(let count = 0, length = Object.keys(clonedElementsToDelete).length; count < length; count++){
+			                        		let key = Object.keys(clonedElementsToDelete)[count];
+			          	            	  	let value = clonedElementsToDelete[key];
+			          	            	  	let classNameForClass = value.classList;
+			          	            	  	for(let countCategory = 0, length = Object.keys(classNameForClass).length; countCategory < length; countCategory++){
+			          	            	  		// TODO Obtain Classlist and append it to mapCategoryAndTransactions
+			          	            	  	}
+			                        	}
+			                        	
+			                        	// TODO use the mapCategoryAndTransactions to iterate every category with their corresponding transactions
+			                        	// And remove the amount from the category.
+			                        	// If the amount is zero then remove the category table row
+			                        	
+			                        	// Recalcualte the Total values accordingly and update them in a different loop
+			                        	
 			                         },
 			                         error: function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
@@ -874,7 +902,11 @@ $(document).ready(function(){
             	
             	// Remove the table row (No need to update category amount or total values as the value of the TR is already 0 )
             	let closestTr = $('#budgetTransactionsRow-' + id).closest('tr');
-            	$(closestTr).fadeOut('slow', function(){ $(this).remove(); });
+            	$(closestTr).fadeOut('slow', function(){
+            		$(this).remove(); 
+        			// Disable delete Transactions button on refreshing the transactions
+                 	manageDeleteTransactionsButton();
+            	});
             	
             },
             error: function (thrownError) {
