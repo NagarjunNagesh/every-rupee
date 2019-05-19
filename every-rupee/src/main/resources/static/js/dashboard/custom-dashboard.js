@@ -40,7 +40,7 @@ window.onload = function () {
 		        		//Get the value from the name=value pair
 		                var sidebarActiveCookie = getCookie('sidebarMini');
 		                
-		                if(_.includes(sidebarActiveCookie, 'active')) {
+		                if(includesStr(sidebarActiveCookie, 'active')) {
 		                	 minimizeSidebar();
 		                }
 		        }
@@ -139,51 +139,39 @@ function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }
 
-// Datetime Picker
-<!-- javascript for init -->
-$('.datetimepicker').datetimepicker({
-	viewMode: 'months',
-	viewDate: false,
-    format: 'MMM YYYY',
-    useCurrent: true,
-    icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-    },
-    tooltips: {
-        today: 'Go to today',
-        clear: 'Clear selection',
-        close: 'Close the picker',
-        selectMonth: 'Select Month',
-        prevMonth: 'Previous Month',
-        nextMonth: 'Next Month',
-        selectYear: 'Select Year',
-        prevYear: 'Previous Year',
-        nextYear: 'Next Year',
-        selectDecade: 'Select Decade',
-        prevDecade: 'Previous Decade',
-        nextDecade: 'Next Decade',
-        prevCentury: 'Previous Century',
-        nextCentury: 'Next Century'
-    }
-});
+function showNotification(message, from, align, colorCode){
 
-$("#monthYearOnlyPicker").on("dp.show", function(e) {
-	   $(e.target).data("DateTimePicker").viewMode("months"); 
-});
+	  $.notify({
+	      icon: "add_alert",
+	      message: message
 
-$('#monthYearOnlyPicker').datetimepicker().on('dp.show dp.update', function () {
-    $(".datepicker-years .picker-switch").removeAttr('title')
-        //.css('cursor', 'default')
-        //.css('background', 'inherit')
-        .on('click', function (e) {
-            e.stopPropagation();
-        });
-});
+	  },{
+	      type: colorCode,
+	      timer: 4000,
+	      placement: {
+	          from: from,
+	          align: align
+	      }
+	  });
+}
+
+function replaceHtml(el, html) {
+    var oldEl = typeof el === "string" ? document.getElementById(el) : el;
+    /*@cc_on // Pure innerHTML is slightly faster in IE
+        oldEl.innerHTML = html;
+        return oldEl;
+    @*/
+    var newEl = oldEl.cloneNode(false);
+    newEl.innerHTML = html;
+    oldEl.parentNode.replaceChild(newEl, oldEl);
+    /* Since we just removed the old element from the DOM, return a reference
+    to the new element, which can be used to restore variable references. */
+    return newEl;
+}
+
+function cloneElementAndAppend(document, elementToClone){
+	let clonedElement = elementToClone.cloneNode(true);
+	document.appendChild(elementToClone);
+	return clonedElement;
+	
+}

@@ -5,7 +5,9 @@
 	    Income
 	  </title>
 	  <object th:include="dashboard/dashboard-fragments/dashboard-head :: dashboard-head" th:remove="tag" ></object>
-	  <link href="../css/plugins/bootstrap-datetimepicker.min.css" rel="stylesheet" th:href="@{/css/plugins/bootstrap-datetimepicker.min.css}">
+	  <link href="../css/plugins/bootstrap-datetimepicker.css" rel="stylesheet" th:href="@{/css/plugins/bootstrap-datetimepicker.css}">
+	  <link href="../css/plugins/bootstrap-select.css" rel="stylesheet" th:href="@{/css/plugins/bootstrap-select.css}">
+	  <link href="../css/dashboard/income/transactions.css" rel="stylesheet" th:href="@{/css/dashboard/income/transactions.css}">
 </head>
 
 
@@ -60,6 +62,7 @@
                         </tr>
                       </thead>
                       <tbody id="productsJson">
+                      	<tr><td></td><td></td><td></td><td><div class="material-spinner"></div></td></tr>
                         <!-- Filled with Javascript dynamically -->
                          <!-- TODO Enable individual Category expansion -->
                          <!-- TODO OptGroup selection displays the optgroup heading for the selected categories as well -->
@@ -71,18 +74,36 @@
             </div> 
              <div class="col-md-3 col-sm-3">
               <div class="card">
-                <div class="card-body text-center">
-                	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
-                		<h6 class="card-title font-weight-normal">Total Income</h6>
-                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"></h4>
-                		<hr>
-                		<h6 class="card-title font-weight-normal">Total Spent</h6>
-	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"></h4>
-                		<hr>
-						<h6 class="card-title font-weight-normal">Total Available</h6>
-                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"></h4>
-                		<button id="totalAvailableTransactions" class="btn btn-success btn-sm">add goals</button>
+              	<div class="card-header card-header-icon card-header-danger">
+                  <div class="card-icon">
+                    <i class="material-icons">pie_chart</i>
+                  </div>
+                  <h4 class="card-title">Financial Position</h4>
                 </div>
+                <div class="card-body text-center">
+                	<div id="chartFinancialPosition" class="ct-chart">
+                		<div class="material-spinner"></div>
+                	</div>
+                	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
+                		<i class="fa fa-circle text-success"></i>Total Income
+                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                		<hr>
+                		<i class="fa fa-circle text-danger"></i>Total Spent
+	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                		<hr>
+						<i class="fa fa-circle text-info"></i>Total Available
+                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h6 class="card-category">Legend</h6>
+                      </div>
+                      <div class="col-md-12">
+                        
+                      </div>
+                    </div>
+                  </div>
                </div>
             </div>          
           </div>
@@ -113,7 +134,7 @@
 			      			<input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true"/>
 			      		</div>
 			      		<div class="form-group bmd-form-group">
-			      			<select id="categoryOptions" name="categoryOptions" class="dropdown dropdown-toggle bootstrap-select form-control" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			      			<select id="categoryOptions" name="categoryOptions" class="form-control" data-toggle="dropdown" data-style="btn btn-primary" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body" data-size="5">
 			      				<optgroup id="expenseSelection" label="Expenses">
 			      				</optgroup>
 			      				<optgroup id="incomeSelection" label="Income">
