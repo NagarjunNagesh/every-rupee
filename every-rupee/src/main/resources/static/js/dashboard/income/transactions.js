@@ -12,8 +12,6 @@ $(document).ready(function(){
 	//Stores the Loggedin User
 	let currentUser = '';
 	var fetchCurrentLoggedInUserUrl = "/api/user/";
-	// Loads the current Logged in User
-	fetchJSONForLoggedInUser();
 	
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
@@ -25,8 +23,6 @@ $(document).ready(function(){
 	// Load Expense category and income category
 	let expenseSelectionOptGroup = document.createDocumentFragment();
 	let incomeSelectionOptGroup = document.createDocumentFragment();
-	// Fetch categories and append it to the select options (Load the categories first)
-	fetchJSONForCategories();
 		
 	// Constructs transaction API url
 	const transactionAPIUrl =  "/api/transactions/";
@@ -57,26 +53,27 @@ $(document).ready(function(){
 	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
-	const loaderBudgetSection = '<div id="loader-remove"></div>';
+	const loaderBudgetSection = '<div id="material-spinner"></div>';
 	
-	// Call the transaction API to fetch information.
-	fetchJSONForTransactions();
+	// Loads the current Logged in User
+	fetchJSONForLoggedInUser();
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
-		registerTransaction(event);
+		// disable button after successful submission
+	   let transactionSubmissionButton = document.getElementById('transactionsFormButtonSubmission');
+	   transactionSubmissionButton.setAttribute("disabled", "disabled");
+	   registerTransaction(event, transactionSubmissionButton);
 	});
 	
-	function registerTransaction(event){
+	function registerTransaction(event, transactionSubmissionButton){
 	   event.preventDefault();
 	   event.stopImmediatePropagation(); // necessary to prevent submitting the form twice
 	   replaceHtml('successMessage' , '');
 	   replaceHtml('errorMessage',"");
 	   let formValidation = true;
-	   // disable button after successful submission
-	   $('#transactionsFormButtonSubmission').prop('disabled', true);
 	   
-	   let amount = $("#amount").val();
+	   let amount = document.getElementById('amount').value;
 	   if(amount == null || amount == ''){
 		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Please fill the Amount.</p></div> <br/>',2000);
 		   formValidation = false;
@@ -90,14 +87,14 @@ $(document).ready(function(){
 	   
 	   if(!formValidation){
 		   // enable button after successful submission
-		   $('#transactionsFormButtonSubmission').prop('disabled', false);
+		   transactionSubmissionButton.removeAttribute("disabled");
 		   return;
 	   }
 	   
 	    
 	    amount = Math.abs(amount);
-	    let description = $('#description').val();
-	    let categoryOptions = $('#categoryOptions').val();
+	    let description = document.getElementById('description').value;
+	    let categoryOptions = document.getElementById('categoryOptions').value;
 		let values = {};
 		values['amount'] = amount;
 		values['description'] = description;
@@ -110,6 +107,7 @@ $(document).ready(function(){
 	          success: function(data) {
 	  	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
 	  	    	resiteredNewTransaction=true;
+	  	    	transactionSubmissionButton.removeAttribute("disabled");
 	  	      },
 	  	      error: function(data) {
 	  	    	var responseError = JSON.parse(data.responseText);
@@ -119,11 +117,10 @@ $(document).ready(function(){
 	           	}
 	  	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
 	  	    	resiteredNewTransaction=false;
+	  	    	transactionSubmissionButton.removeAttribute("disabled");
 	  	    }
 		});
 	    
-	    // enable button after successful submission
-    	$('#transactionsFormButtonSubmission').prop('disabled', false);
 	}
 	
 	
@@ -157,8 +154,6 @@ $(document).ready(function(){
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
 		$.getJSON(transactionAPIUrl + currentUser.financialPortfolioId, function(result){
-			let count = 1;
-			let countGrouped = 1;
 			let totalExpensesTransactions = 0.00;
 			let totalIncomeTransactions = 0.00;
 			let transactionsTableDiv = document.createDocumentFragment();
@@ -167,28 +162,32 @@ $(document).ready(function(){
 			$("#checkAll").prop("checked", false); 
 			// Disable delete Transactions button on refreshing the transactions
          	manageDeleteTransactionsButton();
-		   $.each(result, function(key,value) {
-			   let transactionsRowDocumentFragment = document.createDocumentFragment();
-			   let totalCategoryAmount = 0;
-			   $.each(value, function(subKey,subValue) {
-				   // Create transactions table row
-				   transactionsRowDocumentFragment.appendChild(createTableRows(subValue, count, key));
-				   totalCategoryAmount += subValue.amount;
-				   count++;
-			   });
-			   // Load all the total category amount in the category section
-			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
-			   // Create category label table row
-			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
-			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
-			   // Total Expenses and Total Income
-			   if(categoryMap[key].parentCategory == expenseCategory) {
-				   totalExpensesTransactions += totalCategoryAmount;
-			   } else if (categoryMap[key].parentCategory == incomeCategory) {
-				   totalIncomeTransactions += totalCategoryAmount;
-			   }
-			   countGrouped++;
-		   }); 
+         	let transactionIndex = 1;
+         	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
+         	   let key = Object.keys(result)[countGrouped];
+         	   let value = result[key];
+ 			   let transactionsRowDocumentFragment = document.createDocumentFragment();
+ 			   let totalCategoryAmount = 0;
+ 			   for(let count = 0, length = Object.keys(value).length; count < length; count++) {
+ 				  let subKey = Object.keys(value)[count];
+ 				  let subValue = value[subKey];
+ 				  // Create transactions table row
+ 				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, transactionIndex, key));
+ 				  totalCategoryAmount += subValue.amount;
+ 				  transactionIndex++;
+ 			   }
+ 			   // Load all the total category amount in the category section
+ 			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
+ 			   // Create category label table row
+ 			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
+ 			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
+ 			   // Total Expenses and Total Income
+ 			   if(categoryMap[key].parentCategory == expenseCategory) {
+ 				   totalExpensesTransactions += totalCategoryAmount;
+ 			   } else if (categoryMap[key].parentCategory == incomeCategory) {
+ 				   totalIncomeTransactions += totalCategoryAmount;
+ 			   }
+         	}
 		   
 		   // Update table with empty message if the transactions are empty
 		   if(result.length == 0) {
@@ -246,12 +245,12 @@ $(document).ready(function(){
 		
 		let optGroupExpense = document.createElement('optgroup');
 		optGroupExpense.label = 'Expenses';
-		optGroupExpense.appendChild(expenseSelectionOptGroup);
+		expenseSelectionOptGroup = cloneElementAndAppend(optGroupExpense, expenseSelectionOptGroup);
 		selectCategory.appendChild(optGroupExpense);
 		
 		let optGroupIncome = document.createElement('optgroup');
 		optGroupIncome.label = 'Income';
-		optGroupIncome.appendChild(incomeSelectionOptGroup);
+		incomeSelectionOptGroup =  cloneElementAndAppend(optGroupIncome, incomeSelectionOptGroup);
 		selectCategory.appendChild(optGroupIncome);
 		selectCategoryRow.appendChild(selectCategory);
 		tableRows.appendChild(selectCategoryRow);
@@ -350,7 +349,12 @@ $(document).ready(function(){
 		// Table Row 5
 		let amountTransactionsRow = document.createElement('td');
 		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
-		amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' spendingCategory';
+		
+		if(categoryMap[categoryId].parentCategory == expenseCategory) {
+			amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' spendingCategory';
+		} else {
+			amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' incomeCategory';
+		}
 		
 		// Append a - sign for the category if it is an expense
 	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
@@ -387,13 +391,11 @@ $(document).ready(function(){
 	
 	// Function to enable of disable the delete transactions button
 	function manageDeleteTransactionsButton(){
-		if($( ".number:checked" ).length > 0)
-		  {
-		    $('#manageTransactionButton').prop('disabled', false);
-		  }
-		  else
-		  {
-		    $('#manageTransactionButton').prop('disabled', true);
+		let manageTransactionsButton = document.getElementById('manageTransactionButton');
+		if($( ".number:checked" ).length > 0) {
+			manageTransactionsButton.removeAttribute('disabled');
+		  } else {
+			 manageTransactionsButton.setAttribute('disabled','disabled');
 		  }  
 	}
 	
@@ -434,7 +436,8 @@ $(document).ready(function(){
 			                         success: function(data) {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	 
-			                         	fetchJSONForTransactions();
+			                        	let totalCheckBoxes = $( ".number:checked" ).closest('tr').fadeOut('slow', function(){ $(this).remove(); })
+
 			                         },
 			                         error: function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
@@ -455,12 +458,14 @@ $(document).ready(function(){
 	// Load all categories from API (Call synchronously to set global variable)
 	function fetchJSONForCategories(){
 		$.ajax({
-			  async: false,
 	          type: "GET",
 	          url: fetchCategoriesUrl,
 	          dataType: "json",
 	          success : function(data) {
-	        	  $.each(data, function(key,value) {
+	        	  for(let count = 0, length = Object.keys(data).length; count < length; count++){
+	        		  let key = Object.keys(data)[count];
+	            	  let value = data[key];
+
 	        		  categoryMap[value.categoryId] = value;
 	        		  let option = document.createElement('option');
         			  option.className = 'categoruOption-' + value.categoryId;
@@ -471,10 +476,13 @@ $(document).ready(function(){
 	        		  } else if(value.parentCategory == incomeCategory) {
 	        			  incomeSelectionOptGroup.appendChild(option);
 	        		  }
-	    		   }); 
+	    		   
+	        	  }
 	        	  
-	        	  document.getElementById('expenseSelection').appendChild(expenseSelectionOptGroup);
-	        	  document.getElementById('incomeSelection').appendChild(incomeSelectionOptGroup);
+	        	  expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
+	        	  incomeSelectionOptGroup =  cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
+	        	// Call the transaction API to fetch information.
+	        	  fetchJSONForTransactions();
 	           }
 	        });
 	}
@@ -515,12 +523,14 @@ $(document).ready(function(){
 	// Loads the currenct logged in user from API (Call synchronously to set global variable)
 	function fetchJSONForLoggedInUser(){
 		$.ajax({
-	          async: false,
 	          type: "GET",
 	          url: fetchCurrentLoggedInUserUrl,
 	          dataType: "json",
 	          success : function(data) {
 	        	  currentUser = data;
+	        	  
+	        	// Fetch categories and append it to the select options (Load the categories first)
+	        	fetchJSONForCategories();
 	           }
 	        });
 	}
@@ -536,12 +546,12 @@ $(document).ready(function(){
 				}
 			}
 		}
-		closestTableRow.addClass('tableRowTransactionHighlight');
+		closestTableRow[0].classList.add('tableRowTransactionHighlight');
 	});
 	
 	// Process the description to find out if the user has changed the description
 	$( "tbody" ).on( "focusout", ".tableRowForSelectCategory" ,function() {
-		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
+		$(this).closest('tr')[0].classList.remove('tableRowTransactionHighlight');
 	});
 	
 	// Change trigger on select
@@ -572,7 +582,9 @@ $(document).ready(function(){
 			        	  });
 			        	  
 			        	  // Remove previous class related to category id and add the new one
-			        	  $('#' + categoryId).removeClass('categoryIdForSelect-' + previousCategoryId).addClass('categoryIdForSelect-'+ userTransaction.categoryId);
+			        	  let selectOption = document.getElementById(categoryId);
+			        	  selectOption.classList.remove('categoryIdForSelect-' + previousCategoryId);
+			        	  selectOption.classList.add('categoryIdForSelect-'+ userTransaction.categoryId);
 			        	  // Add to the new category
 			        	  updateCategoryAmount(userTransaction.categoryId, userTransaction.amount, false);
 		          },
@@ -605,12 +617,11 @@ $(document).ready(function(){
 	});
 	
 	// Description - disable enter key and submit request
-	$('tbody').on('keyup keypress', '.transactionsTableDescription' , function(e) {
+	$('tbody').on('keyup', '.transactionsTableDescription' , function(e) {
 		  var keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    postNewDescriptionToUserTransactions(this);
 		    $(this).blur(); 
 		    return false;
 		  }
@@ -638,15 +649,10 @@ $(document).ready(function(){
 		values['transactionId'] = changedDescription[changedDescription.length - 1];
 		
 		$.ajax({
-			  async: false,
 	          type: "POST",
 	          url: transactionsUpdateUrl + 'description',
 	          dataType: "json",
 	          data : values,
-	          success: function (userTransaction){
-	        	  // To prevent form re-submission on focus out of the user has pressed enter 
-	        	  descriptionTextEdited =  trimElement(element.innerText);
-	          },
 	          error: function (thrownError) {
             	 var responseError = JSON.parse(thrownError.responseText);
                  	if(responseError.error.includes("Unauthorized")){
@@ -671,12 +677,11 @@ $(document).ready(function(){
 	});
 	
 	// Amount - disable enter key and submit request
-	$('tbody').on('keyup keypress', '.amountTransactionsRow' , function(e) {
+	$('tbody').on('keyup', '.amountTransactionsRow' , function(e) {
 		  var keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    postNewAmountToUserTransactions(this);
 		    $(this).blur(); 
 		    return false;
 		  }
@@ -704,7 +709,7 @@ $(document).ready(function(){
 		
 		// Replace negative sign to positive sign if entered by the user
 		if(enteredText < 0){
-			enteredText = parseFloat(lastElement(splitElement(enteredText,'-')),2);
+			enteredText = parseFloat(Math.abs(enteredText),2);
 		}
 		
 		// Test if the entered value is the same as the previous one
@@ -717,7 +722,6 @@ $(document).ready(function(){
 			values['transactionId'] = changedAmount[changedAmount.length - 1];
 			let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
 			$.ajax({
-				  async: false,
 		          type: "POST",
 		          url: transactionsUpdateUrl + 'transaction',
 		          dataType: "json",
@@ -747,13 +751,15 @@ $(document).ready(function(){
 	// Append appropriate buttons when the amount is edited
 	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
 		// append remove button if the transaction amount is zero
-		let budgetTableCell = $('#budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]);
-		  if(enteredText == 0 && isEmpty(budgetTableCell[0].innerText)){
-			// Handles the addition of buttons in the budget column for the row
-			  budgetTableCell.html(deleteButton).hide().children().fadeIn('slow', function(){ budgetTableCell.show('slow'); })
-		  } else if(enteredText > 0 && !isEmpty(budgetTableCell[0].innerText)){
-			  budgetTableCell.children().fadeOut('slow', function(){ $(this).html(''); });
-		  }
+		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]);
+	  if(enteredText == 0 || isNaN(enteredText)){
+		// Handles the addition of buttons in the budget column for the row
+		  budgetTableCell.innerHTML = deleteButton;
+		  budgetTableCell.classList.add('fadeInAnimation');
+	  } else if(enteredText > 0 && budgetTableCell != null){
+		  budgetTableCell.classList.add('fadeOutAnimation');
+		  replaceHtml(budgetTableCell, '');
+	  }
 	}
 	
 	// Update the category amount
@@ -768,7 +774,7 @@ $(document).ready(function(){
 	  	  let categoryTotal = $('.amountCategoryId-' + categoryId)[0].innerText;
 	  	  // Convert to number regex
 	  	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
-	  	  previousCategoryTotal = lastElement(splitElement(previousCategoryTotal, '-'));
+	  	  previousCategoryTotal = Math.abs(previousCategoryTotal);
 	  	  let minusSign = '';
 	  	  if(includesStr(categoryTotal,'-')){
 	  		  minusSign = '-';
@@ -787,26 +793,26 @@ $(document).ready(function(){
 	// Updates the final amount section with the current value
 	function updateTotalCalculations(categoryForCalculation , totalAddedOrRemovedFromAmount){
 		
-		if(includesStr(categoryForCalculation, 'spendingCategory')) {
+		if(categoryForCalculation.contains('spendingCategory')) {
 			let currentValueExpense = round(parseFloat(trimElement(lastElement(splitElement($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			replaceHtml('totalExpensesTransactions' , '-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
 			
-		} else if(includesStr(categoryForCalculation, 'incomeCategory')) {
+		} else if(categoryForCalculation.contains('incomeCategory')) {
 			let currentValueIncome = round(parseFloat(trimElement(lastElement(splitElement($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
 			replaceHtml('totalIncomeTransactions' , currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
 		}
 		
 		// Update the total available 
-		let income = convertToNumberFromCurrency(fetchFirstElement($("#totalIncomeTransactions")).innerText);
-		let expense = convertToNumberFromCurrency(fetchFirstElement($("#totalExpensesTransactions")).innerText);
+		let income = convertToNumberFromCurrency($("#totalIncomeTransactions")[0].innerText);
+		let expense = convertToNumberFromCurrency($("#totalExpensesTransactions")[0].innerText);
 
 		let minusSign = '';
 		let availableCash = income-expense;
 		if (availableCash < 0){
 			minusSign = '-';
-			availableCash = lastElement(splitElement(availableCash, '-'));
+			availableCash = Math.abs(availableCash);
 		}
 		
 		replaceHtml('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
@@ -816,24 +822,18 @@ $(document).ready(function(){
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
 	function appendCurrencyToAmount(element, enteredText){
 		// if the currency or the minus sign is removed then replace it back when the focus is lost
-		if(!includesStr(element.innerText,currentCurrencyPreference) && includesStr(amountEditedTransaction,currentCurrencyPreference)){
-			let minusSign = '';
-			if(includesStr(amountEditedTransaction,'-')){
-				minusSign = '-';
-			}
-			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
-			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + trimElement(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
-			element.innerHTML = replaceEnteredText;
-		} else {
-			let minusSign = '';
-			if(includesStr(amountEditedTransaction,'-')){
-				minusSign = '-';
-			}
-			let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
-			// Replace the space in between and trim the text
-			let replaceEnteredText = '<div class="text-right amountDivCentering"  contenteditable="true" tabindex="0">' + trimElement(changeInnerTextAmount).replace(/ +/g, "") + '</div>';
-			element.innerHTML = replaceEnteredText;
+		let minusSign = '';
+		if(includesStr(amountEditedTransaction,'-')){
+			minusSign = '-';
 		}
+		let changeInnerTextAmount = minusSign + currentCurrencyPreference + formatNumber(enteredText, currentUser.locale);
+		let replaceEnteredText = document.createElement('div');
+		replaceEnteredText.className = 'text-right amountDivCentering';
+		replaceEnteredText.setAttribute('contenteditable', true);
+		replaceEnteredText.tabIndex = 0;
+		replaceEnteredText.innerHTML = trimElement(changeInnerTextAmount).replace(/ +/g, "");
+		element.innerHTML = '';
+		element.appendChild(replaceEnteredText);
 	}
 	
 	
@@ -847,7 +847,9 @@ $(document).ready(function(){
 	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = lastElement(splitElement($(this).closest('td').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
-		$('#budgetTransactionsRow-' + id).children().fadeOut('slow', function(){ $(this).html(loaderBudgetSection); });
+		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id)
+		budgetTableCell.innerHTML = loaderBudgetSection;
+		budgetTableCell.classList.add('fadeInAnimation');
 		
 		
 		// Handle delete for individual row
@@ -856,7 +858,7 @@ $(document).ready(function(){
             type: 'DELETE',
             success: function(data) {
             	
-            	let classListBudget = $('#budgetTransactionsRow-' + id)[0].classList;
+            	let classListBudget = budgetTableCell.classList;
             	classListBudget.forEach(function(classItem) {
             		if(includesStr(classItem, 'categoryIdForBudget')) {
             			// Remove amount from current Category

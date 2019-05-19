@@ -168,3 +168,10 @@ function replaceHtml(el, html) {
     to the new element, which can be used to restore variable references. */
     return newEl;
 }
+
+function cloneElementAndAppend(document, elementToClone){
+	let clonedElement = elementToClone.cloneNode(true);
+	document.appendChild(elementToClone);
+	return clonedElement;
+	
+}
