@@ -28,7 +28,6 @@ $(document).ready(function(){
 	const transactionAPIUrl =  "/api/transactions/";
 	const saveTransactionsUrl = "/api/transactions/save/";
 	const transactionsUpdateUrl = "/api/transactions/update/";
-	const replaceTransactionsDiv = "#productsJson";
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -130,10 +129,6 @@ $(document).ready(function(){
     	setTimeout(function() {
     		$(divId).fadeOut();
     	}, milliSeconds);
-	}
-	
-	function fadeOutDiv(element, milliSeconds, html) {
-		$(element).fadeOut(milliSeconds, function(){ $(this).html(html).show(); });
 	}
 	
 	// refresh the transactions page on closing the modal
