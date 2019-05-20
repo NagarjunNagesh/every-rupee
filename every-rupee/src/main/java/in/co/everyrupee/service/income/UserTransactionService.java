@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -25,12 +26,10 @@ import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.utils.ERStringUtils;
 
-@Transactional
 @Service
+@CacheConfig(cacheNames = { "userTransaction" })
 public class UserTransactionService implements IUserTransactionService {
 
-    // TODO enable transactional commit of user transactions with changes to
-    // configuration
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
 
@@ -43,6 +42,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
+    @Cacheable
     public Object fetchUserTransaction(String pFinancialPortfolioId) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -54,11 +54,11 @@ public class UserTransactionService implements IUserTransactionService {
 	    return userTransactions;
 	}
 
-	return sortByCategoryIdForHtmlTransactionsPage(userTransactions);
+	return sortByCategoryIdForHtmlTransactionsPage(userTransactions, pFinancialPortfolioId);
     }
 
     private Map<Integer, List<UserTransaction>> sortByCategoryIdForHtmlTransactionsPage(
-	    List<UserTransaction> userTransactions) {
+	    List<UserTransaction> userTransactions, String pFinancialPortfolioId) {
 	Map<Integer, List<UserTransaction>> userTransactionsMap = new HashMap<Integer, List<UserTransaction>>();
 
 	for (UserTransaction userTransaction : userTransactions) {
@@ -72,6 +72,8 @@ public class UserTransactionService implements IUserTransactionService {
 	    }
 	}
 
+	logger.debug("finished sorting for the financial portfolio - " + pFinancialPortfolioId);
+
 	return userTransactionsMap;
     }
 
@@ -82,6 +84,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
+    @CacheEvict(key = "#pFinancialPortfolioId")
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get("amount"))) {
@@ -107,7 +110,8 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    public void deleteUserTransactions(String transactionalIds) {
+    @CacheEvict(key = "#financialPortfolioId")
+    public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	List<String> transactionIdsAsList = Arrays.asList(arrayOfTransactionIds);
 	List<Integer> transactionIdsAsIntegerList = transactionIdsAsList.stream().map(s -> Integer.parseInt(s))
@@ -118,7 +122,9 @@ public class UserTransactionService implements IUserTransactionService {
     }
 
     @Override
-    public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName) {
+    @CacheEvict(key = "#financialPortfolioId")
+    public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
+	    String financialPortfolioId) {
 
 	Optional<UserTransaction> userTransaction = userTransactionsRepository
 		.findById(Integer.parseInt(formData.get("transactionId").get(0)));

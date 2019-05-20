@@ -27,8 +27,7 @@ $(document).ready(function(){
 	// Constructs transaction API url
 	const transactionAPIUrl =  "/api/transactions/";
 	const saveTransactionsUrl = "/api/transactions/save/";
-	const transactionsUpdateUrl = "/api/transactions/update/";
-	const replaceTransactionsDiv = "#productsJson";
+	const transactionsUpdateUrl = "/update/";
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -130,10 +129,6 @@ $(document).ready(function(){
     	setTimeout(function() {
     		$(divId).fadeOut();
     	}, milliSeconds);
-	}
-	
-	function fadeOutDiv(element, milliSeconds, html) {
-		$(element).fadeOut(milliSeconds, function(){ $(this).html(html).show(); });
 	}
 	
 	// refresh the transactions page on closing the modal
@@ -430,7 +425,7 @@ $(document).ready(function(){
 			                     transactionIds.join(", ")
 			                     
 			                     jQuery.ajax({
-			                         url: transactionAPIUrl + transactionIds,
+			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds,
 			                         type: 'DELETE',
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
@@ -594,7 +589,7 @@ $(document).ready(function(){
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
 			$.ajax({
 		          type: "POST",
-		          url: transactionsUpdateUrl + 'category',
+		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'category',
 		          dataType: "json",
 		          data : values,
 		          success: function(userTransaction){
@@ -678,7 +673,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 	          type: "POST",
-	          url: transactionsUpdateUrl + 'description',
+	          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'description',
 	          dataType: "json",
 	          data : values,
 	          error: function (thrownError) {
@@ -751,7 +746,7 @@ $(document).ready(function(){
 			let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
 			$.ajax({
 		          type: "POST",
-		          url: transactionsUpdateUrl + 'transaction',
+		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'transaction',
 		          dataType: "json",
 		          data : values,
 		          success: function(userTransaction){
@@ -882,7 +877,7 @@ $(document).ready(function(){
 		
 		// Handle delete for individual row
 		jQuery.ajax({
-            url: transactionAPIUrl + id,
+            url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + id,
             type: 'DELETE',
             success: function(data) {
             	

@@ -30,7 +30,7 @@ function splitElement(str, splitString){
 }
 
 function includesStr(arr, val){
-	return  isEmpty(arr) ? null : arr.includes(val); 
+	return isEmpty(arr) ? null : arr.includes(val); 
 }
 
 function fetchFirstElement(arr){

@@ -147,7 +147,7 @@ function showNotification(message, from, align, colorCode){
 
 	  },{
 	      type: colorCode,
-	      timer: 4000,
+	      timer: 2000,
 	      placement: {
 	          from: from,
 	          align: align
