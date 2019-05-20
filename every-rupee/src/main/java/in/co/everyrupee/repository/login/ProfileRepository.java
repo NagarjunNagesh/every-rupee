@@ -18,7 +18,7 @@ import in.co.everyrupee.pojo.login.Profile;
  */
 @Repository("profileRepository")
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-	Optional<Profile> findByEmail(String email);
+    Optional<Profile> findByEmail(String email);
 
-	Optional<Profile> findByResetToken(String resetToken);
+    Optional<Profile> findByResetToken(String resetToken);
 }

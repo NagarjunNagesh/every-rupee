@@ -21,6 +21,8 @@
 		<autoconfigure.version>2.1.3.RELEASE</autoconfigure.version>
 		<passay.version>1.4.0</passay.version>
 		<apache-collections.version>4.0</apache-collections.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -119,6 +121,10 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>

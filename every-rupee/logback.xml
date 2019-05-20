@@ -52,13 +52,17 @@
         <neverBlock>false</neverBlock><!-- default false, set to true to cause 
             the Appender not block the application and just drop the messages -->
   </appender>
-    <logger name="in.co.everyrupee" level="DEBUG" />
+    <logger name="in.co.everyrupee" level="WARN" />
 
 	<!-- to view SQL statements, change to DEBUG -->
 	<logger name="org.hibernate.SQL" level="WARN" />
 
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.transaction" level="WARN" />
+	<logger name="org.springframework.cache" level="WARN">
+        <appender-ref ref="ASYNC_CONSOLE" />
+        <appender-ref ref="ASYNC_FILE" />
+    </logger>
 
 	<!-- in order to debug some marshalling issues, this needs to be TRACE -->
 	<logger name="org.springframework.web.servlet.mvc" level="WARN" />

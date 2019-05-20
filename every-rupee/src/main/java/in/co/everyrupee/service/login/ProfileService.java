@@ -12,6 +12,9 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ import in.co.everyrupee.utils.RegexUtils;
  */
 @Transactional
 @Service("profileService")
+@CacheConfig(cacheNames = { "users" })
 public class ProfileService {
 
     @Autowired
@@ -69,6 +73,7 @@ public class ProfileService {
     private static final String ERROR_LOGIN_MESSAGE = "Error while login ";
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Cacheable
     public Optional<Profile> findUserByEmail(String email) {
 	String ip = getClientIP();
 	if (loginAttemptService.isBlocked(ip)) {
@@ -83,7 +88,7 @@ public class ProfileService {
     }
 
     // API
-
+    @CachePut(key = "#profile.email")
     public Profile registerNewUserAccount(final Profile profile) {
 	if (emailExists(profile.getEmail())) {
 	    throw new UserAlreadyExistException("There is an account with that email adress: " + profile.getEmail());
@@ -99,6 +104,7 @@ public class ProfileService {
 	return saveUser(profile);
     }
 
+    @Cacheable
     private boolean emailExists(final String email) {
 	return findUserByEmail(email).isPresent();
     }

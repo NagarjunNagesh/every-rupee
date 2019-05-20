@@ -56,26 +56,29 @@ public class UserTransactionsController {
     }
 
     // Delete a User Transaction
-    @RequestMapping(value = "/{transactionIds}", method = RequestMethod.DELETE)
-    public GenericResponse deleteUserTransactionById(@PathVariable String transactionIds, Principal userPrincipal) {
+    @RequestMapping(value = "/{financialPortfolioId}/{transactionIds}", method = RequestMethod.DELETE)
+    public GenericResponse deleteUserTransactionById(@PathVariable String financialPortfolioId,
+	    @PathVariable String transactionIds, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	userTransactionService.deleteUserTransactions(transactionIds);
+	userTransactionService.deleteUserTransactions(transactionIds, financialPortfolioId);
 
 	return new GenericResponse("success");
     }
 
     // Update description, transaction & category in user transactions
-    @RequestMapping(value = "/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public UserTransaction updateDescriptionByUserTransactionById(@PathVariable String formFieldName,
-	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
+    @RequestMapping(value = "/{financialPortfolioId}/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public UserTransaction updateDescriptionByUserTransactionById(@PathVariable String financialPortfolioId,
+	    @PathVariable String formFieldName, @RequestBody MultiValueMap<String, String> formData,
+	    Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	UserTransaction userTransactionSaved = userTransactionService.updateTransactions(formData, formFieldName);
+	UserTransaction userTransactionSaved = userTransactionService.updateTransactions(formData, formFieldName,
+		financialPortfolioId);
 
 	return userTransactionSaved;
     }
