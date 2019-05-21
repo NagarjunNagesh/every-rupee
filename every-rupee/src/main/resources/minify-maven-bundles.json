@@ -1,0 +1,33 @@
+{
+    "bundles": [
+        {
+            "type": "css",
+            "name": "transaction.css",
+            "files": [
+                "/dashboard/custom-dashboard.css",
+                "/dashboard/build/material-dashboard.css",
+                "/fonts/font-awesome/font-awesome.css",
+                "/dashboard/income/transactions.css",
+                "/fonts/material-icons/material-icons.css"
+            ]
+        },
+        {
+            "type": "js",
+            "name": "transaction.js",
+            "files": [
+            	"/core/jquery.min.js",
+                "/core/popper.min.js",
+                "/core/bootstrap-material-design.min.js",
+                "/plugins/perfect-scrollbar.jquery.min.js",
+                "/plugins/moment.min.js",
+                "/plugins/bootstrap-notify.js",
+                "/plugins/sweetalert2.js",
+                "/dashboard/material-dashboard/material-dashboard.min.js",
+                "/dashboard/custom-dashboard.js",
+                "/plugins/libraries.js",
+                "/dashboard/sidebar/sidebar.js",
+                "/dashboard/income/transaction.js"
+            ]
+        }
+    ]
+}

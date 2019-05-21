@@ -1,6 +1,5 @@
-/**
- * Javascript configuration for the sidebar in the dashboard
- */
+// Javascript configuration for the sidebar in the dashboard
+ 
 $(document).ready(function() {
       $().ready(function() {
         $sidebar = $('.sidebar');

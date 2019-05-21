@@ -1,6 +1,4 @@
-/**
- * Custom Javascript for dashboard
- */
+// Custom Javascript for dashboard
 
 window.onload = function () {
 	$(document).ready(function(){

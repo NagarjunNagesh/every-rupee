@@ -5,7 +5,6 @@
 	    Income
 	  </title>
 	  <object th:include="dashboard/dashboard-fragments/dashboard-head :: dashboard-head" th:remove="tag" ></object>
-	  <link href="../css/dashboard/income/transactions.css" rel="stylesheet" th:href="@{/css/dashboard/income/transactions.css}">
 </head>
 
 
@@ -156,7 +155,5 @@
 	</div>
 	
   <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
-  <!-- Loads the custom class for every rupee -->
-  <script defer src="../js/dashboard/income/transactions.js" th:src="@{/js/dashboard/income/transactions.js}" type="text/javascript"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
  * 
  * Nagarjun Nagesh
  */
+ 
 $(document).ready(function(){
 	
 	// Change side bar color to green
