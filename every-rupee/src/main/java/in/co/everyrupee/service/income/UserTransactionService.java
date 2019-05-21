@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.GenericConstants;
@@ -26,6 +27,7 @@ import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.utils.ERStringUtils;
 
+@Transactional
 @Service
 @CacheConfig(cacheNames = { "userTransaction" })
 public class UserTransactionService implements IUserTransactionService {

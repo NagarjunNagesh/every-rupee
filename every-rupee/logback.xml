@@ -59,10 +59,9 @@
 
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.transaction" level="WARN" />
-	<logger name="org.springframework.cache" level="WARN">
-        <appender-ref ref="ASYNC_CONSOLE" />
-        <appender-ref ref="ASYNC_FILE" />
-    </logger>
+	
+	<!-- To View the logs for the cache layer LEVEL="trace" -->
+	<logger name="org.springframework.cache" level="trace" />
 
 	<!-- in order to debug some marshalling issues, this needs to be TRACE -->
 	<logger name="org.springframework.web.servlet.mvc" level="WARN" />
