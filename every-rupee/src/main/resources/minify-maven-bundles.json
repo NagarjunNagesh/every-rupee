@@ -6,9 +6,10 @@
             "files": [
                 "/dashboard/custom-dashboard.css",
                 "/dashboard/build/material-dashboard.css",
-                "/fonts/font-awesome/font-awesome.css",
                 "/dashboard/income/transactions.css",
-                "/fonts/material-icons/material-icons.css"
+                "/fonts/material-icons/material-icons.css",
+                "/fonts/roboto/roboto.css",
+                "/fonts/roboto_slab/roboto_slab.css"
             ]
         },
         {
@@ -26,7 +27,7 @@
                 "/dashboard/custom-dashboard.js",
                 "/plugins/libraries.js",
                 "/dashboard/sidebar/sidebar.js",
-                "/dashboard/income/transaction.js"
+                "/dashboard/income/transactions.js"
             ]
         }
     ]
