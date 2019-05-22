@@ -61,7 +61,7 @@
 	<logger name="org.springframework.transaction" level="WARN" />
 	
 	<!-- To View the logs for the cache layer LEVEL="trace" -->
-	<logger name="org.springframework.cache" level="trace" />
+	<logger name="org.springframework.cache" level="WARN" />
 
 	<!-- in order to debug some marshalling issues, this needs to be TRACE -->
 	<logger name="org.springframework.web.servlet.mvc" level="WARN" />
