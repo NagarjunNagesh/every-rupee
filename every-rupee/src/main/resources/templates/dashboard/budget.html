@@ -5,18 +5,15 @@
 	<title>
 	    Debt
 	  </title>
-	  <object th:include="dashboard/dashboard-fragments/dashboard-head :: dashboard-head" th:remove="tag" ></object>
 </head>
 
-<body class="debt-dashboard">
+<body class="debt-dashboard" >
   <div class="wrapper ">
     
-    <div th:replace="dashboard/dashboard-fragments/dashboard-side-menu :: dashboard-side-menu">&copy; EveryRupee Dashboard Side Menu</div>
     
     <div class="main-panel">
-     <div th:replace="dashboard/dashboard-fragments/dashboard-head :: dashboard-top-nav">&copy; EveryRupee Dashboard Top Navigation</div>
       
-      <div class="content">
+      <div class="content" id="mutableDashboard">
         <div class="container-fluid">
         </div>
       </div>
@@ -24,10 +21,8 @@
       
     </div>
   </div>
-  <div th:replace="dashboard/dashboard-fragments/dashboard-side-menu :: dashboard-sidebar-settings">&copy; 2019 EveryRupee Scripts</div>
   
   
-  <div th:replace="dashboard/dashboard-fragments/dashboard-footer :: footer-scripts">&copy; 2019 EveryRupee Scripts</div>
   
 </body>
 

@@ -61,6 +61,63 @@ window.onload = function () {
 			  return "";
 			}
 		
+		$('.pageDynamicLoadForDashboard').click(function(e){
+			e.preventDefault();
+			let id = $(this).attr('id');
+			let url = '';
+			
+			if(isEmpty(id)){
+				swal({
+	                title: "Error Redirecting",
+	                text: 'Please try again later',
+	                type: 'warning',
+	                timer: 1000,
+	                showConfirmButton: false
+	            }).catch(swal.noop);
+				return;
+			}
+			
+			switch(id) {
+			
+			case 'transactionsPage':
+				url = '/dashboard/transactions';
+			    break;
+			case 'budgetPage':
+				url = '/dashboard/budget';
+			    break;
+			case 'goalsPage':
+				url = '/dashboard/goals';
+			    break;
+			case 'overviewPage':
+				url = '/dashboard/home';
+			    break;
+			case 'settings-dashboard-sidebar':
+				url = '/dashboard/settings';
+			    break;
+			case 'profilePage':
+				url = '/dashboard/profile';
+			    break;
+			default:
+				swal({
+	                title: "Redirecting Not Possible",
+	                text: 'Please try again later',
+	                type: 'warning',
+	                timer: 1000,
+	                showConfirmButton: false
+	            }).catch(swal.noop);
+				return;
+			}
+			
+		    $.ajax({
+		        type: "GET",
+		        url: url,
+		        data: { },
+		        success: function(data){
+		            $('#mutableDashboard').html(data);
+		        }
+		    });
+		});
+		
 	});
 	
 }
