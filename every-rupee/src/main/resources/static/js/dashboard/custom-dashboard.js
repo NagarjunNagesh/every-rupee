@@ -67,6 +67,7 @@ window.onload = function () {
 			  return "";
 			}
 		
+		// DO NOT load the html from request just refresh div if possible without downloading JS
 		$('.pageDynamicLoadForDashboard').click(function(e){
 			e.preventDefault();
 			let id = $(this).attr('id');
