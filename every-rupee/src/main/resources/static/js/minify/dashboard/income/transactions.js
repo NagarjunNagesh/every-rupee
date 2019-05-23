@@ -5,10 +5,6 @@ $(document).ready(function(){
 	changeColorOfSidebar();
 	
 	
-	//Stores the Loggedin User
-	let currentUser = '';
-	var fetchCurrentLoggedInUserUrl = "/api/user/";
-	
 	// Store map of categories (promises require LET for maps)
 	let categoryMap = {};
 	// Expense Category
@@ -50,8 +46,9 @@ $(document).ready(function(){
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	const loaderBudgetSection = '<div id="material-spinner"></div>';
 	
-	// Loads the current Logged in User
-	fetchJSONForLoggedInUser();
+	let currentUser = er.fetchCurrentUser();
+	// Fetch categories and append it to the select options (Load the categories first)
+	fetchJSONForCategories();
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -537,21 +534,6 @@ $(document).ready(function(){
 			locale = "en-IN";
 		}
 		  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-	}
-	
-	// Loads the currenct logged in user from API (Call synchronously to set global variable)
-	function fetchJSONForLoggedInUser(){
-		$.ajax({
-	          type: "GET",
-	          url: fetchCurrentLoggedInUserUrl,
-	          dataType: "json",
-	          success : function(data) {
-	        	  currentUser = data;
-	        	  
-	        	// Fetch categories and append it to the select options (Load the categories first)
-	        	fetchJSONForCategories();
-	           }
-	        });
 	}
 	
 	// Catch the description when the user focuses on the description

@@ -1,7 +1,13 @@
 // Custom Javascript for dashboard
-
+//Stores the Loggedin User
+let currentUser = '';
+		
 window.onload = function () {
 	$(document).ready(function(){
+		var fetchCurrentLoggedInUserUrl = "/api/user/";
+		
+		// Loads the current Logged in User
+		fetchJSONForLoggedInUser();
 		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
@@ -89,7 +95,7 @@ window.onload = function () {
 				url = '/dashboard/goals';
 			    break;
 			case 'overviewPage':
-				url = '/dashboard/home';
+				url = '/dashboard/overview';
 			    break;
 			case 'settings-dashboard-sidebar':
 				url = '/dashboard/settings';
@@ -114,12 +120,33 @@ window.onload = function () {
 		        data: { },
 		        success: function(data){
 		            $('#mutableDashboard').html(data);
+		        },
+		        error: function(){
+		        	swal({
+		                title: "Redirecting Not Possible",
+		                text: 'Please try again later',
+		                type: 'warning',
+		                timer: 1000,
+		                showConfirmButton: false
+		            }).catch(swal.noop);
 		        }
 		    });
 		});
 		
+		// Loads the currenct logged in user from API (Call synchronously to set global variable)
+		function fetchJSONForLoggedInUser(){
+			$.ajax({
+		          type: "GET",
+		          url: fetchCurrentLoggedInUserUrl,
+		          dataType: "json",
+		          success : function(data) {
+		        	  currentUser = data;
+		        	  
+		           }
+		        });
+		}
+		
 	});
-	
 }
 
 /* When the toggleFullscreen() function is executed, open the video in fullscreen.
@@ -148,6 +175,12 @@ function toggleFullscreen() {
 	      document.webkitExitFullscreen();
 	    }
 	  }
+}
+
+er = {
+	fetchCurrentUser() {
+		return currentUser;
+	}
 }
 
 /* Get the element you want displayed in fullscreen mode (a video in this example): */

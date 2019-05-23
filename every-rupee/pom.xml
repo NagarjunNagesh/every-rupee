@@ -169,7 +169,7 @@
                             <nosuffix>true</nosuffix>
                             <cssSourceDir>static/css</cssSourceDir>
                             <cssSourceIncludes>
-                                <cssSourceInclude>minify-maven/**.css</cssSourceInclude>
+                                <cssSourceInclude>minify/**</cssSourceInclude>
                             </cssSourceIncludes>
                             <cssSourceExcludes>
 			               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
@@ -177,7 +177,7 @@
 			              	</cssSourceExcludes>
                             <jsSourceDir>static/js</jsSourceDir>
                             <jsSourceIncludes>
-                                <jsSourceInclude>minify-maven/**.js</jsSourceInclude>
+                                <jsSourceInclude>minify/**</jsSourceInclude>
                             </jsSourceIncludes>
                             <jsSourceExcludes>
 				                <jsSourceExclude>**/*.min.js</jsSourceExclude>

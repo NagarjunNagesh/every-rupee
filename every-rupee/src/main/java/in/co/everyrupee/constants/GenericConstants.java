@@ -40,6 +40,7 @@ public class GenericConstants {
     public static final String DASHBOARD_INVESTMENT_URL = "/dashboard/investment";
     public static final String DASHBOARD_SETTINGS_URL = "/dashboard/settings";
     public static final String DASHBOARD_PROFILE_URL = "/dashboard/profile";
+    public static final String DASHBOARD_OVERVIEW_URL = "/dashboard/overview";
 
     // Objects
     public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
@@ -51,7 +52,8 @@ public class GenericConstants {
     public static final String DASHBOARD_BUDGET_VIEW_NAME_OBJECT = "dashboard/budget";
     public static final String DASHBOARD_INVESTMENT_VIEW_NAME_OBJECT = "dashboard/investment";
     public static final String DASHBOARD_SETTINGS_VIEW_NAME_OBJECT = "dashboard/settings";
-    public static final String DASHBOARD_PROFILE_VIEW_NAME_OBJECT = "/dashboard/profile";
+    public static final String DASHBOARD_PROFILE_VIEW_NAME_OBJECT = "dashboard/profile";
+    public static final String DASHBOARD_OVERVIEW_VIEW_NAME_OBJECT = "dashboard/overview";
     public static final String GOOGLE_RECAPTCHA_RESPONSE = "g-recaptcha-response";
 
     // Queries

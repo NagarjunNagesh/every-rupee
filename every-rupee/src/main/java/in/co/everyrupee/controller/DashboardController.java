@@ -57,4 +57,11 @@ public class DashboardController {
 	return modelAndView;
     }
 
+    @RequestMapping(GenericConstants.DASHBOARD_OVERVIEW_URL)
+    public ModelAndView dashboardOverview() {
+	ModelAndView modelAndView = new ModelAndView();
+	modelAndView.setViewName(GenericConstants.DASHBOARD_OVERVIEW_VIEW_NAME_OBJECT);
+	return modelAndView;
+    }
+
 }
