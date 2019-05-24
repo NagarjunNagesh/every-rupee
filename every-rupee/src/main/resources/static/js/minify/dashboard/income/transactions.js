@@ -10,10 +10,6 @@ $(document).ready(function(){
 	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
 	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
 	
-	// Constructs transaction API url
-	const transactionAPIUrl =  "/api/transactions/";
-	const saveTransactionsUrl = "/api/transactions/save/";
-	const transactionsUpdateUrl = "/update/";
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
 	var resiteredNewTransaction = false;
@@ -23,7 +19,7 @@ $(document).ready(function(){
 	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// empty table message
-	const emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
+	let emptyTable =  fetchEmptyTableMessage();
 	// Bills & Fees Options selection
 	const selectedOption = '4';
 	// Currency Preference
@@ -168,7 +164,8 @@ $(document).ready(function(){
 		   
 		   // Update table with empty message if the transactions are empty
 		   if(result.length == 0) {
-			   replaceHtml(replaceTransactionsId, emptyTable);
+			   documentTbody.innerHTML = '';
+			   emptyTable = cloneElementAndAppend(document.getElementById(replaceTransactionsId), emptyTable)
 		   } else {
 			   documentTbody.innerHTML = '';
 			   documentTbody.appendChild(transactionsTableDiv);
@@ -856,6 +853,39 @@ $(document).ready(function(){
 	// convert from currency format to number
 	function convertToNumberFromCurrency(amount){
 		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+	}
+	
+	function fetchEmptyTableMessage() {
+		let emptyTableFragment = document.createDocumentFragment();
+		let emptyTableRow = document.createElement("tr");
+		
+		// Row 1
+		let indexTableCell = document.createElement('td');
+		emptyTableRow.appendChild(indexTableCell);
+		
+		// Row 2
+		let selectAllTableCell = document.createElement('td');
+		emptyTableRow.appendChild(selectAllTableCell);
+		
+		// Row 3
+		let categoryTableCell = document.createElement('td');
+		categoryTableCell.innerHTML = '<img src="../img/dashboard/icons8-document-128.png">';
+		emptyTableRow.appendChild(categoryTableCell);
+		
+		// Row 4
+		let descriptionTableCell = document.createElement('td');
+		descriptionTableCell.innerHTML = '<p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p>';
+		emptyTableRow.appendChild(descriptionTableCell);
+		
+		// Row 5
+		let amountTableCell = document.createElement('td');
+		emptyTableRow.appendChild(amountTableCell);
+		
+		// Row 6
+		let budgetTableCell = document.createElement('td');
+		emptyTableRow.appendChild(budgetTableCell);
+		
+		return emptyTableRow;
 	}
      
 });

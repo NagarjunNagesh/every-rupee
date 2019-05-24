@@ -19,14 +19,17 @@ let categoryMap = {};
 const expenseCategory = "1";
 // Income Category
 const incomeCategory = "2";
+//Constructs transaction API url
+const transactionAPIUrl =  "/api/transactions/";
+const saveTransactionsUrl = "/api/transactions/save/";
+const transactionsUpdateUrl = "/update/";
+
 
 window.onload = function () {
 	$(document).ready(function(){
 		
 		// Loads the current Logged in User
 		fetchJSONForLoggedInUser();
-		// Read Cookies
-		readCookie();
 		// Fetch Categpry 
 		fetchJSONForCategories();
 		
@@ -61,16 +64,32 @@ window.onload = function () {
 			currentActiveSideBar.classList.add('active');
 		}
 		
+		// Read Cookies
+		readCookie();
+		
 		/* Read Cookies */
 		function readCookie() {
 				// make sure that the cookies exists
 		        if (document.cookie != "") { 
 		        		//Get the value from the name=value pair
-		                var sidebarActiveCookie = getCookie('sidebarMini');
+		                let sidebarActiveCookie = getCookie('sidebarMini');
 		                
 		                if(includesStr(sidebarActiveCookie, 'active')) {
 		                	 minimizeSidebar();
 		                }
+		                
+		                // Get the value from the name=value pair
+		                let cookieCurrentPage = getCookie('currentPage');
+		                
+		                if(!isEmpty(cookieCurrentPage)) {
+		                	fetchCurrentPage(cookieCurrentPage);
+		                } else {
+		                	// Fetch overview page and display if cookie is empty
+		                	fetchCurrentPage('overviewPage');
+		                }
+		        } else {
+		        	// fetch overview page and display if no cookie is present
+		        	fetchCurrentPage('overviewPage');
 		        }
 		}
 		
@@ -93,9 +112,21 @@ window.onload = function () {
 		
 		// DO NOT load the html from request just refresh div if possible without downloading JS
 		$('.pageDynamicLoadForDashboard').click(function(e){
-			
 			e.preventDefault();
 			let id = $(this).attr('id');
+			
+			/* Create a cookie to store user preference */
+		    var expirationDate = new Date;
+		    expirationDate.setMonth(expirationDate.getMonth()+2);
+		    
+		    /* Create a cookie to store user preference */
+		    document.cookie =  "currentPage=" + id + "; expires=" + expirationDate.toGMTString();
+			
+			fetchCurrentPage(id);
+		});
+		
+		// Fetches the current page 
+		function fetchCurrentPage(id){
 			let url = '';
 			let color = '';
 			
@@ -154,9 +185,9 @@ window.onload = function () {
 			// Remove the active class from the current sidebar
 			currentActiveSideBar.classList.remove('active');
 			// Change the current sidebar
-			currentActiveSideBar = document.getElementById($(this).closest('li').attr('id'));
+			currentActiveSideBar = document.getElementById($('#' + id).closest('li').attr('id'));
 			// Add the active flag to the current one
-            $(this).closest('li').addClass('active');
+			$('#' + id).closest('li').addClass('active');
 			// Change side bar color to green
         	changeColorOfSidebar(color);
 			
@@ -179,7 +210,7 @@ window.onload = function () {
 		            }).catch(swal.noop);
 		        }
 		    });
-		});
+		}
 		
 		// Loads the currenct logged in user from API (Call synchronously to set global variable)
 		function fetchJSONForLoggedInUser(){
@@ -260,7 +291,6 @@ document.getElementById('dashboard-util-fullscreen').addEventListener('click', f
 
 /* Minimize sidebar */
 $('#minimizeSidebar').click(function () {
-    $(this);
     minimizeSidebar();
     
     /* Create a cookie to store user preference */
