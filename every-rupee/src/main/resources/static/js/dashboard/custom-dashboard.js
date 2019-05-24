@@ -1,6 +1,14 @@
 // Custom Javascript for dashboard
 //Stores the Loggedin User
 let currentUser = '';
+let overviewDashboardId = 'overview-dashboard-sidebar';
+let transactionDashboardId = 'transaction-dashboard-sidebar';
+let goalDashboardId = 'goal-dashboard-sidebar';
+let budgetDashboardId = 'budget-dashboard-sidebar';
+let investmentDashboardId = 'investment-dashboard-sidebar';
+let settingsDashboardId = 'settings-dashboard-sidebar';
+let currentActiveSideBar = '';
+let once = false;
 		
 window.onload = function () {
 	$(document).ready(function(){
@@ -11,27 +19,33 @@ window.onload = function () {
 		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
-			document.getElementById("overview-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(overviewDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.income-dashboard').length) {
-			document.getElementById("income-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(incomeDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
-		if($('.debt-dashboard').length) {
-			document.getElementById("debt-dashboard-sidebar").classList.add('active');
+		if($('.goal-dashboard').length) {
+			currentActiveSideBar = document.getElementById(goalDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
-		if($('.savings-dashboard').length) {
-			document.getElementById("savings-dashboard-sidebar").classList.add('active');
+		if($('.budget-dashboard').length) {
+			currentActiveSideBar = document.getElementById(budgetDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.investment-dashboard').length) {
-			document.getElementById("investment-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(investmentDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.settings-dashboard').length) {
-			document.getElementById("settings-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(settingsDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		// Read Cookies
@@ -69,9 +83,11 @@ window.onload = function () {
 		
 		// DO NOT load the html from request just refresh div if possible without downloading JS
 		$('.pageDynamicLoadForDashboard').click(function(e){
+			
 			e.preventDefault();
 			let id = $(this).attr('id');
 			let url = '';
+			let color = '';
 			
 			if(isEmpty(id)){
 				swal({
@@ -88,21 +104,31 @@ window.onload = function () {
 			
 			case 'transactionsPage':
 				url = '/dashboard/transactions';
+				color = 'green';
 			    break;
 			case 'budgetPage':
 				url = '/dashboard/budget';
+				color = 'rose';
 			    break;
 			case 'goalsPage':
 				url = '/dashboard/goals';
+				color = 'orange';
 			    break;
 			case 'overviewPage':
 				url = '/dashboard/overview';
+				color = 'azure';
+			    break;
+			case 'investmentsPage':
+				url = '/dashboard/investment';
+				color = 'purple';
 			    break;
 			case 'settings-dashboard-sidebar':
 				url = '/dashboard/settings';
+				color = 'danger';
 			    break;
 			case 'profilePage':
 				url = '/dashboard/profile';
+				color = 'danger';
 			    break;
 			default:
 				swal({
@@ -115,12 +141,25 @@ window.onload = function () {
 				return;
 			}
 			
+			// Remove the active class from the current sidebar
+			currentActiveSideBar.classList.remove('active');
+			// Change the current sidebar
+			currentActiveSideBar = document.getElementById($(this).closest('li').attr('id'));
+			// Add the active flag to the current one
+            $(this).closest('li').addClass('active');
+			// Change side bar color to green
+        	changeColorOfSidebar(color);
+			
 		    $.ajax({
 		        type: "GET",
 		        url: url,
+		        dataType: 'html',
 		        data: { },
 		        success: function(data){
+		        	// Load the new HTML
 		            $('#mutableDashboard').html(data);
+		            
+		            loadScriptsOnce();
 		        },
 		        error: function(){
 		        	swal({
@@ -148,6 +187,19 @@ window.onload = function () {
 		}
 		
 	});
+	
+}
+
+function loadScriptsOnce(){
+	if(!once) {
+			// jQuery
+		   jQuery.ajax({
+		        url: '/js/minify/dashboard/income/transactions.js',
+		        dataType: 'script',
+		        async: true
+		    }); 
+		   once = true;
+	}
 }
 
 /* When the toggleFullscreen() function is executed, open the video in fullscreen.
@@ -263,4 +315,10 @@ function cloneElementAndAppend(document, elementToClone){
 	document.appendChild(elementToClone);
 	return clonedElement;
 	
+}
+
+function changeColorOfSidebar(color){
+	if ($sidebar.length != 0) {
+		 $sidebar.attr('data-color', color);
+	 }
 }

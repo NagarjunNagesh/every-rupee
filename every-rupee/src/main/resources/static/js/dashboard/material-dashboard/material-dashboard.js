@@ -29,18 +29,10 @@
 })();
 
 
-var breakCards = true;
-
-var searchVisible = 0;
 var transparent = true;
 
-var transparentDemo = true;
-var fixedTop = false;
-
 var mobile_menu_visible = 0,
-  mobile_menu_initialized = false,
-  toggle_initialized = false,
-  bootstrap_nav_initialized = false;
+  mobile_menu_initialized = false;
 
 var seq = 0,
   delays = 80,
@@ -208,9 +200,7 @@ md = {
         },
       }
 
-      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
-
-      var animationHeaderChart = new Chartist.Line('#websiteViewsChart', dataDailySalesChart, optionsDailySalesChart);
+      new Chartist.Line('#websiteViewsChart', dataDailySalesChart, optionsDailySalesChart);
     }
   },
 
@@ -410,7 +400,6 @@ md = {
   initMinimizeSidebar: function() {
 
     $('#minimizeSidebar').click(function() {
-      var $btn = $(this);
 
       if (md.misc.sidebar_mini_active == true) {
         $('body').removeClass('sidebar-mini');
