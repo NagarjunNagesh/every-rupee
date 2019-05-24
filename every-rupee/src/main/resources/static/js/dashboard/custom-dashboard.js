@@ -9,13 +9,26 @@ let investmentDashboardId = 'investment-dashboard-sidebar';
 let settingsDashboardId = 'settings-dashboard-sidebar';
 let currentActiveSideBar = '';
 let once = false;
-		
+//Load Expense category and income category
+let expenseSelectionOptGroup = document.createDocumentFragment();
+let incomeSelectionOptGroup = document.createDocumentFragment();
+let fetchCurrentLoggedInUserUrl = "/api/user/";
+let fetchCategoriesUrl = "/api/category/";
+let categoryMap = {};
+//Expense Category
+const expenseCategory = "1";
+// Income Category
+const incomeCategory = "2";
+
 window.onload = function () {
 	$(document).ready(function(){
-		var fetchCurrentLoggedInUserUrl = "/api/user/";
 		
 		// Loads the current Logged in User
 		fetchJSONForLoggedInUser();
+		// Read Cookies
+		readCookie();
+		// Fetch Categpry 
+		fetchJSONForCategories();
 		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
@@ -47,9 +60,6 @@ window.onload = function () {
 			currentActiveSideBar = document.getElementById(settingsDashboardId);
 			currentActiveSideBar.classList.add('active');
 		}
-		
-		// Read Cookies
-		readCookie();
 		
 		/* Read Cookies */
 		function readCookie() {
@@ -158,8 +168,6 @@ window.onload = function () {
 		        success: function(data){
 		        	// Load the new HTML
 		            $('#mutableDashboard').html(data);
-		            
-		            loadScriptsOnce();
 		        },
 		        error: function(){
 		        	swal({
@@ -186,20 +194,35 @@ window.onload = function () {
 		        });
 		}
 		
+		// Load all categories from API (Call synchronously to set global variable)
+		function fetchJSONForCategories() {
+			$.ajax({
+		          type: "GET",
+		          url: fetchCategoriesUrl,
+		          dataType: "json",
+		          success : function(data) {
+		        	  for(let count = 0, length = Object.keys(data).length; count < length; count++){
+		        		  let key = Object.keys(data)[count];
+		            	  let value = data[key];
+
+		        		  categoryMap[value.categoryId] = value;
+		        		  let option = document.createElement('option');
+	        			  option.className = 'categoryOption-' + value.categoryId;
+	        			  option.value = value.categoryId;
+	        			  option.text = value.categoryName;
+		        		  if(value.parentCategory == expenseCategory){
+		        			  expenseSelectionOptGroup.appendChild(option);
+		        		  } else if(value.parentCategory == incomeCategory) {
+		        			  incomeSelectionOptGroup.appendChild(option);
+		        		  }
+		    		   
+		        	  }
+		           }
+		        });
+		}
+		
 	});
 	
-}
-
-function loadScriptsOnce(){
-	if(!once) {
-			// jQuery
-		   jQuery.ajax({
-		        url: '/js/minify/dashboard/income/transactions.js',
-		        dataType: 'script',
-		        async: true
-		    }); 
-		   once = true;
-	}
 }
 
 /* When the toggleFullscreen() function is executed, open the video in fullscreen.
@@ -228,12 +251,6 @@ function toggleFullscreen() {
 	      document.webkitExitFullscreen();
 	    }
 	  }
-}
-
-er = {
-	fetchCurrentUser() {
-		return currentUser;
-	}
 }
 
 /* Get the element you want displayed in fullscreen mode (a video in this example): */

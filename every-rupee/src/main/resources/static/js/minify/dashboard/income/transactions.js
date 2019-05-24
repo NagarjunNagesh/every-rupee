@@ -1,50 +1,43 @@
-// Store map of categories (promises require LET for maps)
-let categoryMap = {};
-// Expense Category
-const expenseCategory = "1";
-// Income Category
-const incomeCategory = "2";
-var fetchCategoriesUrl = "/api/category/";
-// Load Expense category and income category
-let expenseSelectionOptGroup = document.createDocumentFragment();
-let incomeSelectionOptGroup = document.createDocumentFragment();
-	
-// Constructs transaction API url
-const transactionAPIUrl =  "/api/transactions/";
-const saveTransactionsUrl = "/api/transactions/save/";
-const transactionsUpdateUrl = "/update/";
-const replaceTransactionsId = "productsJson";
-// Used to refresh the transactions only if new ones are added
-var resiteredNewTransaction = false;
-// Divs for error message while adding transactions
-var errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
-// Divs for success message while adding transactions
-var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
-var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
-// empty table message
-const emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
-// Bills & Fees Options selection
-const selectedOption = '4';
-// Description Text
-let descriptionTextEdited = '';
-// Amount Text
-let amountEditedTransaction = '';
-// Currency Preference
-const currentCurrencyPreference = $('#currentCurrencySymbol').text();
-// Sidebar 
-$sidebar = $('.sidebar');
-// Regex to check if the entered value is a float
-const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
-// Delete Transaction Button Inside TD
-const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
-const loaderBudgetSection = '<div id="material-spinner"></div>';
-	
 	
 $(document).ready(function(){
 	
-	let currentUser = er.fetchCurrentUser();
-	// Fetch categories and append it to the select options (Load the categories first)
-	fetchJSONForCategories();
+	// Description Text
+	let descriptionTextEdited = '';
+	// Amount Text
+	let amountEditedTransaction = '';
+	
+	// Load Expense category and income category
+	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
+	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
+	
+	// Constructs transaction API url
+	const transactionAPIUrl =  "/api/transactions/";
+	const saveTransactionsUrl = "/api/transactions/save/";
+	const transactionsUpdateUrl = "/update/";
+	const replaceTransactionsId = "productsJson";
+	// Used to refresh the transactions only if new ones are added
+	var resiteredNewTransaction = false;
+	// Divs for error message while adding transactions
+	var errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
+	// Divs for success message while adding transactions
+	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
+	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
+	// empty table message
+	const emptyTable =  '<tr><td></td><td></td><td><img src="../img/dashboard/icons8-document-128.png"></td><td><p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p></td><td></td><td></td></tr>';
+	// Bills & Fees Options selection
+	const selectedOption = '4';
+	// Currency Preference
+	const currentCurrencyPreference = $('#currentCurrencySymbol').text();
+	// Sidebar 
+	$sidebar = $('.sidebar');
+	// Regex to check if the entered value is a float
+	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
+	// Delete Transaction Button Inside TD
+	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
+	const loaderBudgetSection = '<div id="material-spinner"></div>';
+		
+	// Call the transaction API to fetch information.
+	fetchJSONForTransactions();
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -467,38 +460,6 @@ $(document).ready(function(){
 			}
 	}
 
-	// Load all categories from API (Call synchronously to set global variable)
-	function fetchJSONForCategories(){
-		$.ajax({
-	          type: "GET",
-	          url: fetchCategoriesUrl,
-	          dataType: "json",
-	          success : function(data) {
-	        	  for(let count = 0, length = Object.keys(data).length; count < length; count++){
-	        		  let key = Object.keys(data)[count];
-	            	  let value = data[key];
-
-	        		  categoryMap[value.categoryId] = value;
-	        		  let option = document.createElement('option');
-        			  option.className = 'categoruOption-' + value.categoryId;
-        			  option.value = value.categoryId;
-        			  option.text = value.categoryName;
-	        		  if(value.parentCategory == expenseCategory){
-	        			  expenseSelectionOptGroup.appendChild(option);
-	        		  } else if(value.parentCategory == incomeCategory) {
-	        			  incomeSelectionOptGroup.appendChild(option);
-	        		  }
-	    		   
-	        	  }
-	        	  
-	        	  expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
-	        	  incomeSelectionOptGroup =  cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
-	        	// Call the transaction API to fetch information.
-	        	  fetchJSONForTransactions();
-	           }
-	        });
-	}
-	
 	// Show or hide multiple rows in the transactions table
 	$( "tbody" ).on( "click", ".toggle" ,function() {
 		let categoryId = splitElement($(this).attr('id'),'-');
