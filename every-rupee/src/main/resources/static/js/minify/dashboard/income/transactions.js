@@ -12,18 +12,18 @@ $(document).ready(function(){
 	
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
-	var resiteredNewTransaction = false;
+	let resiteredNewTransaction = false;
 	// Divs for error message while adding transactions
-	var errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
+	let errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
 	// Divs for success message while adding transactions
-	var successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
-	var svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
+	let successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
+	let svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// empty table message
 	let emptyTable =  fetchEmptyTableMessage();
 	// Bills & Fees Options selection
 	const selectedOption = '4';
 	// Currency Preference
-	const currentCurrencyPreference = $('#currentCurrencySymbol').text();
+	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerHTMLs;
 	// Sidebar 
 	$sidebar = $('.sidebar');
 	// Regex to check if the entered value is a float
@@ -201,10 +201,34 @@ $(document).ready(function(){
 		tableRows.appendChild(indexTableCell);
 		
 		// Table Row 2
-		let htmlString = '<div class="form-check" tabindex="-1"><label class="form-check-label" tabindex="-1"><input class="number form-check-input" type="checkbox" value="' + userTransactionData.transactionId +'" tabindex="-1"><span class="form-check-sign" tabindex="-1"><span class="check"></span></span></label></div>';
+		let formCheckDiv = document.createElement('div');
+		formCheckDiv.className = 'form-check';
+		formCheckDiv.tabIndex = -1;
+		
+		let fromCheckLabel = document.createElement('label');
+		fromCheckLabel.className = 'form-check-label';
+		fromCheckLabel.tabIndex = -1;
+		
+		let inputFormCheckInput = document.createElement('input');
+		inputFormCheckInput.className = 'number form-check-input';
+		inputFormCheckInput.type = 'checkbox';
+		inputFormCheckInput.innerHTML = userTransactionData.transactionId;
+		inputFormCheckInput.tabIndex = -1;
+		
+		let formCheckSignSpan = document.createElement('span');
+		formCheckSignSpan.className = 'form-check-sign';
+		formCheckSignSpan.tabIndex = -1;
+		
+		let checkSpan = document.createElement('span');
+		checkSpan.className = 'check';
+		formCheckSignSpan.appendChild(checkSpan);
+		fromCheckLabel.appendChild(inputFormCheckInput);
+		fromCheckLabel.appendChild(formCheckSignSpan);
+		formCheckDiv.appendChild(fromCheckLabel);
+		
 		let checkboxCell = document.createElement('td');
 		checkboxCell.tabIndex = -1;
-		checkboxCell.innerHTML = htmlString.trim();
+		checkboxCell.innerHTML = formCheckDiv;
 		tableRows.appendChild(checkboxCell);
 		
 		// Table Row 3
