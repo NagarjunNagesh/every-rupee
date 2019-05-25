@@ -23,7 +23,7 @@ $(document).ready(function(){
 	// Bills & Fees Options selection
 	const selectedOption = '4';
 	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerHTMLs;
+	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// Sidebar 
 	$sidebar = $('.sidebar');
 	// Regex to check if the entered value is a float
@@ -913,4 +913,6 @@ $(document).ready(function(){
 	}
      
 });
+
+//# sourceURL=transaction.js
 
