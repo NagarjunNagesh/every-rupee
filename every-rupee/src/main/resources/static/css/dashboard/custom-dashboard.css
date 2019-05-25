@@ -479,16 +479,6 @@
     font-weight: 200;
 }
 
-.sidebar .nav li .dropdown-menu a, .sidebar .nav li a {
-    margin: 10px 15px 0;
-    border-radius: 3px;
-    color: #3c4858;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-transform: capitalize;
-    font-size: 13px;
-}
-
 .sidebar .nav i {
     font-size: 24px;
     float: left;

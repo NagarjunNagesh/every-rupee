@@ -2,11 +2,10 @@
     "bundles": [
         {
             "type": "css",
-            "name": "transaction.css",
+            "name": "core.css",
             "files": [
                 "/dashboard/custom-dashboard.css",
                 "/dashboard/build/material-dashboard.css",
-                "/dashboard/income/transactions.css",
                 "/fonts/material-icons/material-icons.css",
                 "/fonts/roboto/roboto.css",
                 "/fonts/roboto_slab/roboto_slab.css"
@@ -14,7 +13,7 @@
         },
         {
             "type": "js",
-            "name": "transaction.js",
+            "name": "core.js",
             "files": [
             	"/core/jquery.min.js",
                 "/core/popper.min.js",
@@ -23,11 +22,10 @@
                 "/plugins/moment.min.js",
                 "/plugins/bootstrap-notify.js",
                 "/plugins/sweetalert2.js",
-                "/dashboard/material-dashboard/material-dashboard.min.js",
+                "/dashboard/material-dashboard/material-dashboard.js",
                 "/dashboard/custom-dashboard.js",
                 "/plugins/libraries.js",
-                "/dashboard/sidebar/sidebar.js",
-                "/dashboard/income/transactions.js"
+                "/dashboard/sidebar/sidebar.js"
             ]
         }
     ]

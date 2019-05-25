@@ -154,6 +154,38 @@
                 <version>${minify-maven-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>default-minify</id>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
+                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
+                           <cssTargetDir>static/css/min</cssTargetDir> 
+                         <jsTargetDir>static/js/min</jsTargetDir> 
+                            <charset>utf-8</charset>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <cssSourceDir>static/css</cssSourceDir>
+                            <cssSourceIncludes>
+                                <cssSourceInclude>minify/**</cssSourceInclude>
+                            </cssSourceIncludes>
+                            <cssSourceExcludes>
+			               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
+			               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
+			              	</cssSourceExcludes>
+                            <jsSourceDir>static/js</jsSourceDir>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>minify/**</jsSourceInclude>
+                            </jsSourceIncludes>
+                            <jsSourceExcludes>
+				                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+				                <cssSourceExclude>**/*.js.map</cssSourceExclude>
+				            </jsSourceExcludes>
+                        </configuration>
+                    </execution>
+                    <execution>
 	                    <id>bundle-configuration-minify</id>
                         <configuration>
                         	<webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>

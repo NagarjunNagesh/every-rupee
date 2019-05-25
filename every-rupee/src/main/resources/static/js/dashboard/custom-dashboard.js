@@ -1,31 +1,67 @@
 // Custom Javascript for dashboard
+//Stores the Loggedin User
+let currentUser = '';
+let overviewDashboardId = 'overview-dashboard-sidebar';
+let transactionDashboardId = 'transaction-dashboard-sidebar';
+let goalDashboardId = 'goal-dashboard-sidebar';
+let budgetDashboardId = 'budget-dashboard-sidebar';
+let investmentDashboardId = 'investment-dashboard-sidebar';
+let settingsDashboardId = 'settings-dashboard-sidebar';
+let currentActiveSideBar = '';
+let once = false;
+//Load Expense category and income category
+let expenseSelectionOptGroup = document.createDocumentFragment();
+let incomeSelectionOptGroup = document.createDocumentFragment();
+let fetchCurrentLoggedInUserUrl = "/api/user/";
+let fetchCategoriesUrl = "/api/category/";
+let categoryMap = {};
+//Expense Category
+const expenseCategory = "1";
+// Income Category
+const incomeCategory = "2";
+//Constructs transaction API url
+const transactionAPIUrl =  "/api/transactions/";
+const saveTransactionsUrl = "/api/transactions/save/";
+const transactionsUpdateUrl = "/update/";
+
 
 window.onload = function () {
 	$(document).ready(function(){
 		
+		// Loads the current Logged in User
+		fetchJSONForLoggedInUser();
+		// Fetch Categpry 
+		fetchJSONForCategories();
+		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
-			document.getElementById("overview-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(overviewDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.income-dashboard').length) {
-			document.getElementById("income-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(incomeDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
-		if($('.debt-dashboard').length) {
-			document.getElementById("debt-dashboard-sidebar").classList.add('active');
+		if($('.goal-dashboard').length) {
+			currentActiveSideBar = document.getElementById(goalDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
-		if($('.savings-dashboard').length) {
-			document.getElementById("savings-dashboard-sidebar").classList.add('active');
+		if($('.budget-dashboard').length) {
+			currentActiveSideBar = document.getElementById(budgetDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.investment-dashboard').length) {
-			document.getElementById("investment-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(investmentDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		if($('.settings-dashboard').length) {
-			document.getElementById("settings-dashboard-sidebar").classList.add('active');
+			currentActiveSideBar = document.getElementById(settingsDashboardId);
+			currentActiveSideBar.classList.add('active');
 		}
 		
 		// Read Cookies
@@ -36,11 +72,24 @@ window.onload = function () {
 				// make sure that the cookies exists
 		        if (document.cookie != "") { 
 		        		//Get the value from the name=value pair
-		                var sidebarActiveCookie = getCookie('sidebarMini');
+		                let sidebarActiveCookie = getCookie('sidebarMini');
 		                
 		                if(includesStr(sidebarActiveCookie, 'active')) {
 		                	 minimizeSidebar();
 		                }
+		                
+		                // Get the value from the name=value pair
+		                let cookieCurrentPage = getCookie('currentPage');
+		                
+		                if(!isEmpty(cookieCurrentPage)) {
+		                	fetchCurrentPage(cookieCurrentPage);
+		                } else {
+		                	// Fetch overview page and display if cookie is empty
+		                	fetchCurrentPage('overviewPage');
+		                }
+		        } else {
+		        	// fetch overview page and display if no cookie is present
+		        	fetchCurrentPage('overviewPage');
 		        }
 		}
 		
@@ -60,6 +109,148 @@ window.onload = function () {
 			  }
 			  return "";
 			}
+		
+		// DO NOT load the html from request just refresh div if possible without downloading JS
+		$('.pageDynamicLoadForDashboard').click(function(e){
+			e.preventDefault();
+			let id = $(this).attr('id');
+			
+			/* Create a cookie to store user preference */
+		    var expirationDate = new Date;
+		    expirationDate.setMonth(expirationDate.getMonth()+2);
+		    
+		    /* Create a cookie to store user preference */
+		    document.cookie =  "currentPage=" + id + "; expires=" + expirationDate.toGMTString();
+			
+			fetchCurrentPage(id);
+		});
+		
+		// Fetches the current page 
+		function fetchCurrentPage(id){
+			let url = '';
+			let color = '';
+			
+			if(isEmpty(id)){
+				swal({
+	                title: "Error Redirecting",
+	                text: 'Please try again later',
+	                type: 'warning',
+	                timer: 1000,
+	                showConfirmButton: false
+	            }).catch(swal.noop);
+				return;
+			}
+			
+			switch(id) {
+			
+			case 'transactionsPage':
+				url = '/dashboard/transactions';
+				color = 'green';
+			    break;
+			case 'budgetPage':
+				url = '/dashboard/budget';
+				color = 'rose';
+			    break;
+			case 'goalsPage':
+				url = '/dashboard/goals';
+				color = 'orange';
+			    break;
+			case 'overviewPage':
+				url = '/dashboard/overview';
+				color = 'azure';
+			    break;
+			case 'investmentsPage':
+				url = '/dashboard/investment';
+				color = 'purple';
+			    break;
+			case 'settings-dashboard-sidebar':
+				url = '/dashboard/settings';
+				color = 'danger';
+			    break;
+			case 'profilePage':
+				url = '/dashboard/profile';
+				color = 'danger';
+			    break;
+			default:
+				swal({
+	                title: "Redirecting Not Possible",
+	                text: 'Please try again later',
+	                type: 'warning',
+	                timer: 1000,
+	                showConfirmButton: false
+	            }).catch(swal.noop);
+				return;
+			}
+			
+			// Remove the active class from the current sidebar
+			currentActiveSideBar.classList.remove('active');
+			// Change the current sidebar
+			currentActiveSideBar = document.getElementById($('#' + id).closest('li').attr('id'));
+			// Add the active flag to the current one
+			$('#' + id).closest('li').addClass('active');
+			// Change side bar color to green
+        	changeColorOfSidebar(color);
+			
+		    $.ajax({
+		        type: "GET",
+		        url: url,
+		        dataType: 'html',
+		        data: { },
+		        success: function(data){
+		        	// Load the new HTML
+		            $('#mutableDashboard').html(data);
+		        },
+		        error: function(){
+		        	swal({
+		                title: "Redirecting Not Possible",
+		                text: 'Please try again later',
+		                type: 'warning',
+		                timer: 1000,
+		                showConfirmButton: false
+		            }).catch(swal.noop);
+		        }
+		    });
+		}
+		
+		// Loads the currenct logged in user from API (Call synchronously to set global variable)
+		function fetchJSONForLoggedInUser(){
+			$.ajax({
+		          type: "GET",
+		          url: fetchCurrentLoggedInUserUrl,
+		          dataType: "json",
+		          success : function(data) {
+		        	  currentUser = data;
+		        	  
+		           }
+		        });
+		}
+		
+		// Load all categories from API (Call synchronously to set global variable)
+		function fetchJSONForCategories() {
+			$.ajax({
+		          type: "GET",
+		          url: fetchCategoriesUrl,
+		          dataType: "json",
+		          success : function(data) {
+		        	  for(let count = 0, length = Object.keys(data).length; count < length; count++){
+		        		  let key = Object.keys(data)[count];
+		            	  let value = data[key];
+
+		        		  categoryMap[value.categoryId] = value;
+		        		  let option = document.createElement('option');
+	        			  option.className = 'categoryOption-' + value.categoryId;
+	        			  option.value = value.categoryId;
+	        			  option.text = value.categoryName;
+		        		  if(value.parentCategory == expenseCategory){
+		        			  expenseSelectionOptGroup.appendChild(option);
+		        		  } else if(value.parentCategory == incomeCategory) {
+		        			  incomeSelectionOptGroup.appendChild(option);
+		        		  }
+		    		   
+		        	  }
+		           }
+		        });
+		}
 		
 	});
 	
@@ -100,7 +291,6 @@ document.getElementById('dashboard-util-fullscreen').addEventListener('click', f
 
 /* Minimize sidebar */
 $('#minimizeSidebar').click(function () {
-    $(this);
     minimizeSidebar();
     
     /* Create a cookie to store user preference */
@@ -172,4 +362,10 @@ function cloneElementAndAppend(document, elementToClone){
 	document.appendChild(elementToClone);
 	return clonedElement;
 	
+}
+
+function changeColorOfSidebar(color){
+	if ($sidebar.length != 0) {
+		 $sidebar.attr('data-color', color);
+	 }
 }
