@@ -228,7 +228,7 @@ $(document).ready(function(){
 		
 		let checkboxCell = document.createElement('td');
 		checkboxCell.tabIndex = -1;
-		checkboxCell.innerHTML = formCheckDiv;
+		checkboxCell.appendChild(formCheckDiv);
 		tableRows.appendChild(checkboxCell);
 		
 		// Table Row 3
