@@ -192,18 +192,28 @@ $(document).ready(function(){
 		   replaceHTML('totalExpensesTransactions', '-' + currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
 		   
 		   // Update pie chart
+		   updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions)
+		   
+	}
+	
+	// Update the transactions
+	function updatePieChartTransactions(incomeTransactions, expenseTransactions) {
+		
 		   let totalExpenseDifference = totalIncomeTransactions - totalExpensesTransactions;
-		   let totalExpenseAsPercentageOfIncome = (totalExpenseDifference / totalIncomeTransactions) * 100
+		   let totalExpenseAsPercentageOfIncome = (totalExpenseDifference / totalIncomeTransactions) * 100;
+		   
 		   let totalAvailableDifference = totalIncomeTransactions - totalAvailableTransactions;
-		   let totalAvailableAsPercentageOfIncome = (totalAvailableDifference / totalIncomeTransactions) * 100
+		   let totalAvailableAsPercentageOfIncome = (totalAvailableDifference / totalIncomeTransactions) * 100;
+		   
 	        var dataPreferences = {
 	                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
 	                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
 	            };
-
 	        
 		   buildPieChart(dataPreferences, 'chartFinancialPosition');
+
 	}
+	
 	
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, index, categoryId){
@@ -812,6 +822,9 @@ $(document).ready(function(){
 		}
 		
 		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
+		
+		// Update the pie chart
+		updatePieChartTransactions(income, expense);
 		
 	}
 	
