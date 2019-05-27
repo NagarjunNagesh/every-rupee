@@ -196,22 +196,34 @@ $(document).ready(function(){
 		   
 	}
 	
-	// Update the transactions
-	function updatePieChartTransactions(incomeTransactions, expenseTransactions) {
+	// Update the pie chart with transactions data
+	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
+		let dataPreferences = {};
 		
-		   let totalExpenseDifference = totalIncomeTransactions - totalExpensesTransactions;
-		   let totalExpenseAsPercentageOfIncome = (totalExpenseDifference / totalIncomeTransactions) * 100;
-		   
-		   let totalAvailableDifference = totalIncomeTransactions - totalAvailableTransactions;
-		   let totalAvailableAsPercentageOfIncome = (totalAvailableDifference / totalIncomeTransactions) * 100;
-		   
-	        var dataPreferences = {
-	                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
-	                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
-	            };
-	        
-		   buildPieChart(dataPreferences, 'chartFinancialPosition');
-
+		if(totalIncomeTransactions > totalExpensesTransactions) {
+			let totalExpenseDifference = totalIncomeTransactions - totalExpensesTransactions;
+			let totalExpenseAsPercentageOfIncome = round((totalExpenseDifference / totalIncomeTransactions) * 100,1);
+			   
+			let totalAvailableAsPercentageOfIncome = round(((totalIncomeTransactions - totalExpenseDifference) / totalIncomeTransactions) * 100,1);
+			   
+			dataPreferences = {
+		                labels: [totalExpenseAsPercentageOfIncome + '%', totalAvailableAsPercentageOfIncome + '%'],
+		                series: [totalExpenseAsPercentageOfIncome, totalAvailableAsPercentageOfIncome]
+		            };
+		        
+		} else {
+			let totalIncomeDifference = totalExpensesTransactions - totalIncomeTransactions;
+			let totalIncomeAsPercentageOfExpense = round((totalIncomeDifference / totalExpensesTransactions) * 100,1);
+			   
+			let totalDeficitAsPercentageOfExpense = round(((totalExpensesTransactions - totalIncomeDifference) / totalExpensesTransactions) * 100,1);
+			   
+			dataPreferences = {
+		                labels: [,totalDeficitAsPercentageOfExpense + '%', totalIncomeAsPercentageOfExpense + '%'],
+		                series: [,totalDeficitAsPercentageOfExpense, totalIncomeAsPercentageOfExpense]
+		            };
+		}
+		
+		buildPieChart(dataPreferences, 'chartFinancialPosition');
 	}
 	
 	
