@@ -55,6 +55,7 @@ public class GenericConstants {
     public static final String DASHBOARD_PROFILE_VIEW_NAME_OBJECT = "dashboard/profile";
     public static final String DASHBOARD_OVERVIEW_VIEW_NAME_OBJECT = "dashboard/overview";
     public static final String GOOGLE_RECAPTCHA_RESPONSE = "g-recaptcha-response";
+    public static final String ENVIRONMENT_ACTIVE = "environment";
 
     // Queries
     public static final String PROFILE_QUERY_APPLICATION_PROPERTIES = "${spring.queries.profile-query}";

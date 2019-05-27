@@ -28,11 +28,6 @@ const transactionsUpdateUrl = "/update/";
 window.onload = function () {
 	$(document).ready(function(){
 		
-		// Loads the current Logged in User
-		fetchJSONForLoggedInUser();
-		// Fetch Categpry 
-		fetchJSONForCategories();
-		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
 			currentActiveSideBar = document.getElementById(overviewDashboardId);
@@ -212,8 +207,13 @@ window.onload = function () {
 		    });
 		}
 		
-		// Loads the currenct logged in user from API (Call synchronously to set global variable)
-		function fetchJSONForLoggedInUser(){
+	});
+	
+}
+
+er = {
+		//Loads the currenct logged in user from API (Call synchronously to set global variable)
+		fetchJSONForLoggedInUser(){
 			$.ajax({
 		          type: "GET",
 		          url: fetchCurrentLoggedInUserUrl,
@@ -223,10 +223,10 @@ window.onload = function () {
 		        	  
 		           }
 		        });
-		}
-		
+		},
+
 		// Load all categories from API (Call synchronously to set global variable)
-		function fetchJSONForCategories() {
+		fetchJSONForCategories() {
 			$.ajax({
 		          type: "GET",
 		          url: fetchCategoriesUrl,
@@ -238,9 +238,9 @@ window.onload = function () {
 
 		        		  categoryMap[value.categoryId] = value;
 		        		  let option = document.createElement('option');
-	        			  option.className = 'categoryOption-' + value.categoryId;
-	        			  option.value = value.categoryId;
-	        			  option.text = value.categoryName;
+		    			  option.className = 'categoryOption-' + value.categoryId;
+		    			  option.value = value.categoryId;
+		    			  option.text = value.categoryName;
 		        		  if(value.parentCategory == expenseCategory){
 		        			  expenseSelectionOptGroup.appendChild(option);
 		        		  } else if(value.parentCategory == incomeCategory) {
@@ -250,11 +250,29 @@ window.onload = function () {
 		        	  }
 		           }
 		        });
-		}
+		},
 		
-	});
-	
+		fetchExpenseSelectionOptGroup() {
+			return expenseSelectionOptGroup;
+		},
+		
+		fetchIncomeSelectionOptGroup()	{
+			return incomeSelectionOptGroup;
+		},
+		
+		fetchCurrentUser() {
+			return currentUser;
+		},
+		
+		fetchCategoryMap() {
+			return categoryMap;
+		}
 }
+
+//Loads the current Logged in User
+er.fetchJSONForLoggedInUser();
+// Fetch Categpry 
+er.fetchJSONForCategories();
 
 /* When the toggleFullscreen() function is executed, open the video in fullscreen.
 Note that we must include prefixes for different browsers, as they don't support the requestFullscreen method yet */
@@ -343,7 +361,7 @@ function showNotification(message, from, align, colorCode){
 	  });
 }
 
-function replaceHtml(el, html) {
+function replaceHTML(el, html) {
     var oldEl = typeof el === "string" ? document.getElementById(el) : el;
     /*@cc_on // Pure innerHTML is slightly faster in IE
         oldEl.innerHTML = html;

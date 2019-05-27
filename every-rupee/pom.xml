@@ -136,19 +136,6 @@
       		</resource>
 		</resources>
 		<plugins>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArgs>
-                        <!-- <arg>-verbose</arg> -->
-                        <arg>-Xlint:all</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -182,6 +169,18 @@
             </properties>
             <build>
         		<plugins>
+        			<plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		                <configuration>
+		                    <source>${java.version}</source>
+		                    <target>${java.version}</target>
+		                    <compilerArgs>
+		                        <!-- <arg>-verbose</arg> -->
+		                        <arg>-Xlint:all</arg>
+		                    </compilerArgs>
+		                </configuration>
+		            </plugin>
             		 <plugin>
 		                <groupId>com.samaxes.maven</groupId>
 		                <artifactId>minify-maven-plugin</artifactId>
@@ -195,15 +194,16 @@
 		                        <configuration>
 		                            <webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
 		                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-		                           <cssTargetDir>static/css/min</cssTargetDir> 
-		                         <jsTargetDir>static/js/min</jsTargetDir> 
+		                            <cssTargetDir>static/css/</cssTargetDir> 
+		                         	<jsTargetDir>static/js/</jsTargetDir> 
 		                            <charset>utf-8</charset>
+<!-- 		                            <closureCompilationLevel>ADVANCED_OPTIMIZATIONS</closureCompilationLevel> -->
+<!-- 		                           	<closureSortDependencies>true</closureSortDependencies> -->
 		                            <jsEngine>CLOSURE</jsEngine>
 		                            <skipMerge>true</skipMerge>
-		                            <nosuffix>true</nosuffix>
 		                            <cssSourceDir>static/css</cssSourceDir>
 		                            <cssSourceIncludes>
-		                                <cssSourceInclude>minify/**</cssSourceInclude>
+		                                <cssSourceInclude>**</cssSourceInclude>
 		                            </cssSourceIncludes>
 		                            <cssSourceExcludes>
 					               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
@@ -211,7 +211,7 @@
 					              	</cssSourceExcludes>
 		                            <jsSourceDir>static/js</jsSourceDir>
 		                            <jsSourceIncludes>
-		                                <jsSourceInclude>minify/**</jsSourceInclude>
+		                                <jsSourceInclude>**</jsSourceInclude>
 		                            </jsSourceIncludes>
 		                            <jsSourceExcludes>
 						                <jsSourceExclude>**/*.min.js</jsSourceExclude>
@@ -228,12 +228,12 @@
 		                           	<cssEngine>YUI</cssEngine>
 		                           	<jsEngine>CLOSURE</jsEngine>
 		                           	<cssSourceDir>static/css</cssSourceDir>
-		                           	<cssSourceExcludes> -->
+		                           	<cssSourceExcludes>
 					               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
 					               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
 					              	</cssSourceExcludes>
 		                           	<jsSourceDir>static/js</jsSourceDir>
-		                           	<jsSourceExcludes> -->
+		                           	<jsSourceExcludes>
 						                <jsSourceExclude>**/*.min.js</jsSourceExclude>
 						                <cssSourceExclude>**/*.js.map</cssSourceExclude>
 						            </jsSourceExcludes>
