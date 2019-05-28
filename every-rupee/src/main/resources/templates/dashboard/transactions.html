@@ -84,19 +84,16 @@
 		                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 		<hr>
                 		<div>
-							<i class="material-icons text-info legend-spacing">fiber_manual_record</i><span class="align-middle">Total Available</span>
+							<i class="material-icons text-info legend-spacing">fiber_manual_record</i><span id="totalAvailableLabel" class="align-middle">Total Available</span>
 						</div>
 	                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
-	                		<p id="testEnteredText"></p>
-	                		<p id="testPreviousText"></p>
                 </div>
                 <div class="card-footer">
                     <div class="row">
                       <div class="col-md-12">
-                        <h6 class="card-category">Legend</h6>
+                        <h6 class="card-category">Short Description</h6>
                       </div>
-                      <div class="col-md-12 text-center">
-                        	Expense as a percentage of income / Income as a percentage of expense
+                      <div id="legendPieChart" class="col-md-12 text-center">
                       </div>
                     </div>
                   </div>

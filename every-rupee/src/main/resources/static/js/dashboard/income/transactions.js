@@ -212,6 +212,9 @@ $(document).ready(function(){
 		                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
 		                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
 		            };
+			
+			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
+			replaceHTML('totalAvailableLabel', 'Total Available');
 		        
 		} else {
 			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
@@ -223,6 +226,9 @@ $(document).ready(function(){
 		                labels: [totalDeficitAsPercentageOfExpense + '%',,totalIncomeAsPercentageOfExpense + '%'],
 		                series: [totalDeficitAsPercentageOfExpense,,totalIncomeAsPercentageOfExpense]
 		            };
+			
+			replaceHTML('legendPieChart', 'Total Income & Total Overspent as a percentage of Total Expense');
+			replaceHTML('totalAvailableLabel', 'Total Overspent');
 		}
 		
 		return dataPreferences;
@@ -462,8 +468,9 @@ $(document).ready(function(){
 
 			                     $.each($("input[type=checkbox]:checked"), function(){   
 			                     	// To remove the select all check box values
-			                     	if($(this).val() != "on"){
-			                     		transactionIds.push($(this).val());
+			                    	let transactionId = $(this)[0].innerHTML;
+			                     	if(transactionId != "on"){
+			                     		transactionIds.push(transactionId);
 			                     	}
 			                     });
 
