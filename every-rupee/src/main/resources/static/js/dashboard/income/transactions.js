@@ -31,6 +31,8 @@ $(document).ready(function(){
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	const loaderBudgetSection = '<div id="material-spinner"></div>';
+	// New Pie Chart Storage Variable
+	let transactionsChart = '';
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -191,8 +193,8 @@ $(document).ready(function(){
 		   replaceHTML('totalIncomeTransactions', currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
 		   replaceHTML('totalExpensesTransactions', '-' + currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
 		   
-		   // Update pie chart
-		   updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions)
+		   // Build Pie chart
+		   buildPieChart(updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions), 'chartFinancialPosition');
 		   
 	}
 	
@@ -201,29 +203,30 @@ $(document).ready(function(){
 		let dataPreferences = {};
 		
 		if(totalIncomeTransactions > totalExpensesTransactions) {
-			let totalExpenseDifference = totalIncomeTransactions - totalExpensesTransactions;
-			let totalExpenseAsPercentageOfIncome = round((totalExpenseDifference / totalIncomeTransactions) * 100,1);
+			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
+			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
 			   
-			let totalAvailableAsPercentageOfIncome = round(((totalIncomeTransactions - totalExpenseDifference) / totalIncomeTransactions) * 100,1);
+			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
 			   
 			dataPreferences = {
-		                labels: [totalExpenseAsPercentageOfIncome + '%', totalAvailableAsPercentageOfIncome + '%'],
-		                series: [totalExpenseAsPercentageOfIncome, totalAvailableAsPercentageOfIncome]
+		                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
+		                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
 		            };
 		        
 		} else {
-			let totalIncomeDifference = totalExpensesTransactions - totalIncomeTransactions;
-			let totalIncomeAsPercentageOfExpense = round((totalIncomeDifference / totalExpensesTransactions) * 100,1);
+			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
+			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
 			   
-			let totalDeficitAsPercentageOfExpense = round(((totalExpensesTransactions - totalIncomeDifference) / totalExpensesTransactions) * 100,1);
+			let totalIncomeAsPercentageOfExpense = round(((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100,1);
 			   
 			dataPreferences = {
-		                labels: [,totalDeficitAsPercentageOfExpense + '%', totalIncomeAsPercentageOfExpense + '%'],
-		                series: [,totalDeficitAsPercentageOfExpense, totalIncomeAsPercentageOfExpense]
+		                labels: [totalDeficitAsPercentageOfExpense + '%',,totalIncomeAsPercentageOfExpense + '%'],
+		                series: [totalDeficitAsPercentageOfExpense,,totalIncomeAsPercentageOfExpense]
 		            };
 		}
 		
-		buildPieChart(dataPreferences, 'chartFinancialPosition');
+		return dataPreferences;
+		
 	}
 	
 	
@@ -649,6 +652,7 @@ $(document).ready(function(){
 	function postNewDescriptionToUserTransactions(element) {
 		// If the text is not changed then do nothing
 		let enteredText = trimElement(element.innerText);
+		
 		if(isEqual(descriptionTextEdited, enteredText)){
 			// replace the text with a trimmed version 
 			let documentDescription = document.createElement('div');
@@ -658,6 +662,8 @@ $(document).ready(function(){
 			documentDescription.innerHTML = enteredText;
 			element.innerHTML = '';
 			element.appendChild(documentDescription);
+			// Set the description to empty as the data need not be stored.
+			descriptionTextEdited = '';
 			return;
 		}
 		
@@ -680,6 +686,9 @@ $(document).ready(function(){
                  	}
              }
 	        });
+		
+		// Set the description to empty as the data need not be stored.
+		descriptionTextEdited = '';
 	}
 	
 	// Catch the amount when the user focuses on the transaction
@@ -709,10 +718,9 @@ $(document).ready(function(){
 		  // Handles the addition of buttons in the budget column for the row
 		  appendButtonForAmountEdition(amountEntered, selectTransactionId);
 	});
-	
+
 	// Append amount to user transaction
 	function postNewAmountToUserTransactions(element){
-
 		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
 		let enteredText = round(parseFloat(trimElement(lastElement(splitElement(element.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 		let previousText = parseFloat(lastElement(splitElement(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
@@ -723,16 +731,19 @@ $(document).ready(function(){
 		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
-		}
-		
-		// Replace negative sign to positive sign if entered by the user
-		if(enteredText < 0){
+		} else if(enteredText < 0){
+			// Replace negative sign to positive sign if entered by the user
 			enteredText = parseFloat(Math.abs(enteredText),2);
 		}
 		
+		// Test if the previous value is valid
+		if(isNaN(previousText) || !regexForFloat.test(previousText) || previousText == 0) {
+			previousText = 0;
+		}
+		
+		
 		// Test if the entered value is the same as the previous one
 		if(previousText != enteredText){
-		
 			// obtain the transaction id of the table row
 			let changedAmount = splitElement($(element).attr('id'),'-');
 			var values = {};
@@ -746,7 +757,6 @@ $(document).ready(function(){
 		          data : values,
 		          success: function(userTransaction){
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
-		        	  amountEditedTransaction = trimElement(element.innerText);
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -764,6 +774,9 @@ $(document).ready(function(){
 		
 		// Handles the addition of buttons in the budget column for the row
 		appendButtonForAmountEdition(enteredText, selectTransactionId);
+		
+		// Set the amount to empty as the data need not be stored.
+  	  	amountEditedTransaction = '';
 	}
 	
 	// Append appropriate buttons when the amount is edited
@@ -836,7 +849,7 @@ $(document).ready(function(){
 		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
 		
 		// Update the pie chart
-		updatePieChartTransactions(income, expense);
+		transactionsChart.update(updatePieChartTransactions(income, expense));
 		
 	}
 	
@@ -963,7 +976,7 @@ $(document).ready(function(){
             height: '230px'
         };
         replaceHTML(id, '');
-        Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        transactionsChart = Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
 	}
      
 });

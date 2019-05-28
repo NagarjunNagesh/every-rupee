@@ -606,3 +606,11 @@ br[type="_moz"]{display: none;}
 .sidebar-mini .sidebar .sidebar-wrapper {
 	overflow-x:hidden;
 }
+
+.material-icons {
+	vertical-align: middle;
+}
+
+.legend-spacing {
+	font-size: 20px;
+}

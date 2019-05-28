@@ -52,7 +52,7 @@
         <neverBlock>false</neverBlock><!-- default false, set to true to cause 
             the Appender not block the application and just drop the messages -->
   </appender>
-    <logger name="in.co.everyrupee" level="WARN" />
+    <logger name="in.co.everyrupee" level="DEBUG" />
 
 	<!-- to view SQL statements, change to DEBUG -->
 	<logger name="org.hibernate.SQL" level="WARN" />
