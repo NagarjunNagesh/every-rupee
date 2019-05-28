@@ -102,7 +102,7 @@
     right: 15px;
     height: 1px;
     width: calc(100% - 30px);
-    background-color: hsla(0,0%,71%,.3);
+    background-color: rgba(180,180,180,0.3);
 }
 
 .sidebar .user .user-info > a > span {
@@ -605,4 +605,12 @@ br[type="_moz"]{display: none;}
 
 .sidebar-mini .sidebar .sidebar-wrapper {
 	overflow-x:hidden;
+}
+
+.material-icons {
+	vertical-align: middle;
+}
+
+.legend-spacing {
+	font-size: 20px;
 }

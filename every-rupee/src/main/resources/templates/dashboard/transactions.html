@@ -4,13 +4,10 @@
 	<title>
 	    Income
 	  </title>
-	  <link href="../css/minify/dashboard/income/transactions.css" rel="stylesheet" th:href="@{/css/minify/dashboard/income/transactions.css}">
-	  <script defer th:src="@{/js/minify/dashboard/income/transactions.js}" type="text/javascript"></script>
+	  <link href="../css/dashboard/income/transactions.min.css" rel="stylesheet" th:href="@{/css/dashboard/income/transactions.min.css}">
+	  <script defer th:src="@{/js/dashboard/income/transactions.min.js}" type="text/javascript"></script>
 </head>
-
-
-
-<body class="income-dashboard" >
+<body class="income-dashboard">
       <div class="content" id="mutableDashboard">
         <div class="container-fluid">
           <div class="row">
@@ -76,22 +73,27 @@
                 		<div class="material-spinner"></div>
                 	</div>
                 	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
-                		<i class="material-icons text-success">fiber_manual_record</i>Total Income
-                		<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                		<div>
+                			<i class="material-icons text-success legend-spacing">fiber_manual_record</i><span class="align-middle">Total Income</span>
+                		</div>
+                			<h4 id="totalIncomeTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 		<hr>
-                		<i class="material-icons text-danger">fiber_manual_record</i>Total Spent
-	                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                		<div>
+	                		<i class="material-icons text-danger legend-spacing">fiber_manual_record</i><span class="align-middle">Total Spent</span>
+	                	</div>
+		                	<h4 id="totalExpensesTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 		<hr>
-						<i class="material-icons text-info">fiber_manual_record</i>Total Available
-                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                		<div>
+							<i class="material-icons text-info legend-spacing">fiber_manual_record</i><span id="totalAvailableLabel" class="align-middle">Total Available</span>
+						</div>
+	                		<h4 id="totalAvailableTransactions" class="card-title font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 </div>
                 <div class="card-footer">
                     <div class="row">
                       <div class="col-md-12">
-                        <h6 class="card-category">Legend</h6>
+                        <h6 class="card-category">Short Description</h6>
                       </div>
-                      <div class="col-md-12">
-                        
+                      <div id="legendPieChart" class="col-md-12 text-center">
                       </div>
                     </div>
                   </div>

@@ -130,89 +130,119 @@
 
 	<build>
 		<plugins>
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArgs>
-                        <!-- <arg>-verbose</arg> -->
-                        <arg>-Xlint:all</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>${minify-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                        <configuration>
-                            <webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
-                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-                           <cssTargetDir>static/css/min</cssTargetDir> 
-                         <jsTargetDir>static/js/min</jsTargetDir> 
-                            <charset>utf-8</charset>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <skipMerge>true</skipMerge>
-                            <nosuffix>true</nosuffix>
-                            <cssSourceDir>static/css</cssSourceDir>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>minify/**</cssSourceInclude>
-                            </cssSourceIncludes>
-                            <cssSourceExcludes>
-			               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
-			               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
-			              	</cssSourceExcludes>
-                            <jsSourceDir>static/js</jsSourceDir>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>minify/**</jsSourceInclude>
-                            </jsSourceIncludes>
-                            <jsSourceExcludes>
-				                <jsSourceExclude>**/*.min.js</jsSourceExclude>
-				                <cssSourceExclude>**/*.js.map</cssSourceExclude>
-				            </jsSourceExcludes>
-                        </configuration>
-                    </execution>
-                    <execution>
-	                    <id>bundle-configuration-minify</id>
-                        <configuration>
-                        	<webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
-                           	<webappTargetDir>${project.build.directory}/classes</webappTargetDir>
-                           	<charset>utf-8</charset>
-                           	<cssEngine>YUI</cssEngine>
-                           	<jsEngine>CLOSURE</jsEngine>
-                           	<cssSourceDir>static/css</cssSourceDir>
-                           	<cssSourceExcludes> -->
-			               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
-			               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
-			              	</cssSourceExcludes>
-                           	<jsSourceDir>static/js</jsSourceDir>
-                           	<jsSourceExcludes> -->
-				                <jsSourceExclude>**/*.min.js</jsSourceExclude>
-				                <cssSourceExclude>**/*.js.map</cssSourceExclude>
-				            </jsSourceExcludes>
-                            <bundleConfiguration>${project.basedir}/src/main/resources/minify-maven-bundles.json</bundleConfiguration>
-                            <closureCreateSourceMap>true</closureCreateSourceMap>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-						</goals>
-                    </execution>
-                </executions>
-            </plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+                <!-- log configuration -->
+        		<logback.loglevel>DEBUG</logback.loglevel>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+            	<dependency>
+				    <groupId>org.springframework.boot</groupId>
+				    <artifactId>spring-boot-devtools</artifactId>
+				    <optional>true</optional>
+				</dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <activatedProperties>production</activatedProperties>
+            </properties>
+            <build>
+        		<plugins>
+        			<plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		                <configuration>
+		                    <source>${java.version}</source>
+		                    <target>${java.version}</target>
+		                    <compilerArgs>
+		                        <!-- <arg>-verbose</arg> -->
+		                        <arg>-Xlint:all</arg>
+		                    </compilerArgs>
+		                </configuration>
+		            </plugin>
+            		 <plugin>
+		                <groupId>com.samaxes.maven</groupId>
+		                <artifactId>minify-maven-plugin</artifactId>
+		                <version>${minify-maven-plugin.version}</version>
+		                <executions>
+		                    <execution>
+		                        <id>default-minify</id>
+		                        <goals>
+		                            <goal>minify</goal>
+		                        </goals>
+		                        <configuration>
+		                            <webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
+		                            <webappTargetDir>${project.build.directory}/classes</webappTargetDir>
+		                            <cssTargetDir>static/css/</cssTargetDir> 
+		                         	<jsTargetDir>static/js/</jsTargetDir> 
+		                            <charset>utf-8</charset>
+<!-- 		                            <closureCompilationLevel>ADVANCED_OPTIMIZATIONS</closureCompilationLevel> -->
+<!-- 		                           	<closureSortDependencies>true</closureSortDependencies> -->
+		                            <jsEngine>CLOSURE</jsEngine>
+		                            <skipMerge>true</skipMerge>
+		                            <cssSourceDir>static/css</cssSourceDir>
+		                            <cssSourceIncludes>
+		                                <cssSourceInclude>**</cssSourceInclude>
+		                            </cssSourceIncludes>
+		                            <cssSourceExcludes>
+					               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
+					               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
+					              	</cssSourceExcludes>
+		                            <jsSourceDir>static/js</jsSourceDir>
+		                            <jsSourceIncludes>
+		                                <jsSourceInclude>**</jsSourceInclude>
+		                            </jsSourceIncludes>
+		                            <jsSourceExcludes>
+						                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+						                <cssSourceExclude>**/*.js.map</cssSourceExclude>
+						            </jsSourceExcludes>
+		                        </configuration>
+		                    </execution>
+		                    <execution>
+			                    <id>bundle-configuration-minify</id>
+		                        <configuration>
+		                        	<webappSourceDir>${project.basedir}/src/main/resources</webappSourceDir>
+		                           	<webappTargetDir>${project.build.directory}/classes</webappTargetDir>
+		                           	<charset>utf-8</charset>
+		                           	<cssEngine>YUI</cssEngine>
+		                           	<jsEngine>CLOSURE</jsEngine>
+		                           	<cssSourceDir>static/css</cssSourceDir>
+		                           	<cssSourceExcludes>
+					               	 	<cssSourceExclude>**/*.min.css</cssSourceExclude>
+					               	 	<cssSourceExclude>**/*.css.map</cssSourceExclude>
+					              	</cssSourceExcludes>
+		                           	<jsSourceDir>static/js</jsSourceDir>
+		                           	<jsSourceExcludes>
+						                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+						                <cssSourceExclude>**/*.js.map</cssSourceExclude>
+						            </jsSourceExcludes>
+		                            <bundleConfiguration>${project.basedir}/src/main/resources/minify-maven-bundles.json</bundleConfiguration>
+		                            <closureCreateSourceMap>true</closureCreateSourceMap>
+		                        </configuration>
+		                        <goals>
+		                            <goal>minify</goal>
+								</goals>
+		                    </execution>
+		                </executions>
+		            </plugin>
+            	</plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

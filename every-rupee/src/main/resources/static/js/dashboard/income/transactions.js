@@ -18,12 +18,10 @@ $(document).ready(function(){
 	// Divs for success message while adding transactions
 	let successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
 	let svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
-	// empty table message
-	let emptyTable =  fetchEmptyTableMessage();
 	// Bills & Fees Options selection
 	const selectedOption = '4';
 	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerHTMLs;
+	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// Sidebar 
 	$sidebar = $('.sidebar');
 	// Regex to check if the entered value is a float
@@ -31,6 +29,8 @@ $(document).ready(function(){
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	const loaderBudgetSection = '<div id="material-spinner"></div>';
+	// New Pie Chart Storage Variable
+	let transactionsChart = '';
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -46,8 +46,8 @@ $(document).ready(function(){
 	function registerTransaction(event, transactionSubmissionButton){
 	   event.preventDefault();
 	   event.stopImmediatePropagation(); // necessary to prevent submitting the form twice
-	   replaceHtml('successMessage' , '');
-	   replaceHtml('errorMessage',"");
+	   replaceHTML('successMessage' , '');
+	   replaceHTML('errorMessage',"");
 	   let formValidation = true;
 	   
 	   let amount = document.getElementById('amount').value;
@@ -113,8 +113,8 @@ $(document).ready(function(){
 	$('#GSCCModal').on('hidden.bs.modal', function () {
 		// Clear form input fields inside the modal and the error or success messages.
 		$('#transactionsForm').get(0).reset();
-		replaceHtml('successMessage',"");
-		replaceHtml('errorMessage',"");
+		replaceHTML('successMessage',"");
+		replaceHTML('errorMessage',"");
 		
 		if(resiteredNewTransaction) {
 			fetchJSONForTransactions();
@@ -126,67 +126,113 @@ $(document).ready(function(){
 	// Populates the transaction table
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
-		$.getJSON(transactionAPIUrl + currentUser.financialPortfolioId, function(result){
-			let totalExpensesTransactions = 0.00;
-			let totalIncomeTransactions = 0.00;
-			let transactionsTableDiv = document.createDocumentFragment();
-			let documentTbody = document.getElementById('productsJson');
-			// uncheck the select all checkbox if checked
-			$("#checkAll").prop("checked", false); 
-			// Disable delete Transactions button on refreshing the transactions
-         	manageDeleteTransactionsButton();
-         	let transactionIndex = 1;
-         	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
-         	   let key = Object.keys(result)[countGrouped];
-         	   let value = result[key];
- 			   let transactionsRowDocumentFragment = document.createDocumentFragment();
- 			   let totalCategoryAmount = 0;
- 			   for(let count = 0, length = Object.keys(value).length; count < length; count++) {
- 				  let subKey = Object.keys(value)[count];
- 				  let subValue = value[subKey];
- 				  // Create transactions table row
- 				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, transactionIndex, key));
- 				  totalCategoryAmount += subValue.amount;
- 				  transactionIndex++;
- 			   }
- 			   // Load all the total category amount in the category section
- 			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
- 			   // Create category label table row
- 			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
- 			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
- 			   // Total Expenses and Total Income
- 			   if(categoryMap[key].parentCategory == expenseCategory) {
- 				   totalExpensesTransactions += totalCategoryAmount;
- 			   } else if (categoryMap[key].parentCategory == incomeCategory) {
- 				   totalIncomeTransactions += totalCategoryAmount;
- 			   }
-         	}
-		   
-		   // Update table with empty message if the transactions are empty
-		   if(result.length == 0) {
-			   documentTbody.innerHTML = '';
-			   emptyTable = cloneElementAndAppend(document.getElementById(replaceTransactionsId), emptyTable)
-		   } else {
-			   documentTbody.innerHTML = '';
-			   documentTbody.appendChild(transactionsTableDiv);
-		   }
-		   
-		  // update the Total Available Section
-		  updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions);
-		   
+		jQuery.ajax({
+			url: transactionAPIUrl + currentUser.financialPortfolioId,
+            type: 'GET',
+            success: function(result) {
+    			let totalExpensesTransactions = 0.00;
+    			let totalIncomeTransactions = 0.00;
+    			let transactionsTableDiv = document.createDocumentFragment();
+    			let documentTbody = document.getElementById('productsJson');
+    			// uncheck the select all checkbox if checked
+    			$("#checkAll").prop("checked", false); 
+    			// Disable delete Transactions button on refreshing the transactions
+             	manageDeleteTransactionsButton();
+             	let transactionIndex = 1;
+             	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
+             	   let key = Object.keys(result)[countGrouped];
+             	   let value = result[key];
+     			   let transactionsRowDocumentFragment = document.createDocumentFragment();
+     			   let totalCategoryAmount = 0;
+     			   for(let count = 0, length = Object.keys(value).length; count < length; count++) {
+     				  let subKey = Object.keys(value)[count];
+     				  let subValue = value[subKey];
+     				  // Create transactions table row
+     				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, transactionIndex, key));
+     				  totalCategoryAmount += subValue.amount;
+     				  transactionIndex++;
+     			   }
+     			   // Load all the total category amount in the category section
+     			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
+     			   // Create category label table row
+     			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
+     			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
+     			   // Total Expenses and Total Income
+     			   if(categoryMap[key].parentCategory == expenseCategory) {
+     				   totalExpensesTransactions += totalCategoryAmount;
+     			   } else if (categoryMap[key].parentCategory == incomeCategory) {
+     				   totalIncomeTransactions += totalCategoryAmount;
+     			   }
+             	}
+    		   
+    		   // Update table with empty message if the transactions are empty
+    		   if(result.length == 0) {
+    			   documentTbody.innerHTML = '';
+    			   replaceHTML(replaceTransactionsId, fetchEmptyTableMessage());
+    		   } else {
+    			   documentTbody.innerHTML = '';
+    			   documentTbody.appendChild(transactionsTableDiv);
+    		   }
+    		   
+    		  // update the Total Available Section
+    		  updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions);
+    		
+            }
 		});
 	}
 	
 	function updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions) {
 			let totalAvailableTransactions = totalIncomeTransactions - totalExpensesTransactions;
 		   if(totalAvailableTransactions < 0) {
-			   replaceHtml('totalAvailableTransactions' , '-' + currentCurrencyPreference + formatNumber(Math.abs(totalAvailableTransactions), currentUser.locale));
+			   replaceHTML('totalAvailableTransactions' , '-' + currentCurrencyPreference + formatNumber(Math.abs(totalAvailableTransactions), currentUser.locale));
 		   } else {
-			   replaceHtml('totalAvailableTransactions', currentCurrencyPreference + formatNumber(totalAvailableTransactions, currentUser.locale));
+			   replaceHTML('totalAvailableTransactions', currentCurrencyPreference + formatNumber(totalAvailableTransactions, currentUser.locale));
 		   }
-		   replaceHtml('totalIncomeTransactions', currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
-		   replaceHtml('totalExpensesTransactions', '-' + currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
+		   replaceHTML('totalIncomeTransactions', currentCurrencyPreference + formatNumber(totalIncomeTransactions, currentUser.locale));
+		   replaceHTML('totalExpensesTransactions', '-' + currentCurrencyPreference + formatNumber(totalExpensesTransactions, currentUser.locale));
+		   
+		   // Build Pie chart
+		   buildPieChart(updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions), 'chartFinancialPosition');
+		   
 	}
+	
+	// Update the pie chart with transactions data
+	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
+		let dataPreferences = {};
+		
+		if(totalIncomeTransactions > totalExpensesTransactions) {
+			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
+			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
+			   
+			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
+			   
+			dataPreferences = {
+		                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
+		                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
+		            };
+			
+			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
+			replaceHTML('totalAvailableLabel', 'Total Available');
+		        
+		} else {
+			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
+			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
+			   
+			let totalIncomeAsPercentageOfExpense = round(((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100,1);
+			   
+			dataPreferences = {
+		                labels: [totalDeficitAsPercentageOfExpense + '%',,totalIncomeAsPercentageOfExpense + '%'],
+		                series: [totalDeficitAsPercentageOfExpense,,totalIncomeAsPercentageOfExpense]
+		            };
+			
+			replaceHTML('legendPieChart', 'Total Income & Total Overspent as a percentage of Total Expense');
+			replaceHTML('totalAvailableLabel', 'Total Overspent');
+		}
+		
+		return dataPreferences;
+		
+	}
+	
 	
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, index, categoryId){
@@ -228,7 +274,7 @@ $(document).ready(function(){
 		
 		let checkboxCell = document.createElement('td');
 		checkboxCell.tabIndex = -1;
-		checkboxCell.innerHTML = formCheckDiv;
+		checkboxCell.appendChild(formCheckDiv);
 		tableRows.appendChild(checkboxCell);
 		
 		// Table Row 3
@@ -420,8 +466,9 @@ $(document).ready(function(){
 
 			                     $.each($("input[type=checkbox]:checked"), function(){   
 			                     	// To remove the select all check box values
-			                     	if($(this).val() != "on"){
-			                     		transactionIds.push($(this).val());
+			                    	let transactionId = $(this)[0].innerHTML;
+			                     	if(transactionId != "on"){
+			                     		transactionIds.push(transactionId);
 			                     	}
 			                     });
 
@@ -610,6 +657,7 @@ $(document).ready(function(){
 	function postNewDescriptionToUserTransactions(element) {
 		// If the text is not changed then do nothing
 		let enteredText = trimElement(element.innerText);
+		
 		if(isEqual(descriptionTextEdited, enteredText)){
 			// replace the text with a trimmed version 
 			let documentDescription = document.createElement('div');
@@ -619,6 +667,8 @@ $(document).ready(function(){
 			documentDescription.innerHTML = enteredText;
 			element.innerHTML = '';
 			element.appendChild(documentDescription);
+			// Set the description to empty as the data need not be stored.
+			descriptionTextEdited = '';
 			return;
 		}
 		
@@ -641,6 +691,9 @@ $(document).ready(function(){
                  	}
              }
 	        });
+		
+		// Set the description to empty as the data need not be stored.
+		descriptionTextEdited = '';
 	}
 	
 	// Catch the amount when the user focuses on the transaction
@@ -670,10 +723,9 @@ $(document).ready(function(){
 		  // Handles the addition of buttons in the budget column for the row
 		  appendButtonForAmountEdition(amountEntered, selectTransactionId);
 	});
-	
+
 	// Append amount to user transaction
 	function postNewAmountToUserTransactions(element){
-
 		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
 		let enteredText = round(parseFloat(trimElement(lastElement(splitElement(element.innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 		let previousText = parseFloat(lastElement(splitElement(amountEditedTransaction,currentCurrencyPreference)).replace(/[^0-9.-]+/g,""));
@@ -684,16 +736,19 @@ $(document).ready(function(){
 		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
 			// Replace the entered text with 0 inorder for the code to progress.
 			enteredText = 0;
-		}
-		
-		// Replace negative sign to positive sign if entered by the user
-		if(enteredText < 0){
+		} else if(enteredText < 0){
+			// Replace negative sign to positive sign if entered by the user
 			enteredText = parseFloat(Math.abs(enteredText),2);
 		}
 		
+		// Test if the previous value is valid
+		if(isNaN(previousText) || !regexForFloat.test(previousText) || previousText == 0) {
+			previousText = 0;
+		}
+		
+		
 		// Test if the entered value is the same as the previous one
 		if(previousText != enteredText){
-		
 			// obtain the transaction id of the table row
 			let changedAmount = splitElement($(element).attr('id'),'-');
 			var values = {};
@@ -707,7 +762,6 @@ $(document).ready(function(){
 		          data : values,
 		          success: function(userTransaction){
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
-		        	  amountEditedTransaction = trimElement(element.innerText);
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -725,6 +779,9 @@ $(document).ready(function(){
 		
 		// Handles the addition of buttons in the budget column for the row
 		appendButtonForAmountEdition(enteredText, selectTransactionId);
+		
+		// Set the amount to empty as the data need not be stored.
+  	  	amountEditedTransaction = '';
 	}
 	
 	// Append appropriate buttons when the amount is edited
@@ -737,7 +794,7 @@ $(document).ready(function(){
 		  budgetTableCell.classList.add('fadeInAnimation');
 	  } else if(enteredText > 0 && budgetTableCell != null){
 		  budgetTableCell.classList.add('fadeOutAnimation');
-		  replaceHtml(budgetTableCell, '');
+		  replaceHTML(budgetTableCell, '');
 	  }
 	}
 	
@@ -775,12 +832,12 @@ $(document).ready(function(){
 		if(categoryForCalculation.contains('spendingCategory')) {
 			let currentValueExpense = round(parseFloat(trimElement(lastElement(splitElement($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			replaceHtml('totalExpensesTransactions' , '-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
+			replaceHTML('totalExpensesTransactions' , '-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
 			
 		} else if(categoryForCalculation.contains('incomeCategory')) {
 			let currentValueIncome = round(parseFloat(trimElement(lastElement(splitElement($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
-			replaceHtml('totalIncomeTransactions' , currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
+			replaceHTML('totalIncomeTransactions' , currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
 		}
 		
 		// Update the total available 
@@ -794,7 +851,10 @@ $(document).ready(function(){
 			availableCash = Math.abs(availableCash);
 		}
 		
-		replaceHtml('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
+		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
+		
+		// Update the pie chart
+		transactionsChart.update(updatePieChartTransactions(income, expense));
 		
 	}
 	
@@ -879,8 +939,8 @@ $(document).ready(function(){
 		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 	}
 	
+	// Build empty table message as document
 	function fetchEmptyTableMessage() {
-		let emptyTableFragment = document.createDocumentFragment();
 		let emptyTableRow = document.createElement("tr");
 		
 		// Row 1
@@ -911,6 +971,19 @@ $(document).ready(function(){
 		
 		return emptyTableRow;
 	}
+	
+	// Introduce Chartist pie chart
+	function buildPieChart(dataPreferences, id) {
+		 /*  **************** Public Preferences - Pie Chart ******************** */
+
+        var optionsPreferences = {
+            height: '230px'
+        };
+        replaceHTML(id, '');
+        transactionsChart = Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+	}
      
 });
+
+//# sourceURL=transaction.js
 
