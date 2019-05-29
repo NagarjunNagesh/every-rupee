@@ -6,18 +6,11 @@ $(document).ready(function(){
 	// Amount Text
 	let amountEditedTransaction = '';
 	
-	// Load Expense category and income category
-	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
-	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
-	
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
 	let resiteredNewTransaction = false;
 	// Divs for error message while adding transactions
 	let errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
-	// Divs for success message while adding transactions
-	let successfullyAddedTransactionsDiv = '<p class="green-icon margin-bottom-zero margin-left-five">';
-	let svgTick = '<div class="svg-container"> <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true"><circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/><path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/></svg></div>';
 	// Bills & Fees Options selection
 	const selectedOption = '4';
 	// Currency Preference
@@ -28,13 +21,16 @@ $(document).ready(function(){
 	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
-	const loaderBudgetSection = '<div id="material-spinner"></div>';
 	// New Pie Chart Storage Variable
 	let transactionsChart = '';
-	let tableEmptyBool = false;
+	let successMessagePopulated = false;
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
+	
+	// Load Expense category and income category
+	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
+	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -83,7 +79,8 @@ $(document).ready(function(){
 	          dataType: "json",
 	          data : values,
 	          success: function(data) {
-	  	    	fadeoutMessage('#successMessage', '<div class="row ml-auto mr-auto">' + svgTick + successfullyAddedTransactionsDiv + 'Successfully added the transaction.</p></div> <br/>', 2000);
+	        	successMessagePopulated ? $('#successMessage').fadeIn('slow').show() : fadeoutMessage('#successMessage',  successSvgMessage() , 2000);
+	  	    	successMessagePopulated=true;
 	  	    	resiteredNewTransaction=true;
 	  	    	transactionSubmissionButton.removeAttribute("disabled");
 	  	      },
@@ -122,6 +119,7 @@ $(document).ready(function(){
 			// Do not refresh the transactions if no new transactions are added
 			resiteredNewTransaction = false;
 		}
+		
 	});
 	
 	// Populates the transaction table
@@ -201,13 +199,6 @@ $(document).ready(function(){
 	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
 		let dataPreferences = {};
 		
-		if(totalIncomeTransactions === 0 && totalExpensesTransactions === 0) {
-			dataPreferences = {
-	                labels: [0 + '%', 0 + '%'],
-	                series: [0, 0]
-	            };
-		}
-		
 		if(totalIncomeTransactions > totalExpensesTransactions) {
 			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
 			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
@@ -222,7 +213,7 @@ $(document).ready(function(){
 			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
 			replaceHTML('totalAvailableLabel', 'Total Available');
 		        
-		} else {
+		} else if (totalIncomeTransactions < totalExpensesTransactions){
 			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
 			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
 			   
@@ -235,6 +226,8 @@ $(document).ready(function(){
 			
 			replaceHTML('legendPieChart', 'Total Income & Total Overspent as a percentage of Total Expense');
 			replaceHTML('totalAvailableLabel', 'Total Overspent');
+		} else {
+			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
 		}
 		
 		return dataPreferences;
@@ -889,8 +882,9 @@ $(document).ready(function(){
 	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = lastElement(splitElement($(this).closest('td').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
-		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id)
-		budgetTableCell.innerHTML = loaderBudgetSection;
+		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
+		budgetTableCell.innerHTML = '';
+		budgetTableCell.appendChild(loaderBudgetSection());
 		budgetTableCell.classList.add('fadeInAnimation');
 		
 		
@@ -963,12 +957,20 @@ $(document).ready(function(){
 		
 		// Row 3
 		let categoryTableCell = document.createElement('td');
-		categoryTableCell.innerHTML = '<img src="../img/dashboard/icons8-document-128.png">';
+		
+		let imgElement =  document.createElement('img');
+		imgElement.src = '../img/dashboard/icons8-document-128.png';
+		categoryTableCell.appendChild(imgElement);
 		emptyTableRow.appendChild(categoryTableCell);
 		
 		// Row 4
 		let descriptionTableCell = document.createElement('td');
-		descriptionTableCell.innerHTML = '<p class="text-secondary">There are no transactions yet. Start adding some to track your spending.</p>';
+		
+		let paragraphElement = document.createElement('p');
+		paragraphElement.className = 'text-secondary';
+		paragraphElement.innerHTML = 'There are no transactions yet. Start adding some to track your spending.';
+		
+		descriptionTableCell.appendChild(paragraphElement);
 		emptyTableRow.appendChild(descriptionTableCell);
 		
 		// Row 5
@@ -990,8 +992,84 @@ $(document).ready(function(){
             height: '230px'
         };
         replaceHTML(id, '');
-        transactionsChart = Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        
+        if(isNotEmpty(dataPreferences)) {
+        	transactionsChart = Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        }
+        
 	}
+	
+	// Perform update of budget to the API
+	window.onbeforeunload = function(event) {
+        // Call API of budget to automatically add budget
+    };
+    
+    // Build the loader
+    function loaderBudgetSection() {
+    	let loader = document.createElement('div');
+    	loader.id = 'material-spinner';
+    	
+    	return loader;
+    }
+    
+    // Generate SVG Tick Element and success element
+    function successSvgMessage() {
+    	debugger;
+//    	let svgTick = '<div class="svg-container"> 
+//    		<svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 48 48" aria-hidden="true">
+//    	<circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/>
+//    		<path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/>
+//    		</svg></div>';
+    	let alignmentDiv = document.createElement('div');
+    	alignmentDiv.className = 'row ml-auto mr-auto';
+    	
+    	// Parent Div Svg container
+    	let divSvgContainer = document.createElement('div');
+    	divSvgContainer.className = 'svg-container';
+    	
+    	
+    	// SVG element
+    	let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    	svgElement.setAttribute('class','ft-green-tick');
+    	svgElement.setAttribute('height','20');
+    	svgElement.setAttribute('width','20');
+    	svgElement.setAttribute('viewBox','0 0 48 48');
+    	svgElement.setAttribute('aria-hidden',true);
+    	
+    	let circleElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    	circleElement.setAttribute('class','circle');
+    	circleElement.setAttribute('fill','#5bb543');
+    	circleElement.setAttribute('cx','24');
+    	circleElement.setAttribute('cy','24');
+    	circleElement.setAttribute('r','22');
+    	
+    	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement.setAttribute('class','tick');
+    	pathElement.setAttribute('fill','none');
+    	pathElement.setAttribute('stroke','#FFF');
+    	pathElement.setAttribute('stroke-width','6');
+    	pathElement.setAttribute('stroke-linecap','round');
+    	pathElement.setAttribute('stroke-linejoin','round');
+    	pathElement.setAttribute('stroke-miterlimit','10');
+    	pathElement.setAttribute('d','M14 27l5.917 4.917L34 17');
+    	
+    	circleElement.appendChild(pathElement);
+    	svgElement.appendChild(circleElement);
+    	divSvgContainer.appendChild(svgElement);
+    	
+    	let messageParagraphElement = document.createElement('p');
+    	messageParagraphElement.className = 'green-icon margin-bottom-zero margin-left-five';
+    	messageParagraphElement.innerHTML = 'Successfully added the transaction.';
+    	
+    	var br = document.createElement('br');
+    	
+    	alignmentDiv.appendChild(divSvgContainer);
+    	alignmentDiv.appendChild(messageParagraphElement);
+    	alignmentDiv.appendChild(br);
+    	
+    	
+    	return alignmentDiv;
+    }
      
 });
 
