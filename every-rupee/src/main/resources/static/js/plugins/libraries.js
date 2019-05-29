@@ -17,6 +17,14 @@ function  isEmpty(obj) {
 	    return true;
 }
 
+function  isNotEmpty(obj) {
+	return !isEmpty(obj);
+}
+
+function  isNotBlank(obj) {
+	return isNotEmpty(obj) && obj !== '';
+}
+
 function trimElement(str) {
 	return $.trim(str);
 }

@@ -31,6 +31,7 @@ $(document).ready(function(){
 	const loaderBudgetSection = '<div id="material-spinner"></div>';
 	// New Pie Chart Storage Variable
 	let transactionsChart = '';
+	let tableEmptyBool = false;
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -168,7 +169,7 @@ $(document).ready(function(){
     		   // Update table with empty message if the transactions are empty
     		   if(result.length == 0) {
     			   documentTbody.innerHTML = '';
-    			   replaceHTML(replaceTransactionsId, fetchEmptyTableMessage());
+    			   document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
     		   } else {
     			   documentTbody.innerHTML = '';
     			   documentTbody.appendChild(transactionsTableDiv);
@@ -199,6 +200,13 @@ $(document).ready(function(){
 	// Update the pie chart with transactions data
 	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
 		let dataPreferences = {};
+		
+		if(totalIncomeTransactions === 0 && totalExpensesTransactions === 0) {
+			dataPreferences = {
+	                labels: [0 + '%', 0 + '%'],
+	                series: [0, 0]
+	            };
+		}
 		
 		if(totalIncomeTransactions > totalExpensesTransactions) {
 			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
@@ -463,16 +471,17 @@ $(document).ready(function(){
 			            	 if (result.value) {
 			             		// Check all check boxes by default
 			                     var transactionIds = [];
-
-			                     $.each($("input[type=checkbox]:checked"), function(){   
+			                    
+			                     let allCheckedItems = $("input[type=checkbox]:checked")
+			                     for(let i = 0, length = allCheckedItems.length; i < length; i++) {
 			                     	// To remove the select all check box values
-			                    	let transactionId = $(this)[0].innerHTML;
-			                     	if(transactionId != "on"){
+			                    	let transactionId = allCheckedItems[i].innerHTML;
+			                     	if(transactionId != "on" && isNotBlank(transactionId)){
 			                     		transactionIds.push(transactionId);
 			                     	}
-			                     });
+			                     }
 
-			                     transactionIds.join(", ")
+			                     transactionIds.join(",")
 			                     
 			                     jQuery.ajax({
 			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds,
@@ -494,13 +503,12 @@ $(document).ready(function(){
 			                        	});
 			                        	
 			                        	let mapCategoryAndTransactions = {};
-			                        	
 			                        	// Update the Category Amount
 			                        	for(let count = 0, length = Object.keys(clonedElementsToDelete).length; count < length; count++){
 			                        		let key = Object.keys(clonedElementsToDelete)[count];
 			          	            	  	let value = clonedElementsToDelete[key];
 			          	            	  	let classNameForClass = value.classList;
-			          	            	  	for(let countCategory = 0, length = Object.keys(classNameForClass).length; countCategory < length; countCategory++){
+			          	            	  	for(let countCategory = 0, lengthClass = Object.keys(classNameForClass).length; countCategory < lengthClass; countCategory++){
 			          	            	  		// TODO Obtain Classlist and append it to mapCategoryAndTransactions
 			          	            	  	}
 			                        	}
@@ -517,7 +525,7 @@ $(document).ready(function(){
 				                         	if(responseError.error.includes("Unauthorized")){
 				                         		sessionExpiredSwal(thrownError);
 				                         	} else{
-				                         		showNotification('Unable to delete the transaction','top','center','error');
+				                         		showNotification('Unable to delete the transactions','top','center','danger');
 				                         	}
 			                         }
 			                     });
@@ -599,13 +607,14 @@ $(document).ready(function(){
 		        	  let previousCategoryId ='';
 		        	  
 		        		// Update the current category
-			        	  classList.forEach(function (classItem) {
+			        	  for(let i=0, length = classList.length; i < length ; i++) {
+			        		  let classItem = classList[i]
 			        		  if(includesStr(classItem,'categoryIdForSelect')){
 			        			// Remove amount from current Category
 			        			  previousCategoryId = lastElement(splitElement(classItem,'-'));
 			    	        	  updateCategoryAmount(previousCategoryId , parseFloat('-' + userTransaction.amount), false);
 			        		  }
-			        	  });
+			        	  }
 			        	  
 			        	  // Remove previous class related to category id and add the new one
 			        	  let selectOption = document.getElementById(categoryId);
@@ -619,7 +628,7 @@ $(document).ready(function(){
 	                   	if(responseError.error.includes("Unauthorized")){
 	                   		sessionExpiredSwal(thrownError);
 	                   	} else{
-	                   		showNotification('Unable to change the category','top','center','error');
+	                   		showNotification('Unable to change the category','top','center','danger');
 	                   	}
 	               }
 		           
@@ -687,7 +696,7 @@ $(document).ready(function(){
                  	if(responseError.error.includes("Unauthorized")){
                  		sessionExpiredSwal(thrownError);
                  	} else{
-                 		showNotification('Unable to change the description','top','center','error');
+                 		showNotification('Unable to change the description','top','center','danger');
                  	}
              }
 	        });
@@ -768,7 +777,7 @@ $(document).ready(function(){
 	                   	if(responseError.error.includes("Unauthorized")){
 	                   		sessionExpiredSwal(thrownError);
 	                   	} else{
-	                   		showNotification('Unable to change the transacition amount','top','center','error');
+	                   		showNotification('Unable to change the transacition amount','top','center','danger');
 	                   	}
 	               }
 		        });
@@ -892,7 +901,8 @@ $(document).ready(function(){
             success: function(data) {
             	
             	let classListBudget = budgetTableCell.classList;
-            	classListBudget.forEach(function(classItem) {
+            	for(let i=0, length = classListBudget.length; i < length; i++) {
+            		let classItem = classListBudget[i];
             		if(includesStr(classItem, 'categoryIdForBudget')) {
             			// Remove amount from current Category
 	        			previousCategoryId = lastElement(splitElement(classItem,'-'));
@@ -903,7 +913,7 @@ $(document).ready(function(){
 	        			}
 	        			
             		}
-            	});
+            	}
             	
             	// Remove the table row (No need to update category amount or total values as the value of the TR is already 0 )
             	let closestTr = $('#budgetTransactionsRow-' + id).closest('tr');
