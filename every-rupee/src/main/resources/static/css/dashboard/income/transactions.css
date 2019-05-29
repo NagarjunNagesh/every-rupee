@@ -172,6 +172,7 @@
 }
 
 .fadeInAnimation {
+	opacity: 0;
 	animation-name: fadeInOpacity;
 	animation-iteration-count: 1;
 	animation-timing-function: ease-in;
