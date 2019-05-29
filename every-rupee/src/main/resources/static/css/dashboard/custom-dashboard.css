@@ -614,3 +614,22 @@ br[type="_moz"]{display: none;}
 .legend-spacing {
 	font-size: 20px;
 }
+
+.messageFadeInAndOut {
+    animation-name: fadeInOutOpacity;
+    animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 2s;
+}
+
+@keyframes fadeInOutOpacity {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
