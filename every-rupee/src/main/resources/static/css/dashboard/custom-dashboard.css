@@ -616,10 +616,8 @@ br[type="_moz"]{display: none;}
 }
 
 .messageFadeInAndOut {
-    animation-name: fadeInOutOpacity;
-    animation-iteration-count: 1;
-	animation-timing-function: ease-in;
-	animation-duration: 2s;
+    -webkit-animation: fadeInOutOpacity 2s linear forwards;
+    animation: fadeInOutOpacity 2s linear forwards;
 }
 
 @keyframes fadeInOutOpacity {
@@ -632,4 +630,102 @@ br[type="_moz"]{display: none;}
 	100% {
 		opacity: 0;
 	}
+}
+
+/**  Modal Dialog **/
+
+.modal .modal-dialog.modal-signup {
+    max-width: 900px;
+}
+
+.modal .modal-dialog.modal-signup .modal-title {
+    text-align: center;
+    width: 100%;
+}
+
+.modal-dialog .modal-header {
+    border-bottom: none;
+    padding: 24px 24px 0;
+        padding-top: 24px;
+}
+
+.icon.icon-rose {
+    color: #e91e63;
+}
+
+.info-horizontal .icon {
+    float: left;
+    margin-top: 24px;
+    margin-right: 10px;
+}
+
+.info-horizontal .description {
+    overflow: hidden;
+}
+
+.icon.icon-primary {
+    color: #9c27b0;
+}
+
+.info-horizontal .icon > i {
+    font-size: 2.25rem;
+}
+
+.icon.icon-info {
+    color: #00bcd4;
+}
+
+.modal .modal-dialog.modal-signup .info-horizontal {
+    padding: 0 0 20px;
+}
+
+.card-signup .form-check {
+    padding-top: 27px;
+}
+
+.modal .modal-dialog.modal-signup .modal-footer {
+    padding: 0 5px;
+    margin-bottom: 2rem;
+}
+
+.modal-dialog .modal-footer {
+    border-top: none;
+    padding: 24px;
+}
+
+.info .info-title {
+    color: #3c4858;
+    margin: 1.75rem 0 .875rem;
+}
+
+.info {
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 70px 0 30px;
+}
+
+.modal-dialog .modal-header .close {
+	color: #999;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.modal .modal-header .close i {
+    font-size: 16px;
+}
+
+.modal .modal-dialog.modal-signup .modal-title {
+    text-align: center;
+    width: 100%;
+}
+
+.modal .modal-dialog.modal-signup .card-signup {
+    padding: 40px 0;
+    margin: 0 auto;
+}
+
+.modal .modal-dialog.modal-signup .card-signup .social h4 {
+	color: #999;
+	padding-top:15px;
 }

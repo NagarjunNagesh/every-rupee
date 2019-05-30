@@ -23,7 +23,6 @@ $(document).ready(function(){
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	// New Pie Chart Storage Variable
 	let transactionsChart = '';
-	let successMessagePopulated = false;
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -31,6 +30,9 @@ $(document).ready(function(){
 	// Load Expense category and income category
 	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
 	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
+	
+	// Success SVG Fragment
+	let successSVGFormed = successSvgMessage();
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -79,9 +81,12 @@ $(document).ready(function(){
 	          dataType: "json",
 	          data : values,
 	          success: function(data) {
+	        	let successMessageDocument = document.getElementById('successMessage');
+	        	// Clone and Append the success Message
+	        	successSVGFormed = cloneElementAndAppend(successMessageDocument , successSVGFormed);
+	        	// Add css3 to fade in and out
+	        	successMessageDocument.classList.add('messageFadeInAndOut');
 	        	debugger;
-	        	successMessagePopulated ? document.getElementById('successMessage').classList.add('messageFadeInAndOut') : document.getElementById('successMessage').appendChild(successSvgMessage()).classList.add('messageFadeInAndOut');
-	  	    	successMessagePopulated=true;
 	  	    	resiteredNewTransaction=true;
 	  	    	transactionSubmissionButton.removeAttribute("disabled");
 	  	      },
@@ -1016,7 +1021,7 @@ $(document).ready(function(){
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
     	let alignmentDiv = document.createElement('div');
-    	alignmentDiv.className = 'row ml-auto mr-auto';
+    	alignmentDiv.className = 'row justify-content-center';
     	
     	// Parent Div Svg container
     	let divSvgContainer = document.createElement('div');

@@ -106,47 +106,111 @@
       
   
 	<!-- Vertically Centered Modal -->
-	<div class="modal fade" id="GSCCModal" tabindex="-1" role="dialog" aria-labelledby="GSCCModal" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header border-bottom-0 padding-bottom-none">
-              <div class="modal-card-icon">
-                <i class="material-icons">input</i>
+	<div class="modal fade" id="GSCCModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true" aria-labelledby="GSCCModal">
+            <div class="modal-dialog modal-signup" role="document">
+              <div class="modal-content">
+                <div class="card card-signup card-plain">
+                  <div class="modal-header">
+                    <h5 class="modal-title card-title">Choose Your Preference</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <i class="material-icons">clear</i>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-5 ml-auto">
+                        <div class="info info-horizontal">
+                          <div class="icon icon-rose">
+                            <i class="material-icons">account_balance</i>
+                          </div>
+                          <div class="description">
+                            <h4 class="info-title">Connect With Your Bank</h4>
+                            <p class="description">
+                              Connect your bank account to import the transactions for the current month.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="info info-horizontal">
+                          <div class="icon icon-primary">
+                            <i class="material-icons">sync</i>
+                          </div>
+                          <div class="description">
+                            <h4 class="info-title">Automatic Bank Account Syncs</h4>
+                            <p class="description">
+                              Automatically syncs with the bank account to obtain transactions every start of the month.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="info info-horizontal">
+                          <div class="icon icon-info">
+                            <i class="material-icons">import_export</i>
+                          </div>
+                          <div class="description">
+                            <h4 class="info-title">Import From Bank Statements</h4>
+                            <p class="description">
+                              You can also import the transactions from your bank statements
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5 mr-auto">
+                        <div class="social text-center">
+                          <button class="btn btn-just-icon btn-round btn-bank">
+                            <i class="material-icons">account_balance</i>
+                          </button>
+                          <button class="btn btn-just-icon btn-round btn-sync">
+                            <i class="material-icons">sync</i>
+                          </button>
+                          <button class="btn btn-just-icon btn-round btn-import">
+                            <i class="material-icons">import_export</i>
+                          </button>
+                          <h4> or be classical </h4>
+                        </div>
+                        <form id="transactionsForm" action="#" method="post" role="form">
+                          <div class="card-body">
+                            <div class="form-group bmd-form-group">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text"><i class="material-icons">money</i></div>
+                                </div>
+                                <input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true" placeholder="Amount"/>
+                              </div>
+                            </div>
+                            <div class="form-group bmd-form-group">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text"><i class="material-icons">category</i></div>
+                                </div>
+                                <select id="categoryOptions" name="categoryOptions" class="form-control" data-toggle="dropdown" data-style="btn btn-primary" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body" data-size="5">
+				      				<optgroup id="expenseSelection" label="Expenses">
+				      				</optgroup>
+				      				<optgroup id="incomeSelection" label="Income">
+				      				</optgroup>
+				      			</select>
+                              </div>
+                            </div>
+                            <div class="form-group bmd-form-group">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text"><i class="material-icons">description</i></div>
+                                </div>
+                                <input id="description" name="description" type="text" class="form-control" placeholder="Description"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer justify-content-center">
+                            <button class="btn btn-success btn-round" id="transactionsFormButtonSubmission"  type="submit" form="transactionsForm">Add Transaction</button>
+                          </div>
+                        </form>
+                        <span id="successMessage" th:utext="${successMessage}" class="justify-content-center"></span>
+			  			<span id="errorMessage" th:utext="${errorMessage}" class="justify-content-center"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-	        <h4 class="modal-title" id="myModalLabel">Add Transactions</h4>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <form autocomplete="off" id="transactionsForm" action="#" method="post" role="form" >
-	        			<div class="form-group bmd-form-group">
-			      			<label class="bmd-label-floating" for="amount">Amount</label>
-			      			<input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true"/>
-			      		</div>
-			      		<div class="form-group bmd-form-group">
-			      			<select id="categoryOptions" name="categoryOptions" class="form-control" data-toggle="dropdown" data-style="btn btn-primary" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body" data-size="5">
-			      				<optgroup id="expenseSelection" label="Expenses">
-			      				</optgroup>
-			      				<optgroup id="incomeSelection" label="Income">
-			      				</optgroup>
-			      			</select>
-			      		</div>
-			      		<div class="form-group bmd-form-group">
-			      			<label class="bmd-label-floating" for="description">Description</label>
-			      			<input id="description" name="description" type="text" class="form-control"/>
-			      		</div>
-			  </form>
-			  <span id="successMessage" th:utext="${successMessage}"></span>
-			  <span id="errorMessage" th:utext="${errorMessage}"></span>
-	      </div>
-	      <div class="modal-footer border-top-0 d-block padding-top-none">
-	      	<button id="transactionsFormButtonSubmission" type="submit" class="btn btn-success" form="transactionsForm">Add Transaction</button>
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+            </div>
+          </div>
 	
 </body>
 </html>
