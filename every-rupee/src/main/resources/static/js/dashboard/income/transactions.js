@@ -86,7 +86,6 @@ $(document).ready(function(){
 	        	successSVGFormed = cloneElementAndAppend(successMessageDocument , successSVGFormed);
 	        	// Add css3 to fade in and out
 	        	successMessageDocument.classList.add('messageFadeInAndOut');
-	        	debugger;
 	  	    	resiteredNewTransaction=true;
 	  	    	transactionSubmissionButton.removeAttribute("disabled");
 	  	      },
