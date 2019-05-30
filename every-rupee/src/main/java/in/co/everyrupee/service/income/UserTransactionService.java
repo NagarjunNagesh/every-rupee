@@ -3,9 +3,12 @@ package in.co.everyrupee.service.income;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -115,9 +118,11 @@ public class UserTransactionService implements IUserTransactionService {
     @CacheEvict(key = "#financialPortfolioId")
     public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
-	List<String> transactionIdsAsList = Arrays.asList(arrayOfTransactionIds);
-	List<Integer> transactionIdsAsIntegerList = transactionIdsAsList.stream().map(s -> Integer.parseInt(s))
-		.collect(Collectors.toList());
+	Set<String> transactionIdsAsSet = new HashSet<String>();
+	transactionIdsAsSet.addAll(Arrays.asList(arrayOfTransactionIds));
+	transactionIdsAsSet.remove(ERStringUtils.EMPTY);
+	List<Integer> transactionIdsAsIntegerList = transactionIdsAsSet.stream().filter(Objects::nonNull)
+		.map(s -> Integer.parseInt(s)).collect(Collectors.toList());
 
 	userTransactionsRepository.deleteUsersWithIds(transactionIdsAsIntegerList);
 

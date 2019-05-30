@@ -348,7 +348,7 @@ function round(value, decimals) {
 function showNotification(message, from, align, colorCode){
 
 	  $.notify({
-	      icon: "add_alert",
+	      icon: "notifications",
 	      message: message
 
 	  },{
