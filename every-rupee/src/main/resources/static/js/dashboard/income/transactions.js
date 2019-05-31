@@ -388,8 +388,20 @@ $(document).ready(function(){
 		
 		// Table Row 3
 		let selectCategoryRow = document.createElement('td');
-		selectCategoryRow.className = 'font-weight-bold';
+		selectCategoryRow.className = 'row font-weight-bold';
 		selectCategoryRow.innerHTML = categoryMap[categoryId].categoryName;
+		
+		let linkElementWrapper = document.createElement('a');
+		linkElementWrapper.href = '#';
+		linkElementWrapper.id = 'addTableRow-' + categoryId;
+		linkElementWrapper.className = 'addTableRowListener align-self-center';
+		
+		let addIconElement = document.createElement('i');
+		addIconElement.className = 'material-icons displayCategoryAddIcon';
+		addIconElement.innerHTML = 'add_circle_outline';
+		
+		linkElementWrapper.appendChild(addIconElement);
+		selectCategoryRow.appendChild(linkElementWrapper);
 		tableRow.appendChild(selectCategoryRow);
 		
 		// Table Row 4
@@ -518,7 +530,7 @@ $(document).ready(function(){
 			                        	// Recalcualte the Total values accordingly and update them in a different loop
 			                        	
 			                         },
-			                         error: function (thrownError) {
+			                        error:  function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
 				                         	if(responseError.error.includes("Unauthorized")){
 				                         		sessionExpiredSwal(thrownError);
@@ -1069,6 +1081,41 @@ $(document).ready(function(){
     	
     	return alignmentDiv;
     }
+    
+    // Add button to add the table row to the corresponding category
+	$( "tbody" ).on( "click", ".addTableRowListener" ,function(event) {
+		 event.preventDefault();
+		 // stop the event from bubbling.
+		 event.stopPropagation();
+		 event.stopImmediatePropagation();
+		 let id = lastElement(splitElement($(this).attr('id'),'-'));
+		 let values = {};
+		 values['amount'] = 0.00;
+		 values['description'] = '';
+		 values['categoryOptions'] = id;
+		 debugger;
+		 $.ajax({
+	          type: "POST",
+	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          data : values,
+	          success: function(userTransaction){
+	        	  let tableRow = createTableRows(userTransaction, 1, userTransaction.categoryId);
+	        	  let categoryParent = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
+	        	  let closestSibling = categoryParent.nextSibling;
+	        	  // TODO Check the closest sibling has a display none and then hdie or unhide the row
+	        	  categoryParent.parentNode.insertBefore(tableRow, closestSibling); 
+	          },
+	          error:  function (thrownError) {
+             	 var responseError = JSON.parse(thrownError.responseText);
+                  	if(responseError.error.includes("Unauthorized")){
+                  		sessionExpiredSwal(thrownError);
+                  	} else{
+                  		showNotification('Unable to add a new transaction','top','center','danger');
+                  	}
+              }
+		 });
+	});
      
 });
 

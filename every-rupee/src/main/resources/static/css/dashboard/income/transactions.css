@@ -258,3 +258,18 @@
 	line-height: 22px;
 }
 
+/** Display Icons besides transactions **/
+.displayCategoryAddIcon {
+	padding-left: .51rem;
+	color: #816e6e;
+	font-weight : 400;
+	font-size: 18px;
+	display: none;
+}
+
+tr[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , tr[class*=" categoryTableRow-"]:hover .displayCategoryAddIcon {
+	display: block;
+}
+
+
+
