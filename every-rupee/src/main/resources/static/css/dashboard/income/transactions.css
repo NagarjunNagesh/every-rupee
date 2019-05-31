@@ -263,7 +263,7 @@
 	padding-left: .51rem;
 	color: #816e6e;
 	font-weight : 400;
-	font-size: 18px;
+	font-size: 0.95rem;
 	display: none;
 }
 
@@ -271,5 +271,8 @@ tr[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , tr[class*=" categ
 	display: block;
 }
 
+.toggle .row {
+	border-color: none;
+} 
 
 
