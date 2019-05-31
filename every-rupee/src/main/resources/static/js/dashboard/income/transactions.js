@@ -1097,7 +1097,6 @@ $(document).ready(function(){
 		 values['amount'] = 0.00;
 		 values['description'] = '';
 		 values['categoryOptions'] = id;
-		 debugger;
 		 $.ajax({
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
