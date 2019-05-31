@@ -142,7 +142,6 @@ $(document).ready(function(){
     			$("#checkAll").prop("checked", false); 
     			// Disable delete Transactions button on refreshing the transactions
              	manageDeleteTransactionsButton();
-             	let transactionIndex = 1;
              	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
              	   let key = Object.keys(result)[countGrouped];
              	   let value = result[key];
@@ -152,9 +151,8 @@ $(document).ready(function(){
      				  let subKey = Object.keys(value)[count];
      				  let subValue = value[subKey];
      				  // Create transactions table row
-     				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, transactionIndex, key));
+     				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, 'd-none', key));
      				  totalCategoryAmount += subValue.amount;
-     				  transactionIndex++;
      			   }
      			   // Load all the total category amount in the category section
      			   let categoryAmountTotal = currentCurrencyPreference + formatNumber(totalCategoryAmount, currentUser.locale);
@@ -241,15 +239,15 @@ $(document).ready(function(){
 	
 	
 	// Building a HTML table for transactions
-	function createTableRows(userTransactionData, index, categoryId){
+	function createTableRows(userTransactionData, displayNoneProperty, categoryId){
 		let tableRows = document.createElement("tr");
-		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow d-none';
+		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow ' + displayNoneProperty;
 		
 		// Row 1
 		let indexTableCell = document.createElement('td');
 		indexTableCell.className = 'text-center';
 		indexTableCell.tabIndex = -1;
-		indexTableCell.innerHTML = index;
+		indexTableCell.innerHTML = '';
 		tableRows.appendChild(indexTableCell);
 		
 		// Table Row 2
@@ -388,8 +386,20 @@ $(document).ready(function(){
 		
 		// Table Row 3
 		let selectCategoryRow = document.createElement('td');
-		selectCategoryRow.className = 'font-weight-bold';
+		selectCategoryRow.className = 'row font-weight-bold';
 		selectCategoryRow.innerHTML = categoryMap[categoryId].categoryName;
+		
+		let linkElementWrapper = document.createElement('a');
+		linkElementWrapper.href = '#';
+		linkElementWrapper.id = 'addTableRow-' + categoryId;
+		linkElementWrapper.className = 'addTableRowListener align-self-center';
+		
+		let addIconElement = document.createElement('i');
+		addIconElement.className = 'material-icons displayCategoryAddIcon';
+		addIconElement.innerHTML = 'add_circle_outline';
+		
+		linkElementWrapper.appendChild(addIconElement);
+		selectCategoryRow.appendChild(linkElementWrapper);
 		tableRow.appendChild(selectCategoryRow);
 		
 		// Table Row 4
@@ -518,7 +528,7 @@ $(document).ready(function(){
 			                        	// Recalcualte the Total values accordingly and update them in a different loop
 			                        	
 			                         },
-			                         error: function (thrownError) {
+			                        error:  function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
 				                         	if(responseError.error.includes("Unauthorized")){
 				                         		sessionExpiredSwal(thrownError);
@@ -537,10 +547,15 @@ $(document).ready(function(){
 	// Show or hide multiple rows in the transactions table
 	$( "tbody" ).on( "click", ".toggle" ,function() {
 		let categoryId = splitElement($(this).attr('id'),'-');
+		toggleDropdown(categoryId, this);
+	 });
+	
+	// toggle dropdown
+	function toggleDropdown(categoryId, closestTrElement) {
 		let classToHide = '.hideableRow-' + lastElement(categoryId);
 	  	$(classToHide).toggleClass('d-none');
-	  	$($(this)[0].children[0]).toggleClass('dropdown-toggle', 100, 'easeInQuad').toggleClass('dropdown-toggle-right', 100, 'easeInQuad');
-	 });
+	  	$($(closestTrElement)[0].children[0]).toggleClass('dropdown-toggle', 100, 'easeInQuad').toggleClass('dropdown-toggle-right', 100, 'easeInQuad');
+	}
 	
 	// Throw a session expired error and reload the page.
 	function sessionExpiredSwal(data){
@@ -1069,6 +1084,45 @@ $(document).ready(function(){
     	
     	return alignmentDiv;
     }
+    
+    // Add button to add the table row to the corresponding category
+	$( "tbody" ).on( "click", ".addTableRowListener" ,function(event) {
+		 event.preventDefault();
+		 // stop the event from bubbling.
+		 event.stopPropagation();
+		 event.stopImmediatePropagation();
+		 let id = lastElement(splitElement($(this).attr('id'),'-'));
+		 let currentElement = this;
+		 let values = {};
+		 values['amount'] = 0.00;
+		 values['description'] = '';
+		 values['categoryOptions'] = id;
+		 $.ajax({
+	          type: "POST",
+	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          data : values,
+	          success: function(userTransaction){
+	        	  let categoryParent = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
+	        	  let closestSibling = categoryParent.nextSibling;
+	        	  let lastClassName =  lastElement(splitElement(closestSibling.className, ' '));
+	        	  // Toggle dropdown if the rows are hidden
+        		  if(includesStr(lastClassName , 'd-none')) {
+        			  toggleDropdown(id, $(currentElement).closest('tr'));
+        		  }
+        		  // Add the new row to the category
+	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'', userTransaction.categoryId), closestSibling); 
+	          },
+	          error:  function (thrownError) {
+             	 var responseError = JSON.parse(thrownError.responseText);
+                  	if(responseError.error.includes("Unauthorized")){
+                  		sessionExpiredSwal(thrownError);
+                  	} else{
+                  		showNotification('Unable to add a new transaction','top','center','danger');
+                  	}
+              }
+		 });
+	});
      
 });
 
