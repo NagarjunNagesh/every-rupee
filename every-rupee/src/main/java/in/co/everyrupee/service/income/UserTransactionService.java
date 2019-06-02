@@ -2,10 +2,13 @@ package in.co.everyrupee.service.income;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -64,17 +67,28 @@ public class UserTransactionService implements IUserTransactionService {
 
     private Map<Integer, List<UserTransaction>> sortByCategoryIdForHtmlTransactionsPage(
 	    List<UserTransaction> userTransactions, String pFinancialPortfolioId) {
+	Map<Integer, List<UserTransaction>> userTransactionsMapTemp = new HashMap<Integer, List<UserTransaction>>();
 	Map<Integer, List<UserTransaction>> userTransactionsMap = new HashMap<Integer, List<UserTransaction>>();
 
+	// Build a map with category and transactions
 	for (UserTransaction userTransaction : userTransactions) {
-	    if (!userTransactionsMap.containsKey(userTransaction.getCategoryId())) {
+	    if (!userTransactionsMapTemp.containsKey(userTransaction.getCategoryId())) {
 		List<UserTransaction> list = new ArrayList<UserTransaction>();
 		list.add(userTransaction);
 
-		userTransactionsMap.put(userTransaction.getCategoryId(), list);
+		userTransactionsMapTemp.put(userTransaction.getCategoryId(), list);
 	    } else {
-		userTransactionsMap.get(userTransaction.getCategoryId()).add(userTransaction);
+		userTransactionsMapTemp.get(userTransaction.getCategoryId()).add(userTransaction);
 	    }
+	}
+
+	// Sort older transactions at the bottom
+	Iterator<Entry<Integer, List<UserTransaction>>> it = userTransactionsMapTemp.entrySet().iterator();
+	while (it.hasNext()) {
+	    Map.Entry<Integer, List<UserTransaction>> categoryAndTransactionsPair = it.next();
+	    List<UserTransaction> userTransactionsList = categoryAndTransactionsPair.getValue();
+	    Collections.reverse(userTransactionsList);
+	    userTransactionsMap.put(categoryAndTransactionsPair.getKey(), userTransactionsList);
 	}
 
 	logger.debug("finished sorting for the financial portfolio - " + pFinancialPortfolioId);
