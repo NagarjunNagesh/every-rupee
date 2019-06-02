@@ -276,11 +276,6 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	display: block;
 }
 
-.toggle .row {
-	border-top: none;
-	padding-left: 1.49rem;
-}
-
 .drag-handle {
 	display: none;
 }
@@ -291,4 +286,12 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 
 .draggable-handle-wrapper {
 	cursor: move;
+}
+
+.tableHeadingDiv {
+	display: table-header-group;
+}
+
+.tableBodyDiv {
+	display: table-row-group;
 }
