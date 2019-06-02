@@ -1054,12 +1054,12 @@ $(document).ready(function(){
     };
     
     // Build the loader
-    function loaderBudgetSection() {
-    	let loader = document.createElement('div');
-    	loader.id = 'material-spinner';
-    	
-    	return loader;
-    }
+	//    function loaderBudgetSection() {
+	//    	let loader = document.createElement('div');
+	//    	loader.id = 'material-spinner';
+	//    	
+	//    	return loader;
+	//    }
     
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
