@@ -938,7 +938,6 @@ $(document).ready(function(){
             success: function(data) {
             	
             	let classListBudget = budgetTableCell.classList;
-            	debugger;
             	for(let i=0, length = classListBudget.length; i < length; i++) {
             		let classItem = classListBudget[i];
             		if(includesStr(classItem, 'categoryIdForBudget')) {
