@@ -34,6 +34,7 @@
     -o-text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
     -moz-binding: url(<q>assets/xml/ellipsis.xml#ellipsis</q>);
+    color: gray;
 }
 
 .dropdown-toggle-right::after {
@@ -101,12 +102,13 @@
 .hideableRow:hover .tableRowSelectCategory, .tableRowTransactionHighlight .tableRowSelectCategory {
 	display: inline-block;
 	width: 100%;
-	padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+	padding: .2rem 1rem .3rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
 	border: 1px solid #d2d2d2;
 	border-radius: 0.25rem;
+	height: 28px;
 	appearance: none;
 }
 
@@ -121,25 +123,27 @@
 .hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus, .tableRowTransactionHighlight .descriptionDivCentering {
 	display: block;
 	width: 100%;
-	padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+	padding: .2rem 1rem .3rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
-	border-radius: 0.25rem;
+	border-radius: .25rem;
 	appearance: none;
-	height: 33px;
+	height: 28px;
 	background-color: #fff;
+	
 }
 
 .hideableRow:hover .amountDivCentering, .hideableRow:focus .amountDivCentering, .hideableRow:active .amountDivCentering, .amountDivCentering:active, .amountDivCentering:focus, .tableRowTransactionHighlight .amountDivCentering  {
 	display: block;
 	text-align: right;
-	padding: 0.375rem 0.375rem 0.375rem 0.75rem;
+	padding: .2rem .7rem .3rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
 	border-radius: 0.25rem;
 	appearance: none;
+	height: 28px;
 	background-color: #fff;
 }
 
@@ -261,18 +265,32 @@
 /** Display Icons besides transactions **/
 .displayCategoryAddIcon {
 	padding-left: .51rem;
-	color: #816e6e;
+	color: #6b5e5d;
 	font-weight : 400;
 	font-size: 0.95rem;
 	display: none;
 }
 
-tr[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , tr[class*=" categoryTableRow-"]:hover .displayCategoryAddIcon {
+div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" categoryTableRow-"]:hover .displayCategoryAddIcon {
 	display: block;
 }
 
-.toggle .row {
-	border-color: none;
-} 
+.drag-handle {
+	display: none;
+}
 
+.hideableRow:hover .drag-handle {
+	display: block;
+}
 
+.draggable-handle-wrapper {
+	cursor: move;
+}
+
+.tableHeadingDiv {
+	display: table-header-group;
+}
+
+.tableBodyDiv {
+	display: table-row-group;
+}

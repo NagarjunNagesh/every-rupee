@@ -16128,13 +16128,14 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
   margin-top: -2px;
 }
 
+/**  Custom Changes for transactions **/
 .table>thead>tr>th,
 .table>tbody>tr>th,
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>tbody>tr>td,
 .table>tfoot>tr>td {
-  padding: 12px 8px;
+  padding: 5px 5px;
   vertical-align: middle;
   border-color: #ddd;
 }

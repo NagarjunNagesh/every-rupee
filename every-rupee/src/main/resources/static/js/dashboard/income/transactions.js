@@ -240,16 +240,32 @@ $(document).ready(function(){
 	
 	// Building a HTML table for transactions
 	function createTableRows(userTransactionData, displayNoneProperty, categoryId){
-		let tableRows = document.createElement("tr");
+		let tableRows = document.createElement("div");
 		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow ' + displayNoneProperty;
 		
 		// Row 1
-		let indexTableCell = document.createElement('td');
-		indexTableCell.className = 'text-center';
+		let indexTableCell = document.createElement('div');
+		indexTableCell.className = 'text-center d-lg-table-cell draggable-handle-wrapper';
 		indexTableCell.tabIndex = -1;
 		indexTableCell.innerHTML = '';
-		tableRows.appendChild(indexTableCell);
+		indexTableCell.draggable = true;
 		
+		// Build SVG
+		let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    	svgElement.setAttribute('class','drag-handle');
+    	svgElement.setAttribute('height','15');
+    	svgElement.setAttribute('width','8');
+    	svgElement.setAttribute('viewBox','0 0 8 15');
+    	svgElement.setAttribute('focusable',false);
+    	
+    	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement.setAttribute('fill','#B6BEC2');
+    	pathElement.setAttribute('d','M1.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0-6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5-12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z');
+    	
+    	svgElement.appendChild(pathElement);
+    	indexTableCell.appendChild(svgElement);
+    	tableRows.appendChild(indexTableCell);
+    	
 		// Table Row 2
 		let formCheckDiv = document.createElement('div');
 		formCheckDiv.className = 'form-check';
@@ -276,13 +292,15 @@ $(document).ready(function(){
 		fromCheckLabel.appendChild(formCheckSignSpan);
 		formCheckDiv.appendChild(fromCheckLabel);
 		
-		let checkboxCell = document.createElement('td');
+		let checkboxCell = document.createElement('div');
 		checkboxCell.tabIndex = -1;
+		checkboxCell.className = 'd-lg-table-cell text-center';
 		checkboxCell.appendChild(formCheckDiv);
 		tableRows.appendChild(checkboxCell);
 		
 		// Table Row 3
-		let selectCategoryRow = document.createElement('td');
+		let selectCategoryRow = document.createElement('div');
+		selectCategoryRow.className = 'd-lg-table-cell';
 		
 		// Build Select
 		let selectCategory = document.createElement('select');
@@ -304,9 +322,9 @@ $(document).ready(function(){
 		tableRows.appendChild(selectCategoryRow);
 		
 		// Table Row 4
-		let descriptionTableRow = document.createElement('td');
+		let descriptionTableRow = document.createElement('div');
 		descriptionTableRow.setAttribute('id', 'descriptionTransactionsRow-' + userTransactionData.transactionId);
-		descriptionTableRow.className = 'transactionsTableDescription';
+		descriptionTableRow.className = 'transactionsTableDescription d-lg-table-cell';
 		descriptionTableRow.setAttribute('data-gramm_editor' , false);
 		descriptionTableRow.tabIndex = -1;
 		
@@ -320,9 +338,9 @@ $(document).ready(function(){
 		tableRows.appendChild(descriptionTableRow);
 		
 		// Table Row 5
-		let amountTransactionsRow = document.createElement('td');
+		let amountTransactionsRow = document.createElement('div');
 		amountTransactionsRow.setAttribute('id', 'amountTransactionsRow-' + userTransactionData.transactionId);
-		amountTransactionsRow.className = 'text-right amountTransactionsRow';
+		amountTransactionsRow.className = 'text-right amountTransactionsRow d-lg-table-cell';
 		amountTransactionsRow.setAttribute('data-gramm_editor', false);
 		amountTransactionsRow.tabIndex = -1;
 		
@@ -343,9 +361,9 @@ $(document).ready(function(){
 	   tableRows.appendChild(amountTransactionsRow);
 	   
 	   // Table Row 6
-	   let budgetTransactionRow = document.createElement('td');
+	   let budgetTransactionRow = document.createElement('div');
 	   budgetTransactionRow.setAttribute('id', 'budgetTransactionsRow-' + userTransactionData.transactionId);
-	   budgetTransactionRow.className = 'text-right categoryIdForBudget-' + categoryId;
+	   budgetTransactionRow.className = 'text-right d-lg-table-cell categoryIdForBudget-' + categoryId;
 	   budgetTransactionRow.tabIndex = -1;
 	   
 	    // append button to remove the transaction if the amount is zero
@@ -361,59 +379,65 @@ $(document).ready(function(){
 	
 	// Building a HTML table for category header for transactions
 	function createTableCategoryRows(categoryId, countGrouped, categoryAmountTotal){
-		let tableRow = document.createElement("tr");
+		let tableRow = document.createElement("div");
 		tableRow.setAttribute('id', 'categoryTableRow-' + categoryId);
 		tableRow.setAttribute('data-toggle', 'collapse');
 		tableRow.setAttribute('role' , 'button');
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRow.className = 'toggle table-danger categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle table-danger d-lg-table-row categoryTableRow-' + categoryId;
 		} else {
-			tableRow.className = 'toggle table-success categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle table-success d-lg-table-row categoryTableRow-' + categoryId;
 		}
 		
 		// Row 1
-		let indexTableCell = document.createElement('td');
-		indexTableCell.className = 'text-center dropdown-toggle-right font-17';
+		let indexTableCell = document.createElement('div');
+		indexTableCell.className = 'text-center d-lg-table-cell dropdown-toggle-right font-17';
 		tableRow.appendChild(indexTableCell);
 		
 		// Table Row 2
-		let checkboxCell = document.createElement('td');
+		let checkboxCell = document.createElement('div');
 		checkboxCell.tabIndex = -1;
+		checkboxCell.className = 'd-lg-table-cell';
 		tableRow.appendChild(checkboxCell);
 		
 		
 		// Table Row 3
-		let selectCategoryRow = document.createElement('td');
-		selectCategoryRow.className = 'row font-weight-bold';
-		selectCategoryRow.innerHTML = categoryMap[categoryId].categoryName;
+		let selectCategoryRow = document.createElement('div');
+		selectCategoryRow.className = 'font-weight-bold d-lg-table-cell';
+		
+		let categoryNameWrapper = document.createElement('div');
+		categoryNameWrapper.className = 'd-lg-inline';
+		categoryNameWrapper.innerHTML = categoryMap[categoryId].categoryName;
 		
 		let linkElementWrapper = document.createElement('a');
 		linkElementWrapper.href = '#';
 		linkElementWrapper.id = 'addTableRow-' + categoryId;
-		linkElementWrapper.className = 'addTableRowListener align-self-center';
+		linkElementWrapper.className = 'd-lg-inline addTableRowListener align-self-center';
 		
 		let addIconElement = document.createElement('i');
-		addIconElement.className = 'material-icons displayCategoryAddIcon';
+		addIconElement.className = 'd-lg-inline material-icons displayCategoryAddIcon';
 		addIconElement.innerHTML = 'add_circle_outline';
 		
 		linkElementWrapper.appendChild(addIconElement);
-		selectCategoryRow.appendChild(linkElementWrapper);
+		categoryNameWrapper.appendChild(linkElementWrapper);
+		selectCategoryRow.appendChild(categoryNameWrapper);
 		tableRow.appendChild(selectCategoryRow);
 		
 		// Table Row 4
-		let descriptionTableRow = document.createElement('td');
+		let descriptionTableRow = document.createElement('div');
+		descriptionTableRow.className = 'd-lg-table-cell';
 		tableRow.appendChild(descriptionTableRow);
 		
 		// Table Row 5
-		let amountTransactionsRow = document.createElement('td');
+		let amountTransactionsRow = document.createElement('div');
 		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
 		
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' spendingCategory';
+			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
 		} else {
-			amountTransactionsRow.className = 'text-right amountCategoryId-' + categoryId + ' incomeCategory';
+			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
 		}
 		
 		// Append a - sign for the category if it is an expense
@@ -425,9 +449,9 @@ $(document).ready(function(){
 	   tableRow.appendChild(amountTransactionsRow);
 	   
 	   // Table Row 6
-	   let budgetTransactionsRow = document.createElement('td');
+	   let budgetTransactionsRow = document.createElement('div');
 	   budgetTransactionsRow.setAttribute('id', 'budgetCategory-' + categoryId);
-	   budgetTransactionsRow.className = 'text-right';
+	   budgetTransactionsRow.className = 'text-right d-lg-table-cell';
 	   tableRow.appendChild(budgetTransactionsRow);
 	   // TODO  have to be replaced with budget
 		
@@ -436,11 +460,11 @@ $(document).ready(function(){
 	}
 	
 	// Disable Button if no check box is clicked and vice versa
-	$( "tbody" ).on( "click", ".number" ,function() {
+	$( "#transactionsTable" ).on( "click", ".number" ,function() {
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
-		$(this).closest('tr').toggleClass('background-snow', 300);
+		$(this).parent().closest('div').toggleClass('background-snow', 300);
 	});
 	
 	// Select all check boxes for Transactions
@@ -497,7 +521,7 @@ $(document).ready(function(){
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	 
-			                        	let elementsToDelete = $( ".number:checked" ).closest('tr');
+			                        	let elementsToDelete = $( ".number:checked" ).parent().closest('div');
 			                        	let clonedElementsToDelete = elementsToDelete.clone();
 			                        	
 			                        	// Remove all the elements
@@ -545,7 +569,7 @@ $(document).ready(function(){
 	}
 
 	// Show or hide multiple rows in the transactions table
-	$( "tbody" ).on( "click", ".toggle" ,function() {
+	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
 		let categoryId = splitElement($(this).attr('id'),'-');
 		toggleDropdown(categoryId, this);
 	 });
@@ -553,7 +577,7 @@ $(document).ready(function(){
 	// toggle dropdown
 	function toggleDropdown(categoryId, closestTrElement) {
 		let classToHide = '.hideableRow-' + lastElement(categoryId);
-	  	$(classToHide).toggleClass('d-none');
+	  	$(classToHide).toggleClass('d-none').toggleClass('d-lg-table-row');
 	  	$($(closestTrElement)[0].children[0]).toggleClass('dropdown-toggle', 100, 'easeInQuad').toggleClass('dropdown-toggle-right', 100, 'easeInQuad');
 	}
 	
@@ -583,8 +607,8 @@ $(document).ready(function(){
 	}
 	
 	// Catch the description when the user focuses on the description
-	$( "tbody" ).on( "focusin", ".tableRowForSelectCategory" ,function() {
-		let closestTableRow = $(this).closest('tr');
+	$( "#transactionsTable" ).on( "focusin", ".tableRowForSelectCategory" ,function() {
+		let closestTableRow = $(this).parent().closest('div');
 		// Remove BR appended by mozilla
 		if(closestTableRow != null && closestTableRow.length > 0 && closestTableRow[0] != null) {
 			if(closestTableRow[0].children != null && closestTableRow[0].children.length >= 4) {
@@ -597,12 +621,12 @@ $(document).ready(function(){
 	});
 	
 	// Process the description to find out if the user has changed the description
-	$( "tbody" ).on( "focusout", ".tableRowForSelectCategory" ,function() {
-		$(this).closest('tr')[0].classList.remove('tableRowTransactionHighlight');
+	$( "#transactionsTable" ).on( "focusout", ".tableRowForSelectCategory" ,function() {
+		$(this).parent().closest('div')[0].classList.remove('tableRowTransactionHighlight');
 	});
 	
 	// Change trigger on select
-	$( "tbody" ).on( "change", ".tableRowForSelectCategory" ,function() {
+	$( "#transactionsTable" ).on( "change", ".tableRowForSelectCategory" ,function() {
 		let categoryId = $(this).attr('id');
 		let selectedTransactionId = splitElement(categoryId,'-');
 		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
@@ -650,22 +674,22 @@ $(document).ready(function(){
 	});
 	
 	// Catch the description when the user focuses on the description
-	$( "tbody" ).on( "focusin", ".transactionsTableDescription" ,function() {
+	$( "#transactionsTable" ).on( "focusin", ".transactionsTableDescription" ,function() {
 		// Remove BR appended by mozilla
 		$('.transactionsTableDescription br[type="_moz"]').remove();
 		descriptionTextEdited = trimElement(this.innerText);
-		$(this).closest('tr').addClass('tableRowTransactionHighlight');
+		$(this).parent().closest('div').addClass('tableRowTransactionHighlight');
 	});
 	
 	// Process the description to find out if the user has changed the description
-	$( "tbody" ).on( "focusout", ".transactionsTableDescription" ,function() {
+	$( "#transactionsTable" ).on( "focusout", ".transactionsTableDescription" ,function() {
 		
 		postNewDescriptionToUserTransactions(this);
-		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
+		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
 	// Description - disable enter key and submit request
-	$('tbody').on('keyup', '.transactionsTableDescription' , function(e) {
+	$('#transactionsTable').on('keyup', '.transactionsTableDescription' , function(e) {
 		  var keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
@@ -719,19 +743,19 @@ $(document).ready(function(){
 	}
 	
 	// Catch the amount when the user focuses on the transaction
-	$( "tbody" ).on( "focusin", ".amountTransactionsRow" ,function() {
+	$( "#transactionsTable" ).on( "focusin", ".amountTransactionsRow" ,function() {
 		amountEditedTransaction = trimElement(this.innerText);
-		$(this).closest('tr').addClass('tableRowTransactionHighlight');
+		$(this).parent().closest('div').addClass('tableRowTransactionHighlight');
 	});
 	
 	// Process the amount to find out if the user has changed the transaction amount (Disable async to update total category amount)
-	$( "tbody" ).on( "focusout", ".amountTransactionsRow" ,function() {
+	$( "#transactionsTable" ).on( "focusout", ".amountTransactionsRow" ,function() {
 		postNewAmountToUserTransactions(this);
-		$(this).closest('tr').removeClass('tableRowTransactionHighlight');
+		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
 	// Amount - disable enter key and submit request
-	$('tbody').on('keyup', '.amountTransactionsRow' , function(e) {
+	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
 		  var keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
@@ -816,7 +840,7 @@ $(document).ready(function(){
 		  budgetTableCell.classList.add('fadeInAnimation');
 	  } else if(enteredText > 0 && budgetTableCell != null){
 		  budgetTableCell.classList.add('fadeOutAnimation');
-		  replaceHTML(budgetTableCell, '');
+		  budgetTableCell.innerHTML = '';
 	  }
 	}
 	
@@ -899,13 +923,12 @@ $(document).ready(function(){
 	
 	
 	// Dynamically generated button click
-	$( "tbody" ).on( "click", ".removeRowTransaction" ,function() {
-		var id = lastElement(splitElement($(this).closest('td').attr('id'),'-'));
+	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function() {
+		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
-		budgetTableCell.innerHTML = '';
-		budgetTableCell.appendChild(loaderBudgetSection());
-		budgetTableCell.classList.add('fadeInAnimation');
+//		budgetTableCell.appendChild(loaderBudgetSection());
+		budgetTableCell.classList.add('fadeOutAnimation');
 		
 		
 		// Handle delete for individual row
@@ -923,14 +946,14 @@ $(document).ready(function(){
 	        			let categoryAmount = convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText);
 	        			
 	        			if(categoryAmount == 0) {
-	        				$('.amountCategoryId-' + previousCategoryId).closest('tr').fadeOut('slow', function(){ $(this).remove(); });
+	        				$('.amountCategoryId-' + previousCategoryId).parent().closest('div').fadeOut('slow', function(){ $(this).remove(); });
 	        			}
 	        			
             		}
             	}
             	
             	// Remove the table row (No need to update category amount or total values as the value of the TR is already 0 )
-            	let closestTr = $('#budgetTransactionsRow-' + id).closest('tr');
+            	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
             	$(closestTr).fadeOut('slow', function(){
             		$(this).remove(); 
         			// Disable delete Transactions button on refreshing the transactions
@@ -965,18 +988,21 @@ $(document).ready(function(){
 	
 	// Build empty table message as document
 	function fetchEmptyTableMessage() {
-		let emptyTableRow = document.createElement("tr");
+		let emptyTableRow = document.createElement("div");
+		emptyTableRow.className = 'd-lg-table-row';
 		
 		// Row 1
-		let indexTableCell = document.createElement('td');
+		let indexTableCell = document.createElement('div');
+		indexTableCell.className = 'd-lg-table-cell';
 		emptyTableRow.appendChild(indexTableCell);
 		
 		// Row 2
-		let selectAllTableCell = document.createElement('td');
+		let selectAllTableCell = document.createElement('div');
+		selectAllTableCell.className = 'd-lg-table-cell';
 		emptyTableRow.appendChild(selectAllTableCell);
 		
 		// Row 3
-		let categoryTableCell = document.createElement('td');
+		let categoryTableCell = document.createElement('div');
 		
 		let imgElement =  document.createElement('img');
 		imgElement.src = '../img/dashboard/icons8-document-128.png';
@@ -984,7 +1010,8 @@ $(document).ready(function(){
 		emptyTableRow.appendChild(categoryTableCell);
 		
 		// Row 4
-		let descriptionTableCell = document.createElement('td');
+		let descriptionTableCell = document.createElement('div');
+		descriptionTableCell.className = 'd-lg-table-cell';
 		
 		let paragraphElement = document.createElement('p');
 		paragraphElement.className = 'text-secondary';
@@ -994,11 +1021,13 @@ $(document).ready(function(){
 		emptyTableRow.appendChild(descriptionTableCell);
 		
 		// Row 5
-		let amountTableCell = document.createElement('td');
+		let amountTableCell = document.createElement('div');
+		amountTableCell.className = 'd-lg-table-cell';
 		emptyTableRow.appendChild(amountTableCell);
 		
 		// Row 6
-		let budgetTableCell = document.createElement('td');
+		let budgetTableCell = document.createElement('div');
+		budgetTableCell.className = 'd-lg-table-cell';
 		emptyTableRow.appendChild(budgetTableCell);
 		
 		return emptyTableRow;
@@ -1025,12 +1054,12 @@ $(document).ready(function(){
     };
     
     // Build the loader
-    function loaderBudgetSection() {
-    	let loader = document.createElement('div');
-    	loader.id = 'material-spinner';
-    	
-    	return loader;
-    }
+	//    function loaderBudgetSection() {
+	//    	let loader = document.createElement('div');
+	//    	loader.id = 'material-spinner';
+	//    	
+	//    	return loader;
+	//    }
     
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
@@ -1086,7 +1115,7 @@ $(document).ready(function(){
     }
     
     // Add button to add the table row to the corresponding category
-	$( "tbody" ).on( "click", ".addTableRowListener" ,function(event) {
+	$( "#transactionsTable" ).on( "click", ".addTableRowListener" ,function(event) {
 		 event.preventDefault();
 		 // stop the event from bubbling.
 		 event.stopPropagation();
@@ -1108,10 +1137,10 @@ $(document).ready(function(){
 	        	  let lastClassName =  lastElement(splitElement(closestSibling.className, ' '));
 	        	  // Toggle dropdown if the rows are hidden
         		  if(includesStr(lastClassName , 'd-none')) {
-        			  toggleDropdown(id, $(currentElement).closest('tr'));
+        			  toggleDropdown(id, $(currentElement).parent().closest('div'));
         		  }
         		  // Add the new row to the category
-	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'', userTransaction.categoryId), closestSibling); 
+	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling); 
 	          },
 	          error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
