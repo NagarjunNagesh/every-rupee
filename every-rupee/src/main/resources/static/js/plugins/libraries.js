@@ -10,11 +10,24 @@ function lastElement(arr){
 }
 
 function  isEmpty(obj) {
+	if (obj == null) 
+        return true;
+	
+	if (obj === undefined)
+        return true;
+	
+	 if(obj.length == 0)
+		 return true;
+	 
+	 if (obj.length > 0)    
+         return false;
+	 
 	 for(var key in obj) {
 	        if(obj.hasOwnProperty(key))
 	            return false;
 	    }
-	    return true;
+	    
+	 return true;
 }
 
 function  isNotEmpty(obj) {
