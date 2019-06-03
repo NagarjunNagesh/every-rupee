@@ -467,7 +467,7 @@ $(document).ready(function(){
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
-		$(this).parent().closest('div').toggleClass('background-snow', 300);
+		$(this).parent().closest('div').parent().closest('div').parent().closest('div').toggleClass('background-snow', 300);
 	});
 	
 	// Select all check boxes for Transactions
