@@ -1057,7 +1057,7 @@ $(document).ready(function(){
         if(isNotEmpty(dataPreferences)) {
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
         	
-        	transactionsChart.on('created', function(bar) {
+        	transactionsChart.on('created', function(donut) {
         		  $('.ct-slice-donut-solid').on('mouseover', function() {
         		    // TODO Changes to add a tooltip
         		  });
