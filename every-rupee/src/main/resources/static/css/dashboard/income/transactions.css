@@ -157,7 +157,7 @@
     text-align: center;
 }
 
-.ct-chart .ct-series-c .ct-slice-pie {
+.ct-chart .ct-series-a .ct-slice-donut-solid {
 	fill: #4caf50;
 	stroke: #4caf50;
 }
@@ -293,4 +293,9 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 
 .tableBodyDiv {
 	display: table-row-group;
+}
+
+.transactions-chart {
+	position:fixed;
+	right: 0rem;
 }

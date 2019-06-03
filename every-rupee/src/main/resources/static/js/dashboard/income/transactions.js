@@ -202,35 +202,38 @@ $(document).ready(function(){
 	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
 		let dataPreferences = {};
 		
-		if(totalIncomeTransactions > totalExpensesTransactions) {
-			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
-			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
-			   
-			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
-			   
-			dataPreferences = {
-		                labels: [totalAvailableAsPercentageOfIncome + '%', totalExpenseAsPercentageOfIncome + '%'],
-		                series: [totalAvailableAsPercentageOfIncome, totalExpenseAsPercentageOfIncome]
-		            };
-			
-			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
-			replaceHTML('totalAvailableLabel', 'Total Available');
-		        
-		} else if (totalIncomeTransactions < totalExpensesTransactions){
+		if(totalIncomeTransactions === 0 && totalExpensesTransactions === 0) {
+			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
+		} else if (totalIncomeTransactions < totalExpensesTransactions) {
 			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
 			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
 			   
 			let totalIncomeAsPercentageOfExpense = round(((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100,1);
 			   
+			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
-		                labels: [totalDeficitAsPercentageOfExpense + '%',,totalIncomeAsPercentageOfExpense + '%'],
-		                series: [totalDeficitAsPercentageOfExpense,,totalIncomeAsPercentageOfExpense]
+		                labels: [totalIncomeAsPercentageOfExpense + '%',,totalDeficitAsPercentageOfExpense + '%'],
+		                series: [totalIncomeAsPercentageOfExpense,,totalDeficitAsPercentageOfExpense]
 		            };
 			
 			replaceHTML('legendPieChart', 'Total Income & Total Overspent as a percentage of Total Expense');
 			replaceHTML('totalAvailableLabel', 'Total Overspent');
-		} else {
-			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
+		} else  {
+			// (totalIncomeTransactions > totalExpensesTransactions) || (totalIncomeTransactions == totalExpensesTransactions)
+			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
+			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
+			   
+			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
+			   
+			// labels: [INCOME,EXPENSE,AVAILABLE]
+			dataPreferences = {
+		                labels: [, totalExpenseAsPercentageOfIncome + '%',totalAvailableAsPercentageOfIncome + '%'],
+		                series: [, totalExpenseAsPercentageOfIncome,totalAvailableAsPercentageOfIncome]
+		            };
+			
+			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
+			replaceHTML('totalAvailableLabel', 'Total Available');
+		        
 		}
 		
 		return dataPreferences;
@@ -520,8 +523,9 @@ $(document).ready(function(){
 			                         type: 'DELETE',
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
-			                        	 
-			                        	let elementsToDelete = $( ".number:checked" ).parent().closest('div');
+			                        	
+			                        	// Choose the closest parent Div for the checked elements
+			                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
 			                        	let clonedElementsToDelete = elementsToDelete.clone();
 			                        	
 			                        	// Remove all the elements
@@ -533,7 +537,6 @@ $(document).ready(function(){
 			                        		// Disable delete Transactions button on refreshing the transactions
 				                         	manageDeleteTransactionsButton();
 			                        	});
-			                        	
 			                        	let mapCategoryAndTransactions = {};
 			                        	// Update the Category Amount
 			                        	for(let count = 0, length = Object.keys(clonedElementsToDelete).length; count < length; count++){
@@ -847,13 +850,15 @@ $(document).ready(function(){
 	// Update the category amount
 	function updateCategoryAmount(categoryId, totalAddedOrRemovedFromAmount, updateTotal){
 		
-			// if the category has not been added yet
-			if(isEmpty($('.amountCategoryId-' + categoryId))){
-				return;
-			}
-			
+		  let categoryRows = document.getElementsByClassName('amountCategoryId-' + categoryId);
+		  // if the category has not been added yet
+		  if(isEmpty(categoryRows)){
+			 return;
+		  }
+		  
+		  categoryRows = categoryRows[0];
 		  let newCategoryTotal = 0;
-	  	  let categoryTotal = $('.amountCategoryId-' + categoryId)[0].innerText;
+	  	  let categoryTotal = categoryRows.innerText;
 	  	  // Convert to number regex
 	  	  let previousCategoryTotal = parseFloat(categoryTotal.replace(/[^0-9.-]+/g,""));
 	  	  previousCategoryTotal = Math.abs(previousCategoryTotal);
@@ -863,11 +868,11 @@ $(document).ready(function(){
 	  	  }
 	  	  newCategoryTotal = round(parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)),2);
 	  	  // Format the newCategoryTotal to number and format the number as currency
-	  	  $('.amountCategoryId-' + categoryId).html(minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	  	  replaceHTML(categoryRows , minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
 	  	  
 	  	  if(updateTotal){
 	  		  // Obtain the class list of the category table row
-		  	  let categoryForCalculation = $('.amountCategoryId-' + categoryId)[0].classList;
+		  	  let categoryForCalculation = categoryRows.classList;
 		  	  updateTotalCalculations(categoryForCalculation, totalAddedOrRemovedFromAmount);
 	  	  }
 	}
@@ -927,8 +932,8 @@ $(document).ready(function(){
 		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
-//		budgetTableCell.appendChild(loaderBudgetSection());
 		budgetTableCell.classList.add('fadeOutAnimation');
+//		budgetTableCell.appendChild(loaderBudgetSection());
 		
 		
 		// Handle delete for individual row
@@ -1038,12 +1043,29 @@ $(document).ready(function(){
 		 /*  **************** Public Preferences - Pie Chart ******************** */
 
         var optionsPreferences = {
-            height: '230px'
+		  donut: true,
+		  donutWidth: 50,
+		  donutSolid: true,
+		  startAngle: 270,
+		  showLabel: true,
+		  height: '230px'
         };
+        
+        // Reset the chart
         replaceHTML(id, '');
         
         if(isNotEmpty(dataPreferences)) {
-        	transactionsChart = Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	
+        	transactionsChart.on('created', function(bar) {
+        		  $('.ct-slice-donut-solid').on('mouseover', function() {
+        		    // TODO Changes to add a tooltip
+        		  });
+
+        		  $('.ct-slice-donut-solid').on('mouseout', function() {
+        			  // TODO Changes to add a tooltip
+        		  });
+        		});
         }
         
 	}
@@ -1121,7 +1143,6 @@ $(document).ready(function(){
 		 event.stopPropagation();
 		 event.stopImmediatePropagation();
 		 let id = lastElement(splitElement($(this).attr('id'),'-'));
-		 let currentElement = this;
 		 let values = {};
 		 values['amount'] = 0.00;
 		 values['description'] = '';
@@ -1137,7 +1158,7 @@ $(document).ready(function(){
 	        	  let lastClassName =  lastElement(splitElement(closestSibling.className, ' '));
 	        	  // Toggle dropdown if the rows are hidden
         		  if(includesStr(lastClassName , 'd-none')) {
-        			  toggleDropdown(id, $(currentElement).parent().closest('div'));
+        			  toggleDropdown(id, categoryParent);
         		  }
         		  // Add the new row to the category
 	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling); 
@@ -1152,7 +1173,6 @@ $(document).ready(function(){
               }
 		 });
 	});
-     
 });
 
 //# sourceURL=transaction.js

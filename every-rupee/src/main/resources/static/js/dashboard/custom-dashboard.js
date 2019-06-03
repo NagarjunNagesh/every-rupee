@@ -250,22 +250,6 @@ er = {
 		        	  }
 		           }
 		        });
-		},
-		
-		fetchExpenseSelectionOptGroup() {
-			return expenseSelectionOptGroup;
-		},
-		
-		fetchIncomeSelectionOptGroup()	{
-			return incomeSelectionOptGroup;
-		},
-		
-		fetchCurrentUser() {
-			return currentUser;
-		},
-		
-		fetchCategoryMap() {
-			return categoryMap;
 		}
 }
 
