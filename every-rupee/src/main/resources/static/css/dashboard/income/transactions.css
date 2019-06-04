@@ -42,7 +42,7 @@
 	width: 0;
 	height: 0;
 	margin-left: 0.255em;
-	vertical-align: 0.255em;
+	vertical-align: middle;
 	content: "";
 	border-top: 0.3em solid transparent;
 	border-right: 0.3em solid transparent;
@@ -110,6 +110,7 @@
 	border-radius: 0.25rem;
 	height: 28px;
 	appearance: none;
+	max-width: calc(100% - 30px);
 }
 
 .hideableRow:hover .tableRowSelectCategory::after  {
@@ -123,7 +124,7 @@
 .hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus, .tableRowTransactionHighlight .descriptionDivCentering {
 	display: block;
 	width: 100%;
-	padding: .2rem 1rem .3rem .7rem;
+	padding: 0.055rem 1rem .3rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
@@ -131,13 +132,14 @@
 	appearance: none;
 	height: 28px;
 	background-color: #fff;
+	max-width: calc(100% - 30px);
 	
 }
 
 .hideableRow:hover .amountDivCentering, .hideableRow:focus .amountDivCentering, .hideableRow:active .amountDivCentering, .amountDivCentering:active, .amountDivCentering:focus, .tableRowTransactionHighlight .amountDivCentering  {
 	display: block;
 	text-align: right;
-	padding: .2rem .7rem .3rem .7rem;
+	padding: 0.055rem .7rem .3rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
@@ -145,6 +147,7 @@
 	appearance: none;
 	height: 28px;
 	background-color: #fff;
+	max-width: calc(100% - 30px);
 }
 
 .bootstrap-select .dropdown-toggle.tableRowSelectCategory .filter-option-inner-inner {

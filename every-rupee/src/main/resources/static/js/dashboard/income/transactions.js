@@ -137,7 +137,7 @@ $(document).ready(function(){
     			let totalExpensesTransactions = 0.00;
     			let totalIncomeTransactions = 0.00;
     			let transactionsTableDiv = document.createDocumentFragment();
-    			let documentTbody = document.getElementById('productsJson');
+    			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
     			$("#checkAll").prop("checked", false); 
     			// Disable delete Transactions button on refreshing the transactions
@@ -464,6 +464,11 @@ $(document).ready(function(){
 	
 	// Disable Button if no check box is clicked and vice versa
 	$( "#transactionsTable" ).on( "click", ".number" ,function() {
+		let checkAllElement = $("#checkAll:checked");
+		if(checkAllElement.length > 0) {
+			// uncheck the check all if a check is clicked and if the check all is already clicked
+			checkAllElement.prop('checked', false);
+		}
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
@@ -524,36 +529,30 @@ $(document).ready(function(){
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	
-			                        	// Choose the closest parent Div for the checked elements
-			                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
-			                        	let clonedElementsToDelete = elementsToDelete.clone();
+			                        	let checkAllClicked = $("#checkAll:checked").length > 0;
 			                        	
-			                        	// Remove all the elements
-			                        	elementsToDelete.fadeOut('slow', function(){ 
-			                        		$(this).remove(); 
-			                        		
+			                        	// If Check All is clicked them empty div and reset pie chart
+			                        	if(checkAllClicked){
 			                        		// uncheck the select all checkbox if checked
 				                			$("#checkAll").prop("checked", false); 
-			                        		// Disable delete Transactions button on refreshing the transactions
+			                        		let documentTbody = document.getElementById(replaceTransactionsId);
+			                        		documentTbody.innerHTML = '';
+			                 			   	document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
+			                 			   	// update the Total Available Section with 0
+			                 	    		updateTotalAvailableSection(0 , 0);
+			                 	    		// Disable delete Transactions button on refreshing the transactions
 				                         	manageDeleteTransactionsButton();
-			                        	});
-			                        	let mapCategoryAndTransactions = {};
-			                        	// Update the Category Amount
-			                        	for(let count = 0, length = Object.keys(clonedElementsToDelete).length; count < length; count++){
-			                        		let key = Object.keys(clonedElementsToDelete)[count];
-			          	            	  	let value = clonedElementsToDelete[key];
-			          	            	  	let classNameForClass = value.classList;
-			          	            	  	for(let countCategory = 0, lengthClass = Object.keys(classNameForClass).length; countCategory < lengthClass; countCategory++){
-			          	            	  		// TODO Obtain Classlist and append it to mapCategoryAndTransactions
-			          	            	  	}
+			                        	} else {
+			                        		// Choose the closest parent Div for the checked elements
+				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
+				                        	let clonedElementsToDelete = elementsToDelete.clone();
+			                        		// Remove all the elements
+				                        	elementsToDelete.fadeOut('slow', function(){ 
+				                        		$(this).remove(); 
+				                        		// Disable delete Transactions button on refreshing the transactions
+					                         	manageDeleteTransactionsButton();
+				                        	});
 			                        	}
-			                        	
-			                        	// TODO use the mapCategoryAndTransactions to iterate every category with their corresponding transactions
-			                        	// And remove the amount from the category.
-			                        	// If the amount is zero then remove the category table row
-			                        	
-			                        	// Recalcualte the Total values accordingly and update them in a different loop
-			                        	
 			                         },
 			                        error:  function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
@@ -933,7 +932,6 @@ $(document).ready(function(){
 		// Remove the button and append the loader with fade out
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
 		budgetTableCell.classList.add('fadeOutAnimation');
-//		budgetTableCell.appendChild(loaderBudgetSection());
 		
 		
 		// Handle delete for individual row
@@ -1074,14 +1072,6 @@ $(document).ready(function(){
 	window.onbeforeunload = function(event) {
         // Call API of budget to automatically add budget
     };
-    
-    // Build the loader
-	//    function loaderBudgetSection() {
-	//    	let loader = document.createElement('div');
-	//    	loader.id = 'material-spinner';
-	//    	
-	//    	return loader;
-	//    }
     
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
