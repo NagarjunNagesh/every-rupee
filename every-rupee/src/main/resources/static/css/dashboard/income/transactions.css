@@ -302,3 +302,15 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	position:fixed;
 	right: 0rem;
 }
+
+.hideableRow:hover .draggable-handle-wrapper {
+	height: 100%;
+	vertical-align: middle;
+	align-items: center;
+}
+
+.hideableRow:hover .draggable-handle-wrapper .drag-handle {
+	margin: auto;
+	display: block;
+	vertical-align: middle;
+}

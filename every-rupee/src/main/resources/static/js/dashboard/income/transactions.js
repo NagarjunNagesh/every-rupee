@@ -464,10 +464,17 @@ $(document).ready(function(){
 	
 	// Disable Button if no check box is clicked and vice versa
 	$( "#transactionsTable" ).on( "click", ".number" ,function() {
-		let checkAllElement = $("#checkAll:checked");
-		if(checkAllElement.length > 0) {
+		let checkAllElementChecked = $("#checkAll:checked");
+		if(checkAllElementChecked.length > 0) {
 			// uncheck the check all if a check is clicked and if the check all is already clicked
-			checkAllElement.prop('checked', false);
+			checkAllElementChecked.prop('checked', false);
+		}
+		
+		// Click the checkAll is all the checkboxes are clicked
+		let allCheckedTransactions = $(".number:checked");
+		let allTransactions = $(".number");
+		if(allCheckedTransactions.length == allTransactions.length) {
+			$("#checkAll").prop('checked', true);
 		}
 		manageDeleteTransactionsButton();
 		
