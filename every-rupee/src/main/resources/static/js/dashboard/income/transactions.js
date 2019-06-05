@@ -420,7 +420,7 @@ $(document).ready(function(){
 		linkElementWrapper.className = 'd-lg-inline addTableRowListener align-self-center';
 		
 		let addIconElement = document.createElement('i');
-		addIconElement.className = 'd-lg-inline material-icons displayCategoryAddIcon';
+		addIconElement.className = 'material-icons displayCategoryAddIcon';
 		addIconElement.innerHTML = 'add_circle_outline';
 		
 		linkElementWrapper.appendChild(addIconElement);

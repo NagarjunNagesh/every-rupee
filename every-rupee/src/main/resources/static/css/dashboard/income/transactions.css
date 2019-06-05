@@ -275,7 +275,7 @@
 }
 
 div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" categoryTableRow-"]:hover .displayCategoryAddIcon {
-	display: block;
+	display: inline;
 }
 
 .drag-handle {
