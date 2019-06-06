@@ -389,9 +389,9 @@ $(document).ready(function(){
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRow.className = 'toggle table-danger d-lg-table-row categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle d-lg-table-row expenseCategory categoryTableRow-' + categoryId;
 		} else {
-			tableRow.className = 'toggle table-success d-lg-table-row categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle d-lg-table-row incomeCategory categoryTableRow-' + categoryId;
 		}
 		
 		// Row 1
@@ -438,9 +438,9 @@ $(document).ready(function(){
 		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
 		
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
+			amountTransactionsRow.className = 'text-right category-text-danger font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
 		} else {
-			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
+			amountTransactionsRow.className = 'text-right category-text-success font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
 		}
 		
 		// Append a - sign for the category if it is an expense
@@ -933,7 +933,7 @@ $(document).ready(function(){
 	}
 	
 	
-	// Dynamically generated button click
+	// Dynamically generated button click event
 	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
@@ -1061,14 +1061,15 @@ $(document).ready(function(){
         
         if(isNotEmpty(dataPreferences)) {
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	let chartLegend = document.getElementById('chartLegend');
         	
         	transactionsChart.on('created', function(donut) {
         		  $('.ct-slice-donut-solid').on('mouseover', function() {
-        		    // TODO Changes to add a tooltip
+        			  chartLegend.classList.remove('d-none');
         		  });
 
         		  $('.ct-slice-donut-solid').on('mouseout', function() {
-        			  // TODO Changes to add a tooltip
+        			  chartLegend.classList.add('d-none');
         		  });
         		});
         }
@@ -1170,6 +1171,7 @@ $(document).ready(function(){
               }
 		 });
 	});
+	
 });
 
 //# sourceURL=transaction.js
