@@ -13,14 +13,18 @@
 	background-color: snow;
 }
 
-.hideableRow:hover, .background-snow, .tableRowTransactionHighlight, .categoryTableRow {
-	border-bottom: 2px solid #fff1f1;
-	border-top: 2px solid #fff1f1;
+.hideableRow:hover .d-lg-table-cell, .background-snow .d-lg-table-cell, .tableRowTransactionHighlight .d-lg-table-cell, .categoryTableRow .d-lg-table-cell{
+	border-bottom: 1px solid #fff1f1;
+	border-top: 1px solid #fff1f1;
 }
 
 .hideableRow {
 	-webkit-transition: all 1s linear;
   	transition: all 1s linear;
+}
+.hideableRow .d-lg-table-cell {
+	border-bottom: 1px solid #f6f6f6;
+	padding: .18rem 0;
 }
 
 .table-fixed {
@@ -42,7 +46,7 @@
 	width: 0;
 	height: 0;
 	margin-left: 0.255em;
-	vertical-align: 0.255em;
+	vertical-align: middle;
 	content: "";
 	border-top: 0.3em solid transparent;
 	border-right: 0.3em solid transparent;
@@ -54,6 +58,12 @@
 	-webkit-transition: all .3s linear 0s;
   	transition: all .3s linear 0s;	
   	-webkit-transition-duration: 0.5s;
+  	 cursor: pointer;
+  	 color: #495257;
+}
+
+.toggle .d-lg-table-cell {
+	padding: 0.24rem 0;
 }
 
 /** Display select as plain text **/
@@ -102,7 +112,7 @@
 .hideableRow:hover .tableRowSelectCategory, .tableRowTransactionHighlight .tableRowSelectCategory {
 	display: inline-block;
 	width: 100%;
-	padding: .2rem 1rem .3rem .7rem;
+	padding: .2rem 1rem .15rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
@@ -110,6 +120,7 @@
 	border-radius: 0.25rem;
 	height: 28px;
 	appearance: none;
+	max-width: calc(100% - 30px);
 }
 
 .hideableRow:hover .tableRowSelectCategory::after  {
@@ -123,7 +134,7 @@
 .hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus, .tableRowTransactionHighlight .descriptionDivCentering {
 	display: block;
 	width: 100%;
-	padding: .2rem 1rem .3rem .7rem;
+	padding: 0.055rem 1rem .15rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
@@ -131,13 +142,14 @@
 	appearance: none;
 	height: 28px;
 	background-color: #fff;
+	max-width: calc(100% - 30px);
 	
 }
 
 .hideableRow:hover .amountDivCentering, .hideableRow:focus .amountDivCentering, .hideableRow:active .amountDivCentering, .amountDivCentering:active, .amountDivCentering:focus, .tableRowTransactionHighlight .amountDivCentering  {
 	display: block;
 	text-align: right;
-	padding: .2rem .7rem .3rem .7rem;
+	padding: 0.055rem .7rem .15rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
@@ -145,6 +157,8 @@
 	appearance: none;
 	height: 28px;
 	background-color: #fff;
+	max-width: calc(100% - 30px);
+	margin: 0 auto 0 auto;
 }
 
 .bootstrap-select .dropdown-toggle.tableRowSelectCategory .filter-option-inner-inner {
@@ -272,7 +286,7 @@
 }
 
 div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" categoryTableRow-"]:hover .displayCategoryAddIcon {
-	display: block;
+	display: inline;
 }
 
 .drag-handle {
@@ -289,6 +303,12 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 
 .tableHeadingDiv {
 	display: table-header-group;
+	text-transform: capitalize;
+	color: #8e999e;
+}
+
+.tableHeadingDiv .form-check .form-check-sign .check {
+	border: 1px solid #8e999e;
 }
 
 .tableBodyDiv {
@@ -296,6 +316,31 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 }
 
 .transactions-chart {
-	position:fixed;
-	right: 0rem;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 4rem;
+}
+
+.hideableRow:hover .draggable-handle-wrapper {
+	height: 100%;
+	vertical-align: middle;
+	align-items: center;
+}
+
+.hideableRow:hover .draggable-handle-wrapper .drag-handle {
+	margin: auto;
+	display: block;
+	vertical-align: middle;
+}
+
+.transactionsTableDescription {
+	vertical-align: middle;
+}
+
+.category-text-danger, .expenseCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .expenseCategory:hover .d-lg-table-cell .d-lg-inline {
+	color: #fc695f;
+}
+
+.category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline {
+	color: #58c65c;
 }

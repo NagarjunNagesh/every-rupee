@@ -137,7 +137,7 @@ $(document).ready(function(){
     			let totalExpensesTransactions = 0.00;
     			let totalIncomeTransactions = 0.00;
     			let transactionsTableDiv = document.createDocumentFragment();
-    			let documentTbody = document.getElementById('productsJson');
+    			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
     			$("#checkAll").prop("checked", false); 
     			// Disable delete Transactions button on refreshing the transactions
@@ -389,9 +389,9 @@ $(document).ready(function(){
 		
 		// Change the table color if for expense vs income
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			tableRow.className = 'toggle table-danger d-lg-table-row categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle d-lg-table-row expenseCategory categoryTableRow-' + categoryId;
 		} else {
-			tableRow.className = 'toggle table-success d-lg-table-row categoryTableRow-' + categoryId;
+			tableRow.className = 'toggle d-lg-table-row incomeCategory categoryTableRow-' + categoryId;
 		}
 		
 		// Row 1
@@ -420,7 +420,7 @@ $(document).ready(function(){
 		linkElementWrapper.className = 'd-lg-inline addTableRowListener align-self-center';
 		
 		let addIconElement = document.createElement('i');
-		addIconElement.className = 'd-lg-inline material-icons displayCategoryAddIcon';
+		addIconElement.className = 'material-icons displayCategoryAddIcon';
 		addIconElement.innerHTML = 'add_circle_outline';
 		
 		linkElementWrapper.appendChild(addIconElement);
@@ -438,9 +438,9 @@ $(document).ready(function(){
 		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
 		
 		if(categoryMap[categoryId].parentCategory == expenseCategory) {
-			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
+			amountTransactionsRow.className = 'text-right category-text-danger font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
 		} else {
-			amountTransactionsRow.className = 'text-right d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
+			amountTransactionsRow.className = 'text-right category-text-success font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
 		}
 		
 		// Append a - sign for the category if it is an expense
@@ -464,6 +464,18 @@ $(document).ready(function(){
 	
 	// Disable Button if no check box is clicked and vice versa
 	$( "#transactionsTable" ).on( "click", ".number" ,function() {
+		let checkAllElementChecked = $("#checkAll:checked");
+		if(checkAllElementChecked.length > 0) {
+			// uncheck the check all if a check is clicked and if the check all is already clicked
+			checkAllElementChecked.prop('checked', false);
+		}
+		
+		// Click the checkAll is all the checkboxes are clicked
+		let allCheckedTransactions = $(".number:checked");
+		let allTransactions = $(".number");
+		if(allCheckedTransactions.length == allTransactions.length) {
+			$("#checkAll").prop('checked', true);
+		}
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
@@ -524,36 +536,30 @@ $(document).ready(function(){
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	
-			                        	// Choose the closest parent Div for the checked elements
-			                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
-			                        	let clonedElementsToDelete = elementsToDelete.clone();
+			                        	let checkAllClicked = $("#checkAll:checked").length > 0;
 			                        	
-			                        	// Remove all the elements
-			                        	elementsToDelete.fadeOut('slow', function(){ 
-			                        		$(this).remove(); 
-			                        		
+			                        	// If Check All is clicked them empty div and reset pie chart
+			                        	if(checkAllClicked){
 			                        		// uncheck the select all checkbox if checked
 				                			$("#checkAll").prop("checked", false); 
-			                        		// Disable delete Transactions button on refreshing the transactions
+			                        		let documentTbody = document.getElementById(replaceTransactionsId);
+			                        		documentTbody.innerHTML = '';
+			                 			   	document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
+			                 			   	// update the Total Available Section with 0
+			                 	    		updateTotalAvailableSection(0 , 0);
+			                 	    		// Disable delete Transactions button on refreshing the transactions
 				                         	manageDeleteTransactionsButton();
-			                        	});
-			                        	let mapCategoryAndTransactions = {};
-			                        	// Update the Category Amount
-			                        	for(let count = 0, length = Object.keys(clonedElementsToDelete).length; count < length; count++){
-			                        		let key = Object.keys(clonedElementsToDelete)[count];
-			          	            	  	let value = clonedElementsToDelete[key];
-			          	            	  	let classNameForClass = value.classList;
-			          	            	  	for(let countCategory = 0, lengthClass = Object.keys(classNameForClass).length; countCategory < lengthClass; countCategory++){
-			          	            	  		// TODO Obtain Classlist and append it to mapCategoryAndTransactions
-			          	            	  	}
+			                        	} else {
+			                        		// Choose the closest parent Div for the checked elements
+				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
+				                        	let clonedElementsToDelete = elementsToDelete.clone();
+			                        		// Remove all the elements
+				                        	elementsToDelete.fadeOut('slow', function(){ 
+				                        		$(this).remove(); 
+				                        		// Disable delete Transactions button on refreshing the transactions
+					                         	manageDeleteTransactionsButton();
+				                        	});
 			                        	}
-			                        	
-			                        	// TODO use the mapCategoryAndTransactions to iterate every category with their corresponding transactions
-			                        	// And remove the amount from the category.
-			                        	// If the amount is zero then remove the category table row
-			                        	
-			                        	// Recalcualte the Total values accordingly and update them in a different loop
-			                        	
 			                         },
 			                        error:  function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
@@ -927,13 +933,12 @@ $(document).ready(function(){
 	}
 	
 	
-	// Dynamically generated button click
+	// Dynamically generated button click event
 	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function() {
 		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
 		budgetTableCell.classList.add('fadeOutAnimation');
-//		budgetTableCell.appendChild(loaderBudgetSection());
 		
 		
 		// Handle delete for individual row
@@ -1056,14 +1061,15 @@ $(document).ready(function(){
         
         if(isNotEmpty(dataPreferences)) {
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	let chartLegend = document.getElementById('chartLegend');
         	
-        	transactionsChart.on('created', function(bar) {
+        	transactionsChart.on('created', function(donut) {
         		  $('.ct-slice-donut-solid').on('mouseover', function() {
-        		    // TODO Changes to add a tooltip
+        			  chartLegend.classList.remove('d-none');
         		  });
 
         		  $('.ct-slice-donut-solid').on('mouseout', function() {
-        			  // TODO Changes to add a tooltip
+        			  chartLegend.classList.add('d-none');
         		  });
         		});
         }
@@ -1074,14 +1080,6 @@ $(document).ready(function(){
 	window.onbeforeunload = function(event) {
         // Call API of budget to automatically add budget
     };
-    
-    // Build the loader
-	//    function loaderBudgetSection() {
-	//    	let loader = document.createElement('div');
-	//    	loader.id = 'material-spinner';
-	//    	
-	//    	return loader;
-	//    }
     
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
@@ -1173,6 +1171,7 @@ $(document).ready(function(){
               }
 		 });
 	});
+	
 });
 
 //# sourceURL=transaction.js
