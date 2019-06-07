@@ -344,3 +344,23 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 .category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline {
 	color: #58c65c;
 }
+
+.transactions-chart .card-body span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 13rem;
+	color: #69757a;
+}
+
+#totalIncomeTransactions, #totalExpensesTransactions {
+	color: #534e4e;
+}
+
+#totalAvailableTransactions {
+	color: #000;
+}
+
+#mutableDashboard .card-title {
+	color: #929292;
+}

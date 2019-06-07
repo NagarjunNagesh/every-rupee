@@ -23,6 +23,8 @@ $(document).ready(function(){
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	// New Pie Chart Storage Variable
 	let transactionsChart = '';
+	// Fetch Drag Handle for transactions row table
+	let dragHandle = fetchDragHandle();
 		
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
@@ -140,8 +142,6 @@ $(document).ready(function(){
     			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
     			$("#checkAll").prop("checked", false); 
-    			// Disable delete Transactions button on refreshing the transactions
-             	manageDeleteTransactionsButton();
              	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
              	   let key = Object.keys(result)[countGrouped];
              	   let value = result[key];
@@ -176,6 +176,8 @@ $(document).ready(function(){
     			   documentTbody.appendChild(transactionsTableDiv);
     		   }
     		   
+    		  // Disable delete Transactions button on refreshing the transactions
+              manageDeleteTransactionsButton();
     		  // update the Total Available Section
     		  updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions);
     		
@@ -253,20 +255,8 @@ $(document).ready(function(){
 		indexTableCell.innerHTML = '';
 		indexTableCell.draggable = true;
 		
-		// Build SVG
-		let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-    	svgElement.setAttribute('class','drag-handle');
-    	svgElement.setAttribute('height','15');
-    	svgElement.setAttribute('width','8');
-    	svgElement.setAttribute('viewBox','0 0 8 15');
-    	svgElement.setAttribute('focusable',false);
-    	
-    	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    	pathElement.setAttribute('fill','#B6BEC2');
-    	pathElement.setAttribute('d','M1.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0-6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5-12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z');
-    	
-    	svgElement.appendChild(pathElement);
-    	indexTableCell.appendChild(svgElement);
+		// obtains the drag handle and clones them into index cell
+		dragHandle = cloneElementAndAppend(indexTableCell, dragHandle);
     	tableRows.appendChild(indexTableCell);
     	
 		// Table Row 2
@@ -456,6 +446,11 @@ $(document).ready(function(){
 	   budgetTransactionsRow.setAttribute('id', 'budgetCategory-' + categoryId);
 	   budgetTransactionsRow.className = 'text-right d-lg-table-cell';
 	   tableRow.appendChild(budgetTransactionsRow);
+	   
+		//	   <div class="BudgetGroupHeader-column BudgetGroupHeader-column--actions" style="display: block;top: auto;cursor: pointer;height: 100%;text-align: right;vertical-align: middle;"><span class="budget-card-header-action ui-content--sm--r BudgetGroupHeader-deleteGroup" style="color: #8e999e;text-align: center;vertical-align: middle;align-content: center;">
+		//	   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 18" style="vertical-align: top;align-self: center !important;margin: auto;/*! display: block; */vertical-align: middle;">
+		//	   <path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.25" d="M4.273 3.727V2a1 1 0 0 1 1-1h3.454a1 1 0 0 1 1 1v1.727M13 5.91v10.455a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5.909m6 2.727v5.455M4.273 8.636v5.455m5.454-5.455v5.455M13 3.727H1" style="margin: auto;display: block;vertical-align: middle;">
+		//	   </path></svg> Delete Group</span></div>
 	   // TODO  have to be replaced with budget
 		
 		return tableRow;
@@ -1171,6 +1166,26 @@ $(document).ready(function(){
               }
 		 });
 	});
+	
+	// Builds the drag handle for transaction rows
+	function fetchDragHandle() {
+		
+		// Build SVG Drag Handle for table rows
+		let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    	svgElement.setAttribute('class','drag-handle');
+    	svgElement.setAttribute('height','20');
+    	svgElement.setAttribute('width','9');
+    	svgElement.setAttribute('viewBox','0 0 9 20');
+    	svgElement.setAttribute('focusable',false);
+    	
+    	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement.setAttribute('fill','#B6BEC2');
+    	pathElement.setAttribute('d','M1.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0-6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5-12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm0 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z');
+    	
+    	svgElement.appendChild(pathElement);
+    	
+    	return svgElement;
+	}
 	
 });
 
