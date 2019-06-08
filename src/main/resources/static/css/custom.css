@@ -1,0 +1,295 @@
+@charset "UTF-8";
+
+/*!
+ =========================================================
+ * Custom CSS - v1.0
+ =========================================================
+* 
+* Author: Nagarjun Nagesh
+* 
+* All the Custom CSS for EveryRupee gos in here
+*/
+
+.btn-upsell {
+	border: 3px solid #f33527;
+	color: #f33527;
+	border-radius: 5px;
+	font-weight: 700;
+	transition: background-color .5s ease-out;
+}
+
+.btn-upsell:hover {
+	background-color: #f33527;
+	color: #fff;
+}
+
+.top-login-link {
+	border: 3px solid #85c3e9;
+	color: #85c3e9;
+	border-radius: 5px;
+	font-weight: 700;
+	transition: background-color .5s ease-out;
+	margin: 0 10px;
+}
+
+.top-login-link:hover {
+	background-color: #85c3e9;
+	color: #fff;
+}
+
+.page-header-text {
+	text-align:center;
+	margin: 0 auto;
+	padding: 100px 10% 24px;
+}
+
+.home-description {
+	text-align:left;
+}
+
+.home-description .home-description-body {
+	margin-bottom: 2rem;
+}
+
+.home-description h2 {
+	font-family: "Roboto Slab", "Times New Roman", serif;
+	font-size: 36px;
+	font-weight: 900;
+	color: #585858;
+	text-align: left;
+	line-height: 1.1em;
+	margin-bottom: 24px;
+}
+
+.every-rupee-logo {
+	font-family: 'Bree Serif', serif;
+	font-size: 1.5rem;
+}
+
+.navbar-transparent .every-rupee-logo .first-half {
+	color: inherit;
+}
+
+.navbar-transparent .every-rupee-logo .second-half {
+	color: inherit;
+}
+
+.every-rupee-logo .first-half {
+	color: #000066;
+}
+
+.every-rupee-logo .second-half {
+	color: rgb(255, 128, 0);
+}
+
+.home-icons8 {
+	display: block;
+	overflow: hidden;
+	margin-bottom: 24px;
+}
+
+.home-icons8 li {
+	display: block;
+	height: 68px;
+	background-size: auto 68px;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	text-indent: 120%;
+	white-space: nowrap;
+	box-sizing: border-box;
+	margin: 0;
+	    margin-right: 0px;
+	padding: 0;
+	float: left;
+	background-position: bottom;
+}
+
+/* Debt Icons */
+#icons8-car-64 {
+	background-image: url(../img/finance-icons/debt/icons8-car-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-chip-card-64 {
+	background-image: url(../img/finance-icons/debt/icons8-chip-card-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-home-64 {
+	background-image: url(../img/finance-icons/debt/icons8-home-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-reading-64 {
+	background-image: url(../img/finance-icons/debt/icons8-reading-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+
+/* Income Icons */
+#icons8-beach-64 {
+	background-image: url(../img/finance-icons/income/icons8-beach-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-bed-64 {
+	background-image: url(../img/finance-icons/income/icons8-bed-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-ingredients-64 {
+	background-image: url(../img/finance-icons/income/icons8-ingredients-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-money-box-64 {
+	background-image: url(../img/finance-icons/income/icons8-money-box-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+
+/* Savings Icons */
+#icons8-airport-64 {
+	background-image: url(../img/finance-icons/save/icons8-airport-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-gift-64 {
+	background-image: url(../img/finance-icons/save/icons8-gift-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-hospital-64 {
+	background-image: url(../img/finance-icons/save/icons8-hospital-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-school-64 {
+	background-image: url(../img/finance-icons/save/icons8-school-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+
+
+
+/* Investment Icons */
+#icons8-children-64 {
+	background-image: url(../img/finance-icons/invest/icons8-children-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-elderly-person-64 {
+	background-image: url(../img/finance-icons/invest/icons8-elderly-person-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-engagement-ring-64 {
+	background-image: url(../img/finance-icons/invest/icons8-engagement-ring-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+#icons8-stethoscope-64 {
+	background-image: url(../img/finance-icons/invest/icons8-stethoscope-64.png);
+	width: 37px;
+	margin-right: 9px;
+	background-size: 37px auto;	
+}
+
+/** Button CSS**/
+.button-right {
+	float: right;
+}
+
+/** Disable button cursor for disabled buttons **/
+.btn[disabled]{
+  cursor:default;
+}
+.btn:not([disabled]) +label {
+  cursor:pointer;
+}
+
+/* Desktop only */
+@media (min-width: 1281px) {
+
+	.page-header-text h1{
+		font-size: 72px;
+		font-weight: 900;
+	}
+
+}
+
+/* Mobile only */
+@media (min-width: 600px) {
+
+	h1 {
+    font-size: 40px;
+	}
+
+}
+
+.page-header .content-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    color: #fff;
+    padding: 0 15px;
+    width: 100%;
+    max-width: 880px;
+}
+
+.off-canvas-sidebar .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.error-page .title {
+    font-size: 12em;
+    color: #fff;
+    letter-spacing: 14px;
+    font-weight: 700;
+}
+
+.error-page .footer ul li a, .error-page .footer .copyright {
+    color: #fff;
+    padding: .9375rem;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    position: relative;
+    display: block;
+}

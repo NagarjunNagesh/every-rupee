@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+			<div th:fragment="dashboard-side-menu">
+			  <!-- Side Nav Start -->
+			  	<div class="sidebar" data-color="azure" data-background-color="white" data-image="../img/dashboard/sidebar/sidebar-1.jpg">
+					      <!--
+					        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+					
+					        Tip 2: you can also add an image using data-image tag
+					    -->
+				    	 <div class="logo">
+					        <a href="/" class="simple-text logo-mini">
+					           <span class="helper"></span><img src="../img/business-name/favicon-business-name.ico" >
+					        </a>
+					        <a href="/" class="simple-text logo-normal">
+					          EveryRupee
+					        </a>
+					      </div>
+					      <div class="sidebar-wrapper">
+					      	<div class="user">
+					          <div class="photo">
+					            <img src="../img/dummy/avatarProfile.jpg">
+					          </div>
+					          <div class="user-info">
+					            <a href="Javascript:void(0);" class="username pageDynamicLoadForDashboard" id="profilePage">
+					              <span>
+					                Arjun Nagesh
+					              </span>
+					            </a>
+					          </div>
+					        </div>
+					        <ul class="nav">
+					          <li id="overview-dashboard-sidebar" class="nav-item">
+					            <a class="nav-link pageDynamicLoadForDashboard" href="Javascript:void(0);" id="overviewPage">
+					              <i class="material-icons">dashboard</i>
+					              <p>Overview</p>
+					            </a>
+					          </li>
+					          <li id="income-dashboard-sidebar" class="nav-item">
+					            <a class="nav-link pageDynamicLoadForDashboard" href="Javascript:void(0);" id="transactionsPage">
+					              <i class="material-icons">account_balance_wallet</i>
+					              <p>Transactions</p>
+					            </a>
+					          </li>
+					          <li id="debt-dashboard-sidebar" class="nav-item">
+					            <a class="nav-link pageDynamicLoadForDashboard" href="Javascript:void(0);" id="budgetPage">
+					              <i class="material-icons">restaurant_menu</i>
+					              <p>Budget</p>
+					            </a>
+					          </li>
+					          <li id="savings-dashboard-sidebar" class="nav-item">
+					            <a class="nav-link pageDynamicLoadForDashboard" href="Javascript:void(0);" id="goalsPage">
+					              <i class="material-icons">track_changes</i>
+					              <p>Goals</p>
+					            </a>
+					          </li>
+					          <li id="investment-dashboard-sidebar" class="nav-item">
+					            <a class="nav-link pageDynamicLoadForDashboard" href="#" id="investmentsPage">
+					              <i class="material-icons">insert_chart_outlined</i>
+					              <p>Investments</p>
+					            </a>
+					          </li>
+					          <li id="dashboard-sidebar-utility" class="nav-item active-pro dashboard-sidebar-utils d-block">
+					              <a id="settings-dashboard-sidebar" href="Javascript:void(0);" data-toggle="tooltip" data-placement="top" title="Settings"  class="pageDynamicLoadForDashboard">
+					                	<i class="material-icons">settings</i>
+						            </a>
+						            <a href="#" id="dashboard-util-fullscreen" data-toggle="tooltip" data-placement="top" title="FullScreen"  type="button">
+						            	<i class="material-icons">open_with</i>
+						            </a>
+						            <a id="dashboard-util" data-toggle="tooltip" data-placement="top" title="Lock">
+						                <span class="fa fa-eye-slash" aria-hidden="true"></span>
+						            </a>
+						            <a id="dashboard-util" href="/logout" data-toggle="tooltip" data-placement="top" title="Logout">
+						                <span class="fa fa-sign-out" aria-hidden="true"></span>
+						                <i class="material-icons">power_settings_new</i>
+					            	</a>
+					          </li>
+					        </ul>
+					      </div>
+					      
+					      <!-- side bar to easy logout -->
+				        
+					    </div>
+					    <!-- Side Nav End -->
+				    </div>
+				
+				
+				<!-- Sidebar settings -->
+				<div th:fragment="dashboard-sidebar-settings">
+				
+					<div class="fixed-plugin">
+				    <div class="dropdown show-dropdown">
+				      <a href="#" data-toggle="dropdown">
+				        <i class="fa fa-cog fa-2x"> </i>
+				      </a>
+				      <ul class="dropdown-menu">
+				        <li class="header-title"> Sidebar Filters</li>
+				        <li class="adjustments-line">
+				          <a href="javascript:void(0)" class="switch-trigger active-color">
+				              <span class="badge filter badge-purple" data-color="purple"></span>
+				              <span class="badge filter badge-azure" data-color="azure"></span>
+				              <span class="badge filter badge-green" data-color="green"></span>
+				              <span class="badge filter badge-warning" data-color="orange"></span>
+				              <span class="badge filter badge-danger" data-color="danger"></span>
+				              <span class="badge filter badge-rose active" data-color="rose"></span>
+				            <span class="clearfix"></span>
+				          </a>
+				        </li>
+				        <li class="header-title">Images</li>
+				        <li class="active">
+				          <a class="img-holder switch-trigger" href="javascript:void(0)">
+				            <img src="../img/dashboard/sidebar/sidebar-1.jpg" alt="">
+				          </a>
+				        </li>
+				        <li>
+				          <a class="img-holder switch-trigger" href="javascript:void(0)">
+				            <img src="../img/dashboard/sidebar/sidebar-2.jpg" alt="">
+				          </a>
+				        </li>
+				        <li>
+				          <a class="img-holder switch-trigger" href="javascript:void(0)">
+				            <img src="../img/dashboard/sidebar/sidebar-3.jpg" alt="">
+				          </a>
+				        </li>
+				        <li>
+				          <a class="img-holder switch-trigger" href="javascript:void(0)">
+				            <img src="../img/dashboard/sidebar/sidebar-4.jpg" alt="">
+				          </a>
+				        </li>
+				        <li class="button-container text-center">
+				          <button id="twitter" class="btn btn-round btn-twitter"><i class="fa fa-twitter"></i> &middot; 45</button>
+				          <button id="facebook" class="btn btn-round btn-facebook"><i class="fa fa-facebook-f"></i> &middot; 50</button>
+				          <br>
+				          <br>
+				        </li>
+				      </ul>
+				    </div>
+				  </div>
+				
+				</div>
+            
+</body>
+</html>
