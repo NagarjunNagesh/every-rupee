@@ -23,6 +23,6 @@
 *.ctxt
 
 # Other files
-/.classpath
+*.classpath
 /mvnw
 *.cmd
