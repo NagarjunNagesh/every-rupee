@@ -1,0 +1,12 @@
+*/target/**
+/logs/
+/bin/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Remove Class #
+*.class
+/.settings/

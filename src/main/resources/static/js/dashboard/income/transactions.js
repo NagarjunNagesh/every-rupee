@@ -257,7 +257,7 @@ $(document).ready(function(){
 		
 		// obtains the drag handle and clones them into index cell
 		dragHandle = cloneElementAndAppend(indexTableCell, dragHandle);
-    	tableRows.appendChild(indexTableCell);
+    		tableRows.appendChild(indexTableCell);
     	
 		// Table Row 2
 		let formCheckDiv = document.createElement('div');
