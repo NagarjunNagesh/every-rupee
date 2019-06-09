@@ -28,6 +28,6 @@ public interface UserTransactionsRepository extends JpaRepository<UserTransactio
      * @param ids List of user ids
      */
     @Modifying
-    @Query("delete from UserTransaction u where u.id in ?1")
-    void deleteUsersWithIds(List<Integer> ids);
+    @Query("delete from UserTransaction u where u.id in ?1 and u.financialPortfolioId in ?2")
+    void deleteUsersWithIds(List<Integer> ids, String financialPortfolioId);
 }

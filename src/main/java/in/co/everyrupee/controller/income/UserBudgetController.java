@@ -11,72 +11,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.co.everyrupee.pojo.income.UserTransaction;
-import in.co.everyrupee.service.income.IUserTransactionService;
+import in.co.everyrupee.pojo.income.UserBudget;
+import in.co.everyrupee.service.income.IUserBudgetService;
 import in.co.everyrupee.utils.GenericResponse;
 
 /**
- * Manage API User Transactions
- * 
- * @author Nagarjun Nagesh
  *
- */
+ *  Manage Budget For Users
+ *  
+ *  @author Nagarjun
+ * 
+ **/
 @RestController
-@RequestMapping("/api/transactions")
-public class UserTransactionsController {
+@RequestMapping("/api/budget")
+public class UserBudgetController {
+	
+	@Autowired
+    IUserBudgetService userBudgetService;
 
-    @Autowired
-    IUserTransactionService userTransactionService;
-
-    // Get a Single User Transaction
+	// Get All User Budgets
     @RequestMapping(value = "/{financialPortfolioId}", method = RequestMethod.GET)
-    public Object getUserTransactionByUserId(@PathVariable String financialPortfolioId, Principal userPrincipal) {
+    public Object getUserBudgetByUserId(@PathVariable String financialPortfolioId, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	return userTransactionService.fetchUserTransaction(financialPortfolioId);
+	return userBudgetService.fetchAllUserBudget(financialPortfolioId);
     }
 
-    // Update a UserTransaction
+    // Save User Budgets
     @RequestMapping(value = "/save/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public UserTransaction update(@PathVariable String financialPortfolioId,
+    public UserBudget update(@PathVariable String financialPortfolioId,
 	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData,
+	UserBudget userBudgetResponse = userBudgetService.saveUserBudget(formData,
 		financialPortfolioId);
-	return userTransactionResponse;
+	return userBudgetResponse;
     }
 
-    // Delete a User Transaction
-    @RequestMapping(value = "/{financialPortfolioId}/{transactionIds}", method = RequestMethod.DELETE)
-    public GenericResponse deleteUserTransactionById(@PathVariable String financialPortfolioId,
-	    @PathVariable String transactionIds, Principal userPrincipal) {
+    // Delete User Budgets
+    @RequestMapping(value = "/{financialPortfolioId}/{categoryIds}", method = RequestMethod.DELETE)
+    public GenericResponse deleteUserBudgetById(@PathVariable String financialPortfolioId,
+	    @PathVariable String categoryIds, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	userTransactionService.deleteUserTransactions(transactionIds, financialPortfolioId);
+	userBudgetService.deleteUserBudgets(categoryIds, financialPortfolioId);
 
 	return new GenericResponse("success");
     }
 
-    // Update description, transaction & category in user transactions
+    // Update budget in user budget
     @RequestMapping(value = "/{financialPortfolioId}/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public UserTransaction updateDescriptionByUserTransactionById(@PathVariable String financialPortfolioId,
+    public UserBudget updateDescriptionByUserBudgetById(@PathVariable String financialPortfolioId,
 	    @PathVariable String formFieldName, @RequestBody MultiValueMap<String, String> formData,
 	    Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	UserTransaction userTransactionSaved = userTransactionService.updateTransactions(formData, formFieldName,
+	UserBudget userBudgetSaved = userBudgetService.updateBudget(formData, formFieldName,
 		financialPortfolioId);
 
-	return userTransactionSaved;
+	return userBudgetSaved;
     }
 
 }

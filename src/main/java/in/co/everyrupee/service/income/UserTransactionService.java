@@ -138,7 +138,7 @@ public class UserTransactionService implements IUserTransactionService {
 	List<Integer> transactionIdsAsIntegerList = transactionIdsAsSet.stream().filter(Objects::nonNull)
 		.map(s -> Integer.parseInt(s)).collect(Collectors.toList());
 
-	userTransactionsRepository.deleteUsersWithIds(transactionIdsAsIntegerList);
+	userTransactionsRepository.deleteUsersWithIds(transactionIdsAsIntegerList, financialPortfolioId);
 
     }
 

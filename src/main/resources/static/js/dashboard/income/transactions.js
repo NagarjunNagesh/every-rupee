@@ -203,7 +203,7 @@ $(document).ready(function(){
 	// Update the pie chart with transactions data
 	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
 		let dataPreferences = {};
-		
+		debugger;
 		if(totalIncomeTransactions === 0 && totalExpensesTransactions === 0) {
 			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
 		} else if (totalIncomeTransactions < totalExpensesTransactions) {
