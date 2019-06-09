@@ -21,4 +21,8 @@
 
 # BlueJ files
 *.ctxt
+
+# Other files
 /.classpath
+/mvnw
+*.cmd
