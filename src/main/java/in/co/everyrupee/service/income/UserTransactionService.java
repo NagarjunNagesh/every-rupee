@@ -21,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.GenericConstants;
+import in.co.everyrupee.events.registration.OnRegistrationCompleteEvent;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
@@ -40,7 +42,7 @@ public class UserTransactionService implements IUserTransactionService {
 
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
-
+    
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -119,6 +121,7 @@ public class UserTransactionService implements IUserTransactionService {
 	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
+	
 	return userTransactionResponse;
     }
 

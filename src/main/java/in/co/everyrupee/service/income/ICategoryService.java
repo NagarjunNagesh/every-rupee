@@ -6,4 +6,6 @@ import in.co.everyrupee.pojo.income.Category;
 
 public interface ICategoryService {
     List<Category> fetchCategories();
+    
+    Boolean categoryIncome(int categoryId);
 }

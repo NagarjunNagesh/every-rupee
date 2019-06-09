@@ -23,7 +23,6 @@ import org.springframework.util.MultiValueMap;
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserBudget;
-import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserBudgetRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.utils.ERStringUtils;

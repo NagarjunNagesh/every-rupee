@@ -85,4 +85,7 @@ public class GenericConstants {
     // Parameters
     public static final String FORMAT_HTML_PARAMETER = "HTML";
     public static final String TRANSACTIONS_PAGE_PARAMETER = "TransactionsPage";
+    
+    // Category Constants
+    public static final String INCOME_CATEGORY = "2";
 }
