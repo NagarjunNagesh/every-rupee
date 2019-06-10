@@ -13,6 +13,7 @@ public class DashboardConstants {
 	public static final String BUDGET_CACHE_NAME = "userBudget";
 	public static final String AMOUNT_JSON = "plannedAmount";
 	public static final String BUDGET_ID_JSON = "budgetId";
+	public static final String DATE_MEANT_FOR = "dateMeantFor";
     }
 
     public class Category {
@@ -38,5 +39,6 @@ public class DashboardConstants {
 	public static final String TRANSACTIONS_CACHE_NAME = "userTransaction";
 	public static final String CATEGORY_OPTIONS = "categoryOptions";
 	public static final String TRANSACTIONS_AMOUNT = "amount";
+	public static final String DATE_MEANT_FOR = "dateMeantFor";
     }
 }

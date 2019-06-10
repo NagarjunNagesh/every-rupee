@@ -34,9 +34,6 @@ $(document).ready(function(){
 	// Success SVG Fragment
 	let successSVGFormed = successSvgMessage();
 	
-	// Create Budget Map 
-	let updateBudgetMap = {};
-	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
 		// disable button after successful submission
@@ -78,6 +75,7 @@ $(document).ready(function(){
 		values['amount'] = amount;
 		values['description'] = description;
 		values['categoryOptions'] = categoryOptions;
+		values['dateMeantFor'] = chosenDate;
 		$.ajax({
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
@@ -1173,6 +1171,7 @@ $(document).ready(function(){
 		 values['amount'] = 0.00;
 		 values['description'] = '';
 		 values['categoryOptions'] = id;
+		 values['dateMeantFor'] = chosenDate;
 		 $.ajax({
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
@@ -1223,14 +1222,7 @@ $(document).ready(function(){
 	// Before navigating away from page update the budget (Synchronous to avoid loss of transfer to server)
 	window.onbeforeunload = function() {
 		if(!window.isRefresh) {
-			jQuery.ajax({
-				url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
-	            type: 'POST',
-	            dataType: "json",
-		        data : updateBudgetMap,
-		        success: function(result) { },
-	            async: false
-			});
+			er.updateBudget();
 		}
 		window.isRefresh = false;
 	}

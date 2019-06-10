@@ -1,12 +1,17 @@
 package in.co.everyrupee.service.income;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -120,6 +125,16 @@ public class UserTransactionService implements IUserTransactionService {
 		.setCategoryId(Integer.parseInt(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0)));
 	userTransaction.setAmount(
 		Double.parseDouble(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT).get(0)));
+	
+	String dateString = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
+	DateFormat format = new SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH);
+	Date date;
+	try {
+	    date = format.parse(dateString);
+	    userTransaction.setDateMeantFor(date);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
 

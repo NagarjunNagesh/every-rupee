@@ -1,6 +1,7 @@
 package in.co.everyrupee.pojo.income;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +45,10 @@ public class UserTransaction implements Serializable {
     @NotNull
     @Column(name = DashboardConstants.Transactions.AMOUNT)
     private double amount;
+    
+    @NotNull
+    @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
+    private Date dateMeantFor;
 
     public int getTransactionId() {
 	return transactionId;
@@ -83,6 +88,14 @@ public class UserTransaction implements Serializable {
 
     public void setFinancialPortfolioId(String financialPortfolioId) {
 	this.financialPortfolioId = financialPortfolioId;
+    }
+    
+    public Date getDateMeantFor() {
+        return dateMeantFor;
+    }
+
+    public void setDateMeantFor(Date dateMeantFor) {
+        this.dateMeantFor = dateMeantFor;
     }
 
 }

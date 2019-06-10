@@ -1,9 +1,14 @@
 package in.co.everyrupee.service.income;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -113,6 +118,15 @@ public class UserBudgetService implements IUserBudgetService {
 	userBudget.setFinancialPortfolioId(pFinancialPortfolioId);
 	userBudget.setCategoryId(Integer.parseInt(formData.get(DashboardConstants.Budget.CATEGORY_ID).get(0)));
 	userBudget.setPlanned(Double.parseDouble(formData.get(DashboardConstants.Budget.AMOUNT_JSON).get(0)));
+	String dateString = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
+	DateFormat format = new SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH);
+	Date date;
+	try {
+	    date = format.parse(dateString);
+	    userBudget.setDateMeantFor(date);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
 
 	UserBudget userBudgetResponse = userBudgetRepository.save(userBudget);
 	return userBudgetResponse;

@@ -26,6 +26,12 @@ const transactionsUpdateUrl = "/update/";
 const budgetUpdateUrl = "/update/plannedAmount";
 const budgetAPIUrl =  "/api/budget/";
 
+//Create Budget Map for transactions
+let updateBudgetMap = {};
+
+//chosenDate for transactions
+let chosenDate = today.getMonth()+1 + ',' + today.getYear()
+
 
 window.onload = function () {
 	$(document).ready(function(){
@@ -143,6 +149,8 @@ window.onload = function () {
 			case 'transactionsPage':
 				url = '/dashboard/transactions';
 				color = 'green';
+				// Updates the budget before navigating away
+				er.updateBudget();
 			    break;
 			case 'budgetPage':
 				url = '/dashboard/budget';
@@ -254,6 +262,18 @@ er = {
 		        	  }
 		           }
 		        });
+		},
+		
+		// Updates the budget before refreshing or navigating away from the page
+		updateBudget() {
+			jQuery.ajax({
+				url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
+	            type: 'POST',
+	            dataType: "json",
+		        data : updateBudgetMap,
+		        success: function(result) { },
+	            async: false
+			});
 		}
 }
 
