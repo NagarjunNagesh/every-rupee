@@ -18,16 +18,16 @@ import in.co.everyrupee.pojo.income.UserBudget;
  */
 @Repository
 public interface UserBudgetRepository extends JpaRepository<UserBudget, Integer> {
-	List<UserBudget> findByFinancialPortfolioId(String financialPortfolioId);
-	
-	/**
-     * Delete all user with ids specified in {@code ids} parameter
+    List<UserBudget> findByFinancialPortfolioId(String financialPortfolioId);
+
+    /**
+     * Fetches all user with ids specified in {@code ids} parameter
      * 
      * @param ids List of user ids
      */
-    @Query("select from UserBudget u where u.categoryId in ?1 and u.financialPortfolioId in ?2")
+    @Query("SELECT u FROM UserBudget u where u.categoryId in ?1 and u.financialPortfolioId in ?2")
     List<UserBudget> fetchUserBudgetWithIds(List<Integer> categoryIds, String financialPortfolioId);
-    
+
     /**
      * Delete all user with ids specified in {@code ids} parameter
      * 

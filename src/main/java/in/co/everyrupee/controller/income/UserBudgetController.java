@@ -1,6 +1,7 @@
 package in.co.everyrupee.controller.income;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,21 +18,21 @@ import in.co.everyrupee.utils.GenericResponse;
 
 /**
  *
- *  Manage Budget For Users
- *  
- *  @author Nagarjun
+ * Manage Budget For Users
+ * 
+ * @author Nagarjun
  * 
  **/
 @RestController
 @RequestMapping("/api/budget")
 public class UserBudgetController {
-	
-	@Autowired
+
+    @Autowired
     IUserBudgetService userBudgetService;
 
-	// Get All User Budgets
+    // Get All User Budgets
     @RequestMapping(value = "/{financialPortfolioId}", method = RequestMethod.GET)
-    public Object getUserBudgetByUserId(@PathVariable String financialPortfolioId, Principal userPrincipal) {
+    public List<UserBudget> getUserBudgetByUserId(@PathVariable String financialPortfolioId, Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
@@ -47,8 +48,7 @@ public class UserBudgetController {
 	    throw new SecurityException();
 	}
 
-	UserBudget userBudgetResponse = userBudgetService.saveUserBudget(formData,
-		financialPortfolioId);
+	UserBudget userBudgetResponse = userBudgetService.saveUserBudget(formData, financialPortfolioId);
 	return userBudgetResponse;
     }
 
@@ -67,14 +67,14 @@ public class UserBudgetController {
 
     // Update budget in user budget
     @RequestMapping(value = "/{financialPortfolioId}/update/{formFieldName}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public UserBudget updateDescriptionByUserBudgetById(@PathVariable String financialPortfolioId,
+    public List<UserBudget> updateUserBudgetById(@PathVariable String financialPortfolioId,
 	    @PathVariable String formFieldName, @RequestBody MultiValueMap<String, String> formData,
 	    Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	UserBudget userBudgetSaved = userBudgetService.updateBudget(formData, formFieldName,
+	List<UserBudget> userBudgetSaved = userBudgetService.updateBudget(formData, formFieldName,
 		financialPortfolioId);
 
 	return userBudgetSaved;

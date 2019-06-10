@@ -11,6 +11,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import in.co.everyrupee.constants.income.DashboardConstants;
+
 /**
  * 
  * POJO for User Budget
@@ -19,62 +21,62 @@ import javax.validation.constraints.NotNull;
  *
  */
 @Entity
-@Table(name = "user_budget")
+@Table(name = DashboardConstants.Budget.USER_BUDGET_TABLE)
 public class UserBudget implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_seq")
-    @SequenceGenerator(name = "coupon_seq", sequenceName = "coupon_seq", allocationSize = 100)
-	@Column(name = "budget_id")
-	private int budgetId;
-	
-	@NotNull
-    @Column(name = "financial_portfolio_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.COUPON_SEQ)
+    @SequenceGenerator(name = DashboardConstants.COUPON_SEQ, sequenceName = DashboardConstants.COUPON_SEQ, allocationSize = 100)
+    @Column(name = DashboardConstants.Budget.BUDGET_ID)
+    private int budgetId;
+
+    @NotNull
+    @Column(name = DashboardConstants.Budget.FINANCIAL_PORTFOLIO_ID)
     private String financialPortfolioId;
-	
-	@NotNull
-	@Column(name = "category_id")
+
+    @NotNull
+    @Column(name = DashboardConstants.Budget.CATEGORY_ID)
     private int categoryId;
-	
-	@NotNull
-    @Column(name = "planned")
+
+    @NotNull
+    @Column(name = DashboardConstants.Budget.PLANNED)
     private double planned;
 
-	public int getBudgetId() {
-		return budgetId;
-	}
+    public int getBudgetId() {
+	return budgetId;
+    }
 
-	public void setBudgetId(int budgetId) {
-		this.budgetId = budgetId;
-	}
+    public void setBudgetId(int budgetId) {
+	this.budgetId = budgetId;
+    }
 
-	public String getFinancialPortfolioId() {
-		return financialPortfolioId;
-	}
+    public String getFinancialPortfolioId() {
+	return financialPortfolioId;
+    }
 
-	public void setFinancialPortfolioId(String financialPortfolioId) {
-		this.financialPortfolioId = financialPortfolioId;
-	}
+    public void setFinancialPortfolioId(String financialPortfolioId) {
+	this.financialPortfolioId = financialPortfolioId;
+    }
 
-	public int getCategoryId() {
-		return categoryId;
-	}
+    public int getCategoryId() {
+	return categoryId;
+    }
 
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
+    public void setCategoryId(int categoryId) {
+	this.categoryId = categoryId;
+    }
 
-	public double getPlanned() {
-		return planned;
-	}
+    public double getPlanned() {
+	return planned;
+    }
 
-	public void setPlanned(double planned) {
-		this.planned = planned;
-	}
-	
+    public void setPlanned(double planned) {
+	this.planned = planned;
+    }
+
 }

@@ -15,8 +15,6 @@ $(document).ready(function(){
 	const selectedOption = '4';
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
-	// Sidebar 
-	$sidebar = $('.sidebar');
 	// Regex to check if the entered value is a float
 	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
@@ -35,6 +33,9 @@ $(document).ready(function(){
 	
 	// Success SVG Fragment
 	let successSVGFormed = successSvgMessage();
+	
+	// Create Budget Map 
+	let updateBudgetMap = {};
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -180,11 +181,40 @@ $(document).ready(function(){
               manageDeleteTransactionsButton();
     		  // update the Total Available Section
     		  updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions);
+    		  // Update Budget from API
+    		  updateBudgetForIncome();
     		
             }
 		});
 	}
 	
+	// Update the budget for all the category rows if present
+	function updateBudgetForIncome() {
+		jQuery.ajax({
+			url: budgetAPIUrl + currentUser.financialPortfolioId,
+            type: 'GET',
+            success: function(data) {
+            	for(let count = 0, length = Object.keys(data).length; count < length; count++){
+	        		  let key = Object.keys(data)[count];
+	            	  let value = data[key];
+	            	  
+	            	  if(isEmpty(value)) {
+	            		  continue;
+	            	  }
+	            	  
+	            	  let categoryRowToUpdate = document.getElementById('budgetCategory-' + value.categoryId);
+	            	  
+	            	  if(categoryRowToUpdate == null) {
+	            		  continue;
+	            	  }
+	            	  
+	            	  categoryRowToUpdate.innerHTML = currentCurrencyPreference + formatNumber(value.planned, currentUser.locale);
+            	}
+            }
+		});
+	}
+	
+	// Updates the total income and total expenses
 	function updateTotalAvailableSection(totalIncomeTransactions , totalExpensesTransactions) {
 			let totalAvailableTransactions = totalIncomeTransactions - totalExpensesTransactions;
 		   if(totalAvailableTransactions < 0) {
@@ -203,7 +233,6 @@ $(document).ready(function(){
 	// Update the pie chart with transactions data
 	function updatePieChartTransactions(totalIncomeTransactions, totalExpensesTransactions) {
 		let dataPreferences = {};
-		debugger;
 		if(totalIncomeTransactions === 0 && totalExpensesTransactions === 0) {
 			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
 		} else if (totalIncomeTransactions < totalExpensesTransactions) {
@@ -444,14 +473,13 @@ $(document).ready(function(){
 	   // Table Row 6
 	   let budgetTransactionsRow = document.createElement('div');
 	   budgetTransactionsRow.setAttribute('id', 'budgetCategory-' + categoryId);
-	   budgetTransactionsRow.className = 'text-right d-lg-table-cell';
+	   budgetTransactionsRow.className = 'text-right d-lg-table-cell font-weight-bold';
 	   tableRow.appendChild(budgetTransactionsRow);
 	   
 		//	   <div class="BudgetGroupHeader-column BudgetGroupHeader-column--actions" style="display: block;top: auto;cursor: pointer;height: 100%;text-align: right;vertical-align: middle;"><span class="budget-card-header-action ui-content--sm--r BudgetGroupHeader-deleteGroup" style="color: #8e999e;text-align: center;vertical-align: middle;align-content: center;">
 		//	   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 18" style="vertical-align: top;align-self: center !important;margin: auto;/*! display: block; */vertical-align: middle;">
 		//	   <path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.25" d="M4.273 3.727V2a1 1 0 0 1 1-1h3.454a1 1 0 0 1 1 1v1.727M13 5.91v10.455a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5.909m6 2.727v5.455M4.273 8.636v5.455m5.454-5.455v5.455M13 3.727H1" style="margin: auto;display: block;vertical-align: middle;">
 		//	   </path></svg> Delete Group</span></div>
-	   // TODO  have to be replaced with budget
 		
 		return tableRow;
 		
@@ -600,14 +628,6 @@ $(document).ready(function(){
             }).catch(swal.noop);
     		
     	}
-	}
-	
-	// Format numbers in Indian Currency
-	function formatNumber(num, locale) {
-		if(isEmpty(locale)){
-			locale = "en-IN";
-		}
-		  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 	}
 	
 	// Catch the description when the user focuses on the description
@@ -804,7 +824,7 @@ $(document).ready(function(){
 			var values = {};
 			values['amount'] = enteredText;
 			values['transactionId'] = changedAmount[changedAmount.length - 1];
-			let totalAddedOrRemovedFromAmount = parseFloat(enteredText - previousText).toFixed(2);
+			let totalAddedOrRemovedFromAmount = round(parseFloat(enteredText - previousText),2);
 			$.ajax({
 		          type: "POST",
 		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'transaction',
@@ -812,6 +832,7 @@ $(document).ready(function(){
 		          data : values,
 		          success: function(userTransaction){
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
+		        	  autoCreateBudget(userTransaction.categoryId, totalAddedOrRemovedFromAmount);
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -832,6 +853,18 @@ $(document).ready(function(){
 		
 		// Set the amount to empty as the data need not be stored.
   	  	amountEditedTransaction = '';
+	}
+	
+	// Automatically create a budget for the category if it is an income category
+	function autoCreateBudget(categoryId, totalAddedOrRemovedFromAmount) {
+		if(categoryMap[categoryId].parentCategory == incomeCategory) {
+			if(isEmpty(updateBudgetMap[categoryId])) {
+				updateBudgetMap[categoryId] = totalAddedOrRemovedFromAmount;
+			} else {
+				let oldValue = updateBudgetMap[categoryId];
+				updateBudgetMap[categoryId] = oldValue + totalAddedOrRemovedFromAmount;
+			}
+		}
 	}
 	
 	// Append appropriate buttons when the amount is edited
@@ -867,9 +900,9 @@ $(document).ready(function(){
 	  	  if(includesStr(categoryTotal,'-')){
 	  		  minusSign = '-';
 	  	  }
-	  	  newCategoryTotal = round(parseFloat(parseFloat(previousCategoryTotal) + parseFloat(totalAddedOrRemovedFromAmount)),2);
+	  	  newCategoryTotal = round(previousCategoryTotal + totalAddedOrRemovedFromAmount,2);
 	  	  // Format the newCategoryTotal to number and format the number as currency
-	  	  replaceHTML(categoryRows , minusSign + currentCurrencyPreference + formatNumber(Number(newCategoryTotal), currentUser.locale));
+	  	  replaceHTML(categoryRows , minusSign + currentCurrencyPreference + formatNumber(newCategoryTotal, currentUser.locale));
 	  	  
 	  	  if(updateTotal){
 	  		  // Obtain the class list of the category table row
@@ -883,12 +916,12 @@ $(document).ready(function(){
 		
 		if(categoryForCalculation.contains('spendingCategory')) {
 			let currentValueExpense = round(parseFloat(trimElement(lastElement(splitElement($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountLeftForExpenses = currentValueExpense+ round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			let totalAmountLeftForExpenses = currentValueExpense+ totalAddedOrRemovedFromAmount;
 			replaceHTML('totalExpensesTransactions' , '-' + currentCurrencyPreference + formatNumber(Number(totalAmountLeftForExpenses), currentUser.locale));
 			
 		} else if(categoryForCalculation.contains('incomeCategory')) {
 			let currentValueIncome = round(parseFloat(trimElement(lastElement(splitElement($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-			let totalAmountLeftForIncome = currentValueIncome + round(parseFloat(totalAddedOrRemovedFromAmount),2);
+			let totalAmountLeftForIncome = currentValueIncome + totalAddedOrRemovedFromAmount;
 			replaceHTML('totalIncomeTransactions' , currentCurrencyPreference + formatNumber(Number(totalAmountLeftForIncome), currentUser.locale));
 		}
 		
@@ -903,7 +936,7 @@ $(document).ready(function(){
 			availableCash = Math.abs(availableCash);
 		}
 		
-		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(Number(availableCash), currentUser.locale));
+		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(availableCash, currentUser.locale));
 		
 		// Update the pie chart
 		transactionsChart.update(updatePieChartTransactions(income, expense));
@@ -1185,6 +1218,28 @@ $(document).ready(function(){
     	svgElement.appendChild(pathElement);
     	
     	return svgElement;
+	}
+	
+	// Before navigating away from page update the budget (Synchronous to avoid loss of transfer to server)
+	window.onbeforeunload = function() {
+		if(!window.isRefresh) {
+			jQuery.ajax({
+				url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
+	            type: 'POST',
+	            dataType: "json",
+		        data : updateBudgetMap,
+		        success: function(result) { },
+	            async: false
+			});
+		}
+		window.isRefresh = false;
+	}
+	
+	// Do not update the budget if the value is old (Safari)
+	window.onpageshow = function(event) {
+	    if (event.persisted) {
+	        window.isRefresh = true;
+	    }
 	}
 	
 });

@@ -23,6 +23,8 @@ const incomeCategory = "2";
 const transactionAPIUrl =  "/api/transactions/";
 const saveTransactionsUrl = "/api/transactions/save/";
 const transactionsUpdateUrl = "/update/";
+const budgetUpdateUrl = "/update/plannedAmount";
+const budgetAPIUrl =  "/api/budget/";
 
 
 window.onload = function () {
@@ -185,6 +187,8 @@ window.onload = function () {
 			$('#' + id).closest('li').addClass('active');
 			// Change side bar color to green
         	changeColorOfSidebar(color);
+        	// Change Image of sidebar
+        	changeImageOfSidebar("../img/dashboard/sidebar/sidebar-1.jpg")
 			
 		    $.ajax({
 		        type: "GET",
@@ -370,4 +374,20 @@ function changeColorOfSidebar(color){
 	if ($sidebar.length != 0) {
 		 $sidebar.attr('data-color', color);
 	 }
+}
+
+function changeImageOfSidebar(img) {
+	if ($sidebar.length != 0) {
+		 $sidebar.attr('data-image', img);
+	 }
+	// Request image to be changed
+	md.checkSidebarImage();
+}
+
+//Format numbers in Indian Currency
+function formatNumber(num, locale) {
+	if(isEmpty(locale)){
+		locale = "en-IN";
+	}
+	  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
