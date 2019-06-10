@@ -271,7 +271,7 @@ er = {
 	            type: 'POST',
 	            dataType: "json",
 		        data : updateBudgetMap,
-		        success: function(result) { },
+		        success: function() { },
 	            async: false
 			});
 		}
