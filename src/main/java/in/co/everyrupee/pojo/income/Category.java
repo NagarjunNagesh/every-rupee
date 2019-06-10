@@ -11,7 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Value;
+import in.co.everyrupee.constants.income.DashboardConstants;
 
 /**
  * POJO for Category
@@ -20,24 +20,23 @@ import org.springframework.beans.factory.annotation.Value;
  *
  */
 @Entity
-@Table(name = "category")
+@Table(name = DashboardConstants.Category.CATEGORY_TABLE)
 public class Category implements Serializable {
 
     private static final long serialVersionUID = -7829537522506194637L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_seq")
-    @SequenceGenerator(name = "coupon_seq", sequenceName = "coupon_seq", allocationSize = 100)
-    @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.COUPON_SEQ)
+    @SequenceGenerator(name = DashboardConstants.COUPON_SEQ, sequenceName = DashboardConstants.COUPON_SEQ, allocationSize = 100)
+    @Column(name = DashboardConstants.Category.CATEGORY_ID)
     private int categoryId;
 
     @NotNull
-    @Column(name = "category_name")
+    @Column(name = DashboardConstants.Category.CATEGORY_NAME)
     private String categoryName;
 
     @NotNull
-    @Value("${category.parentCategory}")
-    @Column(name = "parent_category")
+    @Column(name = DashboardConstants.Category.PARENT_CATEGORY)
     private String parentCategory;
 
     public int getCategoryId() {

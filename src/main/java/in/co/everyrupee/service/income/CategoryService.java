@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import in.co.everyrupee.constants.GenericConstants;
+import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.Category;
 import in.co.everyrupee.repository.income.CategoryRepository;
@@ -24,7 +25,7 @@ public class CategoryService implements ICategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    @Cacheable("categories")
+    @Cacheable(DashboardConstants.Category.CATEGORY_CACHE_NAME)
     public List<Category> fetchCategories() {
 	List<Category> categoriesList = categoryRepository.fetchAllCategories();
 
@@ -33,26 +34,25 @@ public class CategoryService implements ICategoryService {
 	}
 	return categoriesList;
     }
-    
+
+    @Override
     public Boolean categoryIncome(int categoryId) {
 	List<Category> categoriesList = categoryRepository.fetchAllCategories();
 
 	if (CollectionUtils.isEmpty(categoriesList)) {
 	    throw new ResourceNotFoundException("Category", "categories", "all");
 	}
-	
-	Optional<Category> category = categoriesList.stream()
-            .filter(x -> categoryId == x.getCategoryId())
-            .findFirst();
 
-	if(category.isPresent()) {
-		Category currentCategory = category.get();
-		if(ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), GenericConstants.INCOME_CATEGORY)) {
-			return true;
-		}
+	Optional<Category> category = categoriesList.stream().filter(x -> categoryId == x.getCategoryId()).findFirst();
+
+	if (category.isPresent()) {
+	    Category currentCategory = category.get();
+	    if (ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), GenericConstants.INCOME_CATEGORY)) {
+		return true;
+	    }
 	    return false;
 	}
-	
+
 	return null;
     }
 

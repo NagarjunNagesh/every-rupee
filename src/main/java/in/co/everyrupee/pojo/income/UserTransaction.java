@@ -1,6 +1,7 @@
 package in.co.everyrupee.pojo.income;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import in.co.everyrupee.constants.income.DashboardConstants;
+
 /**
  * POJO for User Transactions
  * 
@@ -18,30 +21,34 @@ import javax.validation.constraints.NotNull;
  *
  */
 @Entity
-@Table(name = "user_transactions")
+@Table(name = DashboardConstants.Transactions.TRANSACTIONS_TABLE)
 public class UserTransaction implements Serializable {
 
     private static final long serialVersionUID = 4387424250638939980L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupon_seq")
-    @SequenceGenerator(name = "coupon_seq", sequenceName = "coupon_seq", allocationSize = 100)
-    @Column(name = "transaction_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.COUPON_SEQ)
+    @SequenceGenerator(name = DashboardConstants.COUPON_SEQ, sequenceName = DashboardConstants.COUPON_SEQ, allocationSize = 100)
+    @Column(name = DashboardConstants.Transactions.TRANSACTIONS_ID)
     private int transactionId;
 
-    @Column(name = "description")
+    @Column(name = DashboardConstants.Transactions.DESCRIPTION)
     private String description;
 
-    @Column(name = "category_id")
+    @Column(name = DashboardConstants.Category.CATEGORY_ID)
     private int categoryId;
 
     @NotNull
-    @Column(name = "financial_portfolio_id")
+    @Column(name = DashboardConstants.Transactions.FINANCIAL_PORTFOLIO_ID)
     private String financialPortfolioId;
 
     @NotNull
-    @Column(name = "amount")
+    @Column(name = DashboardConstants.Transactions.AMOUNT)
     private double amount;
+    
+    @NotNull
+    @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
+    private Date dateMeantFor;
 
     public int getTransactionId() {
 	return transactionId;
@@ -81,6 +88,14 @@ public class UserTransaction implements Serializable {
 
     public void setFinancialPortfolioId(String financialPortfolioId) {
 	this.financialPortfolioId = financialPortfolioId;
+    }
+    
+    public Date getDateMeantFor() {
+        return dateMeantFor;
+    }
+
+    public void setDateMeantFor(Date dateMeantFor) {
+        this.dateMeantFor = dateMeantFor;
     }
 
 }

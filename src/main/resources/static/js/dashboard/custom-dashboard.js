@@ -23,6 +23,14 @@ const incomeCategory = "2";
 const transactionAPIUrl =  "/api/transactions/";
 const saveTransactionsUrl = "/api/transactions/save/";
 const transactionsUpdateUrl = "/update/";
+const budgetUpdateUrl = "/update/plannedAmount";
+const budgetAPIUrl =  "/api/budget/";
+
+//Create Budget Map for transactions
+let updateBudgetMap = {};
+
+//chosenDate for transactions
+let chosenDate = today.getMonth()+1 + ',' + today.getYear()
 
 
 window.onload = function () {
@@ -141,6 +149,8 @@ window.onload = function () {
 			case 'transactionsPage':
 				url = '/dashboard/transactions';
 				color = 'green';
+				// Updates the budget before navigating away
+				er.updateBudget();
 			    break;
 			case 'budgetPage':
 				url = '/dashboard/budget';
@@ -185,6 +195,8 @@ window.onload = function () {
 			$('#' + id).closest('li').addClass('active');
 			// Change side bar color to green
         	changeColorOfSidebar(color);
+        	// Change Image of sidebar
+        	changeImageOfSidebar("../img/dashboard/sidebar/sidebar-1.jpg")
 			
 		    $.ajax({
 		        type: "GET",
@@ -250,6 +262,18 @@ er = {
 		        	  }
 		           }
 		        });
+		},
+		
+		// Updates the budget before refreshing or navigating away from the page
+		updateBudget() {
+			jQuery.ajax({
+				url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
+	            type: 'POST',
+	            dataType: "json",
+		        data : updateBudgetMap,
+		        success: function() { },
+	            async: false
+			});
 		}
 }
 
@@ -370,4 +394,20 @@ function changeColorOfSidebar(color){
 	if ($sidebar.length != 0) {
 		 $sidebar.attr('data-color', color);
 	 }
+}
+
+function changeImageOfSidebar(img) {
+	if ($sidebar.length != 0) {
+		 $sidebar.attr('data-image', img);
+	 }
+	// Request image to be changed
+	md.checkSidebarImage();
+}
+
+//Format numbers in Indian Currency
+function formatNumber(num, locale) {
+	if(isEmpty(locale)){
+		locale = "en-IN";
+	}
+	  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }

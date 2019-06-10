@@ -1,12 +1,17 @@
 package in.co.everyrupee.service.income;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -21,14 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.GenericConstants;
-import in.co.everyrupee.events.registration.OnRegistrationCompleteEvent;
+import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
@@ -37,12 +41,12 @@ import in.co.everyrupee.utils.ERStringUtils;
 
 @Transactional
 @Service
-@CacheConfig(cacheNames = { "userTransaction" })
+@CacheConfig(cacheNames = { DashboardConstants.Transactions.TRANSACTIONS_CACHE_NAME })
 public class UserTransactionService implements IUserTransactionService {
 
     @Autowired
     UserTransactionsRepository userTransactionsRepository;
-    
+
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -108,20 +112,32 @@ public class UserTransactionService implements IUserTransactionService {
     @CacheEvict(key = "#pFinancialPortfolioId")
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
-	if (CollectionUtils.isEmpty(formData.get("amount"))) {
+	if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT))) {
 	    throw new ResourceNotFoundException("UserTransactions", "formData", formData);
 	}
 
 	UserTransaction userTransaction = new UserTransaction();
 	userTransaction.setFinancialPortfolioId(pFinancialPortfolioId);
-	if (CollectionUtils.isNotEmpty(formData.get("description"))) {
-	    userTransaction.setDescription(formData.get("description").get(0));
+	if (CollectionUtils.isNotEmpty(formData.get(DashboardConstants.Transactions.DESCRIPTION))) {
+	    userTransaction.setDescription(formData.get(DashboardConstants.Transactions.DESCRIPTION).get(0));
 	}
-	userTransaction.setCategoryId(Integer.parseInt(formData.get("categoryOptions").get(0)));
-	userTransaction.setAmount(Double.parseDouble(formData.get("amount").get(0)));
+	userTransaction
+		.setCategoryId(Integer.parseInt(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0)));
+	userTransaction.setAmount(
+		Double.parseDouble(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT).get(0)));
+	
+	String dateString = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
+	DateFormat format = new SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH);
+	Date date;
+	try {
+	    date = format.parse(dateString);
+	    userTransaction.setDateMeantFor(date);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
-	
+
 	return userTransactionResponse;
     }
 
@@ -151,18 +167,20 @@ public class UserTransactionService implements IUserTransactionService {
 	    String financialPortfolioId) {
 
 	Optional<UserTransaction> userTransaction = userTransactionsRepository
-		.findById(Integer.parseInt(formData.get("transactionId").get(0)));
+		.findById(Integer.parseInt(formData.get(DashboardConstants.Transactions.TRANSACTIONS__ID_JSON).get(0)));
 
-	if (ERStringUtils.equalsIgnoreCase(formFieldName, "description")) {
-	    userTransaction.get().setDescription(formData.get("description").get(0));
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, DashboardConstants.Transactions.DESCRIPTION)) {
+	    userTransaction.get().setDescription(formData.get(DashboardConstants.Transactions.DESCRIPTION).get(0));
 	}
 
-	if (ERStringUtils.equalsIgnoreCase(formFieldName, "transaction")) {
-	    userTransaction.get().setAmount(Double.parseDouble(formData.get("amount").get(0)));
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, DashboardConstants.Transactions.AMOUNT_FIELD_NAME)) {
+	    userTransaction.get().setAmount(
+		    Double.parseDouble(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT).get(0)));
 	}
 
-	if (ERStringUtils.equalsIgnoreCase(formFieldName, "category")) {
-	    userTransaction.get().setCategoryId(Integer.parseInt(formData.get("categoryId").get(0)));
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, DashboardConstants.Transactions.CATEGORY_FORM_FIELD_NAME)) {
+	    userTransaction.get().setCategoryId(
+		    Integer.parseInt(formData.get(DashboardConstants.Transactions.CATEGORY_ID_JSON).get(0)));
 	}
 
 	UserTransaction userTransactionSaved = userTransactionsRepository.save(userTransaction.get());
