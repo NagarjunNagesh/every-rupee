@@ -36,6 +36,7 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Cacheable(DashboardConstants.Category.CATEGORY_INCOME_OR_NOT)
     public Boolean categoryIncome(int categoryId) {
 	List<Category> categoriesList = categoryRepository.fetchAllCategories();
 

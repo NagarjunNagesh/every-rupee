@@ -3,6 +3,10 @@ package in.co.everyrupee.constants.income;
 public class DashboardConstants {
 
     public static final String COUPON_SEQ = "coupon_seq";
+    public static final String DATE_FORMAT = "ddMMyyyy";
+    public static final String CREATION_DATE = "create_date";
+    public static final String MODIFICATION_DATE = "modify_date";
+    public static final String DEFAULT_ADD_ROW_QUANTITY = "0";
 
     public class Budget {
 	public static final String BUDGET_ID = "budget_id";
@@ -23,6 +27,7 @@ public class DashboardConstants {
 	public static final String PARENT_CATEGORY = "parent_category";
 	public static final String CATEGORY_CACHE_NAME = "categories";
 	public static final String CATEGORY_ID_JSON = "categoryId";
+	public static final String CATEGORY_INCOME_OR_NOT = "categoryIncomePrediction";
     }
 
     public class Transactions {

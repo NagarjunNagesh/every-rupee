@@ -11,6 +11,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import in.co.everyrupee.constants.income.DashboardConstants;
 
 /**
@@ -36,6 +38,7 @@ public class Category implements Serializable {
     private String categoryName;
 
     @NotNull
+    @Value("${category.parentCategory}")
     @Column(name = DashboardConstants.Category.PARENT_CATEGORY)
     private String parentCategory;
 

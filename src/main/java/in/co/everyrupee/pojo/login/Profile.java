@@ -1,5 +1,6 @@
 package in.co.everyrupee.pojo.login;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,9 +15,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PostPersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
@@ -57,6 +62,16 @@ public class Profile {
     private String locale;
     @Column(name = ProfileServiceConstants.User.FINANCIAL_PORTFOLIO_ID)
     private int financialPortfolioId;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = ProfileServiceConstants.User.CREATION_DATE)
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = ProfileServiceConstants.User.MODIFICATION_DATE)
+    private Date modifyDate;
 
     // Set Financial Portfolio id equal to user id
     @PostPersist

@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.events.income.OnSaveTransactionCompleteEvent;
 import in.co.everyrupee.service.income.ICategoryService;
 import in.co.everyrupee.service.income.IUserBudgetService;
+import in.co.everyrupee.utils.ERStringUtils;
 
 @Component
 public class UserBudgetCreationListener implements ApplicationListener<OnSaveTransactionCompleteEvent> {
@@ -35,8 +37,12 @@ public class UserBudgetCreationListener implements ApplicationListener<OnSaveTra
 	try {
 	    MultiValueMap<String, String> formData = event.getformData();
 
-	    if (formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS) == null
-		    && formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0) != null) {
+	    if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS))
+		    || ERStringUtils.isNotBlank(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0))
+		    || CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.AMOUNT))
+		    || ERStringUtils.isNotBlank(formData.get(DashboardConstants.Transactions.AMOUNT).get(0))
+		    || ERStringUtils.equalsIgnoreCase(formData.get(DashboardConstants.Transactions.AMOUNT).get(0),
+			    DashboardConstants.DEFAULT_ADD_ROW_QUANTITY)) {
 		return;
 	    }
 
