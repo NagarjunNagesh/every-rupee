@@ -119,7 +119,7 @@ public class UserBudgetService implements IUserBudgetService {
 	userBudget.setCategoryId(Integer.parseInt(formData.get(DashboardConstants.Budget.CATEGORY_ID).get(0)));
 	userBudget.setPlanned(Double.parseDouble(formData.get(DashboardConstants.Budget.AMOUNT_JSON).get(0)));
 	String dateString = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
-	DateFormat format = new SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH);
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
 	Date date;
 	try {
 	    date = format.parse(dateString);

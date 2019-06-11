@@ -19,6 +19,8 @@ public class ProfileServiceConstants {
 	public static final String RESET_TOKEN = "reset_token";
 	public static final String LOCALE = "locale";
 	public static final String FINANCIAL_PORTFOLIO_ID = "financial_portfolio_id";
+	public static final String CREATION_DATE = "create_date";
+	public static final String MODIFICATION_DATE = "modify_date";
     }
 
     // Roles

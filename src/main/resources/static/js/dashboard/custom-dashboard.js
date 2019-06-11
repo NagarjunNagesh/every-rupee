@@ -29,8 +29,10 @@ const budgetAPIUrl =  "/api/budget/";
 //Create Budget Map for transactions
 let updateBudgetMap = {};
 
-//chosenDate for transactions
-let chosenDate = today.getMonth()+1 + ',' + today.getYear()
+// Get today
+let today = new Date();
+// chosenDate for transactions (April 2019 as 042019)
+let chosenDate = '01'+("0" + (today.getMonth() + 1)).slice(-2) + today.getFullYear();
 
 
 window.onload = function () {
@@ -150,7 +152,7 @@ window.onload = function () {
 				url = '/dashboard/transactions';
 				color = 'green';
 				// Updates the budget before navigating away
-				er.updateBudget();
+				er.updateBudget(true);
 			    break;
 			case 'budgetPage':
 				url = '/dashboard/budget';
@@ -264,16 +266,21 @@ er = {
 		        });
 		},
 		
-		// Updates the budget before refreshing or navigating away from the page
-		updateBudget() {
-			jQuery.ajax({
-				url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
-	            type: 'POST',
-	            dataType: "json",
-		        data : updateBudgetMap,
-		        success: function() { },
-	            async: false
-			});
+		// Updates the budget before refreshing or navigating away from the page (Synchronous)
+		updateBudget(async) {
+			if(isNotEmpty(updateBudgetMap)) {
+				jQuery.ajax({
+					url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
+		            type: 'POST',
+		            dataType: "json",
+			        data : updateBudgetMap,
+			        success: function() {
+			        	// Prevents duplicate updation when clicking on sidebar tabs
+			        	updateBudgetMap = {}; 
+			        },
+		            async: async
+				});
+			}
 		}
 }
 

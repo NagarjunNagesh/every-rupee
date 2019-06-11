@@ -8,9 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
 
@@ -47,10 +53,27 @@ public class UserBudget implements Serializable {
     @NotNull
     @Column(name = DashboardConstants.Budget.PLANNED)
     private double planned;
-    
-    @NotNull
+
     @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateMeantFor;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = DashboardConstants.CREATION_DATE)
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = DashboardConstants.MODIFICATION_DATE)
+    private Date modifyDate;
+
+    @PrePersist
+    protected void onCreate() {
+	if (dateMeantFor == null) {
+	    dateMeantFor = new Date();
+	}
+    }
 
     public int getBudgetId() {
 	return budgetId;
@@ -85,11 +108,11 @@ public class UserBudget implements Serializable {
     }
 
     public Date getDateMeantFor() {
-        return dateMeantFor;
+	return dateMeantFor;
     }
 
     public void setDateMeantFor(Date dateMeantFor) {
-        this.dateMeantFor = dateMeantFor;
+	this.dateMeantFor = dateMeantFor;
     }
 
 }

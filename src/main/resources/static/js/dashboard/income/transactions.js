@@ -80,6 +80,7 @@ $(document).ready(function(){
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 	          data : values,
 	          success: function(data) {
 	        	let successMessageDocument = document.getElementById('successMessage');
@@ -554,6 +555,7 @@ $(document).ready(function(){
 			                     jQuery.ajax({
 			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds,
 			                         type: 'DELETE',
+			                         contentType: "application/json; charset=utf-8", 
 			                         success: function() {
 			                        	showNotification('Successfully deleted the selected transactions','top','center','success');
 			                        	
@@ -661,6 +663,7 @@ $(document).ready(function(){
 		          type: "POST",
 		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'category',
 		          dataType: "json",
+		          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 		          data : values,
 		          success: function(userTransaction){
 		        	  let previousCategoryId ='';
@@ -749,6 +752,7 @@ $(document).ready(function(){
 	          type: "POST",
 	          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'description',
 	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
 	          error: function (thrownError) {
             	 var responseError = JSON.parse(thrownError.responseText);
@@ -827,6 +831,7 @@ $(document).ready(function(){
 		          type: "POST",
 		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'transaction',
 		          dataType: "json",
+		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
 		          success: function(userTransaction){
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
@@ -1176,6 +1181,7 @@ $(document).ready(function(){
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
 	          success: function(userTransaction){
 	        	  let categoryParent = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
@@ -1222,7 +1228,7 @@ $(document).ready(function(){
 	// Before navigating away from page update the budget (Synchronous to avoid loss of transfer to server)
 	window.onbeforeunload = function() {
 		if(!window.isRefresh) {
-			er.updateBudget();
+			er.updateBudget(false);
 		}
 		window.isRefresh = false;
 	}
