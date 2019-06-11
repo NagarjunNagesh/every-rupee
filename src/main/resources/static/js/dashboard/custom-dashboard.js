@@ -272,7 +272,6 @@ er = {
 				jQuery.ajax({
 					url: budgetAPIUrl + currentUser.financialPortfolioId + budgetUpdateUrl,
 		            type: 'POST',
-		            contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 		            dataType: "json",
 			        data : updateBudgetMap,
 			        success: function() {

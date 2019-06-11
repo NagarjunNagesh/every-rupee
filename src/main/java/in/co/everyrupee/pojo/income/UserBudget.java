@@ -55,7 +55,7 @@ public class UserBudget implements Serializable {
     private double planned;
 
     @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateMeantFor;
 
     @CreationTimestamp

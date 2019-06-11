@@ -10,17 +10,14 @@ function lastElement(arr){
 }
 
 function  isEmpty(obj) {
-	if (obj == null) 
+	if(typeof(obj) == 'number' || typeof(obj) == 'boolean')
+	    return false; 
+	
+	if (obj == null || obj === undefined)
         return true;
 	
-	if (obj === undefined)
-        return true;
-	
-	 if(obj.length == 0)
-		 return true;
-	 
-	 if (obj.length > 0)    
-         return false;
+	if(typeof(obj.length) != 'undefined')
+	    return obj.length == 0;
 	 
 	 for(var key in obj) {
 	        if(obj.hasOwnProperty(key))

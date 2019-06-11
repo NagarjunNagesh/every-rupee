@@ -38,9 +38,9 @@ public class UserBudgetCreationListener implements ApplicationListener<OnSaveTra
 	    MultiValueMap<String, String> formData = event.getformData();
 
 	    if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS))
-		    || ERStringUtils.isNotBlank(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0))
+		    || ERStringUtils.isBlank(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0))
 		    || CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.AMOUNT))
-		    || ERStringUtils.isNotBlank(formData.get(DashboardConstants.Transactions.AMOUNT).get(0))
+		    || ERStringUtils.isBlank(formData.get(DashboardConstants.Transactions.AMOUNT).get(0))
 		    || ERStringUtils.equalsIgnoreCase(formData.get(DashboardConstants.Transactions.AMOUNT).get(0),
 			    DashboardConstants.DEFAULT_ADD_ROW_QUANTITY)) {
 		return;

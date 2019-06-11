@@ -53,7 +53,7 @@ public class UserTransaction implements Serializable {
     private double amount;
 
     @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dateMeantFor;
 
     @CreationTimestamp
