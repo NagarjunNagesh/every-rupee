@@ -13,9 +13,12 @@ import in.co.everyrupee.pojo.login.Profile;
  * @author nagarjun
  *
  */
-@SuppressWarnings("serial")
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private final String appUrl;
     private final Locale locale;
     private final Profile profile;
