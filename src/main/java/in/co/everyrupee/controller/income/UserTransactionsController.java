@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.co.everyrupee.events.income.OnSaveTransactionCompleteEvent;
-import in.co.everyrupee.events.registration.OnRegistrationCompleteEvent;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.service.income.IUserTransactionService;
@@ -32,11 +31,10 @@ public class UserTransactionsController {
 
     @Autowired
     IUserTransactionService userTransactionService;
-    
-    @Autowired
-	private ApplicationEventPublisher eventPublisher;
 
-    
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     // Get a Single User Transaction
     @RequestMapping(value = "/{pFinancialPortfolioId}", method = RequestMethod.GET)
     public Object getUserTransactionByUserId(@PathVariable String pFinancialPortfolioId, Principal userPrincipal) {
@@ -54,14 +52,13 @@ public class UserTransactionsController {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
-	
+
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData,
-			pFinancialPortfolioId);
-	
-	eventPublisher
-	.publishEvent(new OnSaveTransactionCompleteEvent(user, pFinancialPortfolioId, formData));
+		pFinancialPortfolioId);
+
+	eventPublisher.publishEvent(new OnSaveTransactionCompleteEvent(user, pFinancialPortfolioId, formData));
 
 	return userTransactionResponse;
     }

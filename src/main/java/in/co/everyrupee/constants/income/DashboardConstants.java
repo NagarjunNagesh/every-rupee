@@ -7,12 +7,14 @@ public class DashboardConstants {
     public static final String CREATION_DATE = "create_date";
     public static final String MODIFICATION_DATE = "modify_date";
     public static final String DEFAULT_ADD_ROW_QUANTITY = "0";
+    public static final String BOOLEAN_DEFAULT_TRUE = "BOOLEAN DEFAULT TRUE";
 
     public class Budget {
 	public static final String BUDGET_ID = "budget_id";
 	public static final String FINANCIAL_PORTFOLIO_ID = "financial_portfolio_id";
 	public static final String CATEGORY_ID = "category_id";
 	public static final String PLANNED = "planned";
+	public static final String AUTO_GENERATED_BUDGET = "auto_generated_budget";
 	public static final String USER_BUDGET_TABLE = "user_budget";
 	public static final String BUDGET_CACHE_NAME = "userBudget";
 	public static final String AMOUNT_JSON = "plannedAmount";
