@@ -3,7 +3,6 @@ package in.co.everyrupee.events.listener.income;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,7 +27,7 @@ import in.co.everyrupee.utils.ERStringUtils;
  */
 @Async
 @Component
-public class UserBudgetCreationListener implements ApplicationListener<OnSaveTransactionCompleteEvent> {
+public class UserBudgetCreationListener implements IUserBudgetCreationListener {
 
     @Autowired
     private IUserBudgetService userBudgetService;
@@ -40,6 +39,8 @@ public class UserBudgetCreationListener implements ApplicationListener<OnSaveTra
 
     // API
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void onApplicationEvent(final OnSaveTransactionCompleteEvent event) {
 	this.saveUserBudget(event);
@@ -47,9 +48,8 @@ public class UserBudgetCreationListener implements ApplicationListener<OnSaveTra
 
     // Required to not propogate the transactions and to create a new transaction
     // for the listener.
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private void saveUserBudget(final OnSaveTransactionCompleteEvent event) {
+    @Override
+    public void saveUserBudget(final OnSaveTransactionCompleteEvent event) {
 
 	try {
 	    MultiValueMap<String, String> formData = event.getformData();
