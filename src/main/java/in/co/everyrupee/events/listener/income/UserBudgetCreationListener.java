@@ -4,7 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
@@ -14,6 +19,14 @@ import in.co.everyrupee.service.income.ICategoryService;
 import in.co.everyrupee.service.income.IUserBudgetService;
 import in.co.everyrupee.utils.ERStringUtils;
 
+/**
+ * Asynchronously creates a budget for the user, removing itself from the
+ * transaction of the caller method.
+ * 
+ * @author Nagarjun
+ *
+ */
+@Async
 @Component
 public class UserBudgetCreationListener implements ApplicationListener<OnSaveTransactionCompleteEvent> {
 
@@ -32,6 +45,10 @@ public class UserBudgetCreationListener implements ApplicationListener<OnSaveTra
 	this.saveUserBudget(event);
     }
 
+    // Required to not propogate the transactions and to create a new transaction
+    // for the listener.
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void saveUserBudget(final OnSaveTransactionCompleteEvent event) {
 
 	try {
