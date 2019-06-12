@@ -3,12 +3,9 @@ package in.co.everyrupee.events.listener.registration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.events.registration.OnRegistrationCompleteEvent;
@@ -18,12 +15,12 @@ import in.co.everyrupee.service.email.EmailService;
 /**
  * Sends an email to the user after the user has registered with Every Rupee
  * 
- * @author nagarjun
+ * @author Nagarjun
  *
  */
 @Async
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class RegistrationCompleteListener implements IRegistrationCompleteListener {
 
     @Autowired
     private EmailService mailSender;
@@ -31,15 +28,14 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // Calls the confirm registration email scenario
-
     @Override
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
 	this.confirmRegistration(event);
     }
 
     // Sends the Email
-    private void confirmRegistration(final OnRegistrationCompleteEvent event) {
+    @Override
+    public void confirmRegistration(final OnRegistrationCompleteEvent event) {
 	final Profile user = event.getUser();
 
 	try {
@@ -51,7 +47,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     }
 
     // Creates the mail to send for the user
-    private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final Profile user) {
+    @Override
+    public final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final Profile user) {
 	final String recipientAddress = user.getEmail();
 	final String subject = GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT;
 	final String message = GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT;
