@@ -15,7 +15,7 @@ import in.co.everyrupee.service.email.EmailService;
 /**
  * Sends an email to the user after the user has registered with Every Rupee
  * 
- * @author nagarjun
+ * @author Nagarjun
  *
  */
 @Async
