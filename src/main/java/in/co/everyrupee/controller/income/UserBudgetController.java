@@ -48,7 +48,7 @@ public class UserBudgetController {
 	    throw new SecurityException();
 	}
 
-	UserBudget userBudgetResponse = userBudgetService.saveUserBudget(formData, financialPortfolioId);
+	UserBudget userBudgetResponse = userBudgetService.saveUserBudget(formData, financialPortfolioId, true);
 	return userBudgetResponse;
     }
 

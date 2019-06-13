@@ -133,7 +133,7 @@ $(document).ready(function(){
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
 		jQuery.ajax({
-			url: transactionAPIUrl + currentUser.financialPortfolioId,
+			url: transactionAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
             type: 'GET',
             success: function(result) {
     			let totalExpensesTransactions = 0.00;
@@ -190,7 +190,7 @@ $(document).ready(function(){
 	// Update the budget for all the category rows if present
 	function updateBudgetForIncome() {
 		jQuery.ajax({
-			url: budgetAPIUrl + currentUser.financialPortfolioId,
+			url: budgetAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
             type: 'GET',
             success: function(data) {
             	for(let count = 0, length = Object.keys(data).length; count < length; count++){

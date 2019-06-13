@@ -6,7 +6,7 @@ import in.co.everyrupee.pojo.income.UserTransaction;
 
 public interface IUserTransactionService {
 
-    Object fetchUserTransaction(String financialPortfolioId);
+    Object fetchUserTransaction(String financialPortfolioId, String dateMeantFor);
 
     UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String financialPortfolioId);
 

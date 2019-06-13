@@ -1,14 +1,17 @@
 package in.co.everyrupee.service.income;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -54,9 +57,17 @@ public class UserTransactionService implements IUserTransactionService {
      */
     @Override
     @Cacheable
-    public Object fetchUserTransaction(String pFinancialPortfolioId) {
+    public Object fetchUserTransaction(String pFinancialPortfolioId,String dateMeantFor) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date;
+	try {
+	    date = format.parse(dateMeantFor);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
+	
 	List<UserTransaction> userTransactions = userTransactionsRepository
 		.findByFinancialPortfolioId(pFinancialPortfolioId);
 
