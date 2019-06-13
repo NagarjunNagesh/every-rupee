@@ -56,12 +56,12 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @Cacheable
+    @Cacheable(key = "{#pFinancialPortfolioId,#dateMeantFor}")
     public Object fetchUserTransaction(String pFinancialPortfolioId,String dateMeantFor) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
-	Date date;
+	Date date = new Date();
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
@@ -69,7 +69,7 @@ public class UserTransactionService implements IUserTransactionService {
 	}
 	
 	List<UserTransaction> userTransactions = userTransactionsRepository
-		.findByFinancialPortfolioId(pFinancialPortfolioId);
+		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId,date);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
@@ -117,7 +117,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict(key = "#pFinancialPortfolioId")
+    @CacheEvict
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT))) {
@@ -153,7 +153,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict(key = "#financialPortfolioId")
+    @CacheEvict
     public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	Set<String> transactionIdsAsSet = new HashSet<String>();
@@ -167,7 +167,7 @@ public class UserTransactionService implements IUserTransactionService {
     }
 
     @Override
-    @CacheEvict(key = "#financialPortfolioId")
+    @CacheEvict
     public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId) {
 
