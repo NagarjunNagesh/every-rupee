@@ -117,7 +117,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict
+    @CacheEvict(key = "{#pFinancialPortfolioId,#formData.get(\"dateMeantFor\").get(0)}")
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT))) {
@@ -153,7 +153,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict
+//    @CacheEvict(key = "{#pFinancialPortfolioId,#dateMeantFor}")
     public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	Set<String> transactionIdsAsSet = new HashSet<String>();
@@ -167,7 +167,7 @@ public class UserTransactionService implements IUserTransactionService {
     }
 
     @Override
-    @CacheEvict
+//    @CacheEvict(key = "{#pFinancialPortfolioId,#dateMeantFor}")
     public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId) {
 
