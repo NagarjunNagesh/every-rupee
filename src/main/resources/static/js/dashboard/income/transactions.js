@@ -964,7 +964,7 @@ $(document).ready(function(){
 	
 	
 	// Dynamically generated button click event
-	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function(e) {
+	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function() {
 		// Prevents the add amount event listener focus out from being executed
 		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
