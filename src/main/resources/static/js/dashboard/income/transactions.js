@@ -853,9 +853,6 @@ $(document).ready(function(){
 		// replace the text with a trimmed version
 		appendCurrencyToAmount(element, enteredText);
 		
-		// Handles the addition of buttons in the budget column for the row
-		appendButtonForAmountEdition(enteredText, selectTransactionId);
-		
 		// Set the amount to empty as the data need not be stored.
   	  	amountEditedTransaction = '';
 	}
@@ -967,7 +964,8 @@ $(document).ready(function(){
 	
 	
 	// Dynamically generated button click event
-	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function() {
+	$( "#transactionsTable" ).on( "click", ".removeRowTransaction" ,function(e) {
+		// Prevents the add amount event listener focus out from being executed
 		var id = lastElement(splitElement($(this).parent().closest('div').attr('id'),'-'));
 		// Remove the button and append the loader with fade out
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + id);
