@@ -89,12 +89,12 @@ public class UserTransactionsController {
      */
     @RequestMapping(value = "/{pFinancialPortfolioId}/{transactionIds}", method = RequestMethod.DELETE)
     public GenericResponse deleteUserTransactionById(@PathVariable String pFinancialPortfolioId,
-	    @PathVariable String transactionIds, Principal userPrincipal) {
+	    @PathVariable String transactionIds, Principal userPrincipal, @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	userTransactionService.deleteUserTransactions(transactionIds, pFinancialPortfolioId);
+	userTransactionService.deleteUserTransactions(transactionIds, pFinancialPortfolioId, dateMeantFor);
 
 	return new GenericResponse("success");
     }

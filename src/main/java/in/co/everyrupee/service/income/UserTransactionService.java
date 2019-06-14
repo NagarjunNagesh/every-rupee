@@ -153,8 +153,8 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-//    @CacheEvict(key = "{#pFinancialPortfolioId,#dateMeantFor}")
-    public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
+    @CacheEvict(key = "{#financialPortfolioId,#dateMeantFor}")
+    public void deleteUserTransactions(String transactionalIds, String financialPortfolioId, String dateMeantFor) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	Set<String> transactionIdsAsSet = new HashSet<String>();
 	transactionIdsAsSet.addAll(Arrays.asList(arrayOfTransactionIds));
@@ -166,8 +166,11 @@ public class UserTransactionService implements IUserTransactionService {
 
     }
 
+    /**
+     * Update the transactions with the new value
+     */
     @Override
-//    @CacheEvict(key = "{#pFinancialPortfolioId,#dateMeantFor}")
+    @CacheEvict(key = "{#financialPortfolioId,#formData.get(\"dateMeantFor\").get(0)}")
     public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId) {
 

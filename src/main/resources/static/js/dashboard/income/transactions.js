@@ -553,7 +553,7 @@ $(document).ready(function(){
 			                     transactionIds.join(",")
 			                     
 			                     jQuery.ajax({
-			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds,
+			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds + dateMeantFor + chosenDate,
 			                         type: 'DELETE',
 			                         contentType: "application/json; charset=utf-8", 
 			                         success: function() {
@@ -659,6 +659,7 @@ $(document).ready(function(){
 			let values = {};
 			values['categoryId'] = $(this).val();
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
+			values['dateMeantFor'] = chosenDate;
 			$.ajax({
 		          type: "POST",
 		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'category',
@@ -747,7 +748,7 @@ $(document).ready(function(){
 		var values = {};
 		values['description'] = enteredText;
 		values['transactionId'] = changedDescription[changedDescription.length - 1];
-		
+		values['dateMeantFor'] = chosenDate;
 		$.ajax({
 	          type: "POST",
 	          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'description',
@@ -826,6 +827,7 @@ $(document).ready(function(){
 			var values = {};
 			values['amount'] = enteredText;
 			values['transactionId'] = changedAmount[changedAmount.length - 1];
+			values['dateMeantFor'] = chosenDate;
 			let totalAddedOrRemovedFromAmount = round(parseFloat(enteredText - previousText),2);
 			$.ajax({
 		          type: "POST",
@@ -974,7 +976,7 @@ $(document).ready(function(){
 		
 		// Handle delete for individual row
 		jQuery.ajax({
-            url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + id,
+            url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + id + dateMeantFor + chosenDate,
             type: 'DELETE',
             success: function(data) {
             	
