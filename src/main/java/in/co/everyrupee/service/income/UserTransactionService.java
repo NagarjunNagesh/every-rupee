@@ -1,14 +1,17 @@
 package in.co.everyrupee.service.income;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -53,12 +56,20 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @Cacheable
-    public Object fetchUserTransaction(String pFinancialPortfolioId) {
+    @Cacheable(key = "{#pFinancialPortfolioId,#dateMeantFor}")
+    public Object fetchUserTransaction(String pFinancialPortfolioId,String dateMeantFor) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date = new Date();
+	try {
+	    date = format.parse(dateMeantFor);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
+	
 	List<UserTransaction> userTransactions = userTransactionsRepository
-		.findByFinancialPortfolioId(pFinancialPortfolioId);
+		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId,date);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
@@ -106,7 +117,7 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict(key = "#pFinancialPortfolioId")
+    @CacheEvict(key = "{#pFinancialPortfolioId,#formData.get(\"dateMeantFor\").get(0)}")
     public UserTransaction saveUserTransaction(MultiValueMap<String, String> formData, String pFinancialPortfolioId) {
 
 	if (CollectionUtils.isEmpty(formData.get(DashboardConstants.Transactions.TRANSACTIONS_AMOUNT))) {
@@ -142,8 +153,8 @@ public class UserTransactionService implements IUserTransactionService {
      * @return
      */
     @Override
-    @CacheEvict(key = "#financialPortfolioId")
-    public void deleteUserTransactions(String transactionalIds, String financialPortfolioId) {
+    @CacheEvict(key = "{#financialPortfolioId,#dateMeantFor}")
+    public void deleteUserTransactions(String transactionalIds, String financialPortfolioId, String dateMeantFor) {
 	String[] arrayOfTransactionIds = transactionalIds.split(GenericConstants.COMMA);
 	Set<String> transactionIdsAsSet = new HashSet<String>();
 	transactionIdsAsSet.addAll(Arrays.asList(arrayOfTransactionIds));
@@ -155,8 +166,11 @@ public class UserTransactionService implements IUserTransactionService {
 
     }
 
+    /**
+     * Update the transactions with the new value
+     */
     @Override
-    @CacheEvict(key = "#financialPortfolioId")
+    @CacheEvict(key = "{#financialPortfolioId,#formData.get(\"dateMeantFor\").get(0)}")
     public UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId) {
 

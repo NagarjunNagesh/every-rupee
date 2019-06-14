@@ -3,6 +3,7 @@
  */
 package in.co.everyrupee.repository.income;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,16 @@ import in.co.everyrupee.pojo.income.UserTransaction;
 @Repository
 public interface UserTransactionsRepository extends JpaRepository<UserTransaction, Integer> {
     List<UserTransaction> findByFinancialPortfolioId(String financialPortfolioId);
+    
+    /**
+     * Find all the transactions for the month specified
+     * 
+     * @param financialPortfolioId
+     * @param dateMeantFor
+     * @return
+     */
+    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.dateMeantFor in ?2")
+    List<UserTransaction> findByFinancialPortfolioIdAndDate(String financialPortfolioId, Date dateMeantFor);
 
     /**
      * Delete all user with ids specified in {@code ids} parameter

@@ -25,6 +25,7 @@ const saveTransactionsUrl = "/api/transactions/save/";
 const transactionsUpdateUrl = "/update/";
 const budgetUpdateUrl = "/update/plannedAmount";
 const budgetAPIUrl =  "/api/budget/";
+const dateMeantFor = '?dateMeantFor=';
 
 //Create Budget Map for transactions
 let updateBudgetMap = {};

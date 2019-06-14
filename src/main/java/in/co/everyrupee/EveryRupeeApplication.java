@@ -19,7 +19,6 @@ import in.co.everyrupee.constants.GenericConstants;
  */
 @SpringBootApplication
 @EnableCaching
-@EnableAsync
 @EnableAuthorizationServer
 @ComponentScan(GenericConstants.EVERYRUPEE_PACKAGE)
 public class EveryRupeeApplication {

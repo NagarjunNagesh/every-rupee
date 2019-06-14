@@ -1,10 +1,13 @@
 package in.co.everyrupee.events.listener.registration;
 
+import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import in.co.everyrupee.constants.GenericConstants;
@@ -27,28 +30,35 @@ public class RegistrationCompleteListener implements IRegistrationCompleteListen
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // Calls the confirm registration email scenario
+    /**
+     * Calls the confirm registration email scenario
+     */
     @Override
     public void onApplicationEvent(final OnRegistrationCompleteEvent event) {
 	this.confirmRegistration(event);
     }
 
-    // Sends the Email
+    /**
+     * Sends the Email
+     */
     @Override
     public void confirmRegistration(final OnRegistrationCompleteEvent event) {
 	final Profile user = event.getUser();
 
 	try {
-	    final SimpleMailMessage email = constructEmailMessage(event, user);
-	    mailSender.sendEmail(email);
+	    final Future<SimpleMailMessage> email = constructEmailMessage(event, user);
+	    mailSender.sendEmail(email.get());
 	} catch (Exception e) {
 	    logger.error("Unable to send confirmation email after email registration");
 	}
     }
 
-    // Creates the mail to send for the user
+    /**
+     * Creates the mail to send for the user
+     */
     @Override
-    public final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final Profile user) {
+    public final Future<SimpleMailMessage> constructEmailMessage(final OnRegistrationCompleteEvent event,
+	    final Profile user) {
 	final String recipientAddress = user.getEmail();
 	final String subject = GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT;
 	final String message = GenericConstants.USER_REGISTERED_SUCCESSFULLY_SUBJECT;
@@ -60,7 +70,7 @@ public class RegistrationCompleteListener implements IRegistrationCompleteListen
 	// TODO Email Template welcoming the user
 	passwordResetEmail.setText(message);
 
-	return passwordResetEmail;
+	return new AsyncResult<SimpleMailMessage>(passwordResetEmail);
     }
 
 }
