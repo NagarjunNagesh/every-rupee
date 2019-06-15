@@ -69,7 +69,7 @@ public class UserBudgetCreationListener implements IUserBudgetCreationListener {
 	    String categoryId = formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0);
 	    formData.put(DashboardConstants.Budget.CATEGORY_ID,
 		    formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS));
-	    formData.put(DashboardConstants.Budget.AMOUNT_JSON, formData.get(DashboardConstants.Transactions.AMOUNT));
+	    formData.put(DashboardConstants.Budget.AUTO_GENERATED_JSON, formData.get(DashboardConstants.Transactions.AMOUNT));
 	    final Boolean categoryIncome = categoryService.categoryIncome(Integer.parseInt(categoryId));
 
 	    if (categoryIncome) {

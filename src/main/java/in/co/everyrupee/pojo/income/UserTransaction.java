@@ -52,6 +52,7 @@ public class UserTransaction implements Serializable {
     @Column(name = DashboardConstants.Transactions.AMOUNT)
     private double amount;
 
+    @NotNull
     @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateMeantFor;
