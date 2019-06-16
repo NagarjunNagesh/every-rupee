@@ -2,7 +2,7 @@ package in.co.everyrupee.constants.income;
 
 public class DashboardConstants {
 
-    public static final String COUPON_SEQ = "coupon_seq";
+    public static final String ID_SEQ = "id_seq";
     public static final String DATE_FORMAT = "ddMMyyyy";
     public static final String CREATION_DATE = "create_date";
     public static final String MODIFICATION_DATE = "modify_date";

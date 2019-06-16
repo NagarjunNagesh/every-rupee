@@ -38,8 +38,8 @@ public class UserBudget implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.COUPON_SEQ)
-    @SequenceGenerator(name = DashboardConstants.COUPON_SEQ, sequenceName = DashboardConstants.COUPON_SEQ, allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.ID_SEQ)
+    @SequenceGenerator(name = DashboardConstants.ID_SEQ, sequenceName = DashboardConstants.ID_SEQ, allocationSize = 100)
     @Column(name = DashboardConstants.Budget.BUDGET_ID)
     private int budgetId;
 
