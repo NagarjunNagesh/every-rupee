@@ -45,7 +45,8 @@ public class UserTransactionsController {
      * @return
      */
     @RequestMapping(value = "/{pFinancialPortfolioId}", method = RequestMethod.GET)
-    public Object getUserTransactionByUserId(@PathVariable String pFinancialPortfolioId, Principal userPrincipal, @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
+    public Object getUserTransactionByUserId(@PathVariable String pFinancialPortfolioId, Principal userPrincipal,
+	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
@@ -53,7 +54,6 @@ public class UserTransactionsController {
 	return userTransactionService.fetchUserTransaction(pFinancialPortfolioId, dateMeantFor);
     }
 
-    
     /**
      * Saves a UserTransaction
      * 
@@ -69,11 +69,11 @@ public class UserTransactionsController {
 	    throw new SecurityException();
 	}
 
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
 	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData,
 		pFinancialPortfolioId);
 
+	// Auto Create Budget on saving the transaction
+	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	eventPublisher.publishEvent(new OnSaveTransactionCompleteEvent(user, pFinancialPortfolioId, formData));
 
 	return userTransactionResponse;
@@ -89,7 +89,8 @@ public class UserTransactionsController {
      */
     @RequestMapping(value = "/{pFinancialPortfolioId}/{transactionIds}", method = RequestMethod.DELETE)
     public GenericResponse deleteUserTransactionById(@PathVariable String pFinancialPortfolioId,
-	    @PathVariable String transactionIds, Principal userPrincipal, @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
+	    @PathVariable String transactionIds, Principal userPrincipal,
+	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}

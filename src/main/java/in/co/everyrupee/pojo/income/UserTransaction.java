@@ -33,8 +33,8 @@ public class UserTransaction implements Serializable {
     private static final long serialVersionUID = 4387424250638939980L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.COUPON_SEQ)
-    @SequenceGenerator(name = DashboardConstants.COUPON_SEQ, sequenceName = DashboardConstants.COUPON_SEQ, allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.ID_SEQ)
+    @SequenceGenerator(name = DashboardConstants.ID_SEQ, sequenceName = DashboardConstants.ID_SEQ, allocationSize = 100)
     @Column(name = DashboardConstants.Transactions.TRANSACTIONS_ID)
     private int transactionId;
 
@@ -52,6 +52,7 @@ public class UserTransaction implements Serializable {
     @Column(name = DashboardConstants.Transactions.AMOUNT)
     private double amount;
 
+    @NotNull
     @Column(name = DashboardConstants.Budget.DATE_MEANT_FOR)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateMeantFor;

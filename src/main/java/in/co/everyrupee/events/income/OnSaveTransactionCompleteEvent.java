@@ -29,13 +29,11 @@ public class OnSaveTransactionCompleteEvent extends ApplicationEvent {
 	this.formData = formData;
     }
 
-    //
-
     public MyUser getUser() {
 	return user;
     }
 
-    public MultiValueMap<String, String> getformData() {
+    public MultiValueMap<String, String> getFormData() {
 	return formData;
     }
 

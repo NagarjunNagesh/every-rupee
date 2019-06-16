@@ -1,6 +1,3 @@
-/**
- * 
- */
 package in.co.everyrupee.security;
 
 import java.util.ArrayList;
