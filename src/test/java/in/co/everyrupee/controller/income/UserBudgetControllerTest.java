@@ -1,5 +1,6 @@
 package in.co.everyrupee.controller.income;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,7 +52,7 @@ public class UserBudgetControllerTest {
     }
 
     /**
-     * Get user Budget by user Id test
+     * Get user Budget by financial portfolio Id test
      * 
      * @throws Exception
      */
@@ -73,6 +74,7 @@ public class UserBudgetControllerTest {
 	when(this.userBudgetService.fetchAllUserBudget(financialPortfolioId, dateMeantFor)).thenReturn(userBudgetList);
 
 	this.mvc.perform(get("/api/budget/193000000?dateMeantFor=01062019").contentType(MediaType.APPLICATION_JSON))
-		.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.*").isNotEmpty());
+		.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.*").isNotEmpty())
+		.andExpect(jsonPath("$[0].financialPortfolioId", is(financialPortfolioId)));
     }
 }
