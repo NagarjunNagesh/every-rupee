@@ -255,4 +255,12 @@ public class UserBudgetService implements IUserBudgetService {
 
     }
 
+    public UserBudgetRepository getUserBudgetRepository() {
+        return userBudgetRepository;
+    }
+
+    public void setUserBudgetRepository(UserBudgetRepository userBudgetRepository) {
+        this.userBudgetRepository = userBudgetRepository;
+    }
+
 }

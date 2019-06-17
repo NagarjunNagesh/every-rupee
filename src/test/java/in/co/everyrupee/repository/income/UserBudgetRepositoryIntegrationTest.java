@@ -2,6 +2,8 @@
 //
 //import static org.assertj.core.api.Assertions.assertThat;
 //
+//import javax.persistence.PersistenceContext;
+//
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,10 @@
 //
 //@RunWith(SpringRunner.class)
 //@DataJpaTest
-////@AutoConfigureTestDatabase(replace = Replace.NONE)
-////@WebMvcTest
-//public class UserBudgetRepositoryIntegrationTest {
+//public class UserBudgetRepositoryIntegrationTest { 
 //
-//    @Autowired
-//    private TestEntityManager entityManager;
+//    @PersistenceContext   
+//    TestEntityManager entityManager;
 //
 //    @Autowired
 //    private UserBudgetRepository userBudgetRepository;
