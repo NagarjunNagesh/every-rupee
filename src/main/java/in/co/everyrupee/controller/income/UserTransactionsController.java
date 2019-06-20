@@ -32,7 +32,7 @@ import in.co.everyrupee.utils.GenericResponse;
 public class UserTransactionsController {
 
     @Autowired
-    IUserTransactionService userTransactionService;
+    private IUserTransactionService userTransactionService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;

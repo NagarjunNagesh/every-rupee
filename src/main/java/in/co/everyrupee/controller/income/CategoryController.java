@@ -22,7 +22,7 @@ import in.co.everyrupee.service.income.ICategoryService;
 public class CategoryController {
 
     @Autowired
-    ICategoryService categoryService;
+    private ICategoryService categoryService;
 
     // Get a Single User Transaction
     @RequestMapping(value = "/", method = RequestMethod.GET)
