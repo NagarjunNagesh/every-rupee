@@ -22,7 +22,7 @@ import in.co.everyrupee.utils.ERStringUtils;
 public class CategoryService implements ICategoryService {
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     @Cacheable(DashboardConstants.Category.CATEGORY_CACHE_NAME)

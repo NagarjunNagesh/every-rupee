@@ -130,7 +130,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	logger.error("400 Status Code", ex);
 	final GenericResponse bodyOfResponse = new GenericResponse(
 		messages.getMessage("message.passwordNotValidError", null, request.getLocale()), "PasswordNotValid");
-	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     // 401
@@ -140,7 +140,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	logger.error("401 Status Code", ex);
 	final GenericResponse bodyOfResponse = new GenericResponse(
 		messages.getMessage("message.unauth", null, request.getLocale()), "Unauthorized");
-	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
 }

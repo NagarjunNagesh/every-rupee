@@ -5,18 +5,15 @@
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-//import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+//import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.test.context.junit4.SpringRunner;
 //
 //@RunWith(SpringRunner.class)
-//@DataJpaTest
-////@AutoConfigureTestDatabase(replace = Replace.NONE)
-////@WebMvcTest
+//@SpringBootTest(classes = UserBudgetRepository.class)
 //public class UserBudgetRepositoryIntegrationTest {
 //
-//    @Autowired
-//    private TestEntityManager entityManager;
+////    @PersistenceContext
+////    TestEntityManager entityManager;
 //
 //    @Autowired
 //    private UserBudgetRepository userBudgetRepository;
@@ -26,7 +23,7 @@
 //     */
 //    @Test
 //    public void injectedComponentsAreNotNull() {
-//	assertThat(entityManager).isNotNull();
+////	assertThat(entityManager).isNotNull();
 //	assertThat(userBudgetRepository).isNotNull();
 //    }
 //

@@ -45,7 +45,7 @@ import in.co.everyrupee.utils.ERStringUtils;
 public class UserTransactionService implements IUserTransactionService {
 
     @Autowired
-    UserTransactionsRepository userTransactionsRepository;
+    private UserTransactionsRepository userTransactionsRepository;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -57,7 +57,7 @@ public class UserTransactionService implements IUserTransactionService {
      */
     @Override
     @Cacheable(key = "{#pFinancialPortfolioId,#dateMeantFor}")
-    public Object fetchUserTransaction(String pFinancialPortfolioId,String dateMeantFor) {
+    public Object fetchUserTransaction(String pFinancialPortfolioId, String dateMeantFor) {
 
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
@@ -67,9 +67,9 @@ public class UserTransactionService implements IUserTransactionService {
 	} catch (ParseException e) {
 	    logger.error(e + " Unable to add date to the user budget");
 	}
-	
+
 	List<UserTransaction> userTransactions = userTransactionsRepository
-		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId,date);
+		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId, date);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    logger.warn("user transactions data is empty for user ", user.getUsername());

@@ -76,15 +76,15 @@ public class ProfileService {
     @Cacheable
     public Optional<Profile> findUserByEmail(String email) {
 	String ip = getClientIP();
-	if (loginAttemptService.isBlocked(ip)) {
+	if (getLoginAttemptService().isBlocked(ip)) {
 	    throw new RuntimeException("blocked");
 	}
 
-	return profileRepository.findByEmail(email);
+	return getProfileRepository().findByEmail(email);
     }
 
     public Optional<Profile> findUserByResetToken(String resetToken) {
-	return profileRepository.findByResetToken(resetToken);
+	return getProfileRepository().findByResetToken(resetToken);
     }
 
     // API
@@ -94,10 +94,10 @@ public class ProfileService {
 	    throw new UserAlreadyExistException("There is an account with that email adress: " + profile.getEmail());
 	}
 
-	boolean passwordValidation = regexUtils.isMatchingRegex(profile.getPassword(), inputRegexes);
+	boolean passwordValidation = getRegexUtils().isMatchingRegex(profile.getPassword(), inputRegexes);
 	if (!passwordValidation) {
 	    throw new PasswordNotValidException(
-		    messages.getMessage("message.passwordNotValidError", null, request.getLocale())
+		    getMessages().getMessage("message.passwordNotValidError", null, getRequest().getLocale())
 			    + profile.getPassword());
 	}
 
@@ -110,12 +110,12 @@ public class ProfileService {
     }
 
     public Profile saveUser(Profile profile) {
-	profile.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
+	profile.setPassword(getbCryptPasswordEncoder().encode(profile.getPassword()));
 	profile.setActive(1);
-	profile.setLocale(messages.getMessage("message.defaultCurrencyFormat", null, request.getLocale()));
-	Role userRole = roleRepository.findByRole(ProfileServiceConstants.Role.USER_ROLE);
+	profile.setLocale(getMessages().getMessage("message.defaultCurrencyFormat", null, getRequest().getLocale()));
+	Role userRole = getRoleRepository().findByRole(ProfileServiceConstants.Role.USER_ROLE);
 	profile.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-	return profileRepository.save(profile);
+	return getProfileRepository().save(profile);
     }
 
     /**
@@ -133,11 +133,39 @@ public class ProfileService {
     }
 
     private String getClientIP() {
-	String xfHeader = request.getHeader("X-Forwarded-For");
+	String xfHeader = getRequest().getHeader("X-Forwarded-For");
 	if (xfHeader == null) {
-	    return request.getRemoteAddr();
+	    return getRequest().getRemoteAddr();
 	}
 	return xfHeader.split(",")[0];
+    }
+
+    public ProfileRepository getProfileRepository() {
+	return profileRepository;
+    }
+
+    public RoleRepository getRoleRepository() {
+	return roleRepository;
+    }
+
+    public LoginAttemptService getLoginAttemptService() {
+	return loginAttemptService;
+    }
+
+    public HttpServletRequest getRequest() {
+	return request;
+    }
+
+    public MessageSource getMessages() {
+	return messages;
+    }
+
+    public RegexUtils getRegexUtils() {
+	return regexUtils;
+    }
+
+    public BCryptPasswordEncoder getbCryptPasswordEncoder() {
+	return bCryptPasswordEncoder;
     }
 
 }
