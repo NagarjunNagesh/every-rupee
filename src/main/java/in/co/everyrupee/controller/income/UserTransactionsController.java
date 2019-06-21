@@ -5,7 +5,6 @@ import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.events.income.OnSaveTransactionCompleteEvent;
 import in.co.everyrupee.pojo.income.UserTransaction;
-import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.service.income.IUserTransactionService;
 import in.co.everyrupee.utils.GenericResponse;
 
@@ -45,7 +43,8 @@ public class UserTransactionsController {
      * @return
      */
     @RequestMapping(value = "/{pFinancialPortfolioId}", method = RequestMethod.GET)
-    public Object getUserTransactionByUserId(@PathVariable String pFinancialPortfolioId, Principal userPrincipal,
+    public Object getUserTransactionByFinancialPortfolioId(@PathVariable String pFinancialPortfolioId,
+	    Principal userPrincipal,
 	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
@@ -73,8 +72,7 @@ public class UserTransactionsController {
 		pFinancialPortfolioId);
 
 	// Auto Create Budget on saving the transaction
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	eventPublisher.publishEvent(new OnSaveTransactionCompleteEvent(user, pFinancialPortfolioId, formData));
+	eventPublisher.publishEvent(new OnSaveTransactionCompleteEvent(pFinancialPortfolioId, formData));
 
 	return userTransactionResponse;
     }

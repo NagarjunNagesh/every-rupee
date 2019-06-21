@@ -59,7 +59,6 @@ public class UserTransactionService implements IUserTransactionService {
     @Cacheable(key = "{#pFinancialPortfolioId,#dateMeantFor}")
     public Object fetchUserTransaction(String pFinancialPortfolioId, String dateMeantFor) {
 
-	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
 	Date date = new Date();
 	try {
@@ -72,6 +71,7 @@ public class UserTransactionService implements IUserTransactionService {
 		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId, date);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
+	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	    logger.warn("user transactions data is empty for user ", user.getUsername());
 	    return userTransactions;
 	}
