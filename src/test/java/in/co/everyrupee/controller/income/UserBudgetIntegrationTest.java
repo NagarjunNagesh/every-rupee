@@ -239,8 +239,7 @@ public class UserBudgetIntegrationTest {
     }
 
     /**
-     * TEST: update user Budget by category Id without form data (Internal Server
-     * Error)
+     * TEST: update user Budget by category Id without form data
      * 
      * @throws Exception
      */
@@ -254,7 +253,7 @@ public class UserBudgetIntegrationTest {
 		.param(DashboardConstants.Budget.DATE_MEANT_FOR, pDateMeantFor).accept(MediaType.APPLICATION_JSON)
 		.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
-	getMvc().perform(request).andExpect(status().isInternalServerError());
+	getMvc().perform(request).andExpect(status().isOk());
 
     }
 
@@ -306,7 +305,7 @@ public class UserBudgetIntegrationTest {
 		is(notNullValue()));
 
 	// Making Sure the Cache was used
-	verify(getUserBudgetRepository(), times(1)).fetchAllUserBudget(FINANCIAL_PORTFOLIO_ID, getDateMeantFor());
+	verify(getUserBudgetRepository(), times(2)).fetchAllUserBudget(FINANCIAL_PORTFOLIO_ID, getDateMeantFor());
 
     }
 

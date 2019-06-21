@@ -133,6 +133,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
+    // 400
+    @ExceptionHandler({ ResourceNotFoundException.class })
+    @ResponseBody
+    public ResponseEntity<Object> handleResourceNotFoundException(final RuntimeException ex, final WebRequest request) {
+	logger.error("400 Status Code", ex);
+	final GenericResponse bodyOfResponse = new GenericResponse(
+		messages.getMessage("message.resourceNotFound", null, request.getLocale()), "ResourceNotFound");
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     // 401
     @ExceptionHandler({ SecurityException.class })
     @ResponseBody
