@@ -35,6 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,7 +45,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.pojo.income.UserTransaction;
-import in.co.everyrupee.repository.income.UserBudgetRepository;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 
 /**
@@ -66,7 +66,7 @@ public class UserTransactionIntegrationTest {
     private UserTransactionsRepository userTransactionRepository;
 
     @MockBean
-    private UserBudgetRepository userBudgetRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     CacheManager cacheManager;
@@ -170,6 +170,7 @@ public class UserTransactionIntegrationTest {
 		.andExpect(status().isOk());
 
 	verify(getUserTransactionRepository(), times(1)).save(Mockito.any());
+
 	// Ensuring that the cache is evicted
 	assertNull(getCacheManager().getCache(DashboardConstants.Transactions.TRANSACTIONS_CACHE_NAME)
 		.get(getCacheObjectKey()));
@@ -354,8 +355,8 @@ public class UserTransactionIntegrationTest {
 	this.userTransactionsList = userTransactionsList;
     }
 
-    private UserBudgetRepository getUserBudgetRepository() {
-	return userBudgetRepository;
+    public ApplicationEventPublisher getEventPublisher() {
+	return eventPublisher;
     }
 
 }
