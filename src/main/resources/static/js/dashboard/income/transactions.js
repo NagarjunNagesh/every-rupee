@@ -572,6 +572,8 @@ $(document).ready(function(){
 			                 	    		updateTotalAvailableSection(0 , 0);
 			                 	    		// Disable delete Transactions button on refreshing the transactions
 				                         	manageDeleteTransactionsButton();
+				                         	// Delete The auto generated user budget
+				                         	er.deleteAllUserBudget();
 			                        	} else {
 			                        		// Choose the closest parent Div for the checked elements
 				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
