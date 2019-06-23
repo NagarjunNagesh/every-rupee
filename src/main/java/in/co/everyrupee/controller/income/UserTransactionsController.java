@@ -69,7 +69,7 @@ public class UserTransactionsController {
 	    throw new SecurityException();
 	}
 
-	return userTransactionService.fetchCategoryTotal(pFinancialPortfolioId, dateMeantFor);
+	return userTransactionService.fetchCategoryTotalAndUpdateUserBudget(pFinancialPortfolioId, dateMeantFor);
     }
 
     /**

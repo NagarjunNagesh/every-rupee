@@ -1274,15 +1274,15 @@ $(document).ready(function(){
             		// Check if the elements are present inside the keys
             		if(!includesStr(categoryTotalKeys, categoryId)) {
             			// Mark those elements to be deleted
-            			elementsToDelete.appendChild(categoryDiv);
+            			$(categoryDiv).fadeOut('slow', function(){
+            				elementsToDelete.appendChild(categoryDiv);
+            			});
             		}
             	}
-
+            	
             	// Remove the elements which are marked to be deleted
             	if(isNotEmpty(elementsToDelete)) {
-            		elementsToDelete.fadeOut('slow', function(){ 
-                		$(this).remove(); 
-        			});
+            		elementsToDelete.remove(); 
             	}
             }
 		});
