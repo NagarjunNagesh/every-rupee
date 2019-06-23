@@ -1,6 +1,7 @@
 package in.co.everyrupee.controller.income;
 
 import java.security.Principal;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -51,6 +52,24 @@ public class UserTransactionsController {
 	}
 
 	return userTransactionService.fetchUserTransaction(pFinancialPortfolioId, dateMeantFor);
+    }
+
+    /**
+     * Fetch category total and update user budget
+     * 
+     * @param pFinancialPortfolioId
+     * @param userPrincipal
+     * @return
+     */
+    @RequestMapping(value = "/categoryTotal/{pFinancialPortfolioId}", method = RequestMethod.GET)
+    public Map<Integer, Double> getCategoryTotalByFinancialPortfolioId(@PathVariable String pFinancialPortfolioId,
+	    Principal userPrincipal,
+	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	return userTransactionService.fetchCategoryTotal(pFinancialPortfolioId, dateMeantFor);
     }
 
     /**

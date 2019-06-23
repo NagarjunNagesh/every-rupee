@@ -1,5 +1,7 @@
 package in.co.everyrupee.service.income;
 
+import java.util.Map;
+
 import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.pojo.income.UserTransaction;
@@ -14,5 +16,7 @@ public interface IUserTransactionService {
 
     UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId);
+
+    Map<Integer, Double> fetchCategoryTotal(String financialPortfolioId, String dateMeantFor);
 
 }

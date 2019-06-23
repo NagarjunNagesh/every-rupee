@@ -64,7 +64,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user budget");
+	    logger.error(e + " Unable to add date to the user Transaction");
 	}
 
 	List<UserTransaction> userTransactions = userTransactionsRepository
@@ -194,6 +194,43 @@ public class UserTransactionService implements IUserTransactionService {
 	UserTransaction userTransactionSaved = userTransactionsRepository.save(userTransaction.get());
 
 	return userTransactionSaved;
+    }
+
+    /**
+     * Fetch category total
+     */
+    @Override
+    public Map<Integer, Double> fetchCategoryTotal(String financialPortfolioId, String dateMeantFor) {
+
+	Map<Integer, Double> categoryAndTotalAmountMap = new HashMap<Integer, Double>();
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date = new Date();
+	try {
+	    date = format.parse(dateMeantFor);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user transaction");
+	}
+
+	List<UserTransaction> userTransactions = userTransactionsRepository
+		.findByFinancialPortfolioIdAndDate(financialPortfolioId, date);
+
+	if (CollectionUtils.isEmpty(userTransactions)) {
+	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    return categoryAndTotalAmountMap;
+	}
+
+	for (UserTransaction userTransaction : userTransactions) {
+	    if (categoryAndTotalAmountMap.containsKey(userTransaction.getCategoryId())) {
+		Double categoryTotalAmountPrevious = categoryAndTotalAmountMap.get(userTransaction.getCategoryId());
+		categoryAndTotalAmountMap.put(userTransaction.getCategoryId(),
+			categoryTotalAmountPrevious + userTransaction.getAmount());
+	    } else {
+		categoryAndTotalAmountMap.put(userTransaction.getCategoryId(), userTransaction.getAmount());
+	    }
+	}
+
+	return categoryAndTotalAmountMap;
     }
 
 }

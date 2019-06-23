@@ -142,13 +142,16 @@ $(document).ready(function(){
     			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
     			$("#checkAll").prop("checked", false); 
-             	for(let countGrouped = 0, lengthArray = Object.keys(result).length; countGrouped < lengthArray; countGrouped++) {
-             	   let key = Object.keys(result)[countGrouped];
+    			// Fetch all the key set for the result
+    			let resultKeySet = Object.keys(result)
+             	for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
+             	   let key = resultKeySet[countGrouped];
              	   let value = result[key];
      			   let transactionsRowDocumentFragment = document.createDocumentFragment();
      			   let totalCategoryAmount = 0;
-     			   for(let count = 0, length = Object.keys(value).length; count < length; count++) {
-     				  let subKey = Object.keys(value)[count];
+     			   let valueElementKeySet = Object.keys(value)
+     			   for(let count = 0, length = valueElementKeySet.length; count < length; count++) {
+     				  let subKey = valueElementKeySet[count];
      				  let subValue = value[subKey];
      				  // Create transactions table row
      				  transactionsRowDocumentFragment.appendChild(createTableRows(subValue, 'd-none', key));
@@ -193,8 +196,9 @@ $(document).ready(function(){
 			url: budgetAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
             type: 'GET',
             success: function(data) {
-            	for(let count = 0, length = Object.keys(data).length; count < length; count++){
-	        		  let key = Object.keys(data)[count];
+            	let dataKeySet = Object.keys(data)
+            	for(let count = 0, length = dataKeySet.length; count < length; count++){
+	        		  let key = dataKeySet[count];
 	            	  let value = data[key];
 	            	  
 	            	  if(isEmpty(value)) {
@@ -577,13 +581,14 @@ $(document).ready(function(){
 			                        	} else {
 			                        		// Choose the closest parent Div for the checked elements
 				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
-				                        	let clonedElementsToDelete = elementsToDelete.clone();
 			                        		// Remove all the elements
 				                        	elementsToDelete.fadeOut('slow', function(){ 
 				                        		$(this).remove(); 
 				                        		// Disable delete Transactions button on refreshing the transactions
 					                         	manageDeleteTransactionsButton();
 				                        	});
+				                        	// To recalculate the category total amount and to reduce user budget for the category appropriately
+				                        	recalculateCategoryTotalAmount();
 			                        	}
 			                         },
 			                        error:  function (thrownError) {
@@ -1238,6 +1243,49 @@ $(document).ready(function(){
 	    if (event.persisted) {
 	        window.isRefresh = true;
 	    }
+	}
+	
+	// Recalculate category amount and append them to the table While updating auto generated user budget 
+	function recalculateCategoryTotalAmount() {
+		// Load all user transaction from API
+		jQuery.ajax({
+			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
+            type: 'GET',
+            async: true,
+            success: function(categoryTotalMap) {
+            	// Get all the category id's
+        		let categoryTotalKeys = Object.keys(categoryTotalMap);
+            	// Update category amount
+            	for(let countGrouped = 0, lengthArray = categoryTotalKeys.length; countGrouped < lengthArray; countGrouped++) {
+              	   let key = categoryTotalKeys[countGrouped];
+              	   let value = categoryTotalMap[key];
+              	   let categoryAmountDiv = document.getElementById('amountCategory-'+key);
+              	   categoryAmountDiv.innerHTML = currentCurrencyPreference + formatNumber(value, currentUser.locale);
+              	   categoryTotalKeys.push(key);
+            	}
+            	
+            	let categoryDivs = document.querySelectorAll('*[id^="categoryTableRow"]');
+            	let elementsToDelete = document.createDocumentFragment();
+            	
+            	// Find the categories that are visible to the user but are not present in the database
+            	for(let count = 0, lengthArray = categoryDivs.length; count < lengthArray; count++){
+            		let categoryDiv = categoryDivs[count];
+            		let categoryId = lastElement(splitElement(categoryDiv.id,'-'));
+            		// Check if the elements are present inside the keys
+            		if(!includesStr(categoryTotalKeys, categoryId)) {
+            			// Mark those elements to be deleted
+            			elementsToDelete.appendChild(categoryDiv);
+            		}
+            	}
+
+            	// Remove the elements which are marked to be deleted
+            	if(isNotEmpty(elementsToDelete)) {
+            		elementsToDelete.fadeOut('slow', function(){ 
+                		$(this).remove(); 
+        			});
+            	}
+            }
+		});
 	}
 	
 });
