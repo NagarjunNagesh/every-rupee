@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.income.DashboardConstants;
+import in.co.everyrupee.events.income.OnFetchCategoryTotalCompleteEvent;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
@@ -46,6 +48,9 @@ public class UserTransactionService implements IUserTransactionService {
 
     @Autowired
     private UserTransactionsRepository userTransactionsRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -64,7 +69,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user budget");
+	    logger.error(e + " Unable to add date to the user Transaction");
 	}
 
 	List<UserTransaction> userTransactions = userTransactionsRepository
@@ -194,6 +199,48 @@ public class UserTransactionService implements IUserTransactionService {
 	UserTransaction userTransactionSaved = userTransactionsRepository.save(userTransaction.get());
 
 	return userTransactionSaved;
+    }
+
+    /**
+     * Fetch category total
+     */
+    @Override
+    public Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId,
+	    String dateMeantFor) {
+
+	Map<Integer, Double> categoryAndTotalAmountMap = new HashMap<Integer, Double>();
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date = new Date();
+	try {
+	    date = format.parse(dateMeantFor);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user transaction");
+	}
+
+	List<UserTransaction> userTransactions = userTransactionsRepository
+		.findByFinancialPortfolioIdAndDate(financialPortfolioId, date);
+
+	if (CollectionUtils.isEmpty(userTransactions)) {
+	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    return categoryAndTotalAmountMap;
+	}
+
+	for (UserTransaction userTransaction : userTransactions) {
+	    if (categoryAndTotalAmountMap.containsKey(userTransaction.getCategoryId())) {
+		Double categoryTotalAmountPrevious = categoryAndTotalAmountMap.get(userTransaction.getCategoryId());
+		categoryAndTotalAmountMap.put(userTransaction.getCategoryId(),
+			categoryTotalAmountPrevious + userTransaction.getAmount());
+	    } else {
+		categoryAndTotalAmountMap.put(userTransaction.getCategoryId(), userTransaction.getAmount());
+	    }
+	}
+
+	// Auto Create Budget on saving the transaction
+	eventPublisher.publishEvent(
+		new OnFetchCategoryTotalCompleteEvent(categoryAndTotalAmountMap, date, financialPortfolioId));
+
+	return categoryAndTotalAmountMap;
     }
 
 }

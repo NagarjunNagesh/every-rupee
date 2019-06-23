@@ -311,8 +311,34 @@ public class UserTransactionIntegrationTest {
 		.andExpect(status().isUnauthorized());
     }
 
-    private WebApplicationContext getContext() {
-	return context;
+    /**
+     * Fetch Category total and update User budget test
+     * 
+     * @throws Exception
+     */
+    @WithMockUser(value = "spring")
+    @Test
+    public void fetchCategoryTotalAndUpdateUserBudget() throws Exception {
+	getMvc().perform(get("/api/transactions/categoryTotal/193000000")
+		.param(DashboardConstants.Transactions.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		.andExpect(jsonPath("$.3").isNotEmpty());
+	verify(getUserTransactionRepository(), times(1)).findByFinancialPortfolioIdAndDate(FINANCIAL_PORTFOLIO_ID,
+		getDateMeantFor());
+
+    }
+
+    /**
+     * Fetch Category total and update User budget test
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void fetchCategoryTotalAndUpdateUserBudgetException() throws Exception {
+	getMvc().perform(get("/api/transactions/categoryTotal/193000000")
+		.param(DashboardConstants.Transactions.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+
     }
 
     private MockMvc getMvc() {
