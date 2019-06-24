@@ -17628,6 +17628,7 @@ Copyright (c) 2015 Daniel Eden
   color: rgba(0, 0, 0, 0.4);
   display: -webkit-flex;
   display: flex;
+  font-weight: 700;
 }
 
 .ct-chart .ct-label.ct-vertical.ct-start {
