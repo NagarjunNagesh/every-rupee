@@ -1,6 +1,5 @@
 package in.co.everyrupee.events.listener.income;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -55,7 +54,7 @@ public class UserBudgetUpdationListener implements IUserBudgetUpdationListener {
 
 	try {
 	    Map<Integer, Double> categoryIdAndCategoryTotal = event.getCategoryIdAndTotalAmount();
-	    Date dateMeantFor = event.getDateMeantFor();
+	    String dateMeantFor = event.getDateMeantFor();
 
 	    if (categoryIdAndCategoryTotal == null || dateMeantFor == null) {
 		return;

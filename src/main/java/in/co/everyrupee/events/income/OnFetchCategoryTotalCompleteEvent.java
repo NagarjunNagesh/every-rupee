@@ -1,6 +1,5 @@
 package in.co.everyrupee.events.income;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.context.ApplicationEvent;
@@ -19,11 +18,11 @@ public class OnFetchCategoryTotalCompleteEvent extends ApplicationEvent {
      */
     private static final long serialVersionUID = 1L;
     private final Map<Integer, Double> categoryIdAndTotalAmount;
-    private final Date dateMeantFor;
+    private final String dateMeantFor;
     private final String financialPortfolioId;
 
     public OnFetchCategoryTotalCompleteEvent(final Map<Integer, Double> categoryIdAndTotalAmount,
-	    final Date dateMeantFor, final String financialPortfolioId) {
+	    final String dateMeantFor, final String financialPortfolioId) {
 	super(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 	this.categoryIdAndTotalAmount = categoryIdAndTotalAmount;
 	this.dateMeantFor = dateMeantFor;
@@ -34,7 +33,7 @@ public class OnFetchCategoryTotalCompleteEvent extends ApplicationEvent {
 	return categoryIdAndTotalAmount;
     }
 
-    public Date getDateMeantFor() {
+    public String getDateMeantFor() {
 	return dateMeantFor;
     }
 

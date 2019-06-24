@@ -616,8 +616,27 @@ $(document).ready(function(){
 	// toggle dropdown
 	function toggleDropdown(categoryId, closestTrElement) {
 		let classToHide = '.hideableRow-' + lastElement(categoryId);
+		let dropdownArrowDiv = closestTrElement.firstChild.classList;
 	  	$(classToHide).toggleClass('d-none').toggleClass('d-lg-table-row');
-	  	$($(closestTrElement)[0].children[0]).toggleClass('dropdown-toggle', 100, 'easeInQuad').toggleClass('dropdown-toggle-right', 100, 'easeInQuad');
+	  	dropdownArrowDiv.toggle('dropdown-toggle');
+	  	dropdownArrowDiv.toggle('dropdown-toggle-right');
+	  	// Show the category modal on click category row
+	  	handleCategoryModalToggle(categoryId, closestTrElement);
+	}
+	
+	// Toggle Category modal upon click of a category
+	function handleCategoryModalToggle(categoryId, closestTrElement) {
+		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
+		let categoryModalDiv = document.getElementsByClassName('category-modal');
+		
+		// Hide the financial position div and show the category modal
+		financialPositionDiv[0].classList.toggle('d-none');
+		categoryModalDiv[0].classList.toggle('d-none');
+
+		// Populate the category label with the one selected
+		let categoryNameDiv = document.getElementById('categoryLabelInModal');
+		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
+		
 	}
 	
 	// Throw a session expired error and reload the page.

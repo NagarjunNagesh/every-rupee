@@ -238,7 +238,7 @@ public class UserTransactionService implements IUserTransactionService {
 
 	// Auto Create Budget on saving the transaction
 	eventPublisher.publishEvent(
-		new OnFetchCategoryTotalCompleteEvent(categoryAndTotalAmountMap, date, financialPortfolioId));
+		new OnFetchCategoryTotalCompleteEvent(categoryAndTotalAmountMap, dateMeantFor, financialPortfolioId));
 
 	return categoryAndTotalAmountMap;
     }
