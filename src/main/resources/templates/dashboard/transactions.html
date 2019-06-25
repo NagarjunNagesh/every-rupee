@@ -11,7 +11,7 @@
       <div class="content" id="mutableDashboard">
         <div class="container-fluid">
           <div class="row">
-			<div class="col-md-9 col-sm-9">
+			<div class="col-lg-9">
               <div class="card">
                 <div class="card-header card-header-success card-header-icon">
                   <div class="card-icon">
@@ -51,7 +51,7 @@
                 </div>
               </div>
             </div> 
-             <div class="col-md-3 col-sm-3">
+             <div class="col-lg-3">
               <div class="card transactions-chart">
               	<div class="card-header card-header-icon card-header-danger">
                   <div class="card-icon">
@@ -67,35 +67,51 @@
                 		<div>
                 			<i class="material-icons text-success legend-spacing">fiber_manual_record</i><span class="align-middle">Total Income</span>
                 		</div>
-                			<h4 id="totalIncomeTransactions" class="font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+                			<h4 id="totalIncomeTransactions" class="font-weight-bold transitionTextToNormal"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 		<hr>
                 		<div>
 	                		<i class="material-icons text-danger legend-spacing">fiber_manual_record</i><span class="align-middle">Total Spent</span>
 	                	</div>
-		                	<h4 id="totalExpensesTransactions" class="font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+		                	<h4 id="totalExpensesTransactions" class="font-weight-bold transitionTextToNormal"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 		<hr>
                 		<div>
 							<i class="material-icons text-orange legend-spacing">fiber_manual_record</i><span id="totalAvailableLabel" class="align-middle">Total Available</span>
 						</div>
-	                		<h4 id="totalAvailableTransactions" class="font-weight-bold"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
+	                		<h4 id="totalAvailableTransactions" class="font-weight-bold transitionTextToNormal"><span th:text="#{message.currencySumbol}"></span>0.00</h4>
                 </div>
-                <div id="chartLegend" class="card-footer d-none">
+                <div id="chartLegend" class="card-footer hiddenAfterHalfASec">
                     <div id="legendPieChart" class="col-md-12 text-center">
                     </div>
-                  </div>
+                </div>
                </div>
                <div class="card category-modal d-none">
               	<div class="card-header card-header-icon card-header-danger">
-                  <div class="card-icon">
-                    <i class="material-icons">pie_chart</i>
-                  </div>
+                  <button type="button" class="close categoryHeaderDisplay" data-dismiss="modal" aria-label="Close">
+                      <i class="material-icons">clear</i>
+                    </button>
                 </div>
                 <div class="card-body text-center">
-                	<div id="categoryLabelInModal"></div>
+                	<div class="row"> 
+                		<div id="categoryLabelInModal" class="text-left col-lg-6"></div> 
+                		<div class="col-lg-6 text-right headingDiv">Planned</div> 
+                	</div>
+                	<div class="row"> 
+                		<div class="col-lg-6"></div> 
+                		<span id="plannedAmountCategoryModal" class="col-lg-6 text-right">
+                			<span th:text="#{message.currencySumbol}"></span>0.00
+                		</span> 
+                	</div>
+                	<div class="text-left headingDiv">
+                		<progress max="100" value="66"></progress>
+                		<span id="remainingAmount" class="">
+                			<span th:text="#{message.currencySumbol}"></span>0.00
+                		</span> 
+                		Remaining
+                	</div>
                 </div>
-                <div id="chartLegend" class="card-footer d-none">
-                    
-                  </div>
+                <div id="" class="card-footer">
+                    <div id="numberOfTransactions"></div> Transactions
+                </div>
                </div>
             </div>          
           </div>

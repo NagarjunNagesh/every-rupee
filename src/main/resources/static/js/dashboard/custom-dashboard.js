@@ -374,11 +374,15 @@ function round(value, decimals) {
 
 function showNotification(message, from, align, colorCode){
 
+//	type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+//    color = Math.floor((Math.random() * 6) + 1);
+    
 	  $.notify({
 	      icon: "notifications",
 	      message: message
 
 	  },{
+		 // type: type[color],
 	      type: colorCode,
 	      timer: 2000,
 	      placement: {
@@ -409,18 +413,25 @@ function cloneElementAndAppend(document, elementToClone){
 	
 }
 
+// Assign color change for side bar
 function changeColorOfSidebar(color){
 	if ($sidebar.length != 0) {
 		 $sidebar.attr('data-color', color);
 	 }
 }
 
+// Assign background image for sidebar
 function changeImageOfSidebar(img) {
+	debugger;
 	if ($sidebar.length != 0) {
 		 $sidebar.attr('data-image', img);
-	 }
-	// Request image to be changed
-	md.checkSidebarImage();
+		 
+		$sidebar_img_container = $sidebar.find('.sidebar-background');
+		if ($sidebar_img_container.length != 0) {
+			$sidebar_img_container.css('background-image', 'url("' + img + '")');
+		    $sidebar_img_container.fadeIn('fast');
+		}
+	}
 }
 
 //Format numbers in Indian Currency

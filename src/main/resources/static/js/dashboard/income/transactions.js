@@ -609,33 +609,45 @@ $(document).ready(function(){
 
 	// Show or hide multiple rows in the transactions table
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
-		let categoryId = splitElement($(this).attr('id'),'-');
+		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
 		toggleDropdown(categoryId, this);
 	 });
 	
 	// toggle dropdown
 	function toggleDropdown(categoryId, closestTrElement) {
-		let classToHide = '.hideableRow-' + lastElement(categoryId);
+		let classToHide = '.hideableRow-' + categoryId;
+		let childCategories = $(classToHide);
 		let dropdownArrowDiv = closestTrElement.firstChild.classList;
-	  	$(classToHide).toggleClass('d-none').toggleClass('d-lg-table-row');
+		childCategories.toggleClass('d-none').toggleClass('d-lg-table-row');
 	  	dropdownArrowDiv.toggle('dropdown-toggle');
 	  	dropdownArrowDiv.toggle('dropdown-toggle-right');
 	  	// Show the category modal on click category row
-	  	handleCategoryModalToggle(categoryId, closestTrElement);
+	  	handleCategoryModalToggle(categoryId, closestTrElement, childCategories.length);
 	}
 	
 	// Toggle Category modal upon click of a category
-	function handleCategoryModalToggle(categoryId, closestTrElement) {
+	function handleCategoryModalToggle(categoryId, closestTrElement, totalTransactions) {
 		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
 		let categoryModalDiv = document.getElementsByClassName('category-modal');
 		
 		// Hide the financial position div and show the category modal
 		financialPositionDiv[0].classList.toggle('d-none');
 		categoryModalDiv[0].classList.toggle('d-none');
-
+		
 		// Populate the category label with the one selected
 		let categoryNameDiv = document.getElementById('categoryLabelInModal');
 		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
+		
+		// Set the number of transactions
+		let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
+		numberOfTransactionsDiv.innerText = totalTransactions;
+		
+		// Update the budget amount to the category Modal if present
+		let budgetElementText = closestTrElement.lastChild.innerText;
+		if(isNotEmpty(budgetElementText)) {
+			let plannedAmountModal = document.getElementById('plannedAmountCategoryModal');
+			plannedAmountModal.innerText = budgetElementText;
+		}
 		
 	}
 	
@@ -1117,25 +1129,36 @@ $(document).ready(function(){
         if(isNotEmpty(dataPreferences)) {
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
         	let chartLegend = document.getElementById('chartLegend');
+        	let incomeAmount = document.getElementById('totalIncomeTransactions');
+        	let expenseAmount = document.getElementById('totalExpensesTransactions');
+        	let totalAvailable = document.getElementById('totalAvailableTransactions');
         	
         	transactionsChart.on('created', function(donut) {
-        		  $('.ct-slice-donut-solid').on('mouseover', function() {
-        			  chartLegend.classList.remove('d-none');
+        		  $('.ct-slice-donut-solid').on('mouseover mouseout', function() {
+        			  chartLegend.classList.toggle('hiddenAfterHalfASec');
+        			  chartLegend.classList.toggle('visibleAfterHalfASec');
         		  });
-
-        		  $('.ct-slice-donut-solid').on('mouseout', function() {
-        			  chartLegend.classList.add('d-none');
+        		  
+        		  $('.ct-series-a').on('mouseover mouseout', function() {
+        			  incomeAmount.classList.toggle('transitionTextToNormal');
+        			  incomeAmount.classList.toggle('transitionTextTo120');
         		  });
+        		  
+        		  $('.ct-series-b').on('mouseover mouseout', function() {
+        			  expenseAmount.classList.toggle('transitionTextToNormal');
+        			  expenseAmount.classList.toggle('transitionTextTo120');
+        		  });
+        		  
+        		  $('.ct-series-c').on('mouseover mouseout', function() {
+        			  totalAvailable.classList.toggle('transitionTextToNormal');
+        			  totalAvailable.classList.toggle('transitionTextTo120');
+        		  });
+        			  
         		});
         }
         
 	}
 	
-	// Perform update of budget to the API
-	window.onbeforeunload = function(event) {
-        // Call API of budget to automatically add budget
-    };
-    
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
     	let alignmentDiv = document.createElement('div');
