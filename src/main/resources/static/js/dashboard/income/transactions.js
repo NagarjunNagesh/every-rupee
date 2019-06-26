@@ -618,37 +618,21 @@ $(document).ready(function(){
 		let classToHide = '.hideableRow-' + categoryId;
 		let childCategories = $(classToHide);
 		let dropdownArrowDiv = closestTrElement.firstChild.classList;
+		// Hide all child categories
 		childCategories.toggleClass('d-none').toggleClass('d-lg-table-row');
+		// Toggle the drop down arrow
 	  	dropdownArrowDiv.toggle('dropdown-toggle');
 	  	dropdownArrowDiv.toggle('dropdown-toggle-right');
-	  	// Show the category modal on click category row
-	  	handleCategoryModalToggle(categoryId, closestTrElement, childCategories.length);
-	}
-	
-	// Toggle Category modal upon click of a category
-	function handleCategoryModalToggle(categoryId, closestTrElement, totalTransactions) {
-		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
-		let categoryModalDiv = document.getElementsByClassName('category-modal');
-		
-		// Hide the financial position div and show the category modal
-		financialPositionDiv[0].classList.toggle('d-none');
-		categoryModalDiv[0].classList.toggle('d-none');
-		
-		// Populate the category label with the one selected
-		let categoryNameDiv = document.getElementById('categoryLabelInModal');
-		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
-		
-		// Set the number of transactions
-		let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
-		numberOfTransactionsDiv.innerText = totalTransactions;
-		
-		// Update the budget amount to the category Modal if present
-		let budgetElementText = closestTrElement.lastChild.innerText;
-		if(isNotEmpty(budgetElementText)) {
-			let plannedAmountModal = document.getElementById('plannedAmountCategoryModal');
-			plannedAmountModal.innerText = budgetElementText;
-		}
-		
+	  	let categoryModalDiv = document.getElementsByClassName('category-modal');
+	  	
+	  	// Call method only when the category div is expanding and if the category modal is already open by other categories
+	  	if(dropdownArrowDiv.contains('dropdown-toggle')) {
+	  		// Show the category modal on click category row
+		  	handleCategoryModalToggle(categoryId, closestTrElement, childCategories.length);
+	  	} else {
+	  		// If the category modal is active then hide it
+	  		toggleCategoryModal(false);
+	  	}
 	}
 	
 	// Throw a session expired error and reload the page.
@@ -1058,11 +1042,6 @@ $(document).ready(function(){
         });
 	});
 	
-	// convert from currency format to number
-	function convertToNumberFromCurrency(amount){
-		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-	}
-	
 	// Build empty table message as document
 	function fetchEmptyTableMessage() {
 		let emptyTableRow = document.createElement("div");
@@ -1329,6 +1308,78 @@ $(document).ready(function(){
             }
 		});
 	}
+	
+	//convert from currency format to number
+	function convertToNumberFromCurrency(amount){
+		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+	}
+	
+	/**
+	 * Logic for Category Modal
+	 * 
+	 */
+	
+	// Toggle Category modal upon click of a category
+	function handleCategoryModalToggle(categoryId, closestTrElement, totalTransactions) {
+		toggleCategoryModal(true);
+		
+		// Populate the category label with the one selected
+		let categoryNameDiv = document.getElementById('categoryLabelInModal');
+		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
+		
+		// Set the number of transactions
+		let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
+		numberOfTransactionsDiv.innerText = totalTransactions;
+		
+		// Update the budget amount to the category Modal if present
+		let plannedAmountModal = document.getElementById('plannedAmountCategoryModal');
+		let categoryTotalDiv = document.getElementById('amountCategory-' + categoryId);
+		let percentageAvailable = document.getElementById('percentageAvailable');
+		let remainingAmountDiv = document.getElementById('remainingAmount');
+		
+		let budgetElementText = closestTrElement.lastChild.innerText;
+		if(isNotEmpty(budgetElementText)) {
+			plannedAmountModal.innerText = budgetElementText;
+			
+			// Calculate percentage of budget available to spend or save
+			let categoryAmount = convertToNumberFromCurrency(categoryTotalDiv.innerText);
+			let budgetAmount = convertToNumberFromCurrency(budgetElementText);
+			
+			// Calculate remaining budget
+			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
+			remainingAmountDiv.innerText = formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
+
+			// Calculate percentage available to spend or save
+			let percentageRemaining = round((budgetAvailableToSpendOrSave / budgetAmount) * 100,0);
+			percentageAvailable.innerText = percentageRemaining;
+		} else {
+			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
+			percentageAvailable.innerText = 'NA'
+				
+		}
+	}
+	
+	// Toggles the category modal
+	function toggleCategoryModal(keepCategoryModalOpened) {
+		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
+		let categoryModalDiv = document.getElementsByClassName('category-modal');
+		
+		if(keepCategoryModalOpened) {
+			// Hide the financial position div and show the category modal
+			categoryModalDiv[0].classList.remove('d-none');
+			financialPositionDiv[0].classList.add('d-none');
+		} else {
+			// show the financial position div and hide the category modal
+			categoryModalDiv[0].classList.add('d-none');
+			financialPositionDiv[0].classList.remove('d-none');
+		}
+		
+	}
+	
+	// Close Button functionality for category Modal
+	document.getElementById("categoryHeaderClose").addEventListener("click",function(e){
+		toggleCategoryModal(false);
+	},false);
 	
 });
 

@@ -86,7 +86,7 @@
                </div>
                <div class="card category-modal d-none">
               	<div class="card-header card-header-icon card-header-danger">
-                  <button type="button" class="close categoryHeaderDisplay" data-dismiss="modal" aria-label="Close">
+                  <button type="button" id="categoryHeaderClose" class="close" data-dismiss="modal" aria-label="Close">
                       <i class="material-icons">clear</i>
                     </button>
                 </div>
@@ -97,8 +97,8 @@
                 	</div>
                 	<div class="row"> 
                 		<div class="col-lg-6"></div> 
-                		<span id="plannedAmountCategoryModal" class="col-lg-6 text-right">
-                			<span th:text="#{message.currencySumbol}"></span>0.00
+                		<span id="percentageAvailable" class="col-lg-6 text-right">
+                			NA
                 		</span> 
                 	</div>
                 	<div class="text-left headingDiv">
@@ -107,6 +107,13 @@
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
                 		Remaining
+                	</div>
+                	<hr>
+                	<div class="row">
+                		<div class="col-lg-1"><i class="material-icons">restaurant_menu</i></div> 
+                		<span id="plannedAmountCategoryModal" class="text-left col-lg-11">
+                			<span th:text="#{message.currencySumbol}"></span>0.00
+                		</span> 
                 	</div>
                 </div>
                 <div id="" class="card-footer">

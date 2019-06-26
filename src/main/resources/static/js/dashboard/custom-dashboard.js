@@ -422,7 +422,6 @@ function changeColorOfSidebar(color){
 
 // Assign background image for sidebar
 function changeImageOfSidebar(img) {
-	debugger;
 	if ($sidebar.length != 0) {
 		 $sidebar.attr('data-image', img);
 		 
@@ -441,3 +440,4 @@ function formatNumber(num, locale) {
 	}
 	  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
