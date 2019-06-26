@@ -1347,14 +1347,34 @@ $(document).ready(function(){
 			
 			// Calculate remaining budget
 			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
-			remainingAmountDiv.innerText = formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
+			let minusSign = '';
+			
+			// Change the div if and only if the class is not already present in the div
+			let remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-success') ? false : true;
+			
+			// Calculate the minus sign and appropriate class for the remaining amounr
+			if(budgetAvailableToSpendOrSave < 0) {
+				remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-danger') ? false : true;
+				minusSign = '-';
+				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
+			}
+			
+			// Change color if the amount is negative or positive
+			if(remainingAmountToggleClass) {
+				remainingAmountDiv.classList.toggle('mild-text-success');
+				remainingAmountDiv.classList.toggle('mild-text-danger');
+			}
+			
+			// Change the remaining text appropriately
+			remainingAmountDiv.innerText = minusSign + currentCurrencyPreference + formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
 
 			// Calculate percentage available to spend or save
 			let percentageRemaining = round((budgetAvailableToSpendOrSave / budgetAmount) * 100,0);
-			percentageAvailable.innerText = percentageRemaining;
+			percentageAvailable.innerText = percentageRemaining + '%';
 		} else {
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
+			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
 				
 		}
 	}

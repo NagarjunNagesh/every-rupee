@@ -337,11 +337,11 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	vertical-align: middle;
 }
 
-.category-text-danger, .expenseCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .expenseCategory:hover .d-lg-table-cell .d-lg-inline {
+.category-text-danger, .expenseCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .expenseCategory:hover .d-lg-table-cell .d-lg-inline, .mild-text-danger {
 	color: #fc695f;
 }
 
-.category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline {
+.category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline, .mild-text-success {
 	color: #58c65c;
 }
 
@@ -426,7 +426,6 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 }
 
 #remainingAmount {
-	color: #58c65c;
 	font-weight: 600;
 }
 
