@@ -385,7 +385,7 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	padding: 1.2rem 0.5rem;
 }
 
-#categoryHeaderClose > i, .category-modal .card-footer {
+#categoryHeaderClose > i, .category-modal .card-footer .text-left {
 	color: #999;
 }
 
@@ -416,7 +416,7 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 }
 
 /* Firefox */
-.categoryModal progress::-moz-progress-bar { 
+.categoryModal progress::-moz-progress-value { 
     background: #58c65c;  
 }
 
@@ -435,4 +435,25 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	font-weight: 400;
 	padding-bottom: 0.5rem;
 	color: #686969;
+}
+
+#addNewGoals {
+	border-color: transparent;
+	background-color: transparent;
+	transition: color .3s;
+	margin: 0;
+	padding: 0;
+	font-weight: 700;
+}
+
+#plannedAmountCategoryModal {
+	padding-top: 0;
+}
+
+#plannedAmountCategoryModal:hover {
+	border-color: #d5d9db;
+}
+
+.budgetSectionCategoryModal {
+	padding: 0.5rem 0;
 }

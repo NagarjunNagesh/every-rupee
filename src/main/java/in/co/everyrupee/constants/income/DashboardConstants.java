@@ -8,6 +8,7 @@ public class DashboardConstants {
     public static final String MODIFICATION_DATE = "modify_date";
     public static final String DEFAULT_ADD_ROW_QUANTITY = "0";
     public static final String BOOLEAN_DEFAULT_TRUE = "BOOLEAN DEFAULT TRUE";
+    public static final String BOOLEAN_FALSE = "false";
 
     public class Budget {
 	public static final String BUDGET_ID = "budget_id";

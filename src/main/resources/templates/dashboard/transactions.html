@@ -111,13 +111,20 @@
                 	<hr>
                 	<div class="row">
                 		<div class="col-lg-1"><i class="material-icons">restaurant_menu</i></div> 
-                		<span id="plannedAmountCategoryModal" class="text-left col-lg-11">
+                		<span id="plannedAmountCategoryModal" class="text-left col-lg-11" contenteditable="true" data-gramm_editor="false">
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
+                		<span id="categoryIdCached"></span>
                 	</div>
                 </div>
-                <div id="" class="card-footer">
-                    <div id="numberOfTransactions"></div> Transactions
+                <div id="" class="card-footer row">
+                	<div class="col-lg-6 text-left"><span id="numberOfTransactions"></span> Transactions</div>
+                    <div class="col-lg-6 text-right">
+	                    <a id="addNewGoals" href="#" class="text-warning">
+	                    	<i class="material-icons">add_circle</i>
+	                    	Add Goals
+	                    </a>
+                    </div>
                 </div>
                </div>
             </div>          
