@@ -242,9 +242,9 @@ $(document).ready(function(){
 			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
 		} else if (totalIncomeTransactions < totalExpensesTransactions) {
 			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
-			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
+			let totalDeficitAsPercentageOfExpense = round(((totalDeficitDifference / totalExpensesTransactions) * 100),1);
 			   
-			let totalIncomeAsPercentageOfExpense = round(((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100,1);
+			let totalIncomeAsPercentageOfExpense = round((((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100),1);
 			   
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
@@ -257,9 +257,9 @@ $(document).ready(function(){
 		} else  {
 			// (totalIncomeTransactions > totalExpensesTransactions) || (totalIncomeTransactions == totalExpensesTransactions)
 			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
-			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
+			let totalAvailableAsPercentageOfIncome = round(((totalAvailable / totalIncomeTransactions) * 100),1);
 			   
-			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
+			let totalExpenseAsPercentageOfIncome = round((((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100),1);
 			   
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
@@ -612,6 +612,11 @@ $(document).ready(function(){
 	// Show or hide multiple rows in the transactions table
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
 		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
+		
+		if(checkIfInvalidCategory(categoryId)) {
+			return;
+		}
+		
 		toggleDropdown(categoryId, this);
 	 });
 	
@@ -679,7 +684,13 @@ $(document).ready(function(){
 		let selectedTransactionId = splitElement(categoryId,'-');
 		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
 		
-		if(!isEmpty(classList)) {
+		if(isNotEmpty(classList)) {
+			
+			// Ensure that the category id is valid
+			if(checkIfInvalidCategory($(this).val())) {
+				return;
+			}
+			
 			let values = {};
 			values['categoryId'] = $(this).val();
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
@@ -1338,8 +1349,14 @@ $(document).ready(function(){
 		let categoryTotalDiv = document.getElementById('amountCategory-' + categoryId);
 		let percentageAvailable = document.getElementById('percentageAvailable');
 		let remainingAmountDiv = document.getElementById('remainingAmount');
+		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
+		let budgetPercentageLabel = document.getElementById('headingDiv');
+		categoryIdForUserBudget.innerText = categoryId;
 		
 		let budgetElementText = closestTrElement.lastChild.innerText;
+		// Change the div if and only if the class is not already present in the div
+		let remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-success') ? false : true;
+		
 		if(isNotEmpty(budgetElementText)) {
 			plannedAmountModal.innerText = budgetElementText;
 			
@@ -1351,14 +1368,15 @@ $(document).ready(function(){
 			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
 			let minusSign = '';
 			
-			// Change the div if and only if the class is not already present in the div
-			let remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-success') ? false : true;
 			
 			// Calculate the minus sign and appropriate class for the remaining amounr
 			if(budgetAvailableToSpendOrSave < 0) {
 				remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-danger') ? false : true;
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
+				budgetPercentageLabel.innerText = 'Overspent (%)'
+			} else {
+				budgetPercentageLabel.innerText = 'Planned (%)'
 			}
 			
 			// Change color if the amount is negative or positive
@@ -1371,12 +1389,18 @@ $(document).ready(function(){
 			remainingAmountDiv.innerText = minusSign + currentCurrencyPreference + formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
 
 			// Calculate percentage available to spend or save
-			let percentageRemaining = round((budgetAvailableToSpendOrSave / budgetAmount) * 100,0);
+			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
 			percentageAvailable.innerText = percentageRemaining + '%';
 		} else {
+			budgetPercentageLabel.innerText = 'Planned (%)'
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
+			// Change the remaining amount to green if it is red in color
+			if(!remainingAmountToggleClass){
+				remainingAmountDiv.classList.toggle('mild-text-success');
+				remainingAmountDiv.classList.toggle('mild-text-danger');
+			}
 				
 		}
 	}
@@ -1431,14 +1455,21 @@ $(document).ready(function(){
 			previousText = 0;
 		}
 		
-		
+		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
 		// Test if the entered value is the same as the previous one
 		if(previousText != enteredText){
 			// obtain the transaction id of the table row
 			let changedAmount = splitElement($(element).attr('id'),'-');
+			
+			let categoryIdForBudget = Number(categoryIdForUserBudget.innerText);
+			// Security check to ensure that the category is present in the map
+			if(checkIfInvalidCategory(categoryIdForBudget)) {
+				return;
+			}
+			
 			var values = {};
 			values['planned'] = enteredText;
-			values['categoryId'] = changedAmount[changedAmount.length - 1];
+			values['category_id'] = categoryIdForBudget;
 			values['autoGenerated'] = 'false';
 			values['dateMeantFor'] = chosenDate;
 			let totalAddedOrRemovedFromAmount = round(parseFloat(enteredText - previousText),2);
@@ -1455,12 +1486,23 @@ $(document).ready(function(){
 	                   	if(responseError.error.includes("Unauthorized")){
 	                   		sessionExpiredSwal(thrownError);
 	                   	} else{
-	                   		showNotification('Unable to change the transacition amount','top','center','danger');
+	                   		showNotification('Unable to change the budget. Please try again','top','center','danger');
 	                   	}
 	               }
 		        });
 		}
 		
+	}
+	
+	// Security check to ensure that the category is present in the map
+	function checkIfInvalidCategory(categoryIdForBudget) {
+		
+		if(isEmpty(categoryMap[Number(categoryIdForBudget)])) {
+			showNotification('Unable to the update budget at the moment. Please refresh the page and try again!','top','center','danger');
+			return true;
+		}
+		
+		return false;
 	}
 });
 
