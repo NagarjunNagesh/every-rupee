@@ -1434,6 +1434,17 @@ $(document).ready(function(){
 		userUpdatedBudget(this);
 	},false);
 	
+	// Budget Amount - disable enter key and submit request
+	document.getElementById('plannedAmountCategoryModal').addEventListener('keyup', function(e) {
+		  var keyCode = e.keyCode || e.which;
+		  if (keyCode === 13) { 
+		    e.preventDefault();
+
+		    $(this).blur(); 
+		    return false;
+		  }
+	},false);
+	
 	// User updates the budget
 	function userUpdatedBudget(element) {
 		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places

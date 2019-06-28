@@ -389,6 +389,14 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	color: #999;
 }
 
+.category-modal .card-footer {
+	white-space: nowrap;	
+}
+
+.category-modal .card-footer .text-left {
+	padding-left: 0;
+}
+
 #categoryLabelInModal {
 	display: block;
 	margin-bottom: .8rem;
@@ -435,6 +443,14 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	font-weight: 400;
 	padding-bottom: 0.5rem;
 	color: #686969;
+	display: block;
+    transition: border-color .3s ease;
+    margin-right: -.8rem;
+    border: 1px solid transparent;
+    border-radius: .4rem;
+    width: calc(100% + 1.6rem);
+    resize: none;
+    line-height: 1;
 }
 
 #addNewGoals {
@@ -446,14 +462,21 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	font-weight: 700;
 }
 
-#plannedAmountCategoryModal {
-	padding-top: 0;
+.budgetAmountDiv:hover, .budgetAmountDiv:active, .budgetAmountDiv:focus {
+	border: 1px solid #d5d9db;
 }
 
-#plannedAmountCategoryModal:hover {
-	border-color: #d5d9db;
+/* { */
+/* 	border: 1px solid #d5d9db; */
+/* 	box-shadow: 0 3px 4px -2px rgba(0,0,0,.15);	 */
+/* } */
+
+.budgetAmountDiv .col-lg-1,.budgetAmountDiv #plannedAmountCategoryModal {
+	padding-top: 0.5rem;
 }
 
-.budgetSectionCategoryModal {
-	padding: 0.5rem 0;
+#percentageAvailable {
+	color: #333a3d;
+	font-weight: 400;
+	font-size: 1.1rem;
 }
