@@ -1350,12 +1350,10 @@ $(document).ready(function(){
 		let percentageAvailable = document.getElementById('percentageAvailable');
 		let remainingAmountDiv = document.getElementById('remainingAmount');
 		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
-		let budgetPercentageLabel = document.getElementById('headingDiv');
+		let budgetPercentageLabel = document.getElementById('budgetInfoLabelInModal');
 		categoryIdForUserBudget.innerText = categoryId;
 		
 		let budgetElementText = closestTrElement.lastChild.innerText;
-		// Change the div if and only if the class is not already present in the div
-		let remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-success') ? false : true;
 		
 		if(isNotEmpty(budgetElementText)) {
 			plannedAmountModal.innerText = budgetElementText;
@@ -1368,10 +1366,11 @@ $(document).ready(function(){
 			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
 			let minusSign = '';
 			
-			
+			// Change the div if and only if the class is not already present in the div
+			let remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-success');
 			// Calculate the minus sign and appropriate class for the remaining amounr
 			if(budgetAvailableToSpendOrSave < 0) {
-				remainingAmountToggleClass = remainingAmountDiv.classList.contains('mild-text-danger') ? false : true;
+				remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
 				budgetPercentageLabel.innerText = 'Overspent (%)'
@@ -1397,7 +1396,7 @@ $(document).ready(function(){
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
 			// Change the remaining amount to green if it is red in color
-			if(!remainingAmountToggleClass){
+			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
 				remainingAmountDiv.classList.toggle('mild-text-danger');
 			}
@@ -1479,7 +1478,13 @@ $(document).ready(function(){
 		          dataType: "json",
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
-		          success: function(userTransaction){
+		          success: function(userBudget){
+		        	  let budgetElement = document.getElementById('budgetCategory-' + userBudget.categoryId);
+		        	  // Update the budget amount in the category row
+		        	  let formattedBudgetAmount = currentCurrencyPreference + formatNumber(userBudget.planned , currentUser.locale);
+		        	  budgetElement.innerText = formattedBudgetAmount;
+		        	  // update the current element with the formatted amount
+		        	  element.innerText = formattedBudgetAmount;
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -1487,6 +1492,9 @@ $(document).ready(function(){
 	                   		sessionExpiredSwal(thrownError);
 	                   	} else{
 	                   		showNotification('Unable to change the budget. Please try again','top','center','danger');
+	                   		// update the current element with the previous amount
+	                   		let formattedBudgetAmount = currentCurrencyPreference + formatNumber(previousText , currentUser.locale);
+	                   		element.innerText = formattedBudgetAmount;
 	                   	}
 	               }
 		        });
