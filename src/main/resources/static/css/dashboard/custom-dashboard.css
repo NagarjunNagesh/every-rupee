@@ -741,3 +741,13 @@ br[type="_moz"]{display: none;}
 .text-orange {
 	color: #ff9800;
 }
+
+.visibleAfterHalfASec {
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+
+.hiddenAfterHalfASec {
+  opacity: 0;
+  transition: opacity 0.5s linear;
+}

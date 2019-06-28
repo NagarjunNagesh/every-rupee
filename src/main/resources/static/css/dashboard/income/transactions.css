@@ -337,11 +337,11 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	vertical-align: middle;
 }
 
-.category-text-danger, .expenseCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .expenseCategory:hover .d-lg-table-cell .d-lg-inline {
+.category-text-danger, .expenseCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .expenseCategory:hover .d-lg-table-cell .d-lg-inline, .mild-text-danger {
 	color: #fc695f;
 }
 
-.category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline {
+.category-text-success, .incomeCategory:hover .d-lg-table-cell .d-lg-inline .displayCategoryAddIcon, .incomeCategory:hover .d-lg-table-cell .d-lg-inline, .mild-text-success {
 	color: #58c65c;
 }
 
@@ -363,4 +363,120 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 
 #mutableDashboard .card-title {
 	color: #929292;
+}
+
+.transitionTextTo120 {
+	font-size: 120%;
+	transition: font-size 0.5s  ease-out;
+}
+
+.transitionTextToNormal {
+	font-size: inherit;
+	transition: font-size 0.5s  ease-out;
+}
+
+/**
+* 
+* Category Modal Designs
+*
+**/
+
+.category-modal {
+	padding: 1.2rem 0.5rem;
+}
+
+#categoryHeaderClose > i, .category-modal .card-footer .text-left {
+	color: #999;
+}
+
+.category-modal .card-footer {
+	white-space: nowrap;	
+}
+
+.category-modal .card-footer .text-left {
+	padding-left: 0;
+}
+
+#categoryLabelInModal {
+	display: block;
+	margin-bottom: .8rem;
+	line-height: 1;
+	color: #495257;
+	font-weight: 600;
+	text-align: left;
+}
+
+.headingDiv {
+	text-transform: capitalize;
+	color: #8e999e;
+}
+
+.category-modal progress  {
+	display: block;
+	margin-bottom: .8rem;
+	border: 0;
+	width: 100%;
+	height: 8px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	color: #58c65c;
+}
+
+/* Firefox */
+.categoryModal progress::-moz-progress-value { 
+    background: #58c65c;  
+}
+
+/* Chrome */
+.categoryModal progress::-webkit-progress-value {
+    background: #58c65c;
+}
+
+#remainingAmount {
+	font-weight: 600;
+}
+
+#plannedAmountCategoryModal {
+	font-size: 1.5rem;
+	padding-top: 0.25rem;
+	font-weight: 400;
+	padding-bottom: 0.5rem;
+	color: #686969;
+	display: block;
+    transition: border-color .3s ease;
+    margin-right: -.8rem;
+    border: 1px solid transparent;
+    border-radius: .4rem;
+    width: calc(100% + 1.6rem);
+    resize: none;
+    line-height: 1;
+}
+
+#addNewGoals {
+	border-color: transparent;
+	background-color: transparent;
+	transition: color .3s;
+	margin: 0;
+	padding: 0;
+	font-weight: 700;
+}
+
+.budgetAmountDiv:hover, .budgetAmountDiv:active, .budgetAmountDiv:focus {
+	border: 1px solid #d5d9db;
+}
+
+/* { */
+/* 	border: 1px solid #d5d9db; */
+/* 	box-shadow: 0 3px 4px -2px rgba(0,0,0,.15);	 */
+/* } */
+
+.budgetAmountDiv .col-lg-1,.budgetAmountDiv #plannedAmountCategoryModal {
+	padding-top: 0.5rem;
+}
+
+#percentageAvailable {
+	color: #333a3d;
+	font-weight: 400;
+	font-size: 1.1rem;
 }

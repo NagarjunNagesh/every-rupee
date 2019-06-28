@@ -5,6 +5,8 @@ $(document).ready(function(){
 	let descriptionTextEdited = '';
 	// Amount Text
 	let amountEditedTransaction = '';
+	// User Updated Budegt
+	let userUpdateBudgetCached = '';
 	
 	const replaceTransactionsId = "productsJson";
 	// Used to refresh the transactions only if new ones are added
@@ -240,9 +242,9 @@ $(document).ready(function(){
 			replaceHTML('legendPieChart', 'Please fill in adequare data build the chart');
 		} else if (totalIncomeTransactions < totalExpensesTransactions) {
 			let totalDeficitDifference = totalExpensesTransactions - totalIncomeTransactions;
-			let totalDeficitAsPercentageOfExpense = round((totalDeficitDifference / totalExpensesTransactions) * 100,1);
+			let totalDeficitAsPercentageOfExpense = round(((totalDeficitDifference / totalExpensesTransactions) * 100),1);
 			   
-			let totalIncomeAsPercentageOfExpense = round(((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100,1);
+			let totalIncomeAsPercentageOfExpense = round((((totalExpensesTransactions - totalDeficitDifference) / totalExpensesTransactions) * 100),1);
 			   
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
@@ -255,9 +257,9 @@ $(document).ready(function(){
 		} else  {
 			// (totalIncomeTransactions > totalExpensesTransactions) || (totalIncomeTransactions == totalExpensesTransactions)
 			let totalAvailable = totalIncomeTransactions - totalExpensesTransactions;
-			let totalAvailableAsPercentageOfIncome = round((totalAvailable / totalIncomeTransactions) * 100,1);
+			let totalAvailableAsPercentageOfIncome = round(((totalAvailable / totalIncomeTransactions) * 100),1);
 			   
-			let totalExpenseAsPercentageOfIncome = round(((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100,1);
+			let totalExpenseAsPercentageOfIncome = round((((totalIncomeTransactions - totalAvailable) / totalIncomeTransactions) * 100),1);
 			   
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
@@ -609,34 +611,34 @@ $(document).ready(function(){
 
 	// Show or hide multiple rows in the transactions table
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
-		let categoryId = splitElement($(this).attr('id'),'-');
+		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
+		
+		if(checkIfInvalidCategory(categoryId)) {
+			return;
+		}
+		
 		toggleDropdown(categoryId, this);
 	 });
 	
 	// toggle dropdown
 	function toggleDropdown(categoryId, closestTrElement) {
-		let classToHide = '.hideableRow-' + lastElement(categoryId);
+		let classToHide = '.hideableRow-' + categoryId;
+		let childCategories = $(classToHide);
 		let dropdownArrowDiv = closestTrElement.firstChild.classList;
-	  	$(classToHide).toggleClass('d-none').toggleClass('d-lg-table-row');
+		// Hide all child categories
+		childCategories.toggleClass('d-none').toggleClass('d-lg-table-row');
+		// Toggle the drop down arrow
 	  	dropdownArrowDiv.toggle('dropdown-toggle');
 	  	dropdownArrowDiv.toggle('dropdown-toggle-right');
-	  	// Show the category modal on click category row
-	  	handleCategoryModalToggle(categoryId, closestTrElement);
-	}
-	
-	// Toggle Category modal upon click of a category
-	function handleCategoryModalToggle(categoryId, closestTrElement) {
-		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
-		let categoryModalDiv = document.getElementsByClassName('category-modal');
-		
-		// Hide the financial position div and show the category modal
-		financialPositionDiv[0].classList.toggle('d-none');
-		categoryModalDiv[0].classList.toggle('d-none');
-
-		// Populate the category label with the one selected
-		let categoryNameDiv = document.getElementById('categoryLabelInModal');
-		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
-		
+	  	
+	  	// Call method only when the category div is expanding and if the category modal is already open by other categories
+	  	if(dropdownArrowDiv.contains('dropdown-toggle')) {
+	  		// Show the category modal on click category row
+		  	handleCategoryModalToggle(categoryId, closestTrElement, childCategories.length);
+	  	} else {
+	  		// If the category modal is active then hide it
+	  		toggleCategoryModal(false);
+	  	}
 	}
 	
 	// Throw a session expired error and reload the page.
@@ -681,7 +683,13 @@ $(document).ready(function(){
 		let selectedTransactionId = splitElement(categoryId,'-');
 		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
 		
-		if(!isEmpty(classList)) {
+		if(isNotEmpty(classList)) {
+			
+			// Ensure that the category id is valid
+			if(checkIfInvalidCategory($(this).val())) {
+				return;
+			}
+			
 			let values = {};
 			values['categoryId'] = $(this).val();
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
@@ -1046,11 +1054,6 @@ $(document).ready(function(){
         });
 	});
 	
-	// convert from currency format to number
-	function convertToNumberFromCurrency(amount){
-		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
-	}
-	
 	// Build empty table message as document
 	function fetchEmptyTableMessage() {
 		let emptyTableRow = document.createElement("div");
@@ -1117,25 +1120,36 @@ $(document).ready(function(){
         if(isNotEmpty(dataPreferences)) {
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
         	let chartLegend = document.getElementById('chartLegend');
+        	let incomeAmount = document.getElementById('totalIncomeTransactions');
+        	let expenseAmount = document.getElementById('totalExpensesTransactions');
+        	let totalAvailable = document.getElementById('totalAvailableTransactions');
         	
         	transactionsChart.on('created', function(donut) {
-        		  $('.ct-slice-donut-solid').on('mouseover', function() {
-        			  chartLegend.classList.remove('d-none');
+        		  $('.ct-slice-donut-solid').on('mouseover mouseout', function() {
+        			  chartLegend.classList.toggle('hiddenAfterHalfASec');
+        			  chartLegend.classList.toggle('visibleAfterHalfASec');
         		  });
-
-        		  $('.ct-slice-donut-solid').on('mouseout', function() {
-        			  chartLegend.classList.add('d-none');
+        		  
+        		  $('.ct-series-a').on('mouseover mouseout', function() {
+        			  incomeAmount.classList.toggle('transitionTextToNormal');
+        			  incomeAmount.classList.toggle('transitionTextTo120');
         		  });
+        		  
+        		  $('.ct-series-b').on('mouseover mouseout', function() {
+        			  expenseAmount.classList.toggle('transitionTextToNormal');
+        			  expenseAmount.classList.toggle('transitionTextTo120');
+        		  });
+        		  
+        		  $('.ct-series-c').on('mouseover mouseout', function() {
+        			  totalAvailable.classList.toggle('transitionTextToNormal');
+        			  totalAvailable.classList.toggle('transitionTextTo120');
+        		  });
+        			  
         		});
         }
         
 	}
 	
-	// Perform update of budget to the API
-	window.onbeforeunload = function(event) {
-        // Call API of budget to automatically add budget
-    };
-    
     // Generate SVG Tick Element and success element
     function successSvgMessage() {
     	let alignmentDiv = document.createElement('div');
@@ -1307,6 +1321,204 @@ $(document).ready(function(){
 		});
 	}
 	
+	//convert from currency format to number
+	function convertToNumberFromCurrency(amount){
+		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
+	}
+	
+	/**
+	 * Logic for Category Modal
+	 * 
+	 */
+	
+	// Toggle Category modal upon click of a category
+	function handleCategoryModalToggle(categoryId, closestTrElement, totalTransactions) {
+		toggleCategoryModal(true);
+		
+		// Populate the category label with the one selected
+		let categoryNameDiv = document.getElementById('categoryLabelInModal');
+		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
+		
+		// Set the number of transactions
+		let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
+		numberOfTransactionsDiv.innerText = totalTransactions;
+		
+		// Update the budget amount to the category Modal if present
+		let plannedAmountModal = document.getElementById('plannedAmountCategoryModal');
+		let categoryTotalDiv = document.getElementById('amountCategory-' + categoryId);
+		let percentageAvailable = document.getElementById('percentageAvailable');
+		let remainingAmountDiv = document.getElementById('remainingAmount');
+		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
+		let budgetPercentageLabel = document.getElementById('budgetInfoLabelInModal');
+		categoryIdForUserBudget.innerText = categoryId;
+		
+		let budgetElementText = closestTrElement.lastChild.innerText;
+		
+		if(isNotEmpty(budgetElementText)) {
+			plannedAmountModal.innerText = budgetElementText;
+			
+			// Calculate percentage of budget available to spend or save
+			let categoryAmount = convertToNumberFromCurrency(categoryTotalDiv.innerText);
+			let budgetAmount = convertToNumberFromCurrency(budgetElementText);
+			
+			// Calculate remaining budget
+			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
+			let minusSign = '';
+			
+			// Change the div if and only if the class is not already present in the div
+			let remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-success');
+			// Calculate the minus sign and appropriate class for the remaining amounr
+			if(budgetAvailableToSpendOrSave < 0) {
+				remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
+				minusSign = '-';
+				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
+				budgetPercentageLabel.innerText = 'Overspent (%)'
+			} else {
+				budgetPercentageLabel.innerText = 'Planned (%)'
+			}
+			
+			// Change color if the amount is negative or positive
+			if(remainingAmountToggleClass) {
+				remainingAmountDiv.classList.toggle('mild-text-success');
+				remainingAmountDiv.classList.toggle('mild-text-danger');
+			}
+			
+			// Change the remaining text appropriately
+			remainingAmountDiv.innerText = minusSign + currentCurrencyPreference + formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
+
+			// Calculate percentage available to spend or save
+			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
+			percentageAvailable.innerText = percentageRemaining + '%';
+		} else {
+			budgetPercentageLabel.innerText = 'Planned (%)'
+			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
+			percentageAvailable.innerText = 'NA'
+			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
+			// Change the remaining amount to green if it is red in color
+			if(!remainingAmountDiv.classList.contains('mild-text-success')){
+				remainingAmountDiv.classList.toggle('mild-text-success');
+				remainingAmountDiv.classList.toggle('mild-text-danger');
+			}
+				
+		}
+	}
+	
+	// Toggles the category modal
+	function toggleCategoryModal(keepCategoryModalOpened) {
+		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
+		let categoryModalDiv = document.getElementsByClassName('category-modal');
+		
+		if(keepCategoryModalOpened) {
+			// Hide the financial position div and show the category modal
+			categoryModalDiv[0].classList.remove('d-none');
+			financialPositionDiv[0].classList.add('d-none');
+		} else {
+			// show the financial position div and hide the category modal
+			categoryModalDiv[0].classList.add('d-none');
+			financialPositionDiv[0].classList.remove('d-none');
+		}
+		
+	}
+	
+	// Close Button functionality for category Modal
+	document.getElementById("categoryHeaderClose").addEventListener("click",function(e){
+		toggleCategoryModal(false);
+	},false);
+	
+	document.getElementById('plannedAmountCategoryModal').addEventListener("focusin",function(){
+		userUpdateBudgetCached = trimElement(this.innerText);
+	},false);
+	
+	document.getElementById('plannedAmountCategoryModal').addEventListener("focusout",function(){
+		userUpdatedBudget(this);
+	},false);
+	
+	// Budget Amount - disable enter key and submit request
+	document.getElementById('plannedAmountCategoryModal').addEventListener('keyup', function(e) {
+		  var keyCode = e.keyCode || e.which;
+		  if (keyCode === 13) { 
+		    e.preventDefault();
+
+		    $(this).blur(); 
+		    return false;
+		  }
+	},false);
+	
+	// User updates the budget
+	function userUpdatedBudget(element) {
+		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
+		let enteredText = convertToNumberFromCurrency(element.innerText);
+		let previousText = convertToNumberFromCurrency(userUpdateBudgetCached);
+		
+		// Test if the entered value is valid
+		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
+			// Replace the entered text with 0 inorder for the code to progress.
+			enteredText = 0;
+		} else if(enteredText < 0){
+			// Replace negative sign to positive sign if entered by the user
+			enteredText = parseFloat(Math.abs(enteredText),2);
+		}
+		
+		// Test if the previous value is valid
+		if(isNaN(previousText) || !regexForFloat.test(previousText) || previousText == 0) {
+			previousText = 0;
+		}
+		
+		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
+		// Test if the entered value is the same as the previous one
+		if(previousText != enteredText){
+			
+			let categoryIdForBudget = Number(categoryIdForUserBudget.innerText);
+			// Security check to ensure that the category is present in the map
+			if(checkIfInvalidCategory(categoryIdForBudget)) {
+				return;
+			}
+			
+			var values = {};
+			values['planned'] = enteredText;
+			values['category_id'] = categoryIdForBudget;
+			values['autoGenerated'] = 'false';
+			values['dateMeantFor'] = chosenDate;
+			$.ajax({
+		          type: "POST",
+		          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+		          dataType: "json",
+		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		          data : values,
+		          success: function(userBudget){
+		        	  let budgetElement = document.getElementById('budgetCategory-' + userBudget.categoryId);
+		        	  // Update the budget amount in the category row
+		        	  let formattedBudgetAmount = currentCurrencyPreference + formatNumber(userBudget.planned , currentUser.locale);
+		        	  budgetElement.innerText = formattedBudgetAmount;
+		        	  // update the current element with the formatted amount
+		        	  element.innerText = formattedBudgetAmount;
+		          },
+		          error: function (thrownError) {
+	              	 var responseError = JSON.parse(thrownError.responseText);
+	                   	if(responseError.error.includes("Unauthorized")){
+	                   		sessionExpiredSwal(thrownError);
+	                   	} else{
+	                   		showNotification('Unable to change the budget. Please try again','top','center','danger');
+	                   		// update the current element with the previous amount
+	                   		let formattedBudgetAmount = currentCurrencyPreference + formatNumber(previousText , currentUser.locale);
+	                   		element.innerText = formattedBudgetAmount;
+	                   	}
+	               }
+		        });
+		}
+		
+	}
+	
+	// Security check to ensure that the category is present in the map
+	function checkIfInvalidCategory(categoryIdForBudget) {
+		
+		if(isEmpty(categoryMap[Number(categoryIdForBudget)])) {
+			showNotification('Unable to the update budget at the moment. Please refresh the page and try again!','top','center','danger');
+			return true;
+		}
+		
+		return false;
+	}
 });
 
 //# sourceURL=transaction.js
