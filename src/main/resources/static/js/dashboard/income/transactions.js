@@ -633,6 +633,7 @@ $(document).ready(function(){
 	  	
 	  	// Call method only when the category div is expanding and if the category modal is already open by other categories
 	  	if(dropdownArrowDiv.contains('dropdown-toggle')) {
+	  		toggleCategoryModal(true);
 	  		// Show the category modal on click category row
 		  	handleCategoryModalToggle(categoryId, closestTrElement, childCategories.length);
 	  	} else {
@@ -868,8 +869,10 @@ $(document).ready(function(){
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
 		          success: function(userTransaction){
+		        	  let categoryRowElement = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
 		        	  autoCreateBudget(userTransaction.categoryId, totalAddedOrRemovedFromAmount);
+		        	  handleCategoryModalToggle(userTransaction.categoryId, categoryRowElement, '');
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -1333,15 +1336,22 @@ $(document).ready(function(){
 	
 	// Toggle Category modal upon click of a category
 	function handleCategoryModalToggle(categoryId, closestTrElement, totalTransactions) {
-		toggleCategoryModal(true);
+		
+		let categoryModal = document.getElementsByClassName('category-modal');
+		// If the category modal is closed then do not calculate and return
+		if(categoryModal[0].classList.contains('d-none')) {
+			return;
+		}
 		
 		// Populate the category label with the one selected
 		let categoryNameDiv = document.getElementById('categoryLabelInModal');
 		categoryNameDiv.innerText = categoryMap[categoryId].categoryName;
 		
-		// Set the number of transactions
-		let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
-		numberOfTransactionsDiv.innerText = totalTransactions;
+		// Set the number of transactions if present
+		if(isNotEmpty(totalTransactions)) {
+			let numberOfTransactionsDiv = document.getElementById('numberOfTransactions');
+			numberOfTransactionsDiv.innerText = totalTransactions;
+		}
 		
 		// Update the budget amount to the category Modal if present
 		let plannedAmountModal = document.getElementById('plannedAmountCategoryModal');
@@ -1350,6 +1360,7 @@ $(document).ready(function(){
 		let remainingAmountDiv = document.getElementById('remainingAmount');
 		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
 		let budgetPercentageLabel = document.getElementById('budgetInfoLabelInModal');
+		let progressBarCategoryModal = document.getElementById('amountSpentAgainstBudget');
 		categoryIdForUserBudget.innerText = categoryId;
 		
 		let budgetElementText = closestTrElement.lastChild.innerText;
@@ -1374,7 +1385,7 @@ $(document).ready(function(){
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
 				budgetPercentageLabel.innerText = 'Overspent (%)'
 			} else {
-				budgetPercentageLabel.innerText = 'Planned (%)'
+				budgetPercentageLabel.innerText = 'Remaining (%)'
 			}
 			
 			// Change color if the amount is negative or positive
@@ -1388,12 +1399,16 @@ $(document).ready(function(){
 
 			// Calculate percentage available to spend or save
 			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
-			percentageAvailable.innerText = percentageRemaining + '%';
+			// Assign progress bar value
+			progressBarCategoryModal.value = isNaN(percentageRemaining) ? '0' : (100 - percentageRemaining);
+			percentageRemaining = isNaN(percentageRemaining) ? 'NA' : percentageRemaining + '%';
+			percentageAvailable.innerText = percentageRemaining;
 		} else {
-			budgetPercentageLabel.innerText = 'Planned (%)'
+			budgetPercentageLabel.innerText = 'Remaining (%)'
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
+			progressBarCategoryModal.value='0';
 			// Change the remaining amount to green if it is red in color
 			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
@@ -1413,28 +1428,46 @@ $(document).ready(function(){
 			categoryModalDiv[0].classList.remove('d-none');
 			financialPositionDiv[0].classList.add('d-none');
 		} else {
-			// show the financial position div and hide the category modal
-			categoryModalDiv[0].classList.add('d-none');
-			financialPositionDiv[0].classList.remove('d-none');
+			// Find all the category rows that are expanded
+			let categoryRowsDiv = document.getElementsByClassName('dropdown-toggle');
+			
+			if(categoryRowsDiv.length == 0) {
+				// show the financial position div and hide the category modal
+				categoryModalDiv[0].classList.add('d-none');
+				financialPositionDiv[0].classList.remove('d-none');
+			} else {
+				// If there are other drop down categories open then show the first one from the list
+				let categoryRowToShowInModal = categoryRowsDiv[0].parentNode;
+				let categoryId = lastElement(splitElement(categoryRowToShowInModal.id,'-'));
+				// Fetch all the categories child transactions
+				let hideableRowElement = document.getElementsByClassName('hideableRow-' + categoryId);
+				handleCategoryModalToggle(categoryId, categoryRowToShowInModal, hideableRowElement.length);
+			}
+			
 		}
 		
 	}
 	
 	// Close Button functionality for category Modal
 	document.getElementById("categoryHeaderClose").addEventListener("click",function(e){
-		toggleCategoryModal(false);
+		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
+		let categoryModalDiv = document.getElementsByClassName('category-modal');
+		// show the financial position div and hide the category modal
+		categoryModalDiv[0].classList.add('d-none');
+		financialPositionDiv[0].classList.remove('d-none');
 	},false);
 	
-	document.getElementById('plannedAmountCategoryModal').addEventListener("focusin",function(){
+	const plannedAmountCategoryModal = document.getElementById('plannedAmountCategoryModal');
+	plannedAmountCategoryModal.addEventListener("focusin",function(){
 		userUpdateBudgetCached = trimElement(this.innerText);
 	},false);
 	
-	document.getElementById('plannedAmountCategoryModal').addEventListener("focusout",function(){
+	plannedAmountCategoryModal.addEventListener("focusout",function(){
 		userUpdatedBudget(this);
 	},false);
 	
 	// Budget Amount - disable enter key and submit request
-	document.getElementById('plannedAmountCategoryModal').addEventListener('keyup', function(e) {
+	plannedAmountCategoryModal.addEventListener('keyup', function(e) {
 		  var keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
@@ -1442,6 +1475,12 @@ $(document).ready(function(){
 		    $(this).blur(); 
 		    return false;
 		  }
+	},false);
+	
+	// Double Click Budget Event
+	plannedAmountCategoryModal.addEventListener("dblclick", function() {
+		
+		
 	},false);
 	
 	// User updates the budget
@@ -1486,12 +1525,11 @@ $(document).ready(function(){
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
 		          success: function(userBudget){
-		        	  let budgetElement = document.getElementById('budgetCategory-' + userBudget.categoryId);
+		        	  let categoryRowElement = document.getElementById('categoryTableRow-' + userBudget.categoryId);
 		        	  // Update the budget amount in the category row
 		        	  let formattedBudgetAmount = currentCurrencyPreference + formatNumber(userBudget.planned , currentUser.locale);
-		        	  budgetElement.innerText = formattedBudgetAmount;
-		        	  // update the current element with the formatted amount
-		        	  element.innerText = formattedBudgetAmount;
+		        	  categoryRowElement.lastChild.innerText = formattedBudgetAmount;
+		        	  handleCategoryModalToggle(userBudget.categoryId, categoryRowElement, '');
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -1519,6 +1557,7 @@ $(document).ready(function(){
 		
 		return false;
 	}
+	
 });
 
 //# sourceURL=transaction.js

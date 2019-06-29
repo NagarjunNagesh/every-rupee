@@ -134,7 +134,7 @@
 .hideableRow:hover .descriptionDivCentering, .descriptionDivCentering:active, .descriptionDivCentering:focus, .tableRowTransactionHighlight .descriptionDivCentering {
 	display: block;
 	width: 100%;
-	padding: 0.055rem 1rem .15rem .7rem;
+	padding: 0.055rem 1rem .055rem .7rem;
 	line-height: 1.5;
 	color: #495057;
 	border: 1px solid #d2d2d2;
@@ -375,6 +375,10 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	transition: font-size 0.5s  ease-out;
 }
 
+.information-modal {
+	padding-left: 0;
+}
+
 /**
 * 
 * Category Modal Designs
@@ -382,14 +386,17 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 **/
 
 .category-modal {
-	padding: 1.2rem 0.5rem;
+	padding: 0.5rem;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 4rem;
 }
 
 #categoryHeaderClose > i, .category-modal .card-footer .text-left {
 	color: #999;
 }
 
-.category-modal .card-footer {
+.category-modal .card-footer, .category-modal .card-header .card-title {
 	white-space: nowrap;	
 }
 
@@ -446,8 +453,6 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	display: block;
     transition: border-color .3s ease;
     margin-right: -.8rem;
-    border: 1px solid transparent;
-    border-radius: .4rem;
     width: calc(100% + 1.6rem);
     resize: none;
     line-height: 1;
@@ -462,14 +467,17 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	font-weight: 700;
 }
 
-.budgetAmountDiv:hover, .budgetAmountDiv:active, .budgetAmountDiv:focus {
+.budgetAmountDiv:hover  {
 	border: 1px solid #d5d9db;
+	border-radius: .25rem;
 }
 
-/* { */
-/* 	border: 1px solid #d5d9db; */
-/* 	box-shadow: 0 3px 4px -2px rgba(0,0,0,.15);	 */
-/* } */
+ .budgetAmountDiv:active, .budgetAmountDiv:focus, .budgetAmountDiv:focus-within {
+ 	border: 1px solid #d5d9db;
+ 	box-shadow: 0 3px 4px -2px rgba(0,0,0,.15);
+ 	border-radius: .25rem;
+	color: #333a3d;
+ }
 
 .budgetAmountDiv .col-lg-1,.budgetAmountDiv #plannedAmountCategoryModal {
 	padding-top: 0.5rem;
