@@ -51,7 +51,7 @@
                 </div>
               </div>
             </div> 
-             <div class="col-lg-3">
+             <div class="col-lg-3 information-modal">
               <div class="card transactions-chart">
               	<div class="card-header card-header-icon card-header-danger">
                   <div class="card-icon">
@@ -85,24 +85,23 @@
                 </div>
                </div>
                <div class="card category-modal d-none">
+               	<button type="button" id="categoryHeaderClose" class="close" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons float-right">clear</i>
+                </button>
               	<div class="card-header card-header-icon card-header-danger">
-                  <button type="button" id="categoryHeaderClose" class="close" data-dismiss="modal" aria-label="Close">
-                      <i class="material-icons">clear</i>
-                    </button>
+                    <div id="categoryLabelInModal" class="text-center card-title"></div>
                 </div>
                 <div class="card-body text-center">
                 	<div class="row"> 
-                		<div id="categoryLabelInModal" class="text-left col-lg-6"></div> 
-                		<div id="budgetInfoLabelInModal" class="col-lg-6 text-right headingDiv">Planned (%)</div> 
+                		<div id="budgetInfoLabelInModal" class="col-lg-12 text-right headingDiv justify-content-center align-self-center">Remaining (%)</div> 
                 	</div>
                 	<div class="row"> 
-                		<div class="col-lg-6"></div> 
-                		<span id="percentageAvailable" class="col-lg-6 text-right">
+                		<span id="percentageAvailable" class="col-lg-12 text-right">
                 			NA
                 		</span> 
                 	</div>
                 	<div class="text-left headingDiv">
-                		<progress max="100" value="66"></progress>
+                		<progress id="amountSpentAgainstBudget" max="100" value="66"></progress>
                 		<span id="remainingAmount" class="mild-text-success">
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
