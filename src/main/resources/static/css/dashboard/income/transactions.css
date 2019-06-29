@@ -431,13 +431,15 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 }
 
 /* Firefox */
-.categoryModal progress::-moz-progress-value { 
-    background: #58c65c;  
+progress::-moz-progress-value { 
+    background: #58c65c;
+    background-color: #58c65c;  
 }
 
 /* Chrome */
-.categoryModal progress::-webkit-progress-value {
+progress::-webkit-progress-value {
     background: #58c65c;
+    background-color: #58c65c;
 }
 
 #remainingAmount {
@@ -479,8 +481,9 @@ div[class^="categoryTableRow-"]:hover .displayCategoryAddIcon , div[class*=" cat
 	color: #333a3d;
  }
 
-.budgetAmountDiv .col-lg-1,.budgetAmountDiv #plannedAmountCategoryModal {
+.budgetAmountDiv .col-lg-3,.budgetAmountDiv #plannedAmountCategoryModal {
 	padding-top: 0.5rem;
+	padding-left: 0;
 }
 
 #percentageAvailable {

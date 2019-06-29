@@ -1399,8 +1399,8 @@ $(document).ready(function(){
 
 			// Calculate percentage available to spend or save
 			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
-			// Assign progress bar value
-			progressBarCategoryModal.value = isNaN(percentageRemaining) ? '0' : (100 - percentageRemaining);
+			// Assign progress bar value. If the category amount is higher then the progress is 100%
+			progressBarCategoryModal.value = isNaN(percentageRemaining) ? 0 : (categoryAmount > budgetAmount) ? 100 : (100 - percentageRemaining);
 			percentageRemaining = isNaN(percentageRemaining) ? 'NA' : percentageRemaining + '%';
 			percentageAvailable.innerText = percentageRemaining;
 		} else {
@@ -1408,7 +1408,7 @@ $(document).ready(function(){
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
-			progressBarCategoryModal.value='0';
+			progressBarCategoryModal.value= 0;
 			// Change the remaining amount to green if it is red in color
 			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
