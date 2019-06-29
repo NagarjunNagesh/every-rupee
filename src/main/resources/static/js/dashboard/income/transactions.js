@@ -1478,7 +1478,7 @@ $(document).ready(function(){
 	},false);
 	
 	// Double Click Budget Event
-	plannedAmountCategoryModal.addEventListener("dblclick", function(e) {
+	plannedAmountCategoryModal.addEventListener("dblclick", function() {
 		
 		
 	},false);
