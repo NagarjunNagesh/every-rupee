@@ -491,3 +491,11 @@ progress::-webkit-progress-value {
 	font-weight: 400;
 	font-size: 1.1rem;
 }
+
+progress::-moz-progress-bar { 
+	background: #0063a6; 
+}
+
+.progress {
+	height: 10px;
+}

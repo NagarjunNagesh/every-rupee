@@ -1383,15 +1383,18 @@ $(document).ready(function(){
 				remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
-				budgetPercentageLabel.innerText = 'Overspent (%)'
+				budgetPercentageLabel.innerText = 'Overspent (%)';
+				
 			} else {
-				budgetPercentageLabel.innerText = 'Remaining (%)'
+				budgetPercentageLabel.innerText = 'Remaining (%)';
 			}
 			
 			// Change color if the amount is negative or positive
 			if(remainingAmountToggleClass) {
 				remainingAmountDiv.classList.toggle('mild-text-success');
 				remainingAmountDiv.classList.toggle('mild-text-danger');
+				progressBarCategoryModal.classList.toggle('progress-bar-success-striped');
+				progressBarCategoryModal.classList.toggle('progress-bar-danger-striped');
 			}
 			
 			// Change the remaining text appropriately
@@ -1400,7 +1403,11 @@ $(document).ready(function(){
 			// Calculate percentage available to spend or save
 			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
 			// Assign progress bar value. If the category amount is higher then the progress is 100%
-			progressBarCategoryModal.value = isNaN(percentageRemaining) ? 0 : (categoryAmount > budgetAmount) ? 100 : (100 - percentageRemaining);
+			let progressBarPercentage = isNaN(percentageRemaining) ? 0 : (categoryAmount > budgetAmount) ? 100 : (100 - percentageRemaining);
+			// Set the value and percentage of the progress bar
+			progressBarCategoryModal.setAttribute('aria-valuenow', progressBarPercentage);
+			progressBarCategoryModal.style.width = progressBarPercentage + '%'; 
+			
 			percentageRemaining = isNaN(percentageRemaining) ? 'NA' : percentageRemaining + '%';
 			percentageAvailable.innerText = percentageRemaining;
 		} else {
@@ -1413,8 +1420,10 @@ $(document).ready(function(){
 			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
 				remainingAmountDiv.classList.toggle('mild-text-danger');
+				progressBarCategoryModal.classList.toggle('progress-bar-success-striped');
+				progressBarCategoryModal.classList.toggle('progress-bar-danger-striped');
 			}
-				
+			
 		}
 	}
 	
