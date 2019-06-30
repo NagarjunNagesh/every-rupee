@@ -1208,6 +1208,16 @@ $(document).ready(function(){
     
     // Add button to add the table row to the corresponding category
 	$( "#transactionsTable" ).on( "click", ".addTableRowListener" ,function(event) {
+		 // Add small Material Spinner
+		 let spinnerDocumentFragment = document.createDocumentFragment();
+		 let divMaterialSpinner = document.createElement('div');
+		 divMaterialSpinner.classList = 'material-spinner-small d-lg-inline-block';
+		 spinnerDocumentFragment.appendChild(divMaterialSpinner);
+		 this.classList.remove('d-lg-inline');
+		 this.classList.add('d-none');
+		 this.parentNode.appendChild(spinnerDocumentFragment);
+		 let currentElement = this;
+		 
 		 event.preventDefault();
 		 // stop the event from bubbling.
 		 event.stopPropagation();
@@ -1228,12 +1238,30 @@ $(document).ready(function(){
 	        	  let categoryParent = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
 	        	  let closestSibling = categoryParent.nextSibling;
 	        	  let lastClassName =  lastElement(splitElement(closestSibling.className, ' '));
+	        	  
 	        	  // Toggle dropdown if the rows are hidden
         		  if(includesStr(lastClassName , 'd-none')) {
         			  toggleDropdown(id, categoryParent);
         		  }
+        		  
         		  // Add the new row to the category
-	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling); 
+	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling);
+	        	  
+	        	  // Remove material spinner and remove d none
+	        	  currentElement.parentNode.removeChild(currentElement.parentNode.lastChild);
+	        	  currentElement.classList.add('d-lg-inline');
+	        	  currentElement.classList.remove('d-none');
+	        	  
+	        	  
+        		  // If Category Modal is open then udate the transaction amount 
+        		  let categoryModalElement = document.getElementsByClassName('category-modal');
+        		  if(!categoryModalElement[0].classList.contains('d-none')) {
+        			  // Get the number of hide able rows under the category for Category Modal
+    	        	  let hideableRowElement = document.getElementsByClassName('hideableRow-' + userTransaction.categoryId);
+    	        	  // Update the number of transactions
+    	        	  let numberOfTransactionsElement = document.getElementById('numberOfTransactions');
+    	        	  numberOfTransactionsElement.innerText = hideableRowElement.length;
+        		  }
 	          },
 	          error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
