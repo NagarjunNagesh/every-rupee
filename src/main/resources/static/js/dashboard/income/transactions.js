@@ -1208,6 +1208,16 @@ $(document).ready(function(){
     
     // Add button to add the table row to the corresponding category
 	$( "#transactionsTable" ).on( "click", ".addTableRowListener" ,function(event) {
+		 // Add small Material Spinner
+		 let spinnerDocumentFragment = document.createDocumentFragment();
+		 let divMaterialSpinner = document.createElement('div');
+		 divMaterialSpinner.classList = 'material-spinner-small d-lg-inline-block';
+		 spinnerDocumentFragment.appendChild(divMaterialSpinner);
+		 this.classList.remove('d-lg-inline');
+		 this.classList.add('d-none');
+		 this.parentNode.appendChild(spinnerDocumentFragment);
+		 let currentElement = this;
+		 
 		 event.preventDefault();
 		 // stop the event from bubbling.
 		 event.stopPropagation();
@@ -1228,12 +1238,30 @@ $(document).ready(function(){
 	        	  let categoryParent = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
 	        	  let closestSibling = categoryParent.nextSibling;
 	        	  let lastClassName =  lastElement(splitElement(closestSibling.className, ' '));
+	        	  
 	        	  // Toggle dropdown if the rows are hidden
         		  if(includesStr(lastClassName , 'd-none')) {
         			  toggleDropdown(id, categoryParent);
         		  }
+        		  
         		  // Add the new row to the category
-	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling); 
+	        	  categoryParent.parentNode.insertBefore(createTableRows(userTransaction,'d-lg-table-row', userTransaction.categoryId), closestSibling);
+	        	  
+	        	  // Remove material spinner and remove d none
+	        	  currentElement.parentNode.removeChild(currentElement.parentNode.lastChild);
+	        	  currentElement.classList.add('d-lg-inline');
+	        	  currentElement.classList.remove('d-none');
+	        	  
+	        	  
+        		  // If Category Modal is open then udate the transaction amount 
+        		  let categoryModalElement = document.getElementsByClassName('category-modal');
+        		  if(!categoryModalElement[0].classList.contains('d-none')) {
+        			  // Get the number of hide able rows under the category for Category Modal
+    	        	  let hideableRowElement = document.getElementsByClassName('hideableRow-' + userTransaction.categoryId);
+    	        	  // Update the number of transactions
+    	        	  let numberOfTransactionsElement = document.getElementById('numberOfTransactions');
+    	        	  numberOfTransactionsElement.innerText = hideableRowElement.length;
+        		  }
 	          },
 	          error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
@@ -1383,15 +1411,18 @@ $(document).ready(function(){
 				remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
-				budgetPercentageLabel.innerText = 'Overspent (%)'
+				budgetPercentageLabel.innerText = 'Overspent (%)';
+				
 			} else {
-				budgetPercentageLabel.innerText = 'Remaining (%)'
+				budgetPercentageLabel.innerText = 'Remaining (%)';
 			}
 			
 			// Change color if the amount is negative or positive
 			if(remainingAmountToggleClass) {
 				remainingAmountDiv.classList.toggle('mild-text-success');
 				remainingAmountDiv.classList.toggle('mild-text-danger');
+				progressBarCategoryModal.classList.toggle('progress-bar-success-striped');
+				progressBarCategoryModal.classList.toggle('progress-bar-danger-striped');
 			}
 			
 			// Change the remaining text appropriately
@@ -1399,8 +1430,12 @@ $(document).ready(function(){
 
 			// Calculate percentage available to spend or save
 			let percentageRemaining = round(((budgetAvailableToSpendOrSave / budgetAmount) * 100),0);
-			// Assign progress bar value
-			progressBarCategoryModal.value = isNaN(percentageRemaining) ? '0' : (100 - percentageRemaining);
+			// Assign progress bar value. If the category amount is higher then the progress is 100%
+			let progressBarPercentage = isNaN(percentageRemaining) ? 0 : (categoryAmount > budgetAmount) ? 100 : (100 - percentageRemaining);
+			// Set the value and percentage of the progress bar
+			progressBarCategoryModal.setAttribute('aria-valuenow', progressBarPercentage);
+			progressBarCategoryModal.style.width = progressBarPercentage + '%'; 
+			
 			percentageRemaining = isNaN(percentageRemaining) ? 'NA' : percentageRemaining + '%';
 			percentageAvailable.innerText = percentageRemaining;
 		} else {
@@ -1408,13 +1443,15 @@ $(document).ready(function(){
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
-			progressBarCategoryModal.value='0';
+			progressBarCategoryModal.value= 0;
 			// Change the remaining amount to green if it is red in color
 			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
 				remainingAmountDiv.classList.toggle('mild-text-danger');
+				progressBarCategoryModal.classList.toggle('progress-bar-success-striped');
+				progressBarCategoryModal.classList.toggle('progress-bar-danger-striped');
 			}
-				
+			
 		}
 	}
 	

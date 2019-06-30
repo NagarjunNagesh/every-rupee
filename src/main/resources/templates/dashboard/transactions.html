@@ -101,7 +101,9 @@
                 		</span> 
                 	</div>
                 	<div class="text-left headingDiv">
-                		<progress id="amountSpentAgainstBudget" max="100" value="66"></progress>
+                		<div class="progress">
+						  <div id="amountSpentAgainstBudget" class="progress-bar progress-bar-success-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
                 		<span id="remainingAmount" class="mild-text-success">
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
@@ -109,8 +111,8 @@
                 	</div>
                 	<hr>
                 	<div class="row budgetAmountDiv">
-                		<div class="col-lg-1"><i class="material-icons">restaurant_menu</i></div> 
-                		<span id="plannedAmountCategoryModal" class="text-left col-lg-11" contenteditable="true" data-gramm_editor="false">
+                		<div class="col-lg-3"><i class="material-icons">restaurant_menu</i></div> 
+                		<span id="plannedAmountCategoryModal" class="text-left col-lg-9" contenteditable="true" data-gramm_editor="false">
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
                 		<span id="categoryIdCachedForUserBudget" class="d-none"></span>
@@ -222,7 +224,7 @@
                                 <div class="input-group-prepend">
                                   <div class="input-group-text"><i class="material-icons">description</i></div>
                                 </div>
-                                <input id="description" name="description" type="text" class="form-control" placeholder="Description"/>
+                                <input id="description" name="description" type="text" class="form-control" placeholder="Write a note"/>
                               </div>
                             </div>
                           </div>

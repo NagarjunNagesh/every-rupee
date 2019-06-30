@@ -17827,6 +17827,31 @@ Copyright (c) 2015 Daniel Eden
   background-color: #999;
 }
 
+/** Custom Changes **/
+.progress .progress-bar.progress-bar-success-striped {
+    background: #4caf50;
+    background-image: linear-gradient(45deg,rgba(255,255,255,0.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+}
+
+.progress .progress-bar.progress-bar-warning-striped {
+    background: #ff9800;
+    background-image: linear-gradient(45deg,rgba(255,255,255,0.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+}
+
+.progress .progress-bar.progress-bar-info-striped {
+    background: #00bcd4;
+    background-image: linear-gradient(45deg,rgba(255,255,255,0.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+}
+
+.progress .progress-bar.progress-bar-danger-striped {
+    background: #f44336;
+    background-image: linear-gradient(45deg,rgba(255,255,255,0.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,0.15) 50%,rgba(255,255,255,0.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+}
+
 @media all and (max-width: 991px) {
   [class*="navbar-expand-"]>.container,
   [class*="navbar-expand-"]>.container-fluid {
