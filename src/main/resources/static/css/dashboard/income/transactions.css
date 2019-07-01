@@ -512,3 +512,7 @@ progress::-moz-progress-bar {
 	border-top: 0.7px #3f51b5 solid;
 	animation: material-spinner 4s infinite;
 }
+
+#productsJson .material-spinner-small {
+	padding-left: 0.5rem;
+}

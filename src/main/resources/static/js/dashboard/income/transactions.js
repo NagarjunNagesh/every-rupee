@@ -580,6 +580,8 @@ $(document).ready(function(){
 				                         	manageDeleteTransactionsButton();
 				                         	// Delete The auto generated user budget
 				                         	er.deleteAllUserBudget();
+				                         	// Close category modal
+				                         	closeCategoryModal();
 			                        	} else {
 			                        		// Choose the closest parent Div for the checked elements
 				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
@@ -1012,9 +1014,11 @@ $(document).ready(function(){
             url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + id + dateMeantFor + chosenDate,
             type: 'DELETE',
             success: function(data) {
-            	
+            	let previousCategoryId = '';
             	let classListBudget = budgetTableCell.classList;
+            	// Set the previous category Id for updating the catergory modal
             	for(let i=0, length = classListBudget.length; i < length; i++) {
+                	// Remove the nearest category along with the last transaction row.
             		let classItem = classListBudget[i];
             		if(includesStr(classItem, 'categoryIdForBudget')) {
             			// Remove amount from current Category
@@ -1034,6 +1038,8 @@ $(document).ready(function(){
             		$(this).remove(); 
         			// Disable delete Transactions button on refreshing the transactions
                  	manageDeleteTransactionsButton();
+                 	// Updates total transactions in category Modal if open with this category
+    	        	updateTotalTransactionsInCategoryModal(previousCategoryId);
             	});
             	
             },
@@ -1252,16 +1258,8 @@ $(document).ready(function(){
 	        	  currentElement.classList.add('d-lg-inline');
 	        	  currentElement.classList.remove('d-none');
 	        	  
-	        	  
-        		  // If Category Modal is open then udate the transaction amount 
-        		  let categoryModalElement = document.getElementsByClassName('category-modal');
-        		  if(!categoryModalElement[0].classList.contains('d-none')) {
-        			  // Get the number of hide able rows under the category for Category Modal
-    	        	  let hideableRowElement = document.getElementsByClassName('hideableRow-' + userTransaction.categoryId);
-    	        	  // Update the number of transactions
-    	        	  let numberOfTransactionsElement = document.getElementById('numberOfTransactions');
-    	        	  numberOfTransactionsElement.innerText = hideableRowElement.length;
-        		  }
+	        	  // Updates total transactions in category Modal
+	        	  updateTotalTransactionsInCategoryModal(userTransaction.categoryId);
 	          },
 	          error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
@@ -1317,6 +1315,8 @@ $(document).ready(function(){
             type: 'GET',
             async: true,
             success: function(categoryTotalMap) {
+            	// Category open in Modal
+            	let categoryIdOpenInModal = document.getElementById('categoryIdCachedForUserBudget').innerText;
             	// Get all the category id's
         		let categoryTotalKeys = Object.keys(categoryTotalMap);
             	// Update category amount
@@ -1326,6 +1326,17 @@ $(document).ready(function(){
               	   let categoryAmountDiv = document.getElementById('amountCategory-'+key);
               	   categoryAmountDiv.innerHTML = currentCurrencyPreference + formatNumber(value, currentUser.locale);
               	   categoryTotalKeys.push(key);
+              	   
+              	   debugger;
+              	   // Check if the modal is open
+              	   if(categoryIdOpenInModal == key) {
+              		 let categoryRowElement = document.getElementById('categoryTableRow-' + key);
+              		 // Fetch all the categories child transactions
+     				 let hideableRowElement = document.getElementsByClassName('hideableRow-' + key);
+     				 // Edit Category Modal
+              		 handleCategoryModalToggle(key, categoryRowElement, hideableRowElement.length);
+              	   }
+              	   
             	}
             	
             	let categoryDivs = document.querySelectorAll('*[id^="categoryTableRow"]');
@@ -1443,7 +1454,9 @@ $(document).ready(function(){
 			plannedAmountModal.innerText = currentCurrencyPreference + '0.00';
 			percentageAvailable.innerText = 'NA'
 			remainingAmountDiv.innerText = currentCurrencyPreference + '0.00';
-			progressBarCategoryModal.value= 0;
+			progressBarCategoryModal.setAttribute('aria-valuenow', 0);
+			progressBarCategoryModal.style.width = '0%'; 
+			
 			// Change the remaining amount to green if it is red in color
 			if(!remainingAmountDiv.classList.contains('mild-text-success')){
 				remainingAmountDiv.classList.toggle('mild-text-success');
@@ -1485,13 +1498,18 @@ $(document).ready(function(){
 		
 	}
 	
-	// Close Button functionality for category Modal
-	document.getElementById("categoryHeaderClose").addEventListener("click",function(e){
+	// Close Category Modal
+	function closeCategoryModal() {
 		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
 		let categoryModalDiv = document.getElementsByClassName('category-modal');
 		// show the financial position div and hide the category modal
 		categoryModalDiv[0].classList.add('d-none');
 		financialPositionDiv[0].classList.remove('d-none');
+	}
+	
+	// Close Button functionality for category Modal
+	document.getElementById("categoryHeaderClose").addEventListener("click",function(e){
+		closeCategoryModal();
 	},false);
 	
 	const plannedAmountCategoryModal = document.getElementById('plannedAmountCategoryModal');
@@ -1593,6 +1611,24 @@ $(document).ready(function(){
 		}
 		
 		return false;
+	}
+	
+	// Updates the category modal if the modal is open for the category udates
+	function updateTotalTransactionsInCategoryModal(categoryIdToUpdate) {
+		// Is the category modal open with the category added?
+		  let categoryIdInModal = document.getElementById('categoryIdCachedForUserBudget');
+
+		  if(Number(categoryIdToUpdate) == Number(categoryIdInModal.innerText)) {
+			  // If Category Modal is open then update the transaction amount 
+			  let categoryModalElement = document.getElementsByClassName('category-modal');
+			  if(!categoryModalElement[0].classList.contains('d-none')) {
+				  // Get the number of hide able rows under the category for Category Modal
+	      	  let hideableRowElement = document.getElementsByClassName('hideableRow-' + categoryIdToUpdate);
+	      	  // Update the number of transactions
+	      	  let numberOfTransactionsElement = document.getElementById('numberOfTransactions');
+	      	  numberOfTransactionsElement.innerText = hideableRowElement.length;
+			  }
+		  }
 	}
 	
 });
