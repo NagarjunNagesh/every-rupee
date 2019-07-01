@@ -1327,7 +1327,6 @@ $(document).ready(function(){
               	   categoryAmountDiv.innerHTML = currentCurrencyPreference + formatNumber(value, currentUser.locale);
               	   categoryTotalKeys.push(key);
               	   
-              	   debugger;
               	   // Check if the modal is open
               	   if(categoryIdOpenInModal == key) {
               		 let categoryRowElement = document.getElementById('categoryTableRow-' + key);
