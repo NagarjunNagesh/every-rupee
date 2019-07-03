@@ -585,14 +585,21 @@ $(document).ready(function(){
 			                        	} else {
 			                        		// Choose the closest parent Div for the checked elements
 				                        	let elementsToDelete = $('.number:checked').parent().closest('div').parent().closest('div').parent().closest('div');
+				                        	let iterateOnceAfterCompletion = elementsToDelete.length;
 			                        		// Remove all the elements
 				                        	elementsToDelete.fadeOut('slow', function(){ 
 				                        		$(this).remove(); 
-				                        		// Disable delete Transactions button on refreshing the transactions
-					                         	manageDeleteTransactionsButton();
+				                        		
+				                        		// Execute the condition only once after all the transactions are removed.
+				                        		if(!--iterateOnceAfterCompletion) {
+				                        			// Disable delete Transactions button on refreshing the transactions
+						                         	manageDeleteTransactionsButton();
+						                         	
+						                         	// To recalculate the category total amount and to reduce user budget for the category appropriately
+						                         	recalculateCategoryTotalAmount();
+				                        		}
+					                         	
 				                        	});
-				                        	// To recalculate the category total amount and to reduce user budget for the category appropriately
-				                        	recalculateCategoryTotalAmount();
 			                        	}
 			                         },
 			                        error:  function (thrownError) {
@@ -1034,12 +1041,18 @@ $(document).ready(function(){
             	
             	// Remove the table row (No need to update category amount or total values as the value of the TR is already 0 )
             	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
+            	let closestTrLength = closestTr.length;
+            	
             	$(closestTr).fadeOut('slow', function(){
             		$(this).remove(); 
-        			// Disable delete Transactions button on refreshing the transactions
-                 	manageDeleteTransactionsButton();
-                 	// Updates total transactions in category Modal if open with this category
-    	        	updateTotalTransactionsInCategoryModal(previousCategoryId);
+            		
+            		// Execute these transactions only once after all elements have faded out
+            		if(!--closestTrLength) {
+            			// Disable delete Transactions button on refreshing the transactions
+                     	manageDeleteTransactionsButton();
+                     	// Updates total transactions in category Modal if open with this category
+        	        	updateTotalTransactionsInCategoryModal(previousCategoryId);
+            		}
             	});
             	
             },
@@ -1309,6 +1322,7 @@ $(document).ready(function(){
 	
 	// Recalculate category amount and append them to the table While updating auto generated user budget 
 	function recalculateCategoryTotalAmount() {
+    	
 		// Load all user transaction from API
 		jQuery.ajax({
 			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
@@ -1329,11 +1343,12 @@ $(document).ready(function(){
               	   
               	   // Check if the modal is open
               	   if(categoryIdOpenInModal == key) {
-              		 let categoryRowElement = document.getElementById('categoryTableRow-' + key);
-              		 // Fetch all the categories child transactions
-     				 let hideableRowElement = document.getElementsByClassName('hideableRow-' + key);
-     				 // Edit Category Modal
-              		 handleCategoryModalToggle(key, categoryRowElement, hideableRowElement.length);
+                		// Handle category Modal
+                    	let categoryRowElement = document.getElementById('categoryTableRow-' + key);
+                    	// Fetch all the categories child transactions
+                    	let hideableRowElement = document.getElementsByClassName('hideableRow-' + key);
+                    	// Edit Category Modal
+                    	handleCategoryModalToggle(key, categoryRowElement, hideableRowElement.length);
               	   }
               	   
             	}
@@ -1353,11 +1368,12 @@ $(document).ready(function(){
             			});
             		}
             	}
-            	
+
             	// Remove the elements which are marked to be deleted
             	if(isNotEmpty(elementsToDelete)) {
             		elementsToDelete.remove(); 
             	}
+            	
             }
 		});
 	}
