@@ -481,7 +481,7 @@ progress::-webkit-progress-value {
 	color: #333a3d;
  }
 
-.budgetAmountDiv .col-lg-3,.budgetAmountDiv #plannedAmountCategoryModal {
+.budgetAmountDiv .col-lg-3,.budgetAmountDiv #plannedAmountCategoryModal, .recurrenceDiv .col-lg-3, .recurrenceDiv #recurrenceCategoryModal {
 	padding-top: 0.5rem;
 	padding-left: 0;
 }
@@ -501,6 +501,7 @@ progress::-moz-progress-bar {
 }
 
 .material-spinner-small {
+	margin-left: 0.5rem;
 	height: 10px;
 	min-height: 10px;
 	width: 10px;
@@ -513,6 +514,38 @@ progress::-moz-progress-bar {
 	animation: material-spinner 4s infinite;
 }
 
-#productsJson .material-spinner-small {
-	padding-left: 0.5rem;
+.choose {
+	padding:0;
+	border:0;
+}
+.choose label {
+	float:left;
+	text-align:center;
+	position:relative;
+  cursor:pointer;
+}
+.choose label span {
+	background:#e65e20a6;
+	color:#FFF;
+	line-height:32px;
+	height:32px;
+	padding:0 16px;
+	display:block;
+	transition:all .2s ease;
+}
+.choose label:first-of-type span {
+	border-top-left-radius:6px;
+	border-bottom-left-radius:6px;
+	border-right:0;
+}
+.choose label:last-of-type span {
+	border-top-right-radius:6px;
+	border-bottom-right-radius:6px;
+	border-left:0;
+}
+.choose label input {
+	display:none
+}
+.choose label input:checked + span {
+	box-shadow:inset 0 0 0 32px rgba(0,0,0,0.1);
 }

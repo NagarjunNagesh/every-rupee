@@ -1415,6 +1415,7 @@ $(document).ready(function(){
 		let categoryIdForUserBudget = document.getElementById('categoryIdCachedForUserBudget');
 		let budgetPercentageLabel = document.getElementById('budgetInfoLabelInModal');
 		let progressBarCategoryModal = document.getElementById('amountSpentAgainstBudget');
+		let categoryRowClassList = closestTrElement.classList;
 		categoryIdForUserBudget.innerText = categoryId;
 		
 		let budgetElementText = closestTrElement.lastChild.innerText;
@@ -1432,12 +1433,19 @@ $(document).ready(function(){
 			
 			// Change the div if and only if the class is not already present in the div
 			let remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-success');
-			// Calculate the minus sign and appropriate class for the remaining amounr
+			
+			// Calculate the minus sign and appropriate class for the remaining amount 
 			if(budgetAvailableToSpendOrSave < 0) {
-				remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
+				// if the transaction category is expense category then show overspent else show To be budgeted
+				if(categoryRowClassList.contains('expenseCategory')) {
+					remainingAmountToggleClass = !remainingAmountDiv.classList.contains('mild-text-danger');
+					budgetPercentageLabel.innerText = 'Overspent (%)';
+				} else if(categoryRowClassList.contains('incomeCategory')) {
+					budgetPercentageLabel.innerText = 'To Be Budgeted (%)';
+				}
+				
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
-				budgetPercentageLabel.innerText = 'Overspent (%)';
 				
 			} else {
 				budgetPercentageLabel.innerText = 'Remaining (%)';
