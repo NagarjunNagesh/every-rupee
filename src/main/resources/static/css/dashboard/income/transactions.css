@@ -469,21 +469,25 @@ progress::-webkit-progress-value {
 	font-weight: 700;
 }
 
-.budgetAmountDiv:hover  {
+.budgetAmountDiv span:hover  {
 	border: 1px solid #d5d9db;
 	border-radius: .25rem;
 }
 
- .budgetAmountDiv:active, .budgetAmountDiv:focus, .budgetAmountDiv:focus-within {
+ .budgetAmountDiv span:active, .budgetAmountDiv span:focus, .budgetAmountDiv span:focus-within {
  	border: 1px solid #d5d9db;
  	box-shadow: 0 3px 4px -2px rgba(0,0,0,.15);
  	border-radius: .25rem;
 	color: #333a3d;
  }
 
-.budgetAmountDiv .col-lg-3,.budgetAmountDiv #plannedAmountCategoryModal, .recurrenceDiv .col-lg-3, .recurrenceDiv #recurrenceCategoryModal {
+.budgetAmountDiv #plannedAmountCategoryModal, .recurrenceDiv #recurrenceCategoryModal {
 	padding-top: 0.5rem;
 	padding-left: 0;
+}
+
+.budgetAmountDiv .col-lg-3,  .recurrenceDiv .col-lg-3 {
+	padding-top: 0;
 }
 
 #percentageAvailable {
@@ -522,16 +526,16 @@ progress::-moz-progress-bar {
 	float:left;
 	text-align:center;
 	position:relative;
-  cursor:pointer;
+  	cursor:pointer;
 }
 .choose label span {
-	background:#e65e20a6;
-	color:#FFF;
-	line-height:32px;
-	height:32px;
-	padding:0 16px;
-	display:block;
-	transition:all .2s ease;
+	color: #686969;
+	line-height: 32px;
+	height: 32px;
+	padding: 0 16px;
+	display: block;
+	transition: all .2s ease;
+	border: 1px solid rgba(0,0,0,0.1);
 }
 .choose label:first-of-type span {
 	border-top-left-radius:6px;
@@ -548,4 +552,9 @@ progress::-moz-progress-bar {
 }
 .choose label input:checked + span {
 	box-shadow:inset 0 0 0 32px rgba(0,0,0,0.1);
+}
+
+.debtBadge {
+	padding-left: 0.5rem;
+	margin-left: 0.5rem;
 }
