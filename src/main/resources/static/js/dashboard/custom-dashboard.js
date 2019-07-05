@@ -137,6 +137,7 @@ window.onload = function () {
 		function fetchCurrentPage(id){
 			let url = '';
 			let color = '';
+			let imageUrl = '../img/dashboard/sidebar/sidebar-1.jpg';
 			
 			if(isEmpty(id)){
 				swal({
@@ -164,14 +165,17 @@ window.onload = function () {
 			case 'goalsPage':
 				url = '/dashboard/goals';
 				color = 'orange';
+				imageUrl = '../img/dashboard/sidebar/sidebar-2.jpg';
 			    break;
 			case 'overviewPage':
 				url = '/dashboard/overview';
 				color = 'azure';
+				imageUrl = '../img/dashboard/sidebar/sidebar-3.jpg';
 			    break;
 			case 'investmentsPage':
 				url = '/dashboard/investment';
 				color = 'purple';
+				imageUrl = '../img/dashboard/sidebar/sidebar-4.jpg';
 			    break;
 			case 'settings-dashboard-sidebar':
 				url = '/dashboard/settings';
@@ -201,7 +205,7 @@ window.onload = function () {
 			// Change side bar color to green
         	changeColorOfSidebar(color);
         	// Change Image of sidebar
-        	changeImageOfSidebar("../img/dashboard/sidebar/sidebar-1.jpg")
+        	changeImageOfSidebar(imageUrl)
 			
 		    $.ajax({
 		        type: "GET",

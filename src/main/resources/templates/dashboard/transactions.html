@@ -85,9 +85,16 @@
                 </div>
                </div>
                <div class="card category-modal d-none">
-               	<button type="button" id="categoryHeaderClose" class="close" data-dismiss="modal" aria-label="Close">
-                  <i class="material-icons float-right">clear</i>
-                </button>
+               	<div class="row"> 
+               		<div id="debtBadge" class="col-lg-6">
+               			<span class="badge badge-pill badge-danger" >Debt</span>
+               		</div> 
+               		<div class="col-lg-6">
+               			<button type="button" id="categoryHeaderClose" class="close" data-dismiss="modal" aria-label="Close">
+                  			<i class="material-icons float-right">clear</i>
+  						</button>
+  					</div>
+  				</div>
               	<div class="card-header card-header-icon card-header-danger">
                     <div id="categoryLabelInModal" class="text-center card-title"></div>
                 </div>
@@ -111,19 +118,30 @@
                 	</div>
                 	<hr>
                 	<div class="row budgetAmountDiv">
-                		<div class="col-lg-3"><i class="material-icons">restaurant_menu</i></div> 
-                		<span id="plannedAmountCategoryModal" class="text-left col-lg-9" contenteditable="true" data-gramm_editor="false">
+                		<div class="col-lg-3">
+                			<img src="../img/dashboard/transactions/icons8-restaurant-50.png" data-toggle="tooltip" title="Budget">
+                		</div> 
+                		<span id="plannedAmountCategoryModal" class="text-left col-lg-9 align-middle" contenteditable="true" data-gramm_editor="false">
                 			<span th:text="#{message.currencySumbol}"></span>0.00
                 		</span> 
                 		<span id="categoryIdCachedForUserBudget" class="d-none"></span>
+                	</div>
+                	<div class="row recurrenceDiv">
+                		<div class="col-lg-3">
+                			<img src="../img/dashboard/transactions/icons8-reset-50.png"  data-toggle="tooltip" title="Recurrence">
+                		</div> 
+                		<div id="recurrenceCategoryModal" class="text-left col-lg-9 align-self-center">
+                			<fieldset class="choose">
+							    <label><input type="radio" value="Never" name="recurrence" checked/><span class="disable-select">Never</span></label>
+							    <label><input type="radio" value="Monthly" name="recurrence"/><span class="disable-select">Monthly</span></label>
+							</fieldset>
+                		</div> 
                 	</div>
                 </div>
                 <div id="" class="card-footer row">
                 	<div class="col-lg-6 text-left"><span id="numberOfTransactions"></span> Transactions</div>
                     <div class="col-lg-6 text-right">
-	                    <a id="addNewGoals" href="#" class="text-warning">
-	                    	<i class="material-icons">add_circle</i>
-	                    	Add Goals
+	                    <a id="addNewGoals" href="#" class="text-warning d-none">
 	                    </a>
                     </div>
                 </div>
@@ -201,7 +219,7 @@
                             <div class="form-group bmd-form-group">
                               <div class="input-group">
                                 <div class="input-group-prepend">
-                                  <div class="input-group-text"><i class="material-icons">money</i></div>
+                                  <div class="input-group-text"><i class="material-icons" data-toggle="tooltip" title="Transaction amount">money</i></div>
                                 </div>
                                 <input id="amount" name="amount" type="number" class="form-control small-input" required aria-required="true" aria-invalid="true" placeholder="Amount"/>
                               </div>
@@ -209,7 +227,7 @@
                             <div class="form-group bmd-form-group">
                               <div class="input-group">
                                 <div class="input-group-prepend">
-                                  <div class="input-group-text"><i class="material-icons">category</i></div>
+                                  <div class="input-group-text"><i class="material-icons" data-toggle="tooltip" title="Transaction category">category</i></div>
                                 </div>
                                 <select id="categoryOptions" name="categoryOptions" class="form-control" data-toggle="dropdown" data-style="btn btn-primary" aria-haspopup="true" aria-expanded="false" data-width="auto" data-container="body" data-size="5">
 				      				<optgroup id="expenseSelection" label="Expenses">
@@ -222,11 +240,24 @@
                             <div class="form-group bmd-form-group">
                               <div class="input-group">
                                 <div class="input-group-prepend">
-                                  <div class="input-group-text"><i class="material-icons">description</i></div>
+                                  <div class="input-group-text"><i class="material-icons" data-toggle="tooltip" title="Write a note">description</i></div>
                                 </div>
                                 <input id="description" name="description" type="text" class="form-control" placeholder="Write a note"/>
                               </div>
                             </div>
+                            <div class="form-group bmd-form-group">
+                              <div class="input-group">
+	                            	<div class="input-group-prepend">
+	                                  <div class="input-group-text"><i class="material-icons" data-toggle="tooltip" title="Recurrence">repeat</i></div>
+	                                </div>
+			                		<div id="recurrenceForm" class="text-left" contenteditable="true" data-gramm_editor="false">
+			                			<fieldset class="choose">
+										    <label><input type="radio" value="Never" name="recurrence" checked/><span class="disable-select">Never</span></label>
+										    <label><input type="radio" value="Monthly" name="recurrence"/><span class="disable-select">Monthly</span></label>
+										</fieldset>
+			                		</div> 
+			                  </div>
+			                </div>
                           </div>
                           <div class="modal-footer justify-content-center">
                             <button class="btn btn-success btn-round" id="transactionsFormButtonSubmission"  type="submit" form="transactionsForm">Add Transaction</button>

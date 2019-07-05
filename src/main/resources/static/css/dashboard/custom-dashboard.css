@@ -756,3 +756,10 @@ br[type="_moz"]{display: none;}
 progress {
 	border-radius: 0.25rem;
 }
+
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
