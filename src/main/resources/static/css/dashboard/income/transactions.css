@@ -481,9 +481,8 @@ progress::-webkit-progress-value {
 	color: #333a3d;
  }
 
-.budgetAmountDiv #plannedAmountCategoryModal, .recurrenceDiv #recurrenceCategoryModal {
+.budgetAmountDiv #plannedAmountCategoryModal {
 	padding-top: 0.5rem;
-	padding-left: 0;
 }
 
 .budgetAmountDiv .col-lg-3,  .recurrenceDiv .col-lg-3 {
@@ -557,4 +556,9 @@ progress::-moz-progress-bar {
 .debtBadge {
 	padding-left: 0.5rem;
 	margin-left: 0.5rem;
+}
+
+.recurrenceDiv #recurrenceCategoryModal {
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
 }
