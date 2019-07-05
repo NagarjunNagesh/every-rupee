@@ -562,3 +562,12 @@ progress::-moz-progress-bar {
 	padding-top: 0.25rem;
 	padding-bottom: 0.25rem;
 }
+
+fildset > * {
+    display:inline-block;
+}
+
+.debtBadge img {
+	padding-left:1rem;
+	padding-top:0.5rem;
+}

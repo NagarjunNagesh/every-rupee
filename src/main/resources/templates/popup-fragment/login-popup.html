@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<div th:fragment="popup-login">
+		<div class="modal fade" id="loginModal" tabindex="-1" role="">
+			    <div class="modal-dialog modal-login" role="document">
+			        <div class="modal-content">
+			            <div class="card card-signup card-plain">
+			                <div class="modal-header">
+			                  <div class="card-header card-header-primary text-center">
+			                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			                      <i class="material-icons">clear</i>
+			                    </button>
+			
+			                    <h4 class="card-title">Log in</h4>
+			                    <div class="social-line">
+			                      <a href="/login/facebook" class="btn btn-just-icon btn-link btn-white">
+			                        <i class="fa fa-facebook-square"></i>
+			                      </a>
+			                      <a href="/login/twitter" class="btn btn-just-icon btn-link btn-white">
+			                        <i class="fa fa-twitter"></i>
+			                      </a>
+			                      <a href="/login/google" class="btn btn-just-icon btn-link btn-white">
+			                        <i class="fa fa-google-plus"></i>
+			                      </a>
+			                    </div>
+			                  </div>
+			                </div>
+			                <div class="modal-body">
+			                    <form class="form" method="POST" th:action="@{/api/login}">
+			                        <p class="description text-center">Or Be Classical</p>
+			                        <div class="card-body">
+			
+			                            <div class="form-group bmd-form-group">
+			                                <div class="input-group">
+			                                  <div class="input-group-prepend">
+			                                    <div class="input-group-text"><i class="material-icons">email</i></div>
+			                                  </div>
+			                                  <input type="text" class="form-control" placeholder="Email...">
+			                                </div>
+			                            </div>
+			
+			                            <div class="form-group bmd-form-group">
+			                                <div class="input-group">
+			                                  <div class="input-group-prepend">
+			                                    <div class="input-group-text"><i class="material-icons">lock_outline</i></div>
+			                                  </div>
+			                                  <input type="password" placeholder="Password..." class="form-control">
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </form>
+			                </div>
+			                <div class="modal-footer justify-content-center">
+			                    <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+</body>
+</html>

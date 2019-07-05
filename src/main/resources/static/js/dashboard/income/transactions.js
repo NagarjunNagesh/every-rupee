@@ -36,6 +36,9 @@ $(document).ready(function(){
 	// Success SVG Fragment
 	let successSVGFormed = successSvgMessage();
 	
+	// Load images in category modal
+	loadCategoryModalImages();
+	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
 		// disable button after successful submission
@@ -1638,7 +1641,7 @@ $(document).ready(function(){
 	
 	// Updates the category modal if the modal is open for the category udates
 	function updateTotalTransactionsInCategoryModal(categoryIdToUpdate) {
-		// Is the category modal open with the category added?
+		  // Is the category modal open with the category added?
 		  let categoryIdInModal = document.getElementById('categoryIdCachedForUserBudget');
 
 		  if(Number(categoryIdToUpdate) == Number(categoryIdInModal.innerText)) {
@@ -1652,6 +1655,16 @@ $(document).ready(function(){
 	      	  numberOfTransactionsElement.innerText = hideableRowElement.length;
 			  }
 		  }
+	}
+	
+	// Load Images dynamically after javascript loads
+	function loadCategoryModalImages() {
+		
+		let budgetImageDiv = document.getElementById('budgetImage');
+		budgetImageDiv.src = '../img/dashboard/transactions/icons8-restaurant-40.png';
+		
+		let recurrenceImageDiv = document.getElementById('recurrenceImage');
+		recurrenceImageDiv.src = '../img/dashboard/transactions/icons8-reset-40.png';
 	}
 	
 });
