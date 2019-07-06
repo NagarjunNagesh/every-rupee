@@ -30,7 +30,7 @@
 			                  </div>
 			                </div>
 			                <div class="modal-body">
-			                    <form class="form" method="POST" th:action="@{/api/login}">
+			                    <form class="form" method="POST" th:action="@{/login}">
 			                        <p class="description text-center">Or Be Classical</p>
 			                        <div class="card-body">
 			
@@ -39,7 +39,7 @@
 			                                  <div class="input-group-prepend">
 			                                    <div class="input-group-text"><i class="material-icons">email</i></div>
 			                                  </div>
-			                                  <input type="text" class="form-control" placeholder="Email...">
+			                                  <input type="email" class="form-control" name="email" placeholder="Email...">
 			                                </div>
 			                            </div>
 			
@@ -48,14 +48,18 @@
 			                                  <div class="input-group-prepend">
 			                                    <div class="input-group-text"><i class="material-icons">lock_outline</i></div>
 			                                  </div>
-			                                  <input type="password" placeholder="Password..." class="form-control">
+			                                  <input type="password" id="password" name="password" placeholder="Password..." class="form-control">
 			                                </div>
 			                            </div>
+			                            <div class="text-center">
+							                 <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+							                 <span style="font-size: 20; color: #FF1C19;" th:utext="${successMessage}"></span>
+							           </div>
 			                        </div>
 			                    </form>
 			                </div>
 			                <div class="modal-footer justify-content-center">
-			                    <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
+			                    <a href="/forgot-password" class="btn btn-primary btn-link btn-wd btn-lg">I Forgot My Password</a>
 			                </div>
 			            </div>
 			        </div>

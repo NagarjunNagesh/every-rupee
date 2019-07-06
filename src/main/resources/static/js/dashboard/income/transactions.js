@@ -39,6 +39,9 @@ $(document).ready(function(){
 	// Load images in category modal
 	loadCategoryModalImages();
 	
+	//TEST Show login modal
+	document.getElementById('loginModal').classList.add('show');
+	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
 		// disable button after successful submission
