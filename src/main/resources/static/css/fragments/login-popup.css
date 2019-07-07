@@ -41,17 +41,6 @@
     margin-bottom: 3px;
 }
 
-.card[class*=bg-],
-.card[class*=bg-] .card-title,
-.card[class*=bg-] .card-title a,
-.card[class*=bg-] .icon i,
-.card [class*=card-header-],
-.card [class*=card-header-] .card-title,
-.card [class*=card-header-] .card-title a,
-.card [class*=card-header-] .icon i {
- color:#fff
-}
-
 .card-signup .social-line {
     margin-top: 1rem;
     text-align: center;
