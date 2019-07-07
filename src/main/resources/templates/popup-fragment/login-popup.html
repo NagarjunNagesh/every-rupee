@@ -10,21 +10,42 @@
 			        <div class="modal-content">
 			            <div class="card card-signup card-plain">
 			                <div class="modal-header">
-			                  <div class="card-header card-header-primary text-center">
-			                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			                  <div id="loginModalCardHeader" class="card-header card-header-primary text-center">
+			                    <button id="loginModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">
 			                      <i class="material-icons">clear</i>
 			                    </button>
 			
 			                    <h4 class="card-title">Log in</h4>
 			                    <div class="social-line">
 			                      <a href="/login/facebook" class="btn btn-just-icon btn-link btn-white">
-			                        <i class="fa fa-facebook-square"></i>
+									<svg id="facebookLogin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+									    <path d="M17,3H7C4.791,3,3,4.791,3,7v10c0,2.209,1.791,4,4,4h5.621v-6.961h-2.343v-2.725h2.343V9.309 c0-2.324,1.421-3.591,3.495-3.591c0.699-0.002,1.397,0.034,2.092,0.105v2.43h-1.428c-1.13,0-1.35,0.534-1.35,1.322v1.735h2.7 l-0.351,2.725h-2.365V21H17c2.209,0,4-1.791,4-4V7C21,4.791,19.209,3,17,3z"/>
+									</svg>
 			                      </a>
 			                      <a href="/login/twitter" class="btn btn-just-icon btn-link btn-white">
-			                        <i class="fa fa-twitter"></i>
+			                        <svg id="twitterLogin" viewBox="328 355 335 276" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px">
+									  <path d="
+									    M 630, 425
+									    A 195, 195 0 0 1 331, 600
+									    A 142, 142 0 0 0 428, 570
+									    A  70,  70 0 0 1 370, 523
+									    A  70,  70 0 0 0 401, 521
+									    A  70,  70 0 0 1 344, 455
+									    A  70,  70 0 0 0 372, 460
+									    A  70,  70 0 0 1 354, 370
+									    A 195, 195 0 0 0 495, 442
+									    A  67,  67 0 0 1 611, 380
+									    A 117, 117 0 0 0 654, 363
+									    A  65,  65 0 0 1 623, 401
+									    A 117, 117 0 0 0 662, 390
+									    A  65,  65 0 0 1 630, 425
+									    Z"/>
+									</svg>
 			                      </a>
 			                      <a href="/login/google" class="btn btn-just-icon btn-link btn-white">
-			                        <i class="fa fa-google-plus"></i>
+			                        <svg id="googleLogin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+									    <path d="M12.545,12.151L12.545,12.151c0,1.054,0.855,1.909,1.909,1.909h3.536c-0.607,1.972-2.101,3.467-4.26,3.866 c-3.431,0.635-6.862-1.865-7.19-5.339c-0.34-3.595,2.479-6.62,6.005-6.62c1.002,0,1.946,0.246,2.777,0.679 c0.757,0.395,1.683,0.236,2.286-0.368l0,0c0.954-0.954,0.701-2.563-0.498-3.179c-1.678-0.862-3.631-1.264-5.692-1.038 c-4.583,0.502-8.31,4.226-8.812,8.809C1.945,16.9,6.649,22,12.545,22c6.368,0,8.972-4.515,9.499-8.398 c0.242-1.78-1.182-3.352-2.978-3.354l-4.61-0.006C13.401,10.24,12.545,11.095,12.545,12.151z"/>
+									</svg>
 			                      </a>
 			                    </div>
 			                  </div>
@@ -53,7 +74,7 @@
 			                            </div>
 			                            <div class="text-center">
 							                 <button class="btn btn-primary btn-raised" name="Submit" value="Login" type="Submit" th:text="Login"></button>
-							                 <span style="font-size: 20; color: #FF1C19;" th:utext="${successMessage}"></span>
+							                 <span id="loginModalSuccessMessage" th:utext="${successMessage}"></span>
 							           </div>
 			                        </div>
 			                    </form>

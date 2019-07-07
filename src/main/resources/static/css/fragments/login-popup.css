@@ -69,3 +69,19 @@
 #loginModal .card-body {
 	padding-top:0;
 }
+
+#loginModal .modal-footer > a {
+	color: #999;
+}
+
+#facebookLogin {
+	fill: #3b5998;
+}
+
+#twitterLogin {
+	fill: #00acee;
+}
+
+#googleLogin {
+	fill: #DD4B39;
+}

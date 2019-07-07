@@ -75,6 +75,9 @@ window.onload = function () {
 		// Read Cookies
 		readCookie();
 		
+		// Adjust styles of login for dashboad
+		adjustStylesForLoginPopup();
+		
 		/* Read Cookies */
 		function readCookie() {
 				// make sure that the cookies exists
@@ -205,7 +208,7 @@ window.onload = function () {
 			// Change side bar color to green
         	changeColorOfSidebar(color);
         	// Change Image of sidebar
-        	changeImageOfSidebar(imageUrl)
+        	changeImageOfSidebar(imageUrl);
 			
 		    $.ajax({
 		        type: "GET",
@@ -226,6 +229,17 @@ window.onload = function () {
 		            }).catch(swal.noop);
 		        }
 		    });
+		}
+		
+		// Adjust styles of login for dashboad
+		function adjustStylesForLoginPopup() {
+			let loginModalHeader = document.getElementById('loginModalCardHeader');
+			loginModalHeader.classList.remove('card-header');
+			loginModalHeader.classList.remove('card-header-primary');
+			
+			// Disabled the close button 
+			document.getElementById('loginModalCloseButton').disabled=true;
+			
 		}
 		
 	});
@@ -298,6 +312,19 @@ er = {
 	            dataType: "json",
 	            async: true
 			});
+		},
+		
+		// Throw a session expired error and reload the page.
+		sessionExpiredSwal(data){
+			var responseError = JSON.parse(data.responseText);
+	    	if(responseError.error.includes("Unauthorized")){
+	    		// Show the login modal if the session has expired
+	    		// Initialize the modal to not close will when pressing ESC or clicking outside
+				$('#loginModal').modal({
+				    backdrop: 'static',
+				    keyboard: false
+				});
+	    	}
 		}
 }
 
