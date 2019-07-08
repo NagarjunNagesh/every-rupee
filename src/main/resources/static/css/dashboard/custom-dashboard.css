@@ -742,13 +742,12 @@ br[type="_moz"]{display: none;}
 
 .visibleAfterHalfASec {
   opacity: 1;
-  transition: visibility 0.5s linear, opacity 0.5s linear;
+  transition: opacity 0.5s linear;
 }
 
 .hiddenAfterHalfASec {
   opacity: 0;
-  transition: visibility 0.5s linear, opacity 0.5s linear;
-  visibility: collapse;
+  transition: opacity 0.5s linear;
 }
 
 progress {

@@ -447,7 +447,7 @@ progress::-webkit-progress-value {
 }
 
 #plannedAmountCategoryModal {
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	padding-top: 0.25rem;
 	font-weight: 400;
 	padding-bottom: 0.5rem;
@@ -535,6 +535,7 @@ progress::-moz-progress-bar {
 	display: block;
 	transition: all .2s ease;
 	border: 1px solid rgba(0,0,0,0.1);
+	font-size: 0.7rem;
 }
 .choose label:first-of-type span {
 	border-top-left-radius:6px;
@@ -563,11 +564,31 @@ progress::-moz-progress-bar {
 	padding-bottom: 0.25rem;
 }
 
-fildset > * {
+fildset > label {
     display:inline-block;
 }
 
 .debtBadge img {
 	padding-left:1rem;
 	padding-top:0.5rem;
+}
+
+/** Change the size of the text if the width and height pf the screen are more **/
+@media (min-width:60em) and (min-height:43.75em) {
+	
+ #plannedAmountCategoryModal {
+  font-size: 1.5rem;
+ }
+ 
+ .choose label span {
+ 	font-size: 0.92rem;
+ }
+ 
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (max-width:60em) and (max-height:43.75em) {
+	.card {
+		font-size: .7rem;
+	}
 }

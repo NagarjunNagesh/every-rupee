@@ -29,6 +29,11 @@ $(document).ready(function(){
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
 	
+	
+	/**
+	 * START Load at the end of the javascript
+	 */
+	
 	// Load Expense category and income category
 	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
 	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
