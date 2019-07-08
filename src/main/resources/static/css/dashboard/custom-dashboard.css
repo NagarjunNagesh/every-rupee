@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 #settings-dashboard-sidebar {
-	margin: auto 20px auto 25px;
+	margin: 0 1rem;
 	color: #a9afbb;
 }
 
@@ -11,14 +11,12 @@
 }
 
 #dashboard-util { 
-	margin-left:0;
-	margin-right: 20px;
+	margin-right:1rem;
 	color: #a9afbb;
 }
 
 #dashboard-util-fullscreen { 
-	margin-left:0;
-	margin-right: 20px;
+	margin-right:1rem;
 	color: #a9afbb;
 }
 
@@ -744,13 +742,12 @@ br[type="_moz"]{display: none;}
 
 .visibleAfterHalfASec {
   opacity: 1;
-  transition: visibility 0.5s linear, opacity 0.5s linear;
+  transition: opacity 0.5s linear;
 }
 
 .hiddenAfterHalfASec {
   opacity: 0;
-  transition: visibility 0.5s linear, opacity 0.5s linear;
-  visibility: collapse;
+  transition: opacity 0.5s linear;
 }
 
 progress {
@@ -762,4 +759,15 @@ progress {
   -moz-user-select: none;    
   -ms-user-select: none;      
   user-select: none;
+}
+
+#settings-dashboard-sidebar > i, #dashboard-util-fullscreen > i, #dashboard-util > i {
+	float: none;
+	width: unset;
+	line-height: unset;
+	margin:0;
+}
+
+#loginModal .modal-header {
+	display: block;
 }

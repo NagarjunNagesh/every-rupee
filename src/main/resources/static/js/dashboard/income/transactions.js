@@ -29,12 +29,20 @@ $(document).ready(function(){
 	// Call the transaction API to fetch information.
 	fetchJSONForTransactions();
 	
+	
+	/**
+	 * START Load at the end of the javascript
+	 */
+	
 	// Load Expense category and income category
 	expenseSelectionOptGroup = cloneElementAndAppend(document.getElementById('expenseSelection'), expenseSelectionOptGroup);
 	incomeSelectionOptGroup = cloneElementAndAppend(document.getElementById('incomeSelection'), incomeSelectionOptGroup);
 	
 	// Success SVG Fragment
 	let successSVGFormed = successSvgMessage();
+	
+	// Load images in category modal
+	loadCategoryModalImages();
 	
 	// Save Transactions on form submit
 	$('#transactionsForm').submit(function(event) {
@@ -97,7 +105,7 @@ $(document).ready(function(){
 	  	    	var responseError = JSON.parse(data.responseText);
 	           	if(responseError.error.includes("Unauthorized")){
 	  		    	$('#GSCCModal').modal('hide');
-	  		    	sessionExpiredSwal(data);
+	  		    	er.sessionExpiredSwal(data);
 	           	}
 	  	    	fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Unable to add this transaction.</p></div> <br/>',2000);
 	  	    	resiteredNewTransaction=false;
@@ -605,7 +613,7 @@ $(document).ready(function(){
 			                        error:  function (thrownError) {
 			                        	 var responseError = JSON.parse(thrownError.responseText);
 				                         	if(responseError.error.includes("Unauthorized")){
-				                         		sessionExpiredSwal(thrownError);
+				                         		er.sessionExpiredSwal(thrownError);
 				                         	} else{
 				                         		showNotification('Unable to delete the transactions','top','center','danger');
 				                         	}
@@ -649,23 +657,6 @@ $(document).ready(function(){
 	  		// If the category modal is active then hide it
 	  		toggleCategoryModal(false);
 	  	}
-	}
-	
-	// Throw a session expired error and reload the page.
-	function sessionExpiredSwal(data){
-		var responseError = JSON.parse(data.responseText);
-    	if(responseError.error.includes("Unauthorized")){
-    		swal({
-                title: "Session Expired!",
-                text: 'You will be redirected to the Login Page',
-                type: 'warning',
-                buttonsStyling: false,
-                confirmButtonClass: "btn btn-success"
-            }).then(function() {
-            	location.reload(); 
-            }).catch(swal.noop);
-    		
-    	}
 	}
 	
 	// Catch the description when the user focuses on the description
@@ -733,7 +724,7 @@ $(document).ready(function(){
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
 	                   	if(responseError.error.includes("Unauthorized")){
-	                   		sessionExpiredSwal(thrownError);
+	                   		er.sessionExpiredSwal(thrownError);
 	                   	} else{
 	                   		showNotification('Unable to change the category','top','center','danger');
 	                   	}
@@ -802,7 +793,7 @@ $(document).ready(function(){
 	          error: function (thrownError) {
             	 var responseError = JSON.parse(thrownError.responseText);
                  	if(responseError.error.includes("Unauthorized")){
-                 		sessionExpiredSwal(thrownError);
+                 		er.sessionExpiredSwal(thrownError);
                  	} else{
                  		showNotification('Unable to change the description','top','center','danger');
                  	}
@@ -886,7 +877,7 @@ $(document).ready(function(){
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
 	                   	if(responseError.error.includes("Unauthorized")){
-	                   		sessionExpiredSwal(thrownError);
+	                   		er.sessionExpiredSwal(thrownError);
 	                   	} else{
 	                   		showNotification('Unable to change the transacition amount','top','center','danger');
 	                   	}
@@ -1059,7 +1050,7 @@ $(document).ready(function(){
             error: function (thrownError) {
            	 let responseError = JSON.parse(thrownError.responseText);
                 	if(responseError.error.includes("Unauthorized")){
-                		sessionExpiredSwal(thrownError);
+                		er.sessionExpiredSwal(thrownError);
                 	} else{
                 		document.getElementById('budgetTransactionsRow-' + id).innerHTML = deleteButton;
                 		
@@ -1277,7 +1268,7 @@ $(document).ready(function(){
 	          error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
                   	if(responseError.error.includes("Unauthorized")){
-                  		sessionExpiredSwal(thrownError);
+                  		er.sessionExpiredSwal(thrownError);
                   	} else{
                   		showNotification('Unable to add a new transaction','top','center','danger');
                   	}
@@ -1612,7 +1603,7 @@ $(document).ready(function(){
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
 	                   	if(responseError.error.includes("Unauthorized")){
-	                   		sessionExpiredSwal(thrownError);
+	                   		er.sessionExpiredSwal(thrownError);
 	                   	} else{
 	                   		showNotification('Unable to change the budget. Please try again','top','center','danger');
 	                   		// update the current element with the previous amount
@@ -1638,7 +1629,7 @@ $(document).ready(function(){
 	
 	// Updates the category modal if the modal is open for the category udates
 	function updateTotalTransactionsInCategoryModal(categoryIdToUpdate) {
-		// Is the category modal open with the category added?
+		  // Is the category modal open with the category added?
 		  let categoryIdInModal = document.getElementById('categoryIdCachedForUserBudget');
 
 		  if(Number(categoryIdToUpdate) == Number(categoryIdInModal.innerText)) {
@@ -1652,6 +1643,16 @@ $(document).ready(function(){
 	      	  numberOfTransactionsElement.innerText = hideableRowElement.length;
 			  }
 		  }
+	}
+	
+	// Load Images dynamically after javascript loads
+	function loadCategoryModalImages() {
+		
+		let budgetImageDiv = document.getElementById('budgetImage');
+		budgetImageDiv.src = '../img/dashboard/transactions/icons8-restaurant-40.png';
+		
+		let recurrenceImageDiv = document.getElementById('recurrenceImage');
+		recurrenceImageDiv.src = '../img/dashboard/transactions/icons8-reset-40.png';
 	}
 	
 });

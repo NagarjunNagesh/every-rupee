@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+/*!
+ =========================================================
+ * Custom CSS - v1.0
+ =========================================================
+* 
+* Author: Nagarjun Nagesh
+* 
+* All the Custom CSS for Login POPUP
+*/
+
+.modal .modal-dialog.modal-login {
+ width:360px
+}
+.modal .modal-dialog.modal-login .modal-header .close {
+ color:#fff;
+ text-shadow:none;
+ position:absolute
+}
+.modal .modal-dialog.modal-login .modal-footer {
+ padding-bottom:0;
+ padding-top:0
+}
+.modal .modal-dialog.modal-login .modal-body {
+ padding-left:4px;
+ padding-bottom:0;
+ padding-top:0
+}
+.modal .modal-dialog.modal-login .card-signup {
+ margin-bottom:0
+}
+
+.card .card-header .card-title {
+    margin-bottom: 3px;
+}
+
+.card-signup .social-line {
+    margin-top: 1rem;
+    text-align: center;
+    padding: 0;
+}
+
+.bootstrap-tagsinput.rose-badge .tag .tagsinput-remove-link, .card-signup .card-header .social-line .btn {
+    color: #fff;
+}
+
+.modal-login .card-header {
+	margin-bottom:1.5rem;
+}
+
+#loginModal .card-body {
+	padding-top:0;
+}
+
+#loginModal .modal-footer > a {
+	color: #999;
+}
+
+#facebookLogin {
+	fill: #3b5998;
+}
+
+#twitterLogin {
+	fill: #00acee;
+}
+
+#googleLogin {
+	fill: #DD4B39;
+}

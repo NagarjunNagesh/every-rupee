@@ -5,7 +5,17 @@
             "name": "core.css",
             "files": [
                 "/dashboard/custom-dashboard.css",
+                "/fragments/login-popup.css",
                 "/dashboard/build/material-dashboard.css"
+            ]
+        },
+        {
+            "type": "css",
+            "name": "core-website.css",
+            "files": [
+                "/material-kit/material-kit.css",
+                "/fragments/login-popup.css",
+                "/custom.css"
             ]
         },
         {
