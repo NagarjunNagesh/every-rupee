@@ -56,7 +56,7 @@ $(document).ready(function(){
 	   event.preventDefault();
 	   event.stopImmediatePropagation(); // necessary to prevent submitting the form twice
 	   replaceHTML('successMessage' , '');
-	   replaceHTML('errorMessage',"");
+	   replaceHTML('errorMessage','');
 	   let formValidation = true;
 	   
 	   let amount = document.getElementById('amount').value;
@@ -76,9 +76,21 @@ $(document).ready(function(){
 		   transactionSubmissionButton.removeAttribute("disabled");
 		   return;
 	   }
-	   
 	    
 	    amount = Math.abs(amount);
+	    // Get all the input radio buttons for recurrence to check which one is clicked
+	    let recurrence = document.getElementsByName('recurrence');
+	    let recurrenceValue = 'NEVER';
+	    
+	    // If the recurrence is not empty then assign the checked one
+	    if(isNotEmpty(recurrence)) {
+	    	for(let count = 0, length = recurrence.length; count < length; count++) {
+	    		if(recurrence[count].checked) {
+	    			recurrenceValue = recurrence[count].value;
+	    		}	
+	    	}
+	    }
+	    
 	    let description = document.getElementById('description').value;
 	    let categoryOptions = document.getElementById('categoryOptions').value;
 		let values = {};
@@ -86,6 +98,7 @@ $(document).ready(function(){
 		values['description'] = description;
 		values['categoryOptions'] = categoryOptions;
 		values['dateMeantFor'] = chosenDate;
+		values['recurrence'] = recurrenceValue;
 		$.ajax({
 	          type: "POST",
 	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
@@ -1356,6 +1369,11 @@ $(document).ready(function(){
             			// Mark those elements to be deleted
             			$(categoryDiv).fadeOut('slow', function(){
             				elementsToDelete.appendChild(categoryDiv);
+            				// If the budget is auto created then change the amount to zero
+            				autoCreateBudget(categoryId, 0);
+            				
+            				// Toggle Category Modal 
+                        	toggleCategoryModal(false);
             			});
             		}
             	}
@@ -1654,6 +1672,7 @@ $(document).ready(function(){
 		let recurrenceImageDiv = document.getElementById('recurrenceImage');
 		recurrenceImageDiv.src = '../img/dashboard/transactions/icons8-reset-40.png';
 	}
+	
 	
 });
 
