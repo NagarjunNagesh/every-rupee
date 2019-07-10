@@ -244,6 +244,20 @@ public class UserBudgetServiceTest {
     }
 
     /**
+     * TEST: Delete user budget
+     */
+    @Test
+    public void deleteUserBudgets() {
+	String categoryIds = "3,4,5,6";
+
+	getUserBudgetService().deleteUserBudgets(categoryIds, FINANCIAL_PORTFOLIO_ID, DATE_MEANT_FOR);
+
+	verify(getUserBudgetRepository(), times(1)).deleteUserBudgetWithCategoryIds(getCategoryIdList(),
+		FINANCIAL_PORTFOLIO_ID, getDateMeantFor());
+
+    }
+
+    /**
      * TEST: Update auto generated user budget
      */
     @Test

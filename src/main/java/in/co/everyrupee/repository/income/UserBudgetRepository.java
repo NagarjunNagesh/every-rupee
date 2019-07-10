@@ -47,6 +47,7 @@ public interface UserBudgetRepository extends JpaRepository<UserBudget, Integer>
 
     /**
      * Delete all user budget with category ids specified in {@code ids} parameter
+     * with auto generation as true
      * 
      * @param ids List of category ids
      */
@@ -82,4 +83,14 @@ public interface UserBudgetRepository extends JpaRepository<UserBudget, Integer>
     @Query("SELECT u FROM UserBudget u where u.categoryId in ?1 and u.financialPortfolioId in ?2 and u.dateMeantFor in ?3")
     List<UserBudget> fetchUserBudgetWithCategoryIds(List<Integer> categoryIds, String financialPortfolioId,
 	    Date dateMeantFor);
+
+    /**
+     * Delete all user budget with category ids specified in {@code ids} parameter
+     * 
+     * @param ids List of category ids
+     */
+    @Modifying
+    @Query("delete from UserBudget u where u.categoryId in ?1 and u.financialPortfolioId in ?2 and u.dateMeantFor in ?3")
+    void deleteUserBudgetWithCategoryIds(List<Integer> categoryIdsAsIntegerList, String financialPortfolioId,
+	    Date date);
 }
