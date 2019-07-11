@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
+import in.co.everyrupee.pojo.RecurrencePeriod;
 
 /**
  * POJO for User Transactions
@@ -67,10 +70,19 @@ public class UserTransaction implements Serializable {
     @Column(name = DashboardConstants.MODIFICATION_DATE)
     private Date modifyDate;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = DashboardConstants.Transactions.RECURRENCE, columnDefinition = DashboardConstants.RECURRENCE_COLUMN_DEFINITION)
+    private RecurrencePeriod recurrence;
+
     @PrePersist
     protected void onCreate() {
-	if (dateMeantFor == null) {
-	    dateMeantFor = new Date();
+	if (getDateMeantFor() == null) {
+	    setDateMeantFor(new Date());
+	}
+
+	if (getRecurrence() == null) {
+	    setRecurrence(RecurrencePeriod.NEVER);
 	}
     }
 
@@ -120,6 +132,14 @@ public class UserTransaction implements Serializable {
 
     public void setDateMeantFor(Date dateMeantFor) {
 	this.dateMeantFor = dateMeantFor;
+    }
+
+    public RecurrencePeriod getRecurrence() {
+	return recurrence;
+    }
+
+    public void setRecurrence(RecurrencePeriod recurrence) {
+	this.recurrence = recurrence;
     }
 
 }

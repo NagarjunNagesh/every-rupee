@@ -36,6 +36,7 @@ import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.events.income.OnFetchCategoryTotalCompleteEvent;
 import in.co.everyrupee.exception.ResourceNotFoundException;
+import in.co.everyrupee.pojo.RecurrencePeriod;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
@@ -134,6 +135,12 @@ public class UserTransactionService implements IUserTransactionService {
 	if (CollectionUtils.isNotEmpty(formData.get(DashboardConstants.Transactions.DESCRIPTION))) {
 	    userTransaction.setDescription(formData.get(DashboardConstants.Transactions.DESCRIPTION).get(0));
 	}
+
+	if (CollectionUtils.isNotEmpty(formData.get(DashboardConstants.Transactions.RECURRENCE))) {
+	    userTransaction.setRecurrence(
+		    RecurrencePeriod.valueOf(formData.get(DashboardConstants.Transactions.RECURRENCE).get(0)));
+	}
+
 	userTransaction
 		.setCategoryId(Integer.parseInt(formData.get(DashboardConstants.Transactions.CATEGORY_OPTIONS).get(0)));
 	userTransaction.setAmount(
@@ -194,6 +201,11 @@ public class UserTransactionService implements IUserTransactionService {
 	if (ERStringUtils.equalsIgnoreCase(formFieldName, DashboardConstants.Transactions.CATEGORY_FORM_FIELD_NAME)) {
 	    userTransaction.get().setCategoryId(
 		    Integer.parseInt(formData.get(DashboardConstants.Transactions.CATEGORY_ID_JSON).get(0)));
+	}
+
+	if (ERStringUtils.equalsIgnoreCase(formFieldName, DashboardConstants.Transactions.RECURRENCE)) {
+	    userTransaction.get().setRecurrence(
+		    RecurrencePeriod.valueOf(formData.get(DashboardConstants.Transactions.RECURRENCE).get(0)));
 	}
 
 	UserTransaction userTransactionSaved = userTransactionsRepository.save(userTransaction.get());
