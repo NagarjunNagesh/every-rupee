@@ -1342,8 +1342,6 @@ $(document).ready(function(){
             	// Get all the category id's
         		let categoryTotalKeys = Object.keys(categoryTotalMap);
             	let categoryDivs = document.querySelectorAll('*[id^="categoryTableRow"]');
-            	let elementsToDelete = document.createDocumentFragment();
-            	let categoryIdsToDelete = [];
             	
             	// Find the categories that are visible to the user but are not present in the database
             	for(let count = 0, lengthArray = categoryDivs.length; count < lengthArray; count++){
