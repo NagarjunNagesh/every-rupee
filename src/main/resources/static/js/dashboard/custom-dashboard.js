@@ -335,7 +335,22 @@ er = {
 				return;
 			}
 			
-			categoryIdArray.join(",")
+			// If it is an array then join the array
+			if(categoryIdArray instanceof Array) {
+				for(let count = 0, length = categoryIdArray.length; count < length; count++){
+					let categoryId = categoryIdArray[count];
+					
+					if (categoryIdArray in updateBudgetMap) {
+						// Delete the entry from the map if it is pending to be updated
+						delete updateBudgetMap[categoryId];
+					}
+				}
+				// Join the categories with a comma to end it to delete
+				categoryIdArray.join(",");
+			} else if (categoryIdArray in updateBudgetMap) {
+				// Delete the entry from the map if it is pending to be updated
+				delete updateBudgetMap[categoryIdArray];
+			}
 	         
 			// Send the AJAX request to delete the user budgets
 	        jQuery.ajax({
