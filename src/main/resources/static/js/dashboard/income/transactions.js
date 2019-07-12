@@ -213,7 +213,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	// Update the budget for all the category rows if present
+	// Fetches the budget for all the category rows if present and updates the category row
 	function updateBudgetForIncome() {
 		jQuery.ajax({
 			url: budgetAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
@@ -312,7 +312,7 @@ $(document).ready(function(){
 		
 		// obtains the drag handle and clones them into index cell
 		dragHandle = cloneElementAndAppend(indexTableCell, dragHandle);
-    		tableRows.appendChild(indexTableCell);
+    	tableRows.appendChild(indexTableCell);
     	
 		// Table Row 2
 		let formCheckDiv = document.createElement('div');
@@ -367,6 +367,10 @@ $(document).ready(function(){
 		incomeSelectionOptGroup =  cloneElementAndAppend(optGroupIncome, incomeSelectionOptGroup);
 		selectCategory.appendChild(optGroupIncome);
 		selectCategoryRow.appendChild(selectCategory);
+		
+		// Set the relevant category in the options to selected
+		let toSelectOption = selectCategoryRow.getElementsByClassName('categoryOption-' + categoryId);
+		toSelectOption[0].selected = 'selected';
 		tableRows.appendChild(selectCategoryRow);
 		
 		// Table Row 4
@@ -1662,8 +1666,6 @@ $(document).ready(function(){
 		let budgetImageDiv = document.getElementById('budgetImage');
 		budgetImageDiv.src = '../img/dashboard/transactions/icons8-restaurant-40.png';
 		
-		let recurrenceImageDiv = document.getElementById('recurrenceImage');
-		recurrenceImageDiv.src = '../img/dashboard/transactions/icons8-reset-40.png';
 	}
 	
 });
