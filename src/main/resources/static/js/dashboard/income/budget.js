@@ -1,6 +1,9 @@
 
 $(document).ready(function(){
 	
+	// Currency Preference
+	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
+	
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
 	
@@ -19,21 +22,26 @@ $(document).ready(function(){
 	          	  	if(isEmpty(value)) {
 	          	  		continue;
 	          	  	}
-	          	  	
+
 	          	  	// Appends to a document fragment
-	          	  	budgetDivFragment.appendChild(buildUserBudget(key, value));
+	          	  	budgetDivFragment.appendChild(buildUserBudget(value));
             	}
             	
-            	// paints them to the budget dasboard
-          	  
+            	// paints them to the budget dashboard
+          	  	document.getElementById('budgetAmount').appendChild(budgetDivFragment);
             }
 		});
 		
 	}
 	
 	// Build the user budget div
-	function buildUserBudget(categoryId, userBudgetAmount) {
-		let categoryObject = categoryMap[categoryId];
+	function buildUserBudget(userBudget) {
+		let categoryObject = categoryMap[userBudget.categoryId];
+		
+		if(isEmpty(categoryObject)) {
+			return;
+		}
+		
 		let card = document.createElement("div");
 		card.classList = 'card';
 		
@@ -57,7 +65,7 @@ $(document).ready(function(){
 		// <div id="budgetInfoLabelInModal" class="col-lg-12 text-right headingDiv justify-content-center align-self-center">Remaining (%)</div> 
 		let cardRemainingText = document.createElement('div');
 		cardRemainingText.classList = 'col-lg-12 text-right headingDiv justify-content-center align-self-center';
-		cardRemainingText.id = 'budgetInfoLabelInModal-' + categoryId;
+		cardRemainingText.id = 'budgetInfoLabelInModal-' + categoryObject.categoryId;
 		cardRemainingText.innerText = 'Remaining (%)';
 		cardRowRemaining.appendChild(cardRemainingText);
 		cardBody.appendChild(cardRowRemaining);
@@ -68,7 +76,7 @@ $(document).ready(function(){
 		// <span id="percentageAvailable" class="col-lg-12 text-right">NA</span> 
 		let cardRemainingPercentage = document.createElement('div');
 		cardRemainingPercentage.classList = 'col-lg-12 text-right';
-		cardRemainingPercentage.id = 'percentageAvailable-' + categoryId;
+		cardRemainingPercentage.id = 'percentageAvailable-' + categoryObject.categoryId;
 		cardRemainingPercentage.innerText = 'NA';
 		cardRowPercentage.appendChild(cardRemainingPercentage);
 		cardBody.appendChild(cardRowPercentage);
@@ -86,23 +94,23 @@ $(document).ready(function(){
 		progressBar.setAttribute('role', 'progressbar');
 		progressBar.setAttribute('aria-valuenow', '0');
 		progressBar.setAttribute('aria-valuemin', '0');
-		progressBar.setAttribute('aria-valuemax', '0');
+		progressBar.setAttribute('aria-valuemax', '100');
 		cardProgressClass.appendChild(progressBar);
-		cardProgressAndRemainingAmount.appendChild(cardProgressClass)
+		cardProgressAndRemainingAmount.appendChild(cardProgressClass);
+		
+		
+		// Remaining Amount Div
+		let remainingAmountDiv = document.createElement('span');
+		remainingAmountDiv.id = 'remainingAmount';
+		remainingAmountDiv.classList = 'mild-text-success';
+		
+		let currencyRemainingAmount = document.createElement('span');
+		currencyRemainingAmount.innerText = currentCurrencyPreference + '0.00';
+		remainingAmountDiv.appendChild(currencyRemainingAmount);
+		cardProgressAndRemainingAmount.appendChild(remainingAmountDiv);
 		cardBody.appendChild(cardProgressAndRemainingAmount);
 		
 		card.appendChild(cardBody);
-//		<div class="text-left headingDiv">
-//			<div class="progress">
-//			  <div id="amountSpentAgainstBudget" class="progress-bar progress-bar-success-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-//			</div>
-//			<span id="remainingAmount" class="mild-text-success">
-//				<span th:text="#{message.currencySumbol}"></span>0.00
-//			</span> 
-//			Remaining
-//		</div>
-//		<hr>
-		
 		return card;
 		
 	}

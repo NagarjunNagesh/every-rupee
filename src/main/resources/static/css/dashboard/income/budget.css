@@ -1,1 +1,17 @@
 @charset "UTF-8";
+
+#chartBudgetVisualization .material-spinner {
+	margin: 0 auto;
+}
+
+.budget-chart .card-body span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 13rem;
+    color: #69757a;
+}
+
+#budgetChart .card-title {
+    color: #929292;
+}
