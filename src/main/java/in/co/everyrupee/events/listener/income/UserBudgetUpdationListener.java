@@ -13,7 +13,6 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import in.co.everyrupee.events.income.OnFetchCategoryTotalCompleteEvent;
-import in.co.everyrupee.service.income.ICategoryService;
 import in.co.everyrupee.service.income.IUserBudgetService;
 
 /**
@@ -29,9 +28,6 @@ public class UserBudgetUpdationListener implements IUserBudgetUpdationListener {
 
     @Autowired
     private IUserBudgetService userBudgetService;
-
-    @Autowired
-    private ICategoryService categoryService;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 

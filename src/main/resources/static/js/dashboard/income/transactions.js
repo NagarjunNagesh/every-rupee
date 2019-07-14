@@ -1337,7 +1337,7 @@ $(document).ready(function(){
     	
 		// Load all user transaction from API
 		jQuery.ajax({
-			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
+			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetTrueParam,
             type: 'GET',
             async: true,
             success: function(categoryTotalMap) {

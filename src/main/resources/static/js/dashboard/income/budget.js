@@ -3,9 +3,14 @@ $(document).ready(function(){
 	
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
+	// User Budget Map Cache
+	let userBudgetCache = {};
 	
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
+	
+	// Fetch user transactions
+	fetchTransactions();
 	
 	// Fetches all the user budget and displays them in the user budget
 	function fetchAllUserBudget() {
@@ -18,6 +23,8 @@ $(document).ready(function(){
             	for(let count = 0, length = dataKeySet.length; count < length; count++){
 	            	let key = dataKeySet[count];
 	          	  	let value = data[key];
+	          	  	// Store the values in a cache
+	          	  	userBudgetCache[value.categoryId] = value;
 	          	  
 	          	  	if(isEmpty(value)) {
 	          	  		continue;
@@ -90,6 +97,7 @@ $(document).ready(function(){
 		
 		// progress bar
 		let progressBar = document.createElement('div');
+		progressBar.id='progress-budget-' + categoryObject.categoryId;
 		progressBar.classList = 'progress-bar progress-bar-success-striped';
 		progressBar.setAttribute('role', 'progressbar');
 		progressBar.setAttribute('aria-valuenow', '0');
@@ -101,7 +109,7 @@ $(document).ready(function(){
 		
 		// Remaining Amount Div
 		let remainingAmountDiv = document.createElement('span');
-		remainingAmountDiv.id = 'remainingAmount';
+		remainingAmountDiv.id = 'remainingAmount-' + categoryObject.categoryId;
 		remainingAmountDiv.classList = 'mild-text-success';
 		
 		let currencyRemainingAmount = document.createElement('span');
@@ -113,6 +121,72 @@ $(document).ready(function(){
 		card.appendChild(cardBody);
 		return card;
 		
+	}
+	
+	function fetchTransactions() {
+		
+		jQuery.ajax({
+			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetFalseParam,
+            type: 'GET',
+            success: function(categoryTotalMap) {
+            	debugger;
+            	// Get all the category id's
+        		let categoryTotalKeys = Object.keys(categoryTotalMap);
+        		for(let count = 0, length = categoryTotalKeys.length; count < length; count++){
+        			let categoryIdKey = categoryTotalKeys[count];
+        			let categoryTotalAmount = categoryTotalMap[categoryIdKey];
+        			
+        			let userBudgetValue = userBudgetCache[categoryIdKey];
+
+        			let remainingAmountDiv = document.getElementById('remainingAmount-' + categoryIdKey);
+        			let remainingAmountPercentageDiv = document.getElementById('percentageAvailable-' + categoryIdKey);
+        			let budgetLabelDiv = document.getElementById('budgetInfoLabelInModal-' + categoryIdKey);
+        			let progressBarCategoryModal = document.getElementById('progress-budget-' + categoryIdKey);
+        			
+        			// If the budget is not created for the particular category
+        			if(isNotEmpty(userBudgetValue)) {
+	        			// Calculate remaining budget
+	        			let budgetAvailableToSpendOrSave = userBudgetValue.planned - categoryTotalAmount;
+	        			let minusSign = '';
+	        			
+	        			// Calculate the minus sign and appropriate class for the remaining amount 
+	        			if(budgetAvailableToSpendOrSave < 0) {
+	        				// if the transaction category is expense category then show overspent else show To be budgeted
+	        				if(categoryMap[categoryIdKey].parentCategory == expenseCategory) {
+	        					budgetLabelDiv.innerText = 'Overspent (%)';
+	        				} else if(categoryMap[key].parentCategory == incomeCategory) {
+	        					budgetLabelDiv.innerText = 'To Be Budgeted (%)';
+	        				}
+	        				
+	        				minusSign = '-';
+	        				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
+	        			} else {
+	        				budgetLabelDiv.innerText = 'Remaining (%)';
+	        			}
+	        			
+	    				// Change the remaining text appropriately
+	    				remainingAmountDiv.innerText = minusSign + currentCurrencyPreference + formatNumber(budgetAvailableToSpendOrSave, currentUser.locale);
+	    				
+	    				// Calculate percentage available to spend or save
+	    				let remainingAmountPercentage = round(((budgetAvailableToSpendOrSave / userBudgetValue.planned) * 100),0);
+	    				remainingAmountPercentageDiv.innerText = remainingAmountPercentage + '%';
+	    				
+	    				// Assign progress bar value. If the category amount is higher then the progress is 100%
+	    				let progressBarPercentage = isNaN(remainingAmountPercentage) ? 0 : (categoryTotalAmount > userBudgetValue.planned) ? 100 : (100 - remainingAmountPercentage);
+	    				// Set the value and percentage of the progress bar
+	    				progressBarCategoryModal.setAttribute('aria-valuenow', progressBarPercentage);
+	    				progressBarCategoryModal.style.width = progressBarPercentage + '%'; 
+        			} else if(isNotEmpty(progressBarCategoryModal)){
+        				// Set the value and percentage of the progress bar
+	    				progressBarCategoryModal.setAttribute('aria-valuenow', 0);
+	    				progressBarCategoryModal.style.width = 0 + '%';
+        			}
+    				
+        			
+        			
+        		}
+            }
+		});
 	}
 	
 });

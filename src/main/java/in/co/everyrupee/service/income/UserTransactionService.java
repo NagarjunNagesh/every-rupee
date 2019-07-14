@@ -204,8 +204,8 @@ public class UserTransactionService implements IUserTransactionService {
      * Fetch category total
      */
     @Override
-    public Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId,
-	    String dateMeantFor) {
+    public Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId, String dateMeantFor,
+	    boolean updateBudget) {
 
 	Map<Integer, Double> categoryAndTotalAmountMap = new HashMap<Integer, Double>();
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
@@ -235,9 +235,11 @@ public class UserTransactionService implements IUserTransactionService {
 	    }
 	}
 
-	// Auto Create Budget on saving the transaction
-	eventPublisher.publishEvent(
-		new OnFetchCategoryTotalCompleteEvent(categoryAndTotalAmountMap, dateMeantFor, financialPortfolioId));
+	if (updateBudget) {
+	    // Auto Create Budget on saving the transaction
+	    eventPublisher.publishEvent(new OnFetchCategoryTotalCompleteEvent(categoryAndTotalAmountMap, dateMeantFor,
+		    financialPortfolioId));
+	}
 
 	return categoryAndTotalAmountMap;
     }
