@@ -64,7 +64,7 @@ $(document).ready(function(){
 		
 		// Card title with category name
 		let cardTitle = document.createElement('div');
-		cardTitle.classList = 'col-lg-6 text-right';
+		cardTitle.classList = 'col-lg-6 text-left';
 		cardTitle.innerText = categoryObject.categoryName;
 		cardRowRemaining.appendChild(cardTitle);
 		
@@ -116,6 +116,10 @@ $(document).ready(function(){
 		currencyRemainingAmount.innerText = currentCurrencyPreference + '0.00';
 		remainingAmountDiv.appendChild(currencyRemainingAmount);
 		cardProgressAndRemainingAmount.appendChild(remainingAmountDiv);
+		
+		let currencyRemainingText = document.createElement('span');
+		currencyRemainingText.innerText = 'Remaining';
+		cardProgressAndRemainingAmount.appendChild(currencyRemainingText);
 		cardBody.appendChild(cardProgressAndRemainingAmount);
 		
 		card.appendChild(cardBody);
