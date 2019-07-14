@@ -218,7 +218,7 @@ window.onload = function () {
 		        type: "GET",
 		        url: '/api/keepAlive',
 		        dataType: 'html',
-		        success: function(data){
+		        success: function(){
 		        	// Call the actual page which was requested to be loaded
 		        	$.ajax({
 				        type: "GET",
