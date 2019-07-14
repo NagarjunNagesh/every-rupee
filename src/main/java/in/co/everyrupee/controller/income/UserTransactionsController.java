@@ -63,13 +63,14 @@ public class UserTransactionsController {
      */
     @RequestMapping(value = "/categoryTotal/{pFinancialPortfolioId}", method = RequestMethod.GET)
     public Map<Integer, Double> getCategoryTotalByFinancialPortfolioId(@PathVariable String pFinancialPortfolioId,
-	    Principal userPrincipal,
-	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
+	    Principal userPrincipal, @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor,
+	    @RequestParam(DashboardConstants.Transactions.UPDATE_BUDGET_PARAM) boolean updateBudget) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	return userTransactionService.fetchCategoryTotalAndUpdateUserBudget(pFinancialPortfolioId, dateMeantFor);
+	return userTransactionService.fetchCategoryTotalAndUpdateUserBudget(pFinancialPortfolioId, dateMeantFor,
+		updateBudget);
     }
 
     /**

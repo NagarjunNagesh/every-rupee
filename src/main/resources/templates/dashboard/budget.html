@@ -2,14 +2,52 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>
-	    Debt
+	  <title>
+	    Budget
 	  </title>
+	  <link href="../css/dashboard/income/budget.min.css" rel="stylesheet" th:href="@{/css/dashboard/income/budget.min.css}">
+	  <script defer th:src="@{/js/dashboard/income/budget.min.js}" type="text/javascript"></script>
 </head>
 
-<body class="debt-dashboard" >
+<body class="budget-dashboard" >
       <div class="content" id="mutableDashboard">
         <div class="container-fluid">
+        	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
+        	<div class="row">
+				<div class="col-lg-9" id="budgetAmount">
+				</div>
+				<div class="col-lg-3" id="budgetChart">
+					<div class="card budget-chart">
+		              	<div class="card-header card-header-icon card-header-danger">
+		                  <div class="card-icon">
+		                    <i class="material-icons">pie_chart</i>
+		                  </div>
+		                  <h4 class="card-title">Budget Visualization</h4>
+		                </div>
+		                <div class="card-body text-center">
+		                	<div id="chartBudgetVisualization" class="ct-chart">
+		                		<div class="material-spinner"></div>
+		                	</div>
+		                	<div>
+		               			<i class="material-icons text-success legend-spacing">fiber_manual_record</i><span class="align-middle">Total Budgeted</span>
+		               		</div>
+		               			<h4 id="totalBudgetedCategories" class="font-weight-bold transitionTextToNormal">0</h4><span> Categories</span>
+		               		<hr>
+		               		<div>
+		                		<i class="material-icons text-danger legend-spacing">fiber_manual_record</i><span class="align-middle">To Be Budgeted</span>
+		                	</div>
+			                	<h4 id="toBeBudgeted" class="font-weight-bold">0</h4><span> Categories</span>
+               			</div>
+               			<div id="" class="card-footer row">
+		                    <div class="col-lg-12 text-right">
+			                    <a id="addNewBudgets" href="#" class="text-rose">
+			                    	<i class="material-icons">add_circle</i> Add Budgets
+			                    </a>
+		                    </div>
+		                </div>
+               		</div>
+				</div>
+			</div>
         </div>
       </div>
       

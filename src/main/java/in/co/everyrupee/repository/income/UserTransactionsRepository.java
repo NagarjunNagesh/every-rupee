@@ -22,15 +22,16 @@ import in.co.everyrupee.pojo.income.UserTransaction;
 @Repository
 public interface UserTransactionsRepository extends JpaRepository<UserTransaction, Integer> {
     List<UserTransaction> findByFinancialPortfolioId(String financialPortfolioId);
-    
+
     /**
-     * Find all the transactions for the month specified
+     * Find all the transactions for the month specified (Orders by creation date
+     * desc)
      * 
      * @param financialPortfolioId
      * @param dateMeantFor
      * @return
      */
-    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.dateMeantFor in ?2")
+    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.dateMeantFor in ?2 order by date(createDate) desc ")
     List<UserTransaction> findByFinancialPortfolioIdAndDate(String financialPortfolioId, Date dateMeantFor);
 
     /**

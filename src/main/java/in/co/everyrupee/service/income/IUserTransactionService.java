@@ -17,6 +17,7 @@ public interface IUserTransactionService {
     UserTransaction updateTransactions(MultiValueMap<String, String> formData, String formFieldName,
 	    String financialPortfolioId);
 
-    Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId, String dateMeantFor);
+    Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId, String dateMeantFor,
+	    boolean updateBudget);
 
 }

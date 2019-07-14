@@ -321,9 +321,16 @@ public class UserTransactionIntegrationTest {
     public void fetchCategoryTotalAndUpdateUserBudget() throws Exception {
 	getMvc().perform(get("/api/transactions/categoryTotal/193000000")
 		.param(DashboardConstants.Transactions.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.param(DashboardConstants.Transactions.UPDATE_BUDGET_PARAM, "true")
 		.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 		.andExpect(jsonPath("$.3").isNotEmpty());
-	verify(getUserTransactionRepository(), times(1)).findByFinancialPortfolioIdAndDate(FINANCIAL_PORTFOLIO_ID,
+
+	getMvc().perform(get("/api/transactions/categoryTotal/193000000")
+		.param(DashboardConstants.Transactions.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.param(DashboardConstants.Transactions.UPDATE_BUDGET_PARAM, "false")
+		.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		.andExpect(jsonPath("$.3").isNotEmpty());
+	verify(getUserTransactionRepository(), times(2)).findByFinancialPortfolioIdAndDate(FINANCIAL_PORTFOLIO_ID,
 		getDateMeantFor());
 
     }
@@ -337,6 +344,7 @@ public class UserTransactionIntegrationTest {
     public void fetchCategoryTotalAndUpdateUserBudgetException() throws Exception {
 	getMvc().perform(get("/api/transactions/categoryTotal/193000000")
 		.param(DashboardConstants.Transactions.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.param(DashboardConstants.Transactions.UPDATE_BUDGET_PARAM, "true")
 		.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
 
     }

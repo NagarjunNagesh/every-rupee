@@ -54,5 +54,6 @@ public class DashboardConstants {
 	public static final String TRANSACTIONS_AMOUNT = "amount";
 	public static final String DATE_MEANT_FOR = "dateMeantFor";
 	public static final String RECURRENCE = "recurrence";
+	public static final String UPDATE_BUDGET_PARAM = "updateBudget";
     }
 }

@@ -41,6 +41,7 @@ public class GenericConstants {
     public static final String DASHBOARD_SETTINGS_URL = "/dashboard/settings";
     public static final String DASHBOARD_PROFILE_URL = "/dashboard/profile";
     public static final String DASHBOARD_OVERVIEW_URL = "/dashboard/overview";
+    public static final String KEEP_ALIVE_CHECK_URL = "/api/keepAlive";
 
     // Objects
     public static final String ERROR_MESSAGE_OBJECT = "errorMessage";
