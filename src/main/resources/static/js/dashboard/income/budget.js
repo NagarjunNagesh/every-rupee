@@ -129,7 +129,6 @@ $(document).ready(function(){
 			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetFalseParam,
             type: 'GET',
             success: function(categoryTotalMap) {
-            	debugger;
             	// Get all the category id's
         		let categoryTotalKeys = Object.keys(categoryTotalMap);
         		for(let count = 0, length = categoryTotalKeys.length; count < length; count++){
