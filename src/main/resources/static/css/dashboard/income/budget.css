@@ -20,3 +20,48 @@
 	color: #fd679a;
 	font-weight: 700;
 }
+
+.headingDiv, .budgetAmountEntered {
+	color: #495257;
+}
+
+.percentageAvailable {
+	color: #333a3d;
+	font-weight: 400;
+	font-size: 1.1rem;
+}
+
+.progress {
+	height: 5px;
+	margin-top: 0.5rem;
+}
+
+#budgetAmount .card {
+	margin: 1rem auto;
+}
+
+#chartBudgetVisualization {
+    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+}
+
+.budgetAmountEntered:hover, .budgetAmountEntered:focus, .budgetAmountEntered:active {
+	display: inline-block;
+	width: 100%;
+	padding: .2rem 1rem .15rem .7rem;
+	line-height: 1.5;
+	color: #495057;
+	vertical-align: middle;
+	border: 1px solid #d2d2d2;
+	border-radius: 0.25rem;
+	height: 28px;
+	appearance: none;
+	max-width: calc(100% - 30px);
+}
+
+.budgetAmountEntered::after {
+	border-top: 0.3em solid;
+	border-right: 0.3em solid transparent;
+	border-bottom: 0;
+	border-left: 0.3em solid transparent;
+}

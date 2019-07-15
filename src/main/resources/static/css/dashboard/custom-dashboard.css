@@ -771,3 +771,7 @@ progress {
 #loginModal .modal-header {
 	display: block;
 }
+
+.mild-text {
+	color: #999;
+}
