@@ -170,7 +170,6 @@ $(document).ready(function(){
 	}
 	
 	function fetchTransactions() {
-		
 		jQuery.ajax({
 			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetFalseParam,
             type: 'GET',
@@ -238,6 +237,19 @@ $(document).ready(function(){
 			toBeBudgetedDiv.innerText = 0;
 			totalBudgetedCategoriesDiv.innerText = 0;
 			detachChart = true;
+			
+			// assign the to be budgeted for budget visualization chart
+			toBeBudgetedDiv.innerText = categoryTotalKeys.length;
+			
+			// Create a document fragment to append
+			let emptyBudgetDocumentFragment = document.createDocumentFragment();
+			emptyBudgetDocumentFragment.appendChild(createCopyFromPreviousMonthModal());
+			
+			// Replace the HTML of the empty modal
+			let budgetAmountDiv = document.getElementById('budgetAmount');
+			// Replace the HTML to empty and then append child
+			budgetAmountDiv.innerHTML = '';
+			budgetAmountDiv.appendChild(emptyBudgetDocumentFragment);
 		}
 		
 		if(createNewChart) {
@@ -444,5 +456,36 @@ $(document).ready(function(){
 		});
 		
 	});
+	
+	// Copy all budget from previous modal if budget is empty
+	function createCopyFromPreviousMonthModal() {
+		let card = document.createElement("div");
+		card.classList = 'card';
+		
+		let cardBody = document.createElement("div");
+		cardBody.classList = 'card-body';
+		
+		// Card Row Heading
+		let cardRowHeading = document.createElement('div');
+		cardRowHeading.classList = 'row font-weight-bold';
+		cardRowHeading.innerText = 'Hey, Seems like you need a budget for ...';
+		cardBody.appendChild(cardRowHeading);
+		
+		// card description
+		let cardRowDescription = document.createElement('div');
+		cardRowDescription.classList = 'row';
+		cardRowDescription.innerText = "We'll clone ... budget for you to get started";
+		cardBody.appendChild(cardRowDescription);
+		
+		// card button clone
+		let clonePreviousMonthButton = document.createElement('button');
+		clonePreviousMonthButton.classList = 'btn'
+		clonePreviousMonthButton.innerText = 'Start Planning For ...'
+		cardBody.appendChild(clonePreviousMonthButton);
+			
+		card.appendChild(cardBody);
+		
+		return card;
+	}
 	
 });
