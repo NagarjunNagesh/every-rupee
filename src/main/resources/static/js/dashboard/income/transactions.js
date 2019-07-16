@@ -1053,7 +1053,7 @@ $(document).ready(function(){
             	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
             	let closestTrLength = closestTr.length;
             	
-            	$(closestTr).fadeOut('slow', function(){
+            	closestTr.fadeOut('slow', function(){
             		$(this).remove(); 
             		
             		// Execute these transactions only once after all elements have faded out
@@ -1353,7 +1353,7 @@ $(document).ready(function(){
             		if(!includesStr(categoryTotalKeys, categoryId)) {
             			// Mark those elements to be deleted
             			$(categoryDiv).fadeOut('slow', function(){
-            				categoryDiv.remove()
+            				categoryDiv.remove();
             				
             				// Toggle Category Modal 
                         	toggleCategoryModal(false);

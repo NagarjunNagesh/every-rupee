@@ -9,6 +9,8 @@ $(document).ready(function(){
 	let categoryTotalMapCache = {};
 	// Store the budget amount edited previously to compare
 	let budgetAmountEditedPreviously = '';
+	// store the budget chart in the cache to update later
+	let budgetCategoryChart = '';
 	
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
@@ -55,6 +57,7 @@ $(document).ready(function(){
 		}
 		
 		let card = document.createElement("div");
+		card.id = 'cardCategoryId-' + categoryObject.categoryId;
 		card.classList = 'card';
 		
 		let cardBody = document.createElement("div");
@@ -133,6 +136,34 @@ $(document).ready(function(){
 		cardProgressAndRemainingAmount.appendChild(currencyRemainingText);
 		cardBody.appendChild(cardProgressAndRemainingAmount);
 		
+		
+		let actionDiv = document.createElement('div');
+		actionDiv.classList = 'text-right';
+		
+		// Build a delete icon Div
+		let deleteIconDiv = document.createElement('div');
+		deleteIconDiv.classList = 'svg-container deleteIconWrapper d-lg-inline-block';
+		
+		// SVG for delete
+		let deleteSvgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+		deleteSvgElement.id = 'deleteSvgElement-' + categoryObject.categoryId;
+		deleteSvgElement.classList = 'deleteBudget'
+		deleteSvgElement.setAttribute('height','16');
+		deleteSvgElement.setAttribute('width','16');
+		deleteSvgElement.setAttribute('viewBox','0 0 14 18');
+    	
+		// Changing stroke to currentColor, Wraps the color of the path to its parent div
+    	let deletePathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	deletePathElement.setAttribute('fill','none');
+    	deletePathElement.setAttribute('stroke','currentColor');
+    	deletePathElement.setAttribute('stroke-width','1.25');
+    	deletePathElement.setAttribute('stroke-linecap','square');
+    	deletePathElement.setAttribute('d','M4.273 3.727V2a1 1 0 0 1 1-1h3.454a1 1 0 0 1 1 1v1.727M13 5.91v10.455a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5.909m6 2.727v5.455M4.273 8.636v5.455m5.454-5.455v5.455M13 3.727H1');
+    	deleteSvgElement.appendChild(deletePathElement);
+    	deleteIconDiv.appendChild(deleteSvgElement);
+    	actionDiv.appendChild(deleteIconDiv);
+    	cardBody.appendChild(actionDiv);
+    	
 		card.appendChild(cardBody);
 		return card;
 		
@@ -156,14 +187,14 @@ $(document).ready(function(){
         		}
         		
         		// Update the Budget Visualization module
-        		updateBudgetVisualization();
+        		updateBudgetVisualization(true);
         		
             }
 		});
 	}
 	
 	// Update the budget visualization module
-	function updateBudgetVisualization() {
+	function updateBudgetVisualization(createNewChart) {
 		let categoryTotalKeys = Object.keys(categoryTotalMapCache);
 		
 		let userBudgetCacheKeys = Object.keys(userBudgetCache);
@@ -171,12 +202,14 @@ $(document).ready(function(){
 		// Append an empty chart when there is no budget
 		let dataPreferences = {};
 		
+		let totalBudgetedCategoriesDiv = document.getElementById('totalBudgetedCategories');
+		let toBeBudgetedDiv = document.getElementById('toBeBudgeted');
+		let detachChart = false;
+		
 		if(isNotEmpty(userBudgetCacheKeys)) {
-			let totalBudgetedCategoriesDiv = document.getElementById('totalBudgetedCategories');
 			totalBudgetedCategoriesDiv.innerText = userBudgetCacheKeys.length;
 			
 			if(isNotEmpty(categoryTotalKeys)) {
-				let toBeBudgetedDiv = document.getElementById('toBeBudgeted');
 				let toBeBudgetedAvailable = 0;
 				
 				// Calculate the to be budgeted section
@@ -200,9 +233,24 @@ $(document).ready(function(){
 	            };
 				
 			}
-		} 
+		} else {
+			// If empty then update the chart with the 0
+			toBeBudgetedDiv.innerText = 0;
+			totalBudgetedCategoriesDiv.innerText = 0;
+			detachChart = true;
+		}
 		
-		buildPieChart(dataPreferences , 'chartBudgetVisualization');
+		if(createNewChart) {
+			buildPieChart(dataPreferences , 'chartBudgetVisualization');
+		} else if(detachChart) {
+			// Remove the donut chart from the DOM
+			let chartDonutSVG = document.getElementsByClassName('ct-chart-donut');
+			chartDonutSVG[0].parentNode.removeChild(chartDonutSVG[0]);
+			// Detach the chart
+			budgetCategoryChart.detach();
+		} else  {
+			budgetCategoryChart.update(dataPreferences);
+		}
 	}
 	
 	// Introduce Chartist pie chart
@@ -222,7 +270,7 @@ $(document).ready(function(){
         replaceHTML(id, '');
         
         if(isNotEmpty(dataPreferences)) {
-        	let transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
         }
         
 	}
@@ -271,7 +319,7 @@ $(document).ready(function(){
 		
 		if(previousText != enteredText){
 			// Fetch the id
-			let categoryIdForBudget = lastElement(splitElement($(element).attr('id'),'-'));
+			let categoryIdForBudget = lastElement(splitElement(element.id,'-'));
 			// Security check to ensure that the category is present in the map
 			if(er.checkIfInvalidCategory(categoryIdForBudget)) {
 				return;
@@ -317,7 +365,6 @@ $(document).ready(function(){
 	
 	// Use user budget to update information in the modal
 	function updateProgressBarAndRemaining(categoryIdKey) {
-		debugger;
 		let categoryTotalAmount = categoryTotalMapCache[categoryIdKey];
 		
 		let userBudgetValue = userBudgetCache[categoryIdKey];
@@ -372,5 +419,30 @@ $(document).ready(function(){
 			progressBarCategoryModal.style.width = 0 + '%';
 		}
 	}
+	
+	// Add click event listener to delete the budget
+	$('#budgetAmount').on('click', '.deleteBudget' , function(e) {
+		let categoryId = lastElement(splitElement(this.id,'-'));
+		
+		// Request to delete the user budget
+		$.ajax({
+	          type: "DELETE",
+	          url: budgetAPIUrl + currentUser.financialPortfolioId + '/' + categoryId + dateMeantFor + chosenDate + deleteOnlyAutoGeneratedFalseParam,
+	          contentType: "application/json; charset=utf-8", 
+              success: function() {
+            	  // Remove the budget modal
+            	  $('#cardCategoryId-' + categoryId).fadeOut('slow', function(){
+            		  this.remove();
+            	  });
+            	  	
+            	  // Delete the entry from the map if it is pending to be updated
+  				  delete userBudgetCache[categoryId];
+  				
+            	  // Update budget visualization chart after deletion
+            	  updateBudgetVisualization(false);
+              }
+		});
+		
+	});
 	
 });
