@@ -405,4 +405,19 @@ public class UserBudgetService implements IUserBudgetService {
 
     }
 
+    @Override
+    public void copyPreviousBudgetToSelectedMonth(String financialPortfolioId, MultiValueMap<String, String> formData) {
+
+	String dateToCopy = formData.get(DashboardConstants.Budget.DATE_TO_COPY).get(0);
+
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date;
+	try {
+	    date = format.parse(dateToCopy);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user budget");
+	}
+
+    }
+
 }

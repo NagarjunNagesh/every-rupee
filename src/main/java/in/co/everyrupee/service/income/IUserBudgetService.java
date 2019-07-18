@@ -29,4 +29,6 @@ public interface IUserBudgetService {
 
     void deleteUserBudgets(String categoryIds, String financialPortfolioId, String dateMeantFor);
 
+    void copyPreviousBudgetToSelectedMonth(String financialPortfolioId, MultiValueMap<String, String> formData);
+
 }

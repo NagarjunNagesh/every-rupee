@@ -15,3 +15,120 @@
 #budgetChart .card-title {
     color: #929292;
 }
+
+.mild-text-budget {
+	color: #fd679a;
+	font-weight: 700;
+}
+
+.headingDiv, .budgetAmountEntered {
+	color: #495257;
+}
+
+.percentageAvailable {
+	color: #333a3d;
+	font-weight: 400;
+	font-size: 1.1rem;
+}
+
+.progress {
+	height: 5px;
+	margin-top: 0.5rem;
+}
+
+#budgetAmount .card {
+	margin: 1rem auto;
+}
+
+#chartBudgetVisualization {
+    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+}
+
+.budgetAmountEntered:hover, .budgetAmountEntered:focus, .budgetAmountEntered:active {
+	display: inline-block;
+	width: 100%;
+	padding: .2rem 1rem .15rem .7rem;
+	line-height: 1.5;
+	color: #495057;
+	vertical-align: middle;
+	border: 1px solid #d2d2d2;
+	border-radius: 0.25rem;
+	height: 28px;
+	appearance: none;
+	max-width: calc(100% - 30px);
+}
+
+.budgetAmountEntered::after {
+	border-top: 0.3em solid;
+	border-right: 0.3em solid transparent;
+	border-bottom: 0;
+	border-left: 0.3em solid transparent;
+}
+
+.deleteBudget {
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 600ms, visibility 600ms;
+	-webkit-transition: opacity 600ms, visibility 600ms;
+}
+
+.card:hover .deleteBudget {
+	visibility: visible;
+  	opacity: 1;
+}
+
+.deleteIconWrapper:hover {
+	color: #fd679a;
+}
+
+.deleteIconWrapper {
+	color: #999;
+}
+
+.btn-budget {
+    background: #e82869;
+}
+
+#emptyBudgetHeading {
+	font-size: 1.3rem;
+	color: #69757a;
+	line-height: 2rem;
+	margin: 1rem auto;
+}
+
+#emptyBudgetDescription {
+	color: #69757a;
+	line-height: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.currentMonth {
+	top: 18%;
+	left: 55%;
+	position: absolute;
+	font-weight: 700;
+	color: #24007594;
+	font-size: .8rem;
+}
+
+.previousMonth {
+	top: 8%;
+	left: 48%;
+	position: absolute;
+	font-weight: 700;
+	color: #24007594;
+	font-size: 0.8rem;
+}
+
+#budgetChart .card-title {
+	font-size: 1rem;
+}
+
+.btn-budget:hover, .btn-budget:focus, .btn-budget:active {
+	color: #fff;
+	background-color: #ff1665;
+	border-color: #ff1665;
+	box-shadow: 0 14px 26px -12px rgba(251, 76, 76, 0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(153,153,153,0.2);
+}

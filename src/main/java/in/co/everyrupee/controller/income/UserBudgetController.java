@@ -104,6 +104,19 @@ public class UserBudgetController {
 	return userBudgetSaved;
     }
 
+    // Copy all previous budgeted month to the current month
+    @RequestMapping(value = "/copyPreviousBudget/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public GenericResponse copyPreviousBudgetById(@PathVariable String financialPortfolioId, Principal userPrincipal,
+	    @RequestBody MultiValueMap<String, String> formData) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	getUserBudgetService().copyPreviousBudgetToSelectedMonth(financialPortfolioId, formData);
+
+	return new GenericResponse("success");
+    }
+
     public IUserBudgetService getUserBudgetService() {
 	return userBudgetService;
     }

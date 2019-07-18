@@ -17,8 +17,6 @@ $(document).ready(function(){
 	const selectedOption = '4';
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
-	// Regex to check if the entered value is a float
-	const regexForFloat = /^[+-]?\d+(\.\d+)?$/;
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	// New Pie Chart Storage Variable
@@ -65,7 +63,7 @@ $(document).ready(function(){
 		   formValidation = false;
 	   }
 	   
-	   amount = convertToNumberFromCurrency(amount);
+	   amount = er.convertToNumberFromCurrency(amount,currentCurrencyPreference);
 	   if(amount == 0){
 		   fadeoutMessage('#errorMessage', errorAddingTransactionDiv + 'Amount cannot be zero.</p></div> <br/>',2000);
 		   formValidation = false;
@@ -647,7 +645,7 @@ $(document).ready(function(){
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
 		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
 		
-		if(checkIfInvalidCategory(categoryId)) {
+		if(er.checkIfInvalidCategory(categoryId)) {
 			return;
 		}
 		
@@ -704,7 +702,7 @@ $(document).ready(function(){
 		if(isNotEmpty(classList)) {
 			
 			// Ensure that the category id is valid
-			if(checkIfInvalidCategory($(this).val())) {
+			if(er.checkIfInvalidCategory($(this).val())) {
 				return;
 			}
 			
@@ -843,7 +841,7 @@ $(document).ready(function(){
 		    return false;
 		  }
 		  
-		  let amountEntered = convertToNumberFromCurrency(this.innerText);
+		  let amountEntered = er.convertToNumberFromCurrency(this.innerText,currentCurrencyPreference);
 		  let selectTransactionId = splitElement($(this).attr('id'),'-');
 		  // Handles the addition of buttons in the budget column for the row
 		  appendButtonForAmountEdition(amountEntered, selectTransactionId);
@@ -980,8 +978,8 @@ $(document).ready(function(){
 		}
 		
 		// Update the total available 
-		let income = convertToNumberFromCurrency($("#totalIncomeTransactions")[0].innerText);
-		let expense = convertToNumberFromCurrency($("#totalExpensesTransactions")[0].innerText);
+		let income = er.convertToNumberFromCurrency($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference);
+		let expense = er.convertToNumberFromCurrency($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference);
 
 		let minusSign = '';
 		let availableCash = income-expense;
@@ -1038,7 +1036,7 @@ $(document).ready(function(){
             		if(includesStr(classItem, 'categoryIdForBudget')) {
             			// Remove amount from current Category
 	        			previousCategoryId = lastElement(splitElement(classItem,'-'));
-	        			let categoryAmount = convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText);
+	        			let categoryAmount = er.convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText,currentCurrencyPreference);
 	        			
 	        			if(categoryAmount == 0) {
 	        				$('.amountCategoryId-' + previousCategoryId).parent().closest('div').fadeOut('slow', function(){ 
@@ -1055,7 +1053,7 @@ $(document).ready(function(){
             	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
             	let closestTrLength = closestTr.length;
             	
-            	$(closestTr).fadeOut('slow', function(){
+            	closestTr.fadeOut('slow', function(){
             		$(this).remove(); 
             		
             		// Execute these transactions only once after all elements have faded out
@@ -1355,7 +1353,7 @@ $(document).ready(function(){
             		if(!includesStr(categoryTotalKeys, categoryId)) {
             			// Mark those elements to be deleted
             			$(categoryDiv).fadeOut('slow', function(){
-            				categoryDiv.remove()
+            				categoryDiv.remove();
             				
             				// Toggle Category Modal 
                         	toggleCategoryModal(false);
@@ -1382,11 +1380,6 @@ $(document).ready(function(){
 
             }
 		});
-	}
-	
-	//convert from currency format to number
-	function convertToNumberFromCurrency(amount){
-		return round(parseFloat(trimElement(lastElement(splitElement(amount,currentCurrencyPreference))).replace(/[^0-9.-]+/g,"")),2);
 	}
 	
 	/**
@@ -1430,8 +1423,8 @@ $(document).ready(function(){
 			plannedAmountModal.innerText = budgetElementText;
 			
 			// Calculate percentage of budget available to spend or save
-			let categoryAmount = convertToNumberFromCurrency(categoryTotalDiv.innerText);
-			let budgetAmount = convertToNumberFromCurrency(budgetElementText);
+			let categoryAmount = er.convertToNumberFromCurrency(categoryTotalDiv.innerText,currentCurrencyPreference);
+			let budgetAmount = er.convertToNumberFromCurrency(budgetElementText,currentCurrencyPreference);
 			
 			// Calculate remaining budget
 			let budgetAvailableToSpendOrSave = budgetAmount - categoryAmount;
@@ -1570,8 +1563,8 @@ $(document).ready(function(){
 	// User updates the budget
 	function userUpdatedBudget(element) {
 		// If the text is not changed then do nothing (Remove currency locale and minus sign, remove currency formatting and take only the number and convert it into decimals) and round to 2 decimal places
-		let enteredText = convertToNumberFromCurrency(element.innerText);
-		let previousText = convertToNumberFromCurrency(userUpdateBudgetCached);
+		let enteredText = er.convertToNumberFromCurrency(element.innerText,currentCurrencyPreference);
+		let previousText = er.convertToNumberFromCurrency(userUpdateBudgetCached,currentCurrencyPreference);
 		
 		// Test if the entered value is valid
 		if(isNaN(enteredText) || !regexForFloat.test(enteredText) || enteredText == 0) {
@@ -1593,7 +1586,7 @@ $(document).ready(function(){
 			
 			let categoryIdForBudget = Number(categoryIdForUserBudget.innerText);
 			// Security check to ensure that the category is present in the map
-			if(checkIfInvalidCategory(categoryIdForBudget)) {
+			if(er.checkIfInvalidCategory(categoryIdForBudget)) {
 				return;
 			}
 			
@@ -1629,17 +1622,6 @@ $(document).ready(function(){
 		        });
 		}
 		
-	}
-	
-	// Security check to ensure that the category is present in the map
-	function checkIfInvalidCategory(categoryIdForBudget) {
-		
-		if(isEmpty(categoryMap[Number(categoryIdForBudget)])) {
-			showNotification('Unable to the update budget at the moment. Please refresh the page and try again!','top','center','danger');
-			return true;
-		}
-		
-		return false;
 	}
 	
 	// Updates the category modal if the modal is open for the category udates
