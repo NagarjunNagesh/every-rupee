@@ -45,7 +45,7 @@ let chosenDate = '01'+("0" + (today.getMonth() + 1)).slice(-2) + today.getFullYe
 // Name of the months (0-January :: 11-December)
 let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 // Choose the current month from the user chosen date
-let userChosenMonthName = months[Number(chosenDate.slice(2, 3)) - 1]; 
+let userChosenMonthName = months[Number(chosenDate.slice(2, 4)) - 1]; 
 
 window.onload = function () {
 	$(document).ready(function(){

@@ -483,8 +483,13 @@ $(document).ready(function(){
 		
 		let monthSpan = document.createElement('span');
 		monthSpan.classList = 'previousMonth';
-		monthSpan.innerText = lastBudgetedMonthName;
+		monthSpan.innerText = lastBudgetedMonthName.slice(0,3);;
 		imgDiv.appendChild(monthSpan);
+		
+		let monthSpanCurrent = document.createElement('span');
+		monthSpanCurrent.classList = 'currentMonth';
+		monthSpanCurrent.innerText = userChosenMonthName.slice(0,3);
+		imgDiv.appendChild(monthSpanCurrent)
 		cardBody.appendChild(imgDiv);
 		
 		// Card Row Heading
