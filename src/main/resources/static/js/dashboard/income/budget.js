@@ -15,8 +15,9 @@ $(document).ready(function(){
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
 	
-	// Previous Months Name
+	// last Budgeted Month
 	let lastBudgetedMonthName = months[today.getMonth()-1];
+	let lastBudgetMonth = chosenDate;
 	
 	// Fetches all the user budget and displays them in the user budget
 	function fetchAllUserBudget() {
@@ -469,6 +470,7 @@ $(document).ready(function(){
 	// Copy all budget from previous modal if budget is empty
 	function createCopyFromPreviousMonthModal() {
 		let card = document.createElement("div");
+		card.id = 'emptyBudgetCard';
 		card.classList = 'card text-center';
 		
 		let cardBody = document.createElement("div");
@@ -496,7 +498,7 @@ $(document).ready(function(){
 		let cardRowHeading = document.createElement('div');
 		cardRowHeading.id = 'emptyBudgetHeading'
 		cardRowHeading.classList = 'row font-weight-bold justify-content-center';
-		cardRowHeading.innerHTML = 'Hey, Seems like you need a budget for ' + userChosenMonthName + '.';
+		cardRowHeading.innerHTML = 'Hey, Looks like you need a budget for ' + userChosenMonthName + '.';
 		cardBody.appendChild(cardRowHeading);
 		
 		// card description
@@ -508,6 +510,7 @@ $(document).ready(function(){
 		
 		// card button clone
 		let clonePreviousMonthButton = document.createElement('button');
+		clonePreviousMonthButton.id = 'copyPreviousMonthsBudget';
 		clonePreviousMonthButton.classList = 'btn btn-budget'
 		clonePreviousMonthButton.innerHTML = 'Start Planning For ' + userChosenMonthName;
 		cardBody.appendChild(clonePreviousMonthButton);
@@ -516,5 +519,19 @@ $(document).ready(function(){
 		
 		return card;
 	}
+	
+	$('#budgetAmount').on('click', '#copyPreviousMonthsBudget' , function(e) {
+		var values = {};
+		values['dateToCopy'] = lastBudgetMonth;
+		values['dateMeantFor'] = chosenDate;
+		$.ajax({
+	          type: "POST",
+	          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	          success: function() {
+	          }
+		});
+	});
 	
 });
