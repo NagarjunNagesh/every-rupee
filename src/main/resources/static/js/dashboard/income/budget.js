@@ -15,6 +15,9 @@ $(document).ready(function(){
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
 	
+	// Previous Months Name
+	let lastBudgetedMonthName = months[today.getMonth()-1];
+	
 	// Fetches all the user budget and displays them in the user budget
 	function fetchAllUserBudget() {
 		let budgetDivFragment = document.createDocumentFragment();
@@ -436,6 +439,12 @@ $(document).ready(function(){
 	$('#budgetAmount').on('click', '.deleteBudget' , function(e) {
 		let categoryId = lastElement(splitElement(this.id,'-'));
 		
+		// Security check to ensure that the budget is present
+		if(isEmpty(userBudgetCache[categoryId])) {
+			showNotification('Unable to delete the budget. Please try again!','top','center','danger');
+			return;
+		}
+		
 		// Request to delete the user budget
 		$.ajax({
 	          type: "DELETE",
@@ -460,27 +469,42 @@ $(document).ready(function(){
 	// Copy all budget from previous modal if budget is empty
 	function createCopyFromPreviousMonthModal() {
 		let card = document.createElement("div");
-		card.classList = 'card';
+		card.classList = 'card text-center';
 		
 		let cardBody = document.createElement("div");
 		cardBody.classList = 'card-body';
 		
+		let imgDiv = document.createElement('div');
+		
+		let imgTransfer = document.createElement('img');
+		imgTransfer.id = 'budgetImage';
+		imgTransfer.src = '../img/dashboard/budget/icons8-documents-100.png';
+		imgDiv.appendChild(imgTransfer);
+		
+		let monthSpan = document.createElement('span');
+		monthSpan.classList = 'previousMonth';
+		monthSpan.innerText = lastBudgetedMonthName;
+		imgDiv.appendChild(monthSpan);
+		cardBody.appendChild(imgDiv);
+		
 		// Card Row Heading
 		let cardRowHeading = document.createElement('div');
-		cardRowHeading.classList = 'row font-weight-bold';
-		cardRowHeading.innerText = 'Hey, Seems like you need a budget for ...';
+		cardRowHeading.id = 'emptyBudgetHeading'
+		cardRowHeading.classList = 'row font-weight-bold justify-content-center';
+		cardRowHeading.innerHTML = 'Hey, Seems like you need a budget for ' + userChosenMonthName + '.';
 		cardBody.appendChild(cardRowHeading);
 		
 		// card description
 		let cardRowDescription = document.createElement('div');
-		cardRowDescription.classList = 'row';
-		cardRowDescription.innerText = "We'll clone ... budget for you to get started";
+		cardRowDescription.id = 'emptyBudgetDescription';
+		cardRowDescription.classList = 'row justify-content-center';
+		cardRowDescription.innerHTML = "We'll clone <strong> &nbsp" + lastBudgetedMonthName + "'s budget &nbsp</strong> for you to get started";
 		cardBody.appendChild(cardRowDescription);
 		
 		// card button clone
 		let clonePreviousMonthButton = document.createElement('button');
-		clonePreviousMonthButton.classList = 'btn'
-		clonePreviousMonthButton.innerText = 'Start Planning For ...'
+		clonePreviousMonthButton.classList = 'btn btn-budget'
+		clonePreviousMonthButton.innerHTML = 'Start Planning For ' + userChosenMonthName;
 		cardBody.appendChild(clonePreviousMonthButton);
 			
 		card.appendChild(cardBody);

@@ -86,3 +86,38 @@
 .deleteIconWrapper {
 	color: #999;
 }
+
+.btn-budget {
+    background: #e82869;
+}
+
+#emptyBudgetHeading {
+	font-size: 1.3rem;
+	color: #69757a;
+	line-height: 2rem;
+	margin: 1rem auto;
+}
+
+#emptyBudgetDescription {
+	color: #69757a;
+	line-height: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.currentMonth {
+	top: 18%;
+	left: 55%;
+	position: absolute;
+	font-weight: 700;
+	color: #24007594;
+	font-size: .8rem;
+}
+
+.previousMonth {
+	top: 8%;
+	left: 48%;
+	position: absolute;
+	font-weight: 700;
+	color: #24007594;
+	font-size: 0.8rem;
+}
