@@ -457,4 +457,20 @@ public class UserBudgetService implements IUserBudgetService {
 
     }
 
+    /**
+     * Fetch all dates with user budget for the user
+     */
+    @Override
+    public Set<Date> fetchAllDatesWithUserBudget(String financialPortfolioId) {
+
+	List<Date> dateMeantFor = getUserBudgetRepository().findAllDatesWithDateById(financialPortfolioId);
+
+	// return null if there is no data
+	if (CollectionUtils.isEmpty(dateMeantFor)) {
+	    return null;
+	}
+
+	return new HashSet<Date>(dateMeantFor);
+    }
+
 }

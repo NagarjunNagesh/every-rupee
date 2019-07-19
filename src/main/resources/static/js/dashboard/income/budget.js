@@ -185,7 +185,7 @@ $(document).ready(function(){
         		let categoryTotalKeys = Object.keys(categoryTotalMap);
         		
         		// Update only when the user budget cache is not empty
-        		if(IsNotEmpty(userBudgetCache)) {
+        		if(isNotEmpty(userBudgetCache)) {
         			for(let count = 0, length = categoryTotalKeys.length; count < length; count++){
             			let categoryIdKey = categoryTotalKeys[count];
             			
@@ -272,6 +272,9 @@ $(document).ready(function(){
 		} else  {
 			budgetCategoryChart.update(dataPreferences);
 		}
+		
+		// Fetches all the dates for which user budget is present
+		fetchAllDatesWithUserBudgetData();
 	}
 	
 	// Introduce Chartist pie chart
@@ -482,6 +485,7 @@ $(document).ready(function(){
 		cardBody.classList = 'card-body';
 		
 		let imgDiv = document.createElement('div');
+		imgDiv.classList = 'position-relative';
 		
 		let imgTransfer = document.createElement('img');
 		imgTransfer.id = 'budgetImage';
@@ -552,5 +556,16 @@ $(document).ready(function(){
 	          }
 		});
 	});
+	
+	// Fetches all the dates for which user budget is present
+	function fetchAllDatesWithUserBudgetData() {
+		jQuery.ajax({
+			url: budgetAPIUrl + budgetFetchAllDates + currentUser.financialPortfolioId,
+            type: 'GET',
+            success: function(dates) {
+            	alert(dates);
+            }
+		});
+	}
 	
 });

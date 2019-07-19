@@ -1,7 +1,9 @@
 package in.co.everyrupee.service.income;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.util.MultiValueMap;
 
@@ -30,5 +32,7 @@ public interface IUserBudgetService {
     void deleteUserBudgets(String categoryIds, String financialPortfolioId, String dateMeantFor);
 
     void copyPreviousBudgetToSelectedMonth(String financialPortfolioId, MultiValueMap<String, String> formData);
+
+    Set<Date> fetchAllDatesWithUserBudget(String financialPortfolioId);
 
 }
