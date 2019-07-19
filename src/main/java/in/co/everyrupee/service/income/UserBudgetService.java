@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,8 @@ import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.income.DashboardConstants;
+import in.co.everyrupee.exception.InvalidAttributeValueException;
+import in.co.everyrupee.exception.ResourceAlreadyPresentException;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserBudget;
 import in.co.everyrupee.repository.income.UserBudgetRepository;
@@ -405,15 +408,49 @@ public class UserBudgetService implements IUserBudgetService {
 
     }
 
+    /**
+     * Copy the previous budget mentioned by the system to the period mentioned by
+     * the user
+     */
     @Override
     public void copyPreviousBudgetToSelectedMonth(String financialPortfolioId, MultiValueMap<String, String> formData) {
 
 	String dateToCopy = formData.get(DashboardConstants.Budget.DATE_TO_COPY).get(0);
-
+	String dateMeantFor = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
-	Date date;
+	List<UserBudget> userBudgetList = new ArrayList<UserBudget>();
+
 	try {
-	    date = format.parse(dateToCopy);
+	    Calendar calendarDateToCopy = Calendar.getInstance();
+	    Calendar calendarDateMeantFor = Calendar.getInstance();
+	    Date dateToCopyAsDate = format.parse(dateToCopy);
+	    Date dateMeantForAsDate = format.parse(dateMeantFor);
+	    calendarDateToCopy.setTime(dateToCopyAsDate);
+	    calendarDateMeantFor.setTime(dateMeantForAsDate);
+
+	    // if the month and year match.
+	    if ((calendarDateMeantFor.get(Calendar.MONTH) == calendarDateToCopy.get(Calendar.MONTH))
+		    && (calendarDateMeantFor.get(Calendar.YEAR) == calendarDateToCopy.get(Calendar.YEAR))) {
+		throw new InvalidAttributeValueException("copyPreviousBudgetToSelectedMonth", "dateMeantFor",
+			dateMeantForAsDate);
+	    }
+
+	    userBudgetList = getUserBudgetRepository().fetchAllUserBudget(financialPortfolioId, dateMeantForAsDate);
+
+	    if (CollectionUtils.isEmpty(userBudgetList)) {
+		userBudgetList = getUserBudgetRepository().fetchAllUserBudget(financialPortfolioId, dateToCopyAsDate);
+
+		if (CollectionUtils.isNotEmpty(userBudgetList)) {
+		    for (UserBudget userBudget : userBudgetList) {
+			userBudget.setDateMeantFor(dateMeantForAsDate);
+		    }
+
+		    getUserBudgetRepository().saveAll(userBudgetList);
+		}
+	    } else {
+		throw new ResourceAlreadyPresentException("UserBudget", "dateMeantFor", dateMeantFor);
+	    }
+
 	} catch (ParseException e) {
 	    logger.error(e + " Unable to add date to the user budget");
 	}

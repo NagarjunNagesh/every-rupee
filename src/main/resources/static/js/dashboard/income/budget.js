@@ -30,12 +30,13 @@ $(document).ready(function(){
             	for(let count = 0, length = dataKeySet.length; count < length; count++){
 	            	let key = dataKeySet[count];
 	          	  	let value = data[key];
-	          	  	// Store the values in a cache
-	          	  	userBudgetCache[value.categoryId] = value;
 	          	  
 	          	  	if(isEmpty(value)) {
 	          	  		continue;
 	          	  	}
+	          	  	
+	          	  	// Store the values in a cache
+	          	  	userBudgetCache[value.categoryId] = value;
 
 	          	  	// Appends to a document fragment
 	          	  	budgetDivFragment.appendChild(buildUserBudget(value));
@@ -182,11 +183,15 @@ $(document).ready(function(){
             	categoryTotalMapCache = categoryTotalMap;
             	// Get all the category id's
         		let categoryTotalKeys = Object.keys(categoryTotalMap);
-        		for(let count = 0, length = categoryTotalKeys.length; count < length; count++){
-        			let categoryIdKey = categoryTotalKeys[count];
-        			
-        			// Handle the update of the progress bar modal
-        			updateProgressBarAndRemaining(categoryIdKey);
+        		
+        		// Update only when the user budget cache is not empty
+        		if(IsNotEmpty(userBudgetCache)) {
+        			for(let count = 0, length = categoryTotalKeys.length; count < length; count++){
+            			let categoryIdKey = categoryTotalKeys[count];
+            			
+            			// Handle the update of the progress bar modal
+            			updateProgressBarAndRemaining(categoryIdKey);
+            		}
         		}
         		
         		// Update the Budget Visualization module
@@ -526,10 +531,24 @@ $(document).ready(function(){
 		values['dateMeantFor'] = chosenDate;
 		$.ajax({
 	          type: "POST",
-	          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+	          url: budgetAPIUrl + budgetCopyBudgetUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	          data: values,
 	          success: function() {
+	          }, 
+	          error: function(thrownError) {
+              	var responseError = JSON.parse(thrownError.responseText);
+               	if(responseError.error.includes("Unauthorized")){
+               		er.sessionExpiredSwal(thrownError);
+               	} else if(responseError.error.includes("InvalidAttributeValue")) {
+               		showNotification('Do you already have budget for ' + userChosenMonthName + '?','top','center','danger');
+               	} else{
+               		showNotification('Unable to copy the budget. Please try again','top','center','danger');
+               		// update the current element with the previous amount
+               		let formattedBudgetAmount = currentCurrencyPreference + formatNumber(previousText , currentUser.locale);
+               		element.innerText = formattedBudgetAmount;
+               	}
 	          }
 		});
 	});
