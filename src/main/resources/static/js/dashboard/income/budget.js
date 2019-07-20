@@ -11,13 +11,15 @@ $(document).ready(function(){
 	let budgetAmountEditedPreviously = '';
 	// store the budget chart in the cache to update later
 	let budgetCategoryChart = '';
+	// Fetch all dates from the user budget
+	let datesWithUserBudgetData = [];
 	
 	// Fetch user budget and build the div
 	fetchAllUserBudget();
 	
 	// last Budgeted Month
-	let lastBudgetedMonthName = months[today.getMonth()-1];
-	let lastBudgetMonth = chosenDate;
+	let lastBudgetedMonthName = '';
+	let lastBudgetMonth = 0;
 	
 	// Fetches all the user budget and displays them in the user budget
 	function fetchAllUserBudget() {
@@ -43,12 +45,20 @@ $(document).ready(function(){
             	}
             	
             	// paints them to the budget dashboard
-          	  	document.getElementById('budgetAmount').appendChild(budgetDivFragment);
+            	let budgetAmount = document.getElementById('budgetAmount');
+            	budgetAmount.innerHTML = '';
+            	budgetAmount.appendChild(budgetDivFragment);
           	  	
-          	  	// Fetch user transactions
           		fetchTransactions();
-          		
-            }
+            },
+            error:  function (thrownError) {
+            	 var responseError = JSON.parse(thrownError.responseText);
+             	if(responseError.error.includes("Unauthorized")){
+             		er.sessionExpiredSwal(thrownError);
+             	} else{
+             		showNotification('Unable to delete the budget at this moment. Please try again!','top','center','danger');
+             	}
+             }
 		});
 		
 	}
@@ -174,6 +184,7 @@ $(document).ready(function(){
 		
 	}
 	
+	// Fetch all the transactions
 	function fetchTransactions() {
 		jQuery.ajax({
 			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetFalseParam,
@@ -190,14 +201,22 @@ $(document).ready(function(){
             			let categoryIdKey = categoryTotalKeys[count];
             			
             			// Handle the update of the progress bar modal
-            			updateProgressBarAndRemaining(categoryIdKey);
+            			updateProgressBarAndRemaining(categoryIdKey, document);
             		}
         		}
         		
         		// Update the Budget Visualization module
         		updateBudgetVisualization(true);
         		
-            }
+            }, 
+            error:  function (thrownError) {
+            	 var responseError = JSON.parse(thrownError.responseText);
+             	if(responseError.error.includes("Unauthorized")){
+             		er.sessionExpiredSwal(thrownError);
+             	} else{
+             		showNotification('Unable to delete the budget at this moment. Please try again!','top','center','danger');
+             	}
+             }
 		});
 	}
 	
@@ -367,7 +386,7 @@ $(document).ready(function(){
 		        	  // Update the budget cache
 		        	  userBudgetCache[userBudget.categoryId] = userBudget;
 		        	  // Update the modal
-		        	  updateProgressBarAndRemaining(userBudget.categoryId);
+		        	  updateProgressBarAndRemaining(userBudget.categoryId, document);
 		          },
 		          error: function (thrownError) {
 	              	 var responseError = JSON.parse(thrownError.responseText);
@@ -388,15 +407,15 @@ $(document).ready(function(){
 	}
 	
 	// Use user budget to update information in the modal
-	function updateProgressBarAndRemaining(categoryIdKey) {
+	function updateProgressBarAndRemaining(categoryIdKey, documentOrFragment) {
 		let categoryTotalAmount = categoryTotalMapCache[categoryIdKey];
 		
 		let userBudgetValue = userBudgetCache[categoryIdKey];
 
-		let remainingAmountDiv = document.getElementById('remainingAmount-' + categoryIdKey);
-		let remainingAmountPercentageDiv = document.getElementById('percentageAvailable-' + categoryIdKey);
-		let budgetLabelDiv = document.getElementById('budgetInfoLabelInModal-' + categoryIdKey);
-		let progressBarCategoryModal = document.getElementById('progress-budget-' + categoryIdKey);
+		let remainingAmountDiv = documentOrFragment.getElementById('remainingAmount-' + categoryIdKey);
+		let remainingAmountPercentageDiv = documentOrFragment.getElementById('percentageAvailable-' + categoryIdKey);
+		let budgetLabelDiv = documentOrFragment.getElementById('budgetInfoLabelInModal-' + categoryIdKey);
+		let progressBarCategoryModal = documentOrFragment.getElementById('progress-budget-' + categoryIdKey);
 		
 		// If the budget is not created for the particular category, make sure the budget is not equal to zero
 		if(isNotEmpty(userBudgetValue) && isNotEmpty(categoryTotalAmount)) {
@@ -470,6 +489,14 @@ $(document).ready(function(){
   				
             	  // Update budget visualization chart after deletion
             	  updateBudgetVisualization(false);
+              },
+              error:  function (thrownError) {
+             	 var responseError = JSON.parse(thrownError.responseText);
+              	if(responseError.error.includes("Unauthorized")){
+              		er.sessionExpiredSwal(thrownError);
+              	} else{
+              		showNotification('Unable to delete the budget at this moment. Please try again!','top','center','danger');
+              	}
               }
 		});
 		
@@ -494,7 +521,6 @@ $(document).ready(function(){
 		
 		let monthSpan = document.createElement('span');
 		monthSpan.classList = 'previousMonth';
-		monthSpan.innerText = lastBudgetedMonthName.slice(0,3);;
 		imgDiv.appendChild(monthSpan);
 		
 		let monthSpanCurrent = document.createElement('span');
@@ -514,7 +540,6 @@ $(document).ready(function(){
 		let cardRowDescription = document.createElement('div');
 		cardRowDescription.id = 'emptyBudgetDescription';
 		cardRowDescription.classList = 'row justify-content-center';
-		cardRowDescription.innerHTML = "We'll clone <strong> &nbsp" + lastBudgetedMonthName + "'s budget &nbsp</strong> for you to get started";
 		cardBody.appendChild(cardRowDescription);
 		
 		// card button clone
@@ -529,7 +554,13 @@ $(document).ready(function(){
 		return card;
 	}
 	
+	// Clicking on copy budget
 	$('#budgetAmount').on('click', '#copyPreviousMonthsBudget' , function(e) {
+		this.setAttribute("disabled", "disabled");
+		this.innerHTML = '<div class="material-spinner"></div> Copying budgets..';
+		
+		let element = this;
+		
 		var values = {};
 		values['dateToCopy'] = lastBudgetMonth;
 		values['dateMeantFor'] = chosenDate;
@@ -539,7 +570,42 @@ $(document).ready(function(){
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 	          data: values,
-	          success: function() {
+	          success: function(userBudgets) {
+	        	
+	        	if(isEmpty(userBudgets)) {
+	        		return;
+	        	}
+	        	
+	        	let budgetDivFragment = document.createDocumentFragment();
+	        	// Update User Budget
+	        	let dataKeySet = Object.keys(userBudgets)
+	        	for(let count = 0, length = dataKeySet.length; count < length; count++){
+	        		let key = dataKeySet[count];
+	          	  	let value = userBudgets[key];
+	          	  
+	          	  	if(isEmpty(value)) {
+	          	  		continue;
+	          	  	}
+	          	  	
+	          	  	// Store the values in a cache
+	          	  	userBudgetCache[value.categoryId] = value;
+
+	          	  	// Appends to a document fragment
+	          	  	budgetDivFragment.appendChild(buildUserBudget(value));
+	          	  	
+	          	  	// Handle the update of the progress bar modal
+        			updateProgressBarAndRemaining(value.categoryId, budgetDivFragment);
+            	}
+            	
+            	// paints them to the budget dashboard
+            	let budgetAmount = document.getElementById('budgetAmount');
+            	budgetAmount.innerHTML = '';
+            	budgetAmount.appendChild(budgetDivFragment);
+
+	        	
+        		// Update the Budget Visualization module
+        		updateBudgetVisualization(true);
+        		
 	          }, 
 	          error: function(thrownError) {
               	var responseError = JSON.parse(thrownError.responseText);
@@ -549,22 +615,64 @@ $(document).ready(function(){
                		showNotification('Do you already have budget for ' + userChosenMonthName + '?','top','center','danger');
                	} else{
                		showNotification('Unable to copy the budget. Please try again','top','center','danger');
-               		// update the current element with the previous amount
-               		let formattedBudgetAmount = currentCurrencyPreference + formatNumber(previousText , currentUser.locale);
-               		element.innerText = formattedBudgetAmount;
                	}
+               	
+               	// disable the button
+	        	element.removeAttribute("disabled");
+	        	element.innerHTML = 'Start Planning For ' + userChosenMonthName;
 	          }
 		});
 	});
 	
 	// Fetches all the dates for which user budget is present
 	function fetchAllDatesWithUserBudgetData() {
+		// Fetch all dates
 		jQuery.ajax({
 			url: budgetAPIUrl + budgetFetchAllDates + currentUser.financialPortfolioId,
             type: 'GET',
             success: function(dates) {
-            	alert(dates);
-            }
+            	// If dates are empty then return
+            	if(isEmpty(dates)) {
+            		return;
+            	}
+            	
+            	// Array of dates stored in a cache
+            	datesWithUserBudgetData = dates;
+            	
+            	// Reset the last month date
+            	lastBudgetMonth = 0;
+            	
+            	// Update the latest budget month
+            	for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++) {
+            		let userBudgetDate = datesWithUserBudgetData[count];
+            		if(isEmpty(lastBudgetMonth) || userBudgetDate > lastBudgetMonth) {
+            			// Append preceeding zero
+            			lastBudgetMonth = '0' + userBudgetDate;
+            		}
+            	}
+            	
+            	// Last Budget Month Name
+            	lastBudgetedMonthName = months[Number(lastBudgetMonth.toString().slice(2, 4) -1)];
+            	
+            	// If the user budget is empty then update the fields of empty div
+            	if(isEmpty(userBudgetCache)) {
+            		// Update descriptions of the empty budget
+                	let cardRowDescription = document.getElementById('emptyBudgetDescription');
+                	cardRowDescription.innerHTML = "We'll clone <strong> &nbsp" + lastBudgetedMonthName + "'s budget &nbsp</strong> for you to get started";
+                	
+                	// Display the name if user budget is empty
+                	let previousMonthDiv = document.getElementsByClassName('previousMonth');
+                	previousMonthDiv[0].innerText = lastBudgetedMonthName.slice(0,3);
+            	}
+            },
+            error:  function (thrownError) {
+            	 var responseError = JSON.parse(thrownError.responseText);
+             	if(responseError.error.includes("Unauthorized")){
+             		er.sessionExpiredSwal(thrownError);
+             	} else{
+             		showNotification('Unable to fetch the budget at this moment. Please try again!','top','center','danger');
+             	}
+             }
 		});
 	}
 	

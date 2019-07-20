@@ -87,7 +87,7 @@
 	color: #999;
 }
 
-.btn-budget {
+.btn-budget, .btn.btn-budget:disabled:hover, .btn.btn-budget:disabled {
     background: #e82869;
 }
 
@@ -105,8 +105,8 @@
 }
 
 .currentMonth {
-	top: 18%;
-	left: 55%;
+	top: 8%;
+	left: 48%;
 	position: absolute;
 	font-weight: 700;
 	color: #24007594;
@@ -114,8 +114,8 @@
 }
 
 .previousMonth {
-	top: 8%;
-	left: 48%;
+	top: 18%;
+	left: 55%;
 	position: absolute;
 	font-weight: 700;
 	color: #24007594;

@@ -1,7 +1,6 @@
 package in.co.everyrupee.controller.income;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -108,20 +107,18 @@ public class UserBudgetController {
 
     // Copy all previous budgeted month to the current month
     @RequestMapping(value = "/copyPreviousBudget/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public GenericResponse copyPreviousBudgetById(@PathVariable String financialPortfolioId, Principal userPrincipal,
+    public List<UserBudget> copyPreviousBudgetById(@PathVariable String financialPortfolioId, Principal userPrincipal,
 	    @RequestBody MultiValueMap<String, String> formData) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	getUserBudgetService().copyPreviousBudgetToSelectedMonth(financialPortfolioId, formData);
-
-	return new GenericResponse("success");
+	return getUserBudgetService().copyPreviousBudgetToSelectedMonth(financialPortfolioId, formData);
     }
 
     // Fetch all the dates with the user budget data for the user
     @RequestMapping(value = "/fetchAllDatesWithData/{financialPortfolioId}", method = RequestMethod.GET)
-    public Set<Date> fetchAllDatesWithUserBudgetById(@PathVariable String financialPortfolioId,
+    public Set<Integer> fetchAllDatesWithUserBudgetById(@PathVariable String financialPortfolioId,
 	    Principal userPrincipal) {
 
 	if (userPrincipal == null) {
