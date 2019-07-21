@@ -382,6 +382,24 @@ public class UserBudgetIntegrationTest {
     }
 
     /**
+     * TEST: change Category with user budget id
+     * 
+     * @throws Exception
+     */
+    @WithMockUser(value = "spring")
+    @Test
+    public void changeCategoryWithUserBudgetById() throws Exception {
+	// Not Acceptable Http request
+	RequestBuilder requestSameDate = MockMvcRequestBuilders.post("/api/budget/changeCategory/193000000")
+		.accept(MediaType.APPLICATION_JSON).param(DashboardConstants.Budget.DATE_MEANT_FOR, DATE_MEANT_FOR)
+		.param(DashboardConstants.Budget.CATEGORY_ID, "3").param(DashboardConstants.Budget.NEW_CATEGORY_ID, "4")
+		.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+
+	getMvc().perform(requestSameDate).andExpect(status().isOk());
+
+    }
+
+    /**
      * TEST: Get user Budget by financial portfolio Id (Exception)
      * 
      * @throws Exception

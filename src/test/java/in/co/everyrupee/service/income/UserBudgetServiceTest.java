@@ -303,6 +303,25 @@ public class UserBudgetServiceTest {
 
     }
 
+    /**
+     * TEST: Change category with user budget
+     */
+    @Test
+    public void changeCategoryWithUserBudget() {
+	MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
+	formData.add(DashboardConstants.Budget.DATE_MEANT_FOR, DATE_MEANT_FOR);
+	formData.add(DashboardConstants.Budget.CATEGORY_ID, "01072019");
+	formData.add(DashboardConstants.Budget.NEW_CATEGORY_ID, "01062019");
+
+	// Fetch all budget mock
+	Mockito.when(userBudgetRepository.fetchUserBudgetWithCategoryIds(Mockito.any(), Mockito.any(), Mockito.any()))
+		.thenReturn(getUserBudgetList());
+
+	getUserBudgetService().changeCategoryWithUserBudget(FINANCIAL_PORTFOLIO_ID, formData);
+
+	verify(getUserBudgetRepository(), times(1)).saveAll(Mockito.any());
+    }
+
     private UserBudgetService getUserBudgetService() {
 	return userBudgetService;
     }
