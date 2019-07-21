@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
 public class InvalidAttributeValueException extends RuntimeException {
 
-    private static final String INVALID_ATTRIBUTE_VALUE_MESSAGE = "%s should not be called to copy the same months budget for the parameter %s : '%s'";
+    private static final String INVALID_ATTRIBUTE_VALUE_MESSAGE = "%s should not be called to copy for the parameter %s : '%s'";
     private static final long serialVersionUID = -3168326352377787401L;
     private String resourceName;
     private String fieldName;

@@ -128,6 +128,20 @@ public class UserBudgetController {
 	return getUserBudgetService().fetchAllDatesWithUserBudget(financialPortfolioId);
     }
 
+    // Fetch all the dates with the user budget data for the user
+    @RequestMapping(value = "/changeCategory/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public GenericResponse changeCategoryWithUserBudgetById(@PathVariable String financialPortfolioId,
+	    Principal userPrincipal, @RequestBody MultiValueMap<String, String> formData) {
+
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	getUserBudgetService().changeCategoryWithUserBudget(financialPortfolioId, formData);
+
+	return new GenericResponse("success");
+    }
+
     public IUserBudgetService getUserBudgetService() {
 	return userBudgetService;
     }

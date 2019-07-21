@@ -606,6 +606,73 @@
     }
 }
 
+.material-spinner-medium {
+    /* The height and width can be
+    whatever you want, so long as
+    you adjust the border radius
+    to compensate. I added a 
+    "max-height" because for some
+    reason the spinner was
+    "squishing" when I resized the
+    screen vertically. "max-height"
+    fixed this. */
+    height: 25px;
+    min-height: 25px;
+    width: 25px;
+    /* "border-radius" defines how
+    much "curve" there is on the
+    edge of a square element. If
+    you give it enough curve, it
+    makes the element appear to be
+    circular. */
+    border-radius: 100px;
+    /* So there's a five pixel
+    transparent solid border
+    around a 50px square box, which
+    has edges curved so much that
+    it looks circular... */
+    border: 5px transparent solid;
+    /* ... with one side, the top
+    border, given a color. This
+    creates the quarter-circle 
+    curve. */
+    border-top: 5px #3F51B5 solid;
+    /* "animation" specifies an
+    animation to use on the element,
+    including how long the animation
+    should take, how many times it 
+    should play, and even whether 
+    or not it should ease into the
+    different steps of the animation.
+    By default the animation eases,
+    which is what we want for our
+    Google-esque spinner, so we 
+    don't need to set that. 
+    
+    The "material-spinner" part is
+    the name of the animation that 
+    we want to use. We could've
+    called it "funky-bunny" or
+    anything else so long as we 
+    use the same name when
+    specifying the keyframes. */
+    animation: material-spinner 4s infinite;
+}
+
+.material-spinner-small {
+	margin-left: 0.5rem;
+	height: 10px;
+	min-height: 10px;
+	width: 10px;
+	border-radius: 4px;
+	border: 0.7px transparent solid;
+	border-top-color: transparent;
+	border-top-style: solid;
+	border-top-width: 2px;
+	border-top: 0.7px #3f51b5 solid;
+	animation: material-spinner 4s infinite;
+}
+
 /** Fix firefox from adding br at the first editable content **/
 br[type="_moz"]{display: none;}
 

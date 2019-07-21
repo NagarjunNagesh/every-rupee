@@ -45,15 +45,13 @@
     margin-top: 1.5rem;
 }
 
-.budgetAmountEntered:hover, .budgetAmountEntered:focus, .budgetAmountEntered:active {
+.budgetAmountEntered {
 	display: inline-block;
 	width: 100%;
-	padding: .2rem 1rem .15rem .7rem;
+	padding: .2rem 1rem .15rem 0rem;
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
-	border: 1px solid #d2d2d2;
-	border-radius: 0.25rem;
 	height: 28px;
 	appearance: none;
 	max-width: calc(100% - 30px);
@@ -72,6 +70,10 @@
 	visibility: hidden;
 	transition: opacity 600ms, visibility 600ms;
 	-webkit-transition: opacity 600ms, visibility 600ms;
+}
+
+.categoryOptions {
+	cursor: pointer;
 }
 
 .card:hover .deleteBudget {
@@ -131,4 +133,16 @@
 	background-color: #ff1665;
 	border-color: #ff1665;
 	box-shadow: 0 14px 26px -12px rgba(251, 76, 76, 0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(153,153,153,0.2);
+}
+
+.categoryOptions, .budgetAmountEntered {
+	background-image: none;
+}
+
+.categoryOptions {
+	font-weight: 700;
+}
+
+.card:hover .categoryOptions,.card:hover .budgetAmountEntered, .card:focus .categoryOptions,.card:focus .budgetAmountEntered, .card:active .categoryOptions,.card:active .budgetAmountEntered  {
+	background-image: linear-gradient(to top,#9c27b0 2px,rgba(156,39,176,0) 2px),linear-gradient(to top,#d2d2d2 1px,rgba(210,210,210,0) 1px);
 }

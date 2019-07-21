@@ -13,13 +13,16 @@ $(document).ready(function(){
 	let budgetCategoryChart = '';
 	// Fetch all dates from the user budget
 	let datesWithUserBudgetData = [];
-	
-	// Fetch user budget and build the div
-	fetchAllUserBudget();
-	
 	// last Budgeted Month
 	let lastBudgetedMonthName = '';
 	let lastBudgetMonth = 0;
+	
+	/**
+	 * START loading the page
+	 * 
+	 */
+	// Fetch user budget and build the div
+	fetchAllUserBudget();
 	
 	// Fetches all the user budget and displays them in the user budget
 	function fetchAllUserBudget() {
@@ -84,6 +87,7 @@ $(document).ready(function(){
 		
 		// Card title with category name
 		let cardTitle = document.createElement('div');
+		cardTitle.id = 'categoryName-' + categoryObject.categoryId;
 		cardTitle.classList = 'col-lg-6 text-left font-weight-bold';
 		cardTitle.innerText = categoryObject.categoryName;
 		cardRowRemaining.appendChild(cardTitle);
@@ -101,12 +105,18 @@ $(document).ready(function(){
 		let cardRowPercentage = document.createElement('div');
 		cardRowPercentage.classList = 'row';
 		
+		// Budget Amount Wrapper
+		let cardAmountWrapperDiv = document.createElement('div');
+		cardAmountWrapperDiv.classList = 'col-lg-6';
+		
+		// Budget Amount Div
 		let cardBudgetAmountDiv = document.createElement('div');
 		cardBudgetAmountDiv.id = 'budgetAmountEntered-' + categoryObject.categoryId;
-		cardBudgetAmountDiv.classList = 'col-lg-6 text-left budgetAmountEntered font-weight-bold';
+		cardBudgetAmountDiv.classList = 'text-left budgetAmountEntered font-weight-bold form-control';
 		cardBudgetAmountDiv.setAttribute('contenteditable', true);
 		cardBudgetAmountDiv.innerText = currentCurrencyPreference + formatNumber(userBudget.planned, currentUser.locale);
-		cardRowPercentage.appendChild(cardBudgetAmountDiv);
+		cardAmountWrapperDiv.appendChild(cardBudgetAmountDiv);
+		cardRowPercentage.appendChild(cardAmountWrapperDiv);
 		
 		// <span id="percentageAvailable" class="col-lg-12 text-right">NA</span> 
 		let cardRemainingPercentage = document.createElement('div');
@@ -176,6 +186,12 @@ $(document).ready(function(){
     	deletePathElement.setAttribute('d','M4.273 3.727V2a1 1 0 0 1 1-1h3.454a1 1 0 0 1 1 1v1.727M13 5.91v10.455a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5.909m6 2.727v5.455M4.273 8.636v5.455m5.454-5.455v5.455M13 3.727H1');
     	deleteSvgElement.appendChild(deletePathElement);
     	deleteIconDiv.appendChild(deleteSvgElement);
+    	
+    	let materialSpinnerElement = document.createElement('div');
+    	materialSpinnerElement.id= 'deleteElementSpinner-' + categoryObject.categoryId;
+    	materialSpinnerElement.classList = 'material-spinner-small d-none';
+    	deleteIconDiv.appendChild(materialSpinnerElement);
+    	
     	actionDiv.appendChild(deleteIconDiv);
     	cardBody.appendChild(actionDiv);
     	
@@ -465,11 +481,16 @@ $(document).ready(function(){
 	
 	// Add click event listener to delete the budget
 	$('#budgetAmount').on('click', '.deleteBudget' , function(e) {
+		let deleteButtonElement = this;
 		let categoryId = lastElement(splitElement(this.id,'-'));
+		
+		// Show the material spinner and hide the delete button
+		document.getElementById('deleteElementSpinner-' + categoryId).classList.toggle('d-none');
+		this.classList.toggle('d-none');
 		
 		// Security check to ensure that the budget is present
 		if(isEmpty(userBudgetCache[categoryId])) {
-			showNotification('Unable to delete the budget. Please try again!','top','center','danger');
+			showNotification('Unable to delete the budget. Please refresh and try again!','top','center','danger');
 			return;
 		}
 		
@@ -489,6 +510,20 @@ $(document).ready(function(){
   				
             	  // Update budget visualization chart after deletion
             	  updateBudgetVisualization(false);
+            	  
+            	  // reset the dates cache for the user budget
+            	  if(isEmpty(userBudgetCache)) {
+            		  let datesCache = [];
+            		  for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++){
+            			  let iteratedDate = '0' + datesWithUserBudgetData[count];
+            			  // ignore the chosen date
+            			  if(Number(datesWithUserBudgetData) != Number(chosenDate)) {
+            				  datesCache.push(datesWithUserBudgetData[count]);
+            			  }
+            		  }
+            		  // replace the cached dates with the new ones
+            		  datesWithUserBudgetData = datesCache;
+            	  }
               },
               error:  function (thrownError) {
              	 var responseError = JSON.parse(thrownError.responseText);
@@ -497,6 +532,10 @@ $(document).ready(function(){
               	} else{
               		showNotification('Unable to delete the budget at this moment. Please try again!','top','center','danger');
               	}
+              	
+              	// Remove the material spinner and show the delete button again
+              	document.getElementById('deleteElementSpinner-' + categoryId).classList.toggle('d-none');
+              	deleteButtonElement.classList.toggle('d-none');
               }
 		});
 		
@@ -557,9 +596,16 @@ $(document).ready(function(){
 	// Clicking on copy budget
 	$('#budgetAmount').on('click', '#copyPreviousMonthsBudget' , function(e) {
 		this.setAttribute("disabled", "disabled");
-		this.innerHTML = '<div class="material-spinner"></div> Copying budgets..';
-		
+		this.innerHTML = '<div class="material-spinner-medium"></div>';
 		let element = this;
+		let budgetAmount = document.getElementById('budgetAmount');
+		
+		if(isEmpty(datesWithUserBudgetData) && isEmpty(userBudgetCache)) {
+			// Appends to a document fragment
+      	  	createAnEmptyBudgets(defaultCategory, budgetAmount);
+      	  	createAnEmptyBudgets(defaultCategory+1, budgetAmount);
+			return;
+		}
 		
 		var values = {};
 		values['dateToCopy'] = lastBudgetMonth;
@@ -598,7 +644,6 @@ $(document).ready(function(){
             	}
             	
             	// paints them to the budget dashboard
-            	let budgetAmount = document.getElementById('budgetAmount');
             	budgetAmount.innerHTML = '';
             	budgetAmount.appendChild(budgetDivFragment);
 
@@ -675,5 +720,115 @@ $(document).ready(function(){
              }
 		});
 	}
+	
+	// Create two empty budgets on click Start Planning for .. button
+	function createAnEmptyBudgets(categoryId, budgetAmountDiv) {
+		
+		var values = {};
+		values['planned'] = 0;
+		values['category_id'] = categoryId;
+		values['autoGenerated'] = 'false';
+		values['dateMeantFor'] = chosenDate;
+		$.ajax({
+	          type: "POST",
+	          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	          data: values,
+	          success: function(userBudget) {
+	        	let budgetDivFragment = document.createDocumentFragment();
+	        	budgetDivFragment.appendChild(buildUserBudget(userBudget));
+	        	
+	        	// Store the values in a cache
+          	  	userBudgetCache[userBudget.categoryId] = userBudget;
+          	  	
+          	  	let categoryNameDiv = budgetDivFragment.getElementById('categoryName-' + userBudget.categoryId);
+          	  	categoryNameDiv.innerHTML = '';
+          	  	
+          	  	// Container for inlining the select form
+          	  	let containerForSelect = document.createElement('div');
+          	  	containerForSelect.classList = 'd-lg-inline-block';
+          	  	
+          	  	// Append the select group to the category Name. Enabling use to change the category
+          	  	let selectCategoryElement = document.createElement('select');
+          	  	selectCategoryElement.id = 'categoryOptions-' + userBudget.categoryId;
+          	  	selectCategoryElement.classList = 'categoryOptions form-control';
+          	  	selectCategoryElement.setAttribute('data-toggle', 'dropdown');
+          	  	selectCategoryElement.setAttribute('data-style', 'btn btn-primary');
+          	  	selectCategoryElement.setAttribute('aria-haspopup', true);
+          	  	selectCategoryElement.setAttribute('aria-expanded', false); 
+          	  	selectCategoryElement.setAttribute('data-width', 'auto');
+          	  	selectCategoryElement.setAttribute('data-container', 'body');
+          	  	selectCategoryElement.setAttribute('data-size', '5');
+          	  	
+          	  	let optGroupExpense = document.createElement('optgroup');
+          	  	optGroupExpense.id = 'expenseSelection-' + userBudget.categoryId;
+          	  	optGroupExpense.classList = 'expenseSelection form-control';
+          	  	optGroupExpense.label = 'Expenses';
+          	  	// Load Expense category
+	      		expenseSelectionOptGroup = cloneElementAndAppend(optGroupExpense, expenseSelectionOptGroup);
+          	  	selectCategoryElement.appendChild(optGroupExpense);
+          	  	
+          	  	let optGroupIncome = document.createElement('optgroup');
+        	  	optGroupIncome.id = 'incomeSelection-' + userBudget.categoryId;
+        	  	optGroupIncome.classList = 'incomeSelection form-control';
+        	  	optGroupIncome.label = 'Income';
+        	  	// Load income category
+        	  	incomeSelectionOptGroup = cloneElementAndAppend(optGroupIncome, incomeSelectionOptGroup);
+        	  	selectCategoryElement.appendChild(optGroupIncome);
+        	  	
+        	  	// Set the relevant category in the options to selected
+        		let toSelectOption = selectCategoryElement.getElementsByClassName('categoryOption-' + userBudget.categoryId);
+        		toSelectOption[0].selected = 'selected';
+        		
+        		containerForSelect.appendChild(selectCategoryElement);
+        	  	categoryNameDiv.appendChild(containerForSelect);
+        	  	
+        	  	// Handle the update of the progress bar modal
+    			updateProgressBarAndRemaining(userBudget.categoryId, budgetDivFragment);
+
+    			let emptyBudgetDiv = document.getElementById('emptyBudgetCard');
+	      		// paints them to the budget dashboard
+	      		if(isNotEmpty(emptyBudgetDiv)) {
+	      			// Empty the div
+	    			budgetAmount.innerHTML = '';
+	      		}
+            	budgetAmount.appendChild(budgetDivFragment);
+            	
+            	// Update the Budget Visualization module
+        		updateBudgetVisualization(true);
+            	
+	          }
+		});
+	}
+	
+	// Change trigger on select
+	$( "#budgetAmount" ).on( "change", ".categoryOptions" ,function() {
+		let categoryId = lastElement(splitElement($(this).attr('id'), '-'));
+		
+		let values = {};
+		values['category_id'] = categoryId; 
+		values['newCategoryId'] = $(this).val();
+		values['dateMeantFor'] = chosenDate;
+		$.ajax({
+	          type: "POST",
+	          url: budgetAPIUrl + changeBudgetUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
+	          data : values,
+	          success: function(userBudget){
+	        	 
+	          },
+	          error:  function (thrownError) {
+            	var responseError = JSON.parse(thrownError.responseText);
+             	if(responseError.error.includes("Unauthorized")){
+             		er.sessionExpiredSwal(thrownError);
+             	} else{
+             		showNotification('Unable to change the budget category at this moment. Please try again!','top','center','danger');
+             	}
+             }
+		});
+	
+	});
 	
 });

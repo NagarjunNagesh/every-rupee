@@ -291,6 +291,18 @@ public class UserBudgetServiceTest {
 		true);
     }
 
+    /**
+     * TEST: Delete Auto Generated User Budget With Amount Normal Flow
+     */
+    @Test
+    public void fetchAllDatesWithUserBudget() {
+
+	getUserBudgetService().fetchAllDatesWithUserBudget(FINANCIAL_PORTFOLIO_ID);
+
+	verify(getUserBudgetRepository(), times(1)).findAllDatesWithDateById(FINANCIAL_PORTFOLIO_ID);
+
+    }
+
     private UserBudgetService getUserBudgetService() {
 	return userBudgetService;
     }
