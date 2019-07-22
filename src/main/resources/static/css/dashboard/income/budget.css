@@ -46,9 +46,9 @@
 }
 
 .budgetAmountEntered {
-	display: inline-block;
+	display: inline;
 	width: 100%;
-	padding: .2rem 1rem .15rem 0rem;
+	padding: .2rem 2rem .15rem 0rem;
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
@@ -145,4 +145,12 @@
 
 .card:hover .categoryOptions,.card:hover .budgetAmountEntered, .card:focus .categoryOptions,.card:focus .budgetAmountEntered, .card:active .categoryOptions,.card:active .budgetAmountEntered  {
 	background-image: linear-gradient(to top,#9c27b0 2px,rgba(156,39,176,0) 2px),linear-gradient(to top,#d2d2d2 1px,rgba(210,210,210,0) 1px);
+}
+
+/** Change the size of the text if the width and height of the screen are more **/
+@media (min-width:60em) and (min-height:43.75em) {
+	
+	.currentMonth {
+		left: 48.5%;
+	}
 }

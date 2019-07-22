@@ -31,7 +31,7 @@ $(document).ready(function(){
 			url: budgetAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
             type: 'GET',
             success: function(data) {
-            	let dataKeySet = Object.keys(data)
+            	let dataKeySet = Object.keys(data);
             	for(let count = 0, length = dataKeySet.length; count < length; count++){
 	            	let key = dataKeySet[count];
 	          	  	let value = data[key];
@@ -596,7 +596,7 @@ $(document).ready(function(){
 	// Clicking on copy budget
 	$('#budgetAmount').on('click', '#copyPreviousMonthsBudget' , function(e) {
 		this.setAttribute("disabled", "disabled");
-		this.innerHTML = '<div class="material-spinner-medium"></div>';
+		this.innerHTML = 'Creating budgets..';
 		let element = this;
 		let budgetAmount = document.getElementById('budgetAmount');
 		
@@ -699,8 +699,9 @@ $(document).ready(function(){
             	// Last Budget Month Name
             	lastBudgetedMonthName = months[Number(lastBudgetMonth.toString().slice(2, 4) -1)];
             	
+            	let emptyBudgetDiv = document.getElementById('emptyBudgetCard');
             	// If the user budget is empty then update the fields of empty div
-            	if(isEmpty(userBudgetCache)) {
+            	if(isEmpty(userBudgetCache) && isNotEmpty(emptyBudgetDiv)) {
             		// Update descriptions of the empty budget
                 	let cardRowDescription = document.getElementById('emptyBudgetDescription');
                 	cardRowDescription.innerHTML = "We'll clone <strong> &nbsp" + lastBudgetedMonthName + "'s budget &nbsp</strong> for you to get started";
@@ -791,14 +792,22 @@ $(document).ready(function(){
 	      		// paints them to the budget dashboard
 	      		if(isNotEmpty(emptyBudgetDiv)) {
 	      			// Empty the div
-	    			budgetAmount.innerHTML = '';
+	      			budgetAmountDiv.innerHTML = '';
 	      		}
-            	budgetAmount.appendChild(budgetDivFragment);
+	      		budgetAmountDiv.appendChild(budgetDivFragment);
             	
             	// Update the Budget Visualization module
         		updateBudgetVisualization(true);
             	
-	          }
+	          },
+	          error:  function (thrownError) {
+            	var responseError = JSON.parse(thrownError.responseText);
+             	if(responseError.error.includes("Unauthorized")){
+             		er.sessionExpiredSwal(thrownError);
+             	} else{
+             		showNotification('Unable to create the budgets. Please refresh and try again!','top','center','danger');
+             	}
+             }
 		});
 	}
 	
@@ -830,5 +839,55 @@ $(document).ready(function(){
 		});
 	
 	});
+	
+	// Add Budgets Button
+	$('#budgetChart').on('click', '#addNewBudgets' , function(e) {
+		e.preventDefault();
+		
+		let categoryId = returnUnbudgetedCategory();
+		
+		if(isEmpty(categoryId)) {
+			showNotification('You have a budget for all the categories!','top','center','danger');
+			return;
+		}
+		
+		let budgetAmountDiv = document.getElementById('budgetAmount');
+		createAnEmptyBudgets(categoryId, budgetAmountDiv);
+	});
+	
+	// Find the unbudgeted category 
+	function returnUnbudgetedCategory() {
+		let categoryId = '';
+		
+		// Iterate through all the available categories
+		if(isEmpty(userBudgetCache)) {
+			categoryId = defaultCategory;
+		} else {
+			let allBudgetedCategories = [];
+			let budgetKeySet = Object.keys(userBudgetCache);
+			for(let count = 0, length = budgetKeySet.length; count < length; count++){
+				let key = budgetKeySet[count];
+	      	  	let budgetObject = userBudgetCache[key];
+	      	  	// Push the budgeted category to cache
+	      	  	isNotEmpty(budgetObject) && allBudgetedCategories.push(budgetObject.categoryId);
+			}
+			
+			
+			let dataKeySet = Object.keys(categoryMap);
+			for(let count = 0, length = dataKeySet.length; count < length; count++){
+				let key = dataKeySet[count];
+	      	  	let categoryObject = categoryMap[key];
+	      	  	
+	      	  	// If a category that is not contained in the budget cache is found then assign and leav for loop
+	      	  	if(!includesStr(allBudgetedCategories,categoryObject.categoryId)) {
+	      	  		categoryId = categoryObject.categoryId;
+	      	  		break;
+	      	  	}
+	      	  	
+			}
+		}
+		
+		return categoryId;
+	}
 	
 });
