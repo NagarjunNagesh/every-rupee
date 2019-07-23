@@ -788,9 +788,8 @@ $(document).ready(function(){
         	  	// Handle the update of the progress bar modal
     			updateProgressBarAndRemaining(userBudget.categoryId, budgetDivFragment);
 
-    			let emptyBudgetDiv = document.getElementById('emptyBudgetCard');
-	      		// paints them to the budget dashboard
-	      		if(isNotEmpty(emptyBudgetDiv)) {
+	      		// paints them to the budget dashboard if the empty budget div is not null
+	      		if(document.getElementById('emptyBudgetCard') !== null) {
 	      			// Empty the div
 	      			budgetAmountDiv.innerHTML = '';
 	      		}
@@ -815,6 +814,14 @@ $(document).ready(function(){
 	$( "#budgetAmount" ).on( "change", ".categoryOptions" ,function() {
 		let categoryId = lastElement(splitElement($(this).attr('id'), '-'));
 		
+		// Make sure that the category selected is not budgeted
+		let allUnbudgetedCategories = returnUnbudgetedCategories();
+		if(!includesStr(allUnbudgetedCategories,$(this).val())) {
+			showNotification('The selected category already has a budget. Please choose a different category!','top','center','danger');
+			return;
+		}
+		
+		// Call the change of category services
 		let values = {};
 		values['category_id'] = categoryId; 
 		values['newCategoryId'] = $(this).val();
@@ -826,6 +833,54 @@ $(document).ready(function(){
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
 	          success: function(userBudget){
+	        	  
+	        	 if(isEmpty(userBudget)) {
+	        		 showNotification("Sorry, We couldn't change the budegt at the moment. Please refresh and try again",'top','center','danger');
+	        		 return;
+	        	 }
+	        	  
+	        	 // Delete the entry from the map if it is pending to be updated
+  				 delete userBudgetCache[categoryId];
+  				 
+  				 // Assign new category to the user budget cache
+  				 userBudgetCache[userBudget.categoryId] = userBudget;
+  				  
+	        	 // Update all category IDs
+	        	 let catergoryIdCard = document.getElementById('cardCategoryId-' + categoryId);
+	        	 catergoryIdCard.id = 'cardCategoryId-' + userBudget.categoryId;
+	        	 
+	        	 let categoryNameDiv = document.getElementById('categoryName-' + categoryId);
+	        	 categoryNameDiv.id = 'categoryName-' + userBudget.categoryId;
+	        	 
+	        	 let categoryOptionsDiv = document.getElementById('categoryOptions-' + categoryId);
+	        	 categoryOptionsDiv.id = 'categoryOptions-' + userBudget.categoryId;
+	        	 
+	        	 let expenseSelectionDiv = document.getElementById('expenseSelection-' + categoryId);
+	        	 expenseSelectionDiv.id = 'expenseSelection-' + userBudget.categoryId;
+	        	 
+	        	 let incomeSelectionDiv = document.getElementById('incomeSelection-' + categoryId);
+	        	 incomeSelectionDiv.id = 'incomeSelection-' + userBudget.categoryId;
+	        	 
+	        	 let budgetInfoLabelInModalDiv = document.getElementById('budgetInfoLabelInModal-' + categoryId);
+	        	 budgetInfoLabelInModalDiv.id = 'budgetInfoLabelInModal-' + userBudget.categoryId;
+	        	 
+	        	 let budgetAmountEnteredDiv = document.getElementById('budgetAmountEntered-' + categoryId);
+	        	 budgetAmountEnteredDiv.id = 'budgetAmountEntered-' + userBudget.categoryId;
+	        	 
+	        	 let percentageAvailableDiv = document.getElementById('percentageAvailable-' + categoryId);
+	        	 percentageAvailableDiv.id = 'percentageAvailable-' + userBudget.categoryId;
+	        	 
+	        	 let progressBudgetDiv = document.getElementById('progress-budget-' + categoryId);
+	        	 progressBudgetDiv.id = 'progress-budget-' + userBudget.categoryId;
+	        	 
+	        	 let remainingAmountDiv = document.getElementById('remainingAmount-' + categoryId);
+	        	 remainingAmountDiv.id = 'remainingAmount-' + userBudget.categoryId;
+	        	 
+	        	 let deleteSvgElementDiv = document.getElementById('deleteSvgElement-' + categoryId);
+	        	 deleteSvgElementDiv.id = 'deleteSvgElement-' + userBudget.categoryId;
+	        	 
+	        	 let deleteElementSpinnerDiv = document.getElementById('deleteElementSpinner-' + categoryId);
+	        	 deleteElementSpinnerDiv.id = 'deleteElementSpinner-' + userBudget.categoryId;
 	        	 
 	          },
 	          error:  function (thrownError) {
@@ -864,12 +919,13 @@ $(document).ready(function(){
 			categoryId = defaultCategory;
 		} else {
 			let allBudgetedCategories = [];
+			// Get all the budgeted categories
 			let budgetKeySet = Object.keys(userBudgetCache);
 			for(let count = 0, length = budgetKeySet.length; count < length; count++){
 				let key = budgetKeySet[count];
 	      	  	let budgetObject = userBudgetCache[key];
 	      	  	// Push the budgeted category to cache
-	      	  	isNotEmpty(budgetObject) && allBudgetedCategories.push(budgetObject.categoryId);
+	      	  	isNotEmpty(budgetObject) && allBudgetedCategories.push(key);
 			}
 			
 			
@@ -878,9 +934,9 @@ $(document).ready(function(){
 				let key = dataKeySet[count];
 	      	  	let categoryObject = categoryMap[key];
 	      	  	
-	      	  	// If a category that is not contained in the budget cache is found then assign and leav for loop
-	      	  	if(!includesStr(allBudgetedCategories,categoryObject.categoryId)) {
-	      	  		categoryId = categoryObject.categoryId;
+	      	  	// If a category that is not contained in the budget cache is found then assign and leave for loop
+	      	  	if(!includesStr(allBudgetedCategories,key) && isNotEqual(key,expenseCategory) && isNotEqual(key,incomeCategory)) {
+	      	  		categoryId = key;
 	      	  		break;
 	      	  	}
 	      	  	
@@ -888,6 +944,47 @@ $(document).ready(function(){
 		}
 		
 		return categoryId;
+	}
+	
+	// Find the unbudgeted categories 
+	function returnUnbudgetedCategories() {
+		let categoryIdArray = [];
+		
+		// Iterate through all the available categories
+		if(isEmpty(userBudgetCache)) {
+			// iterate through all available categories and 
+			let dataKeySet = Object.keys(categoryMap);
+			for(let count = 0, length = dataKeySet.length; count < length; count++){
+				let key = dataKeySet[count];
+	      	  	let categoryObject = categoryMap[key];
+	      	  	categoryIdArray.push(categoryObject.categoryId);
+			}
+		} else {
+			let allBudgetedCategories = [];
+			// Get all the budgeted categories
+			let budgetKeySet = Object.keys(userBudgetCache);
+			for(let count = 0, length = budgetKeySet.length; count < length; count++){
+				let key = budgetKeySet[count];
+	      	  	let budgetObject = userBudgetCache[key];
+	      	  	// Push the budgeted category to cache
+	      	  	isNotEmpty(budgetObject) && allBudgetedCategories.push(key);
+			}
+			
+			// Iterate through all the available categories and find the ones that does not have a budget yet
+			let dataKeySet = Object.keys(categoryMap);
+			for(let count = 0, length = dataKeySet.length; count < length; count++){
+				let key = dataKeySet[count];
+	      	  	let categoryObject = categoryMap[key];
+	      	  	
+	      	  	// If a category that is not contained in the budget cache is found then assign and leave for loop
+	      	  	if(!includesStr(allBudgetedCategories,key) && isNotEqual(key,expenseCategory) && isNotEqual(key,incomeCategory)) {
+	      	  		categoryIdArray.push(key);
+	      	  	}
+	      	  	
+			}
+		}
+		
+		return categoryIdArray;
 	}
 	
 });

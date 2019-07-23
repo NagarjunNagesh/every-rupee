@@ -130,16 +130,17 @@ public class UserBudgetController {
 
     // Fetch all the dates with the user budget data for the user
     @RequestMapping(value = "/changeCategory/{financialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public GenericResponse changeCategoryWithUserBudgetById(@PathVariable String financialPortfolioId,
+    public UserBudget changeCategoryWithUserBudgetById(@PathVariable String financialPortfolioId,
 	    Principal userPrincipal, @RequestBody MultiValueMap<String, String> formData) {
 
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
 
-	getUserBudgetService().changeCategoryWithUserBudget(financialPortfolioId, formData);
+	UserBudget userBudgetSaved = getUserBudgetService().changeCategoryWithUserBudget(financialPortfolioId,
+		formData);
 
-	return new GenericResponse("success");
+	return userBudgetSaved;
     }
 
     public IUserBudgetService getUserBudgetService() {

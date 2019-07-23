@@ -35,6 +35,6 @@ public interface IUserBudgetService {
 
     Set<Integer> fetchAllDatesWithUserBudget(String financialPortfolioId);
 
-    void changeCategoryWithUserBudget(String financialPortfolioId, MultiValueMap<String, String> formData);
+    UserBudget changeCategoryWithUserBudget(String financialPortfolioId, MultiValueMap<String, String> formData);
 
 }

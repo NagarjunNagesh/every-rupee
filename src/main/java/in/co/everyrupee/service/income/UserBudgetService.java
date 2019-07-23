@@ -499,7 +499,10 @@ public class UserBudgetService implements IUserBudgetService {
      */
     @Override
     @CacheEvict(key = "{#financialPortfolioId, #formData.get(\"dateMeantFor\").get(0)}")
-    public void changeCategoryWithUserBudget(String financialPortfolioId, MultiValueMap<String, String> formData) {
+    public UserBudget changeCategoryWithUserBudget(String financialPortfolioId,
+	    MultiValueMap<String, String> formData) {
+
+	UserBudget savedUserBudget = new UserBudget();
 	String dateMeantFor = formData.get(DashboardConstants.Budget.DATE_MEANT_FOR).get(0);
 	String categoryId = formData.get(DashboardConstants.Budget.CATEGORY_ID).get(0);
 	String newCategoryId = formData.get(DashboardConstants.Budget.NEW_CATEGORY_ID).get(0);
@@ -522,12 +525,17 @@ public class UserBudgetService implements IUserBudgetService {
 		    return userBudget;
 		}).collect(Collectors.toList());
 
-		getUserBudgetRepository().saveAll(newUserBudgetList);
+		List<UserBudget> savedUserBudgetList = getUserBudgetRepository().saveAll(newUserBudgetList);
+		if (CollectionUtils.isNotEmpty(savedUserBudgetList)) {
+		    savedUserBudget = savedUserBudgetList.get(0);
+		}
 	    }
 
 	} catch (ParseException e) {
 	    logger.error(e + "changeCategoryWithUserBudget: Unable to add date to the user budget");
 	}
+
+	return savedUserBudget;
     }
 
 }
