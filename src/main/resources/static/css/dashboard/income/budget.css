@@ -164,3 +164,9 @@
  	fill: #ff9800;
 	stroke: #ff9800;
  }
+ 
+.budget-chart {
+ 	position: -webkit-sticky;
+	position: sticky;
+	top: 20px;
+ }
