@@ -154,3 +154,13 @@
 		left: 48.5%;
 	}
 }
+
+#budgetChart .ct-chart .ct-series-a .ct-slice-donut-solid {
+	fill: #ff3479;
+	stroke: #fd679a;
+}
+
+#budgetChart .ct-chart .ct-series-b .ct-slice-donut-solid {
+ 	fill: #ff9800;
+	stroke: #ff9800;
+ }

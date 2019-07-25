@@ -792,8 +792,12 @@ $(document).ready(function(){
 	      		if(document.getElementById('emptyBudgetCard') !== null) {
 	      			// Empty the div
 	      			budgetAmountDiv.innerHTML = '';
+	      			budgetAmountDiv.appendChild(budgetDivFragment);
+	      		} else if(budgetAmountDiv.childNodes[0] != null) {
+	      			budgetAmountDiv.insertBefore(budgetDivFragment,budgetAmountDiv.childNodes[0]);
+	      		} else {
+	      			budgetAmountDiv.appendChild(budgetDivFragment);
 	      		}
-	      		budgetAmountDiv.appendChild(budgetDivFragment);
             	
             	// Update the Budget Visualization module
         		updateBudgetVisualization(true);
