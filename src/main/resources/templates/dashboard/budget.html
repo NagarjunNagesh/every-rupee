@@ -15,10 +15,48 @@
         	<span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
         	<div class="row">
 				<div class="col-lg-9" id="budgetAmount">
+					<div id="" class="card">
+						<div class="card-body">
+							<div class="row">
+								<div id="" class="col-lg-3">
+									<div id="" class="w-100 animationBudget"></div>
+								</div>
+								<div class="col-lg-9 text-right headingDiv justify-content-center align-self-center mild-text" id="">Remaining (%)</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-3">
+									<div id="" class="w-50 animationBudget"></div>
+								</div>
+								<div class="col-lg-9 text-right percentageAvailable" id="">NA</div>
+							</div>
+							<div class="row">
+								<div id="" class="col-lg-12">
+									<div class="progress">
+										<div id="animationProgressBar" class="progress-bar progress-bar-budget-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div id="" class="col-lg-11">
+									<div id="remainingAmountMock" class="d-lg-inline-block animationBudget"></div>
+									<span class="mild-text"> Remaining</span>
+								</div>
+								<div id="" class="col-lg-1">
+								</div>
+							</div>
+							<div class="row">
+								<div id="" class="col-lg-11">
+								</div>
+								<div id="" class="col-lg-1">
+									<div id="" class="w-100 animationBudget"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="col-lg-3" id="budgetChart">
 					<div class="card budget-chart">
-		              	<div class="card-header card-header-icon card-header-danger">
+		              	<div class="card-header card-header-icon card-header-rose">
 		                  <div class="card-icon">
 		                    <i class="material-icons">pie_chart</i>
 		                  </div>
@@ -41,7 +79,7 @@
                			<div id="" class="card-footer row">
 		                    <div class="col-lg-12 text-right">
 			                    <a id="addNewBudgets" href="#" class="text-rose">
-			                    	<i class="material-icons">add_circle</i> Add Budgets
+			                    	<i class="material-icons" data-toggle="tooltip" title="Creates a new Budget">add_circle</i> Add Budgets
 			                    </a>
 		                    </div>
 		                </div>

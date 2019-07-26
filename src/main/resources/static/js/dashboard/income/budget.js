@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-	
+	debugger;
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// User Budget Map Cache
@@ -107,7 +107,7 @@ $(document).ready(function(){
 		
 		// Budget Amount Wrapper
 		let cardAmountWrapperDiv = document.createElement('div');
-		cardAmountWrapperDiv.classList = 'col-lg-6';
+		cardAmountWrapperDiv.classList = 'col-lg-3';
 		
 		// Budget Amount Div
 		let cardBudgetAmountDiv = document.createElement('div');
@@ -120,7 +120,7 @@ $(document).ready(function(){
 		
 		// <span id="percentageAvailable" class="col-lg-12 text-right">NA</span> 
 		let cardRemainingPercentage = document.createElement('div');
-		cardRemainingPercentage.classList = 'col-lg-6 text-right percentageAvailable';
+		cardRemainingPercentage.classList = 'col-lg-9 text-right percentageAvailable';
 		cardRemainingPercentage.id = 'percentageAvailable-' + categoryObject.categoryId;
 		cardRemainingPercentage.innerText = 'NA';
 		cardRowPercentage.appendChild(cardRemainingPercentage);
@@ -432,7 +432,6 @@ $(document).ready(function(){
 		let remainingAmountPercentageDiv = documentOrFragment.getElementById('percentageAvailable-' + categoryIdKey);
 		let budgetLabelDiv = documentOrFragment.getElementById('budgetInfoLabelInModal-' + categoryIdKey);
 		let progressBarCategoryModal = documentOrFragment.getElementById('progress-budget-' + categoryIdKey);
-		
 		// If the budget is not created for the particular category, make sure the budget is not equal to zero
 		if(isNotEmpty(userBudgetValue) && isNotEmpty(categoryTotalAmount)) {
 			// Calculate remaining budget
@@ -471,11 +470,15 @@ $(document).ready(function(){
 			// Set the value and percentage of the progress bar
 			progressBarCategoryModal.setAttribute('aria-valuenow', progressBarPercentage);
 			progressBarCategoryModal.style.width = progressBarPercentage + '%'; 
-		} else if(isNotEmpty(progressBarCategoryModal)){
+		} else if(progressBarCategoryModal != null){
 			remainingAmountPercentageDiv.innerText = 'NA';
 			// Set the value and percentage of the progress bar
 			progressBarCategoryModal.setAttribute('aria-valuenow', 0);
 			progressBarCategoryModal.style.width = 0 + '%';
+			// Set the amount remaining
+			remainingAmountDiv.innerText = currentCurrencyPreference + formatNumber(0.00, currentUser.locale);
+			// Set the budget remaining text
+			budgetLabelDiv.innerText = 'Remaining (%)';
 		}
 	}
 	
@@ -701,7 +704,7 @@ $(document).ready(function(){
             	
             	let emptyBudgetDiv = document.getElementById('emptyBudgetCard');
             	// If the user budget is empty then update the fields of empty div
-            	if(isEmpty(userBudgetCache) && isNotEmpty(emptyBudgetDiv)) {
+            	if(isEmpty(userBudgetCache) && emptyBudgetDiv != null) {
             		// Update descriptions of the empty budget
                 	let cardRowDescription = document.getElementById('emptyBudgetDescription');
                 	cardRowDescription.innerHTML = "We'll clone <strong> &nbsp" + lastBudgetedMonthName + "'s budget &nbsp</strong> for you to get started";
@@ -885,6 +888,9 @@ $(document).ready(function(){
 	        	 
 	        	 let deleteElementSpinnerDiv = document.getElementById('deleteElementSpinner-' + categoryId);
 	        	 deleteElementSpinnerDiv.id = 'deleteElementSpinner-' + userBudget.categoryId;
+	        	 
+	        	// Handle the update of the progress bar modal
+     			updateProgressBarAndRemaining(userBudget.categoryId, document);
 	        	 
 	          },
 	          error:  function (thrownError) {
