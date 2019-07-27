@@ -93,4 +93,13 @@ public interface UserBudgetRepository extends JpaRepository<UserBudget, Integer>
     @Query("delete from UserBudget u where u.categoryId in ?1 and u.financialPortfolioId in ?2 and u.dateMeantFor in ?3")
     void deleteUserBudgetWithCategoryIds(List<Integer> categoryIdsAsIntegerList, String financialPortfolioId,
 	    Date date);
+
+    /**
+     * Fetch all user dates by financial portfolio id
+     * 
+     * @param financialPortfolioId
+     * @return
+     */
+    @Query("SELECT u.dateMeantFor FROM UserBudget u where u.financialPortfolioId in ?1")
+    List<Date> findAllDatesWithDateById(String financialPortfolioId);
 }

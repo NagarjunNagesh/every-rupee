@@ -504,12 +504,7 @@ $(document).ready(function(){
 	   budgetTransactionsRow.className = 'text-right d-lg-table-cell font-weight-bold';
 	   tableRow.appendChild(budgetTransactionsRow);
 	   
-		//	   <div class="BudgetGroupHeader-column BudgetGroupHeader-column--actions" style="display: block;top: auto;cursor: pointer;height: 100%;text-align: right;vertical-align: middle;"><span class="budget-card-header-action ui-content--sm--r BudgetGroupHeader-deleteGroup" style="color: #8e999e;text-align: center;vertical-align: middle;align-content: center;">
-		//	   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 18" style="vertical-align: top;align-self: center !important;margin: auto;/*! display: block; */vertical-align: middle;">
-		//	   <path fill="none" stroke="currentColor" stroke-linecap="square" stroke-width="1.25" d="M4.273 3.727V2a1 1 0 0 1 1-1h3.454a1 1 0 0 1 1 1v1.727M13 5.91v10.455a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5.909m6 2.727v5.455M4.273 8.636v5.455m5.454-5.455v5.455M13 3.727H1" style="margin: auto;display: block;vertical-align: middle;">
-		//	   </path></svg> Delete Group</span></div>
-		
-		return tableRow;
+	   return tableRow;
 		
 	}
 	
@@ -643,7 +638,7 @@ $(document).ready(function(){
 
 	// Show or hide multiple rows in the transactions table
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
-		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
+		let categoryId = lastElement(splitElement(this.id,'-'));
 		
 		if(er.checkIfInvalidCategory(categoryId)) {
 			return;
@@ -695,19 +690,19 @@ $(document).ready(function(){
 	
 	// Change trigger on select
 	$( "#transactionsTable" ).on( "change", ".tableRowForSelectCategory" ,function() {
-		let categoryId = $(this).attr('id');
+		let categoryId = this.id;
 		let selectedTransactionId = splitElement(categoryId,'-');
 		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
 		
 		if(isNotEmpty(classList)) {
 			
 			// Ensure that the category id is valid
-			if(er.checkIfInvalidCategory($(this).val())) {
+			if(er.checkIfInvalidCategory(this.value)) {
 				return;
 			}
 			
 			let values = {};
-			values['categoryId'] = $(this).val();
+			values['categoryId'] = this.value;
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
 			values['dateMeantFor'] = chosenDate;
 			$.ajax({
@@ -842,7 +837,7 @@ $(document).ready(function(){
 		  }
 		  
 		  let amountEntered = er.convertToNumberFromCurrency(this.innerText,currentCurrencyPreference);
-		  let selectTransactionId = splitElement($(this).attr('id'),'-');
+		  let selectTransactionId = splitElement(this.id,'-');
 		  // Handles the addition of buttons in the budget column for the row
 		  appendButtonForAmountEdition(amountEntered, selectTransactionId);
 	});
@@ -1251,7 +1246,7 @@ $(document).ready(function(){
 		 // stop the event from bubbling.
 		 event.stopPropagation();
 		 event.stopImmediatePropagation();
-		 let id = lastElement(splitElement($(this).attr('id'),'-'));
+		 let id = lastElement(splitElement(this.id,'-'));
 		 let values = {};
 		 values['amount'] = 0.00;
 		 values['description'] = '';

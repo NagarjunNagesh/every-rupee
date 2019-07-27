@@ -38,6 +38,11 @@
 
 #budgetAmount .card {
 	margin: 1rem auto;
+	-webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 2s; /* Firefox < 16 */
+        -ms-animation: fadein 2s; /* Internet Explorer */
+         -o-animation: fadein 2s; /* Opera < 12.1 */
+            animation: fadein 2s;
 }
 
 #chartBudgetVisualization {
@@ -45,15 +50,13 @@
     margin-top: 1.5rem;
 }
 
-.budgetAmountEntered:hover, .budgetAmountEntered:focus, .budgetAmountEntered:active {
+.budgetAmountEntered {
 	display: inline-block;
 	width: 100%;
-	padding: .2rem 1rem .15rem .7rem;
+	padding: .2rem 2rem .15rem 0;
 	line-height: 1.5;
 	color: #495057;
 	vertical-align: middle;
-	border: 1px solid #d2d2d2;
-	border-radius: 0.25rem;
 	height: 28px;
 	appearance: none;
 	max-width: calc(100% - 30px);
@@ -74,7 +77,11 @@
 	-webkit-transition: opacity 600ms, visibility 600ms;
 }
 
-.card:hover .deleteBudget {
+.categoryOptions {
+	cursor: pointer;
+}
+
+.card:hover .deleteBudget,.card:hover .compensateBudgetImage {
 	visibility: visible;
   	opacity: 1;
 }
@@ -83,11 +90,15 @@
 	color: #fd679a;
 }
 
-.deleteIconWrapper {
+.compensateBudgetImage:hover {
+	background-image: url("../../../img/dashboard/budget/icons8-merge-rose-16.png");
+}
+
+.deleteIconWrapper, .compensateBudgetImage {
 	color: #999;
 }
 
-.btn-budget {
+.btn-budget, .btn.btn-budget:disabled:hover, .btn.btn-budget:disabled {
     background: #e82869;
 }
 
@@ -105,8 +116,8 @@
 }
 
 .currentMonth {
-	top: 18%;
-	left: 55%;
+	top: 8%;
+	left: 48%;
 	position: absolute;
 	font-weight: 700;
 	color: #24007594;
@@ -114,8 +125,8 @@
 }
 
 .previousMonth {
-	top: 8%;
-	left: 48%;
+	top: 18%;
+	left: 55%;
 	position: absolute;
 	font-weight: 700;
 	color: #24007594;
@@ -131,4 +142,111 @@
 	background-color: #ff1665;
 	border-color: #ff1665;
 	box-shadow: 0 14px 26px -12px rgba(251, 76, 76, 0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(153,153,153,0.2);
+}
+
+.categoryOptions, .budgetAmountEntered {
+	background-image: none;
+}
+
+.categoryOptions {
+	font-weight: 700;
+}
+
+.card:hover .categoryOptions,.card:hover .budgetAmountEntered, .card:focus .categoryOptions,.card:focus .budgetAmountEntered, .card:active .categoryOptions,.card:active .budgetAmountEntered  {
+	background-image: linear-gradient(to top,#ff3479 2px,rgba(156,39,176,0) 2px),linear-gradient(to top,#d2d2d2 1px,rgba(210,210,210,0) 1px);
+}
+
+/** Change the size of the text if the width and height of the screen are more **/
+@media (min-width:60em) and (min-height:43.75em) {
+	
+	.currentMonth {
+		left: 48.5%;
+	}
+	
+	.previousMonth {
+		left: 53.5%;
+	}
+}
+
+#budgetChart .ct-chart .ct-series-a .ct-slice-donut-solid {
+	fill: #ff3479;
+	stroke: #fd679a;
+}
+
+#budgetChart .ct-chart .ct-series-b .ct-slice-donut-solid {
+ 	fill: #ff9800;
+	stroke: #ff9800;
+ }
+ 
+.budget-chart {
+ 	position: -webkit-sticky;
+	position: sticky;
+	top: 20px;
+ }
+ 
+.animationBudget {
+ 	 height: 10px;
+  	 animation-duration: 1.25s;
+     animation-fill-mode: forwards;
+     animation-iteration-count: infinite;
+     animation-name: placeHolderShimmer;
+     animation-timing-function: linear;
+     background: #F6F6F6;
+     background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
+     background-size: 800px 104px;
+     position: relative;
+     margin: 0.25rem 0;
+ }
+ 
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0;
+    }
+    100%{
+        background-position: 468px 0;
+    }
+}
+
+#remainingAmountMock {
+	width: 2.5rem;
+	padding-right: 0.5rem;
+	margin: 0;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.compensateBudgetImage {
+	padding-bottom: 0.3rem;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 600ms, visibility 600ms;
+	-webkit-transition: opacity 600ms, visibility 600ms;
 }

@@ -90,4 +90,7 @@ public class GenericConstants {
     // Category Constants
     public static final String INCOME_CATEGORY = "2";
 
+    // Date Format
+    public static final String DATE_FORMAT_FRONTEND = "ddMMyyyy";
+
 }

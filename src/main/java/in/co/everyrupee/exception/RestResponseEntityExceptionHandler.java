@@ -153,4 +153,27 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
+    // 403
+    @ExceptionHandler({ ResourceAlreadyPresentException.class })
+    @ResponseBody
+    public ResponseEntity<Object> handleResourceAlreadyPresentException(final RuntimeException ex,
+	    final WebRequest request) {
+	logger.error("403 Status Code", ex);
+	final GenericResponse bodyOfResponse = new GenericResponse(
+		messages.getMessage("message.resourceFound", null, request.getLocale()), "ResourceAlreadyPresent");
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    // 406
+    @ExceptionHandler({ InvalidAttributeValueException.class })
+    @ResponseBody
+    public ResponseEntity<Object> handleInvalidAttributeValueException(final RuntimeException ex,
+	    final WebRequest request) {
+	logger.error("406 Status Code", ex);
+	final GenericResponse bodyOfResponse = new GenericResponse(
+		messages.getMessage("message.invalidAttributeValue", null, request.getLocale()),
+		"InvalidAttributeValue");
+	return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
+    }
+
 }
