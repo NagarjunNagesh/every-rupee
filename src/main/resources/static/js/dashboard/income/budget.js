@@ -988,7 +988,6 @@ $(document).ready(function(){
 			let dataKeySet = Object.keys(categoryMap);
 			for(let count = 0, length = dataKeySet.length; count < length; count++){
 				let key = dataKeySet[count];
-	      	  	let categoryObject = categoryMap[key];
 	      	  	
 	      	  	// If a category that is not contained in the budget cache is found then assign and leave for loop
 	      	  	if(!includesStr(allBudgetedCategories,key) && isNotEqual(key,expenseCategory) && isNotEqual(key,incomeCategory)) {
@@ -1044,7 +1043,7 @@ $(document).ready(function(){
 	}
 	
 	// Compensate Budget Module
-	$('#budgetAmount').on('click', '.compensateAnchor' , function(e) {
+	$('#budgetAmount').on('click', '.compensateAnchor' , function() {
 		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
 		let anchorDropdownItemFragment = document.createDocumentFragment();
 		let categoryId = lastElement(splitElement(this.id, '-'));
