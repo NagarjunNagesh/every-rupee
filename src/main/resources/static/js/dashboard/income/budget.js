@@ -1029,7 +1029,6 @@ $(document).ready(function(){
 			let dataKeySet = Object.keys(categoryMap);
 			for(let count = 0, length = dataKeySet.length; count < length; count++){
 				let key = dataKeySet[count];
-	      	  	let categoryObject = categoryMap[key];
 	      	  	
 	      	  	// If a category that is not contained in the budget cache is found then assign and leave for loop
 	      	  	if(!includesStr(allBudgetedCategories,key) && isNotEqual(key,expenseCategory) && isNotEqual(key,incomeCategory)) {
