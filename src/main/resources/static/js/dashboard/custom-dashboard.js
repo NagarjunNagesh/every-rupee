@@ -167,6 +167,9 @@ window.onload = function () {
 				return;
 			}
 			
+			// Close the category modals if open
+			closeCategoryModalIfOpen();
+			
 			switch(id) {
 			
 			case 'transactionsPage':
@@ -263,6 +266,27 @@ window.onload = function () {
 		           	}
 		        }
 			});
+		}
+		
+		function closeCategoryModalIfOpen() {
+			// Hide category modal if open
+			if($('#GSCCModal').hasClass('show')) {
+				$('#GSCCModal').modal('hide');
+				$('body').removeClass('modal-open');
+				$('.modal-backdrop').remove();
+			}
+			
+			// Hide category modal if open
+			if($('#categoryCompensationModal').hasClass('show')) {
+				$('#categoryCompensationModal').modal('hide');
+				$('body').removeClass('modal-open');
+				$('.modal-backdrop').remove();
+			}
+			
+			// Swal close modal if open
+			if(Swal.isVisible()) {
+				Swal.close();
+			}
 		}
 		
 		// Adjust styles of login for dashboard

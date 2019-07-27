@@ -1,6 +1,5 @@
 
 $(document).ready(function(){
-	debugger;
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// User Budget Map Cache
@@ -163,6 +162,7 @@ $(document).ready(function(){
 		
 		
 		let actionDiv = document.createElement('div');
+		actionDiv.id = 'actionIcons-' + categoryObject.categoryId;
 		actionDiv.classList = 'text-right';
 		
 		// Build a delete icon Div
@@ -447,10 +447,19 @@ $(document).ready(function(){
 					budgetLabelDiv.innerText = 'To Be Budgeted (%)';
 				}
 				
+				// Anchor Icons
+				createImageAnchor(categoryIdKey, documentOrFragment);
+				
 				minusSign = '-';
 				budgetAvailableToSpendOrSave = Math.abs(budgetAvailableToSpendOrSave);
 			} else {
 				budgetLabelDiv.innerText = 'Remaining (%)';
+				
+				// Remove the compensation anchor if it is present
+				var compensateAnchor = document.getElementById('compensateAnchor-'+ categoryIdKey);
+				if(compensateAnchor != null) {
+					compensateAnchor.parentNode.removeChild(compensateAnchor);
+				}
 			}
 			
 			// Change the remaining text appropriately
@@ -482,6 +491,29 @@ $(document).ready(function(){
 		}
 	}
 	
+	// Create image anchor for compensating budget icon
+	function createImageAnchor(categoryIdKey, documentOrFragment) {
+		let actionIconsDiv = documentOrFragment.getElementById('actionIcons-' + categoryIdKey);
+		let checkImageExistsDiv = document.getElementById('compensateBudgetImage-' + categoryIdKey);
+		// If the compensation anchor exists do not create it
+		if(checkImageExistsDiv == null) {
+			// Document Fragment for compensation
+			let compensationDocumentFragment = document.createDocumentFragment();
+			let compensationIconsDiv = document.createElement('a');
+			compensationIconsDiv.classList = 'compensateAnchor';
+			compensationIconsDiv.id='compensateAnchor-' + categoryIdKey;
+			
+			let compensationImage = document.createElement('img');
+			compensationImage.id= 'compensateBudgetImage-' + categoryIdKey;
+			compensationImage.classList = 'compensateBudgetImage';
+			compensationImage.src = '../img/dashboard/budget/icons8-merge-16.png'
+			compensationIconsDiv.appendChild(compensationImage);
+			compensationDocumentFragment.appendChild(compensationIconsDiv);
+			// Insert as a first child
+			actionIconsDiv.insertBefore(compensationDocumentFragment, actionIconsDiv.childNodes[0]);
+		}
+	}
+	
 	// Add click event listener to delete the budget
 	$('#budgetAmount').on('click', '.deleteBudget' , function(e) {
 		let deleteButtonElement = this;
@@ -490,6 +522,12 @@ $(document).ready(function(){
 		// Show the material spinner and hide the delete button
 		document.getElementById('deleteElementSpinner-' + categoryId).classList.toggle('d-none');
 		this.classList.toggle('d-none');
+		
+		// Hide the recurrence if present
+		compensateBudget = document.getElementById('compensateBudgetImage-' + categoryId);
+		if(compensateBudget != null) {
+			compensateBudget.classList.toggle('d-none');
+		}
 		
 		// Security check to ensure that the budget is present
 		if(isEmpty(userBudgetCache[categoryId])) {
@@ -819,11 +857,11 @@ $(document).ready(function(){
 	
 	// Change trigger on select
 	$( "#budgetAmount" ).on( "change", ".categoryOptions" ,function() {
-		let categoryId = lastElement(splitElement($(this).attr('id'), '-'));
-		
+		let categoryId = lastElement(splitElement(this.id, '-'));
+
 		// Make sure that the category selected is not budgeted
 		let allUnbudgetedCategories = returnUnbudgetedCategories();
-		if(!includesStr(allUnbudgetedCategories,$(this).val())) {
+		if(!includesStr(allUnbudgetedCategories,this.value)) {
 			showNotification('The selected category already has a budget. Please choose a different category!','top','center','danger');
 			return;
 		}
@@ -831,7 +869,7 @@ $(document).ready(function(){
 		// Call the change of category services
 		let values = {};
 		values['category_id'] = categoryId; 
-		values['newCategoryId'] = $(this).val();
+		values['newCategoryId'] = this.value;
 		values['dateMeantFor'] = chosenDate;
 		$.ajax({
 	          type: "POST",
@@ -888,6 +926,14 @@ $(document).ready(function(){
 	        	 
 	        	 let deleteElementSpinnerDiv = document.getElementById('deleteElementSpinner-' + categoryId);
 	        	 deleteElementSpinnerDiv.id = 'deleteElementSpinner-' + userBudget.categoryId;
+	        	 
+	        	 let actionIconsDiv = document.getElementById('actionIcons-' + categoryId);
+	        	 actionIconsDiv.id = 'actionIcons-' + userBudget.categoryId;
+	        	 
+	        	 let compensateAnchorDiv = document.getElementById('compensateAnchor-' + categoryId);
+	        	 if(compensateAnchorDiv != null) {
+	        		 compensateAnchorDiv.parentNode.removeChild(compensateAnchorDiv);
+	        	 }
 	        	 
 	        	// Handle the update of the progress bar modal
      			updateProgressBarAndRemaining(userBudget.categoryId, document);
@@ -996,5 +1042,65 @@ $(document).ready(function(){
 		
 		return categoryIdArray;
 	}
+	
+	// Compensate Budget Module
+	$('#budgetAmount').on('click', '.compensateAnchor' , function(e) {
+		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
+		let anchorDropdownItemFragment = document.createDocumentFragment();
+		let categoryId = lastElement(splitElement(this.id, '-'));
+		let userBudgetAndTotalAvailable = {};
+		
+		// If user budget or the category is empty then show the message
+		if(isEmpty(userBudgetCache) || isEmpty(userBudgetCache[categoryId])) {
+			showNotification('You do not have any budgets to compensate it with!','top','center','danger');
+			return;
+		}
+		
+		// Build a category available cache
+		let selectedCategoryParentCategory = categoryMap[categoryId].parentCategory;
+		let dataKeySet = Object.keys(userBudgetCache);
+		for(let count = 0, length = dataKeySet.length; count < length; count++) {
+			let key = dataKeySet[count];
+      	  	let userBudgetValue = userBudgetCache[key];
+      	  
+      	  	if(isEmpty(userBudgetValue)) {
+      	  		continue;
+      	  	}
+      	  	
+      	  	let categoryTotalValue = categoryTotalMapCache[key];
+      	  	if(isEmpty(categoryTotalValue)) {
+      	  		userBudgetAndTotalAvailable[key] = userBudgetValue.planned;
+      	  	} else if(isNotEmpty(categoryTotalValue) && userBudgetValue.planned > categoryTotalValue) {
+      	  		userBudgetAndTotalAvailable[key] = userBudgetValue.planned - categoryTotalValue;
+      	  	}
+      	  	debugger;
+      	  	// Build category available select (with the same parent category)
+      	  	if(compensationDropdownMenu.childNodes[0] == null || isNotEmpty(userBudgetAndTotalAvailable[key]) || isEqual(selectedCategoryParentCategory,categoryMap[key].parentCategory)) {
+      	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetValue, compensationDropdownMenu));
+      	  	}
+		}
+		
+		// If there are no user budget available to compensate then show message
+		if(isEmpty(userBudgetAndTotalAvailable)) {
+			showNotification('You do not have any budgets available to compensate it with!','top','center','danger');
+			return;
+		}
+		
+		
+		compensationDropdownMenu.appendChild(anchorDropdownItemFragment);
+		$('#categoryCompensationModal').modal('show');
+		
+	});
+	
+	// Build category compensation modal anchor
+	function buildCategoryAvailableToCompensate(userBudgetValue, compensationDropdownMenu) {
+		let anchorDropdownItem = document.createElement('a');
+		anchorDropdownItem.classList = 'dropdown-item compensationDropdownMenu';
+		anchorDropdownItem.id = 'categoryItemAvailable1-' + userBudgetValue.categoryId;
+		anchorDropdownItem.innerText = categoryMap[userBudgetValue.categoryId].categoryName;
+		
+		return anchorDropdownItem;
+	}
+	
 	
 });

@@ -638,7 +638,7 @@ $(document).ready(function(){
 
 	// Show or hide multiple rows in the transactions table
 	$( "#transactionsTable" ).on( "click", ".toggle" ,function() {
-		let categoryId = lastElement(splitElement($(this).attr('id'),'-'));
+		let categoryId = lastElement(splitElement(this.id,'-'));
 		
 		if(er.checkIfInvalidCategory(categoryId)) {
 			return;
@@ -690,19 +690,19 @@ $(document).ready(function(){
 	
 	// Change trigger on select
 	$( "#transactionsTable" ).on( "change", ".tableRowForSelectCategory" ,function() {
-		let categoryId = $(this).attr('id');
+		let categoryId = this.id;
 		let selectedTransactionId = splitElement(categoryId,'-');
 		let classList = $('#' + categoryId).length > 0 ? $('#' + categoryId)[0].classList : null;
 		
 		if(isNotEmpty(classList)) {
 			
 			// Ensure that the category id is valid
-			if(er.checkIfInvalidCategory($(this).val())) {
+			if(er.checkIfInvalidCategory(this.value)) {
 				return;
 			}
 			
 			let values = {};
-			values['categoryId'] = $(this).val();
+			values['categoryId'] = this.value;
 			values['transactionId'] = selectedTransactionId[selectedTransactionId.length - 1];
 			values['dateMeantFor'] = chosenDate;
 			$.ajax({
@@ -837,7 +837,7 @@ $(document).ready(function(){
 		  }
 		  
 		  let amountEntered = er.convertToNumberFromCurrency(this.innerText,currentCurrencyPreference);
-		  let selectTransactionId = splitElement($(this).attr('id'),'-');
+		  let selectTransactionId = splitElement(this.id,'-');
 		  // Handles the addition of buttons in the budget column for the row
 		  appendButtonForAmountEdition(amountEntered, selectTransactionId);
 	});
@@ -1246,7 +1246,7 @@ $(document).ready(function(){
 		 // stop the event from bubbling.
 		 event.stopPropagation();
 		 event.stopImmediatePropagation();
-		 let id = lastElement(splitElement($(this).attr('id'),'-'));
+		 let id = lastElement(splitElement(this.id,'-'));
 		 let values = {};
 		 values['amount'] = 0.00;
 		 values['description'] = '';
