@@ -556,7 +556,7 @@ $(document).ready(function(){
             	  if(isEmpty(userBudgetCache)) {
             		  let datesCache = [];
             		  for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++){
-            			  let iteratedDate = '0' + datesWithUserBudgetData[count];
+            			  
             			  // ignore the chosen date
             			  if(Number(datesWithUserBudgetData) != Number(chosenDate)) {
             				  datesCache.push(datesWithUserBudgetData[count]);
