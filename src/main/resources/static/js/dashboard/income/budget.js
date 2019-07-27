@@ -1073,7 +1073,7 @@ $(document).ready(function(){
       	  	} else if(isNotEmpty(categoryTotalValue) && userBudgetValue.planned > categoryTotalValue) {
       	  		userBudgetAndTotalAvailable[key] = userBudgetValue.planned - categoryTotalValue;
       	  	}
-      	  	debugger;
+      	  	
       	  	// Build category available select (with the same parent category)
       	  	if(compensationDropdownMenu.childNodes[0] == null || isNotEmpty(userBudgetAndTotalAvailable[key]) || isEqual(selectedCategoryParentCategory,categoryMap[key].parentCategory)) {
       	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetValue, compensationDropdownMenu));
