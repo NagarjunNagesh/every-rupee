@@ -1085,7 +1085,7 @@ $(document).ready(function(){
       	  	
       	  	// Build category available select (with the same parent category)
       	  	if(!compensationDropdownMenu.firstElementChild && isNotEmpty(userBudgetAndTotalAvailable[key])) {
-      	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetAndTotalAvailable[key], userBudgetValue, compensationDropdownMenu));
+      	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetAndTotalAvailable[key], userBudgetValue));
       	  	}
 		}
 		
@@ -1110,7 +1110,7 @@ $(document).ready(function(){
 	});
 	
 	// Build category compensation modal anchor
-	function buildCategoryAvailableToCompensate(userBudgetTotalAvailable, userBudgetValue, compensationDropdownMenu) {
+	function buildCategoryAvailableToCompensate(userBudgetTotalAvailable, userBudgetValue) {
 		let anchorDropdownItem = document.createElement('a');
 		anchorDropdownItem.classList = 'dropdown-item compensationDropdownMenu';
 		anchorDropdownItem.id = 'categoryItemAvailable1-' + userBudgetValue.categoryId;
@@ -1120,7 +1120,7 @@ $(document).ready(function(){
 		
 		let categoryLabelDiv = document.createElement('div');
 		categoryLabelDiv.classList = 'col-lg-6 text-left';
-		categoryLabelDiv.innerText = categoryMap[userBudgetValue.categoryId].categoryName;;
+		categoryLabelDiv.innerText = categoryMap[userBudgetValue.categoryId].categoryName;
 		categoryAvailableRow.appendChild(categoryLabelDiv);
 		
 		let categoryAmountAvailableDiv = document.createElement('div');
