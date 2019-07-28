@@ -15,6 +15,10 @@ $(document).ready(function(){
 	// last Budgeted Month
 	let lastBudgetedMonthName = '';
 	let lastBudgetMonth = 0;
+	// Category Compensation Modal Values
+	let userBudgetAndTotalAvailable = {};
+	// Category modal user budget category id;
+	let categoryForModalOpened = '';
 	
 	/**
 	 * START loading the page
@@ -427,7 +431,7 @@ $(document).ready(function(){
 		let categoryTotalAmount = categoryTotalMapCache[categoryIdKey];
 		
 		let userBudgetValue = userBudgetCache[categoryIdKey];
-
+		
 		let remainingAmountDiv = documentOrFragment.getElementById('remainingAmount-' + categoryIdKey);
 		let remainingAmountPercentageDiv = documentOrFragment.getElementById('percentageAvailable-' + categoryIdKey);
 		let budgetLabelDiv = documentOrFragment.getElementById('budgetInfoLabelInModal-' + categoryIdKey);
@@ -1041,12 +1045,17 @@ $(document).ready(function(){
 		return categoryIdArray;
 	}
 	
-	// Compensate Budget Module
+	/**
+	 *  Compensate Budget Module
+	 */
 	$('#budgetAmount').on('click', '.compensateAnchor' , function() {
+		let categoryCompensationTitle = document.getElementById('categoryCompensationTitle');
 		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
 		let anchorDropdownItemFragment = document.createDocumentFragment();
 		let categoryId = lastElement(splitElement(this.id, '-'));
-		let userBudgetAndTotalAvailable = {};
+		// Reset the cached variables
+		userBudgetAndTotalAvailable = {};
+		categoryForModalOpened = categoryId;
 		
 		// If user budget or the category is empty then show the message
 		if(isEmpty(userBudgetCache) || isEmpty(userBudgetCache[categoryId])) {
@@ -1061,20 +1070,22 @@ $(document).ready(function(){
 			let key = dataKeySet[count];
       	  	let userBudgetValue = userBudgetCache[key];
       	  
-      	  	if(isEmpty(userBudgetValue)) {
+      	  	if(isEmpty(userBudgetValue) || isNotEqual(selectedCategoryParentCategory,categoryMap[key].parentCategory)) {
       	  		continue;
       	  	}
       	  	
       	  	let categoryTotalValue = categoryTotalMapCache[key];
-      	  	if(isEmpty(categoryTotalValue)) {
+      	  	// If the category total map is empty and if the user budget is > 0
+      	  	if(isEmpty(categoryTotalValue) && userBudgetValue.planned > 0) {
       	  		userBudgetAndTotalAvailable[key] = userBudgetValue.planned;
       	  	} else if(isNotEmpty(categoryTotalValue) && userBudgetValue.planned > categoryTotalValue) {
+      	  	// If the category total map is not empty and if the user budget amount is > category total
       	  		userBudgetAndTotalAvailable[key] = userBudgetValue.planned - categoryTotalValue;
       	  	}
       	  	
       	  	// Build category available select (with the same parent category)
-      	  	if(compensationDropdownMenu.childNodes[0] == null || isNotEmpty(userBudgetAndTotalAvailable[key]) || isEqual(selectedCategoryParentCategory,categoryMap[key].parentCategory)) {
-      	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetValue, compensationDropdownMenu));
+      	  	if(!compensationDropdownMenu.firstElementChild && isNotEmpty(userBudgetAndTotalAvailable[key])) {
+      	  		anchorDropdownItemFragment.appendChild(buildCategoryAvailableToCompensate(userBudgetAndTotalAvailable[key], userBudgetValue));
       	  	}
 		}
 		
@@ -1085,19 +1096,114 @@ $(document).ready(function(){
 		}
 		
 		
+		// Get the user Budget overspending
+		let userBudgetOverSpending = userBudgetCache[categoryId].planned -  categoryTotalMapCache[categoryId];
+		userBudgetOverSpending = currentCurrencyPreference + formatNumber(Math.abs(userBudgetOverSpending), currentUser.locale);
+		// Set the title of the modal
+		categoryCompensationTitle.innerHTML = 'Compensate <strong> &nbsp' +  categoryMap[categoryId].categoryName + "'s &nbsp</strong>Overspending Of <strong> &nbsp" + userBudgetOverSpending + '&nbsp </strong> With';
+		
+		// Upload the anchor fragment to the modal
 		compensationDropdownMenu.appendChild(anchorDropdownItemFragment);
+		// Show the modal
 		$('#categoryCompensationModal').modal('show');
 		
 	});
 	
 	// Build category compensation modal anchor
-	function buildCategoryAvailableToCompensate(userBudgetValue, compensationDropdownMenu) {
+	function buildCategoryAvailableToCompensate(userBudgetTotalAvailable, userBudgetValue) {
 		let anchorDropdownItem = document.createElement('a');
 		anchorDropdownItem.classList = 'dropdown-item compensationDropdownMenu';
 		anchorDropdownItem.id = 'categoryItemAvailable1-' + userBudgetValue.categoryId;
-		anchorDropdownItem.innerText = categoryMap[userBudgetValue.categoryId].categoryName;
+		
+		let categoryAvailableRow = document.createElement('div');
+		categoryAvailableRow.classList = 'row h-100';
+		
+		let categoryLabelDiv = document.createElement('div');
+		categoryLabelDiv.classList = 'col-lg-6 text-left';
+		categoryLabelDiv.innerText = categoryMap[userBudgetValue.categoryId].categoryName;
+		categoryAvailableRow.appendChild(categoryLabelDiv);
+		
+		let categoryAmountAvailableDiv = document.createElement('div');
+		categoryAmountAvailableDiv.classList = 'col-lg-6 text-right small my-auto text-small-success';
+		let printUserBudgetMoney = isNaN(userBudgetTotalAvailable) ? 0.00 : userBudgetTotalAvailable; 
+		categoryAmountAvailableDiv.innerText = currentCurrencyPreference + formatNumber(printUserBudgetMoney, currentUser.locale);
+		categoryAvailableRow.appendChild(categoryAmountAvailableDiv);
+		anchorDropdownItem.appendChild(categoryAvailableRow);
 		
 		return anchorDropdownItem;
+	}
+	
+	// Category compensation remove anchors while hiding the modal 
+	$('#categoryCompensationModal').on('hidden.bs.modal', function () {
+		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
+		while (compensationDropdownMenu.firstChild) {
+			compensationDropdownMenu.removeChild(compensationDropdownMenu.firstChild);
+		}
+	});
+	
+	// On click drop down of the category available to compensate
+	$('.modal-body').on('click', '.compensationDropdownMenu' , function() {
+		let selectedCategoryId = lastElement(splitElement(this.id, '-'));
+		let compensationDisplay = document.getElementsByClassName('categoryChosenCompensation-1');
+		// Post a budget amount change to the user budget module and change to auto generated as false. 
+		var values = {};
+		values['autoGenerated'] = 'false';
+		values['dateMeantFor'] = chosenDate;
+		
+		if(compensationDisplay == null || isEmpty(categoryMap[selectedCategoryId]) || isEmpty(categoryMap[categoryForModalOpened]) || isEmpty(categoryTotalMapCache[categoryForModalOpened])) {
+			showNotification('There was an error while compensating the categories. Try refreshing the page!','top','center','danger');
+			return;
+		}
+		
+		// Replace the compensated category name
+		compensationDisplay[0].innerText = categoryMap[selectedCategoryId].categoryName;
+		
+		// Fetch category And Total Remaining
+		let categoryBudgetAvailable = userBudgetAndTotalAvailable[selectedCategoryId];
+		// Calculate the amount necessary
+		let recalculateUserBudgetOverspent = categoryTotalMapCache[categoryForModalOpened] - userBudgetCache[categoryForModalOpened].planned;
+		
+		values['planned'] = categoryTotalMapCache[categoryForModalOpened];
+		values['category_id'] = categoryForModalOpened;
+		callBudgetAmountChange(values);
+		
+		// As the recalculateUserBudgetOverspent is (-amount)
+		if(recalculateUserBudgetOverspent > categoryBudgetAvailable) {
+				values['planned'] = userBudgetCache[selectedCategoryId].planned - categoryBudgetAvailable;
+				values['category_id'] = selectedCategoryId;
+				callBudgetAmountChange(values);
+				// TODO add second category
+		} else if(recalculateUserBudgetOverspent <= categoryBudgetAvailable) {
+				values['planned'] = userBudgetCache[selectedCategoryId].planned - recalculateUserBudgetOverspent;
+				values['category_id'] = selectedCategoryId;
+				callBudgetAmountChange(values);
+			
+				// Show the modal
+				$('#categoryCompensationModal').modal('hide');
+		}
+		
+	});
+	
+	// Save Budget by changing amount
+	function callBudgetAmountChange(values) {
+		$.ajax({
+	          type: "POST",
+	          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	          data : values,
+	          success: function(userBudget){
+	        	  // Update the cache containing user budgets
+	        	  userBudgetCache[userBudget.categoryId] = userBudget;
+	        	  
+	        	  // Update the modal
+	        	  updateProgressBarAndRemaining(userBudget.categoryId, document);
+	        	  
+	        	  // Update the budget amount
+	        	  let budgetAmountChange = document.getElementById('budgetAmountEntered-' + userBudget.categoryId);
+	        	  budgetAmountChange.innerText = currentCurrencyPreference + formatNumber(userBudget.planned, currentUser.locale);
+	          }
+		});
 	}
 	
 	
