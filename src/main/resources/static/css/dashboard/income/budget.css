@@ -250,3 +250,59 @@
 	transition: opacity 600ms, visibility 600ms;
 	-webkit-transition: opacity 600ms, visibility 600ms;
 }
+
+#categoryCompensationModal .card-title {
+	font-size: 0.9rem;
+	color: #929292;	
+}
+
+#categoryCompensationModal .modal-dialog .modal-header .close {
+    color: #999;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+#categoryCompensationModal .modal-dialog .card-plain {
+    padding: 2rem 0 0 0;
+    margin: 0 auto;
+}
+
+#categoryCompensationModal .modal-dialog .modal-header {
+    border-bottom: 0;
+    padding: 24px 24px 0;
+    padding-top: 24px;
+    padding-top: 24px;
+}
+
+#categoryCompensationModal .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+}
+
+#categoryCompensationModal .modal-footer {
+	display: inline-block;	
+}
+
+.dropdown-menu .dropdown-item.compensationDropdownMenu:hover {
+	box-shadow: 0 4px 20px 0 rgba(0,0,0,0.14),0 7px 10px -5px rgba(176, 39, 83, 0.4);
+	background-color: #ea2c6d;
+	color: #fff;
+}
+
+.text-small-success {
+	color: green;
+}
+
+.compensationDropdownMenu:hover .text-small-success {
+	color: #fff;
+}
+
+.compensationDropdownMenu {
+	cursor: pointer;
+}
