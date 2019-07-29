@@ -1056,6 +1056,7 @@ $(document).ready(function(){
 		// Reset the cached variables
 		userBudgetAndTotalAvailable = {};
 		categoryForModalOpened = categoryId;
+		$('.displaySelectedCompensationCat').remove();
 		
 		// If user budget or the category is empty then show the message
 		if(isEmpty(userBudgetCache) || isEmpty(userBudgetCache[categoryId])) {
@@ -1115,30 +1116,32 @@ $(document).ready(function(){
 		anchorDropdownItem.classList = 'dropdown-item compensationDropdownMenu';
 		anchorDropdownItem.id = 'categoryItemAvailable1-' + userBudgetValue.categoryId;
 		
-		let categoryAvailableRow = document.createElement('div');
-		categoryAvailableRow.classList = 'row h-100';
-		
 		let categoryLabelDiv = document.createElement('div');
-		categoryLabelDiv.classList = 'col-lg-6 text-left';
+		categoryLabelDiv.classList = 'compensationCatSelectionName font-weight-bold';
 		categoryLabelDiv.innerText = categoryMap[userBudgetValue.categoryId].categoryName;
-		categoryAvailableRow.appendChild(categoryLabelDiv);
+		anchorDropdownItem.appendChild(categoryLabelDiv);
 		
 		let categoryAmountAvailableDiv = document.createElement('div');
-		categoryAmountAvailableDiv.classList = 'col-lg-6 text-right small my-auto text-small-success';
+		categoryAmountAvailableDiv.classList = 'text-right small my-auto text-small-success compensationCatSelectionAmount';
 		let printUserBudgetMoney = isNaN(userBudgetTotalAvailable) ? 0.00 : userBudgetTotalAvailable; 
 		categoryAmountAvailableDiv.innerText = currentCurrencyPreference + formatNumber(printUserBudgetMoney, currentUser.locale);
-		categoryAvailableRow.appendChild(categoryAmountAvailableDiv);
-		anchorDropdownItem.appendChild(categoryAvailableRow);
+		anchorDropdownItem.appendChild(categoryAmountAvailableDiv);
 		
 		return anchorDropdownItem;
 	}
 	
 	// Category compensation remove anchors while hiding the modal 
 	$('#categoryCompensationModal').on('hidden.bs.modal', function () {
+		// Remove all anchors from the dropdown menu
 		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
 		while (compensationDropdownMenu.firstChild) {
 			compensationDropdownMenu.removeChild(compensationDropdownMenu.firstChild);
 		}
+		
+		let compensationDisplay = document.getElementsByClassName('categoryChosenCompensation-1');
+		// Replace the compensated category name
+		compensationDisplay[0].innerText = 'Choose category';
+		
 	});
 	
 	// On click drop down of the category available to compensate
@@ -1163,26 +1166,87 @@ $(document).ready(function(){
 		// Calculate the amount necessary
 		let recalculateUserBudgetOverspent = categoryTotalMapCache[categoryForModalOpened] - userBudgetCache[categoryForModalOpened].planned;
 		
-		values['planned'] = categoryTotalMapCache[categoryForModalOpened];
-		values['category_id'] = categoryForModalOpened;
-		callBudgetAmountChange(values);
-		
 		// As the recalculateUserBudgetOverspent is (-amount)
 		if(recalculateUserBudgetOverspent > categoryBudgetAvailable) {
+				values['planned'] = userBudgetCache[categoryForModalOpened].planned + categoryBudgetAvailable;
+				values['category_id'] = categoryForModalOpened;
+				callBudgetAmountChange(values);
+			
 				values['planned'] = userBudgetCache[selectedCategoryId].planned - categoryBudgetAvailable;
 				values['category_id'] = selectedCategoryId;
 				callBudgetAmountChange(values);
-				// TODO add second category
+				
+				cloneAnchorToBodyAndRemoveDropdown(selectedCategoryId);
+				
+				// Check if there are any new dropdown elements available
+				let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
+				if(!compensationDropdownMenu.firstElementChild) {
+					// Hide the modal
+					$('#categoryCompensationModal').modal('hide');
+					return;
+				}
+				
+				let categoryCompensationTitle = document.getElementById('categoryCompensationTitle');
+				// Set the title of the modal with the new amount necessary for compensation
+				categoryCompensationTitle.innerHTML = 'Compensate <strong> &nbsp' +  categoryMap[categoryForModalOpened].categoryName + "'s &nbsp</strong>Overspending Of <strong> &nbsp" + currentCurrencyPreference + formatNumber((recalculateUserBudgetOverspent - categoryBudgetAvailable), currentUser.locale) + '&nbsp </strong> With';
+				
+				// Replace the compensated category name
+				compensationDisplay[0].innerText = 'Choose category';
+				
+				
 		} else if(recalculateUserBudgetOverspent <= categoryBudgetAvailable) {
+				values['planned'] = categoryTotalMapCache[categoryForModalOpened];
+				values['category_id'] = categoryForModalOpened;
+				callBudgetAmountChange(values);
+			
 				values['planned'] = userBudgetCache[selectedCategoryId].planned - recalculateUserBudgetOverspent;
 				values['category_id'] = selectedCategoryId;
 				callBudgetAmountChange(values);
 			
-				// Show the modal
+				// Hide the modal
 				$('#categoryCompensationModal').modal('hide');
 		}
 		
+		
 	});
+	
+	// Clones the anchor dropdown to the body of the compensation budget modal 
+	function cloneAnchorToBodyAndRemoveDropdown(selectedCategoryId) {
+		let anchorTag = document.getElementById('categoryItemAvailable1-' + selectedCategoryId);
+		let referenceBodyModal = document.getElementById('compensationModalBody');
+		let anchorFragment = document.createDocumentFragment();
+		// Append and remove (Move element)
+		anchorFragment.appendChild(anchorTag);
+		
+		// Change the anchor tag
+		let newAnchorTag = anchorFragment.getElementById('categoryItemAvailable1-' + selectedCategoryId);
+		newAnchorTag.id = 'categoryItemSelected-' + selectedCategoryId;
+		newAnchorTag.classList = 'removeAlreadyAddedCompensation';
+		newAnchorTag.firstChild.classList = 'col-lg-6 text-left font-weight-bold';
+		newAnchorTag.lastChild.classList = 'col-lg-4 text-right text-small-success text-nowrap pl-0';
+		
+		// Div wrapper to create rows
+		let newDivWrapper = document.createElement('div');
+		newDivWrapper.classList = 'row displaySelectedCompensationCat';
+		newDivWrapper.appendChild(newAnchorTag.firstChild);
+		newDivWrapper.appendChild(newAnchorTag.lastChild);
+		
+		
+		// Close button wrapper
+		let closeButtonWrapper = document.createElement('div');
+		closeButtonWrapper.classList = 'col-lg-2 text-center';
+		
+		// Close button
+		let closeIconElement = document.createElement('i');
+		closeIconElement.className = 'material-icons closeElementCompensation';
+		closeIconElement.innerHTML = 'close';
+		closeButtonWrapper.appendChild(closeIconElement);
+		newDivWrapper.appendChild(closeButtonWrapper);
+		newAnchorTag.appendChild(newDivWrapper);
+		
+		// Append the anchor fragment to the top of the list
+		referenceBodyModal.parentNode.insertBefore(anchorFragment, referenceBodyModal.childNodes[0]);
+	}
 	
 	// Save Budget by changing amount
 	function callBudgetAmountChange(values) {
@@ -1202,8 +1266,21 @@ $(document).ready(function(){
 	        	  // Update the budget amount
 	        	  let budgetAmountChange = document.getElementById('budgetAmountEntered-' + userBudget.categoryId);
 	        	  budgetAmountChange.innerText = currentCurrencyPreference + formatNumber(userBudget.planned, currentUser.locale);
+	          },
+	          error: function(thrownError) {
+	        	  var responseError = JSON.parse(thrownError.responseText);
+	        	  if(responseError.error.includes("Unauthorized")){
+	        		  er.sessionExpiredSwal(thrownError);
+	        	  } else{
+	        		  showNotification('Unable to change the budget category amount at this moment. Please try again!','top','center','danger');
+	        	  }
 	          }
 		});
+	}
+	
+	// Remove the budget compensation
+	function removeCompensatedBudget() {
+		
 	}
 	
 	
