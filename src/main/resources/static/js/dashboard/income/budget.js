@@ -1,4 +1,4 @@
-
+"use strict";
 $(document).ready(function(){
 	// Currency Preference
 	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
@@ -1145,7 +1145,7 @@ $(document).ready(function(){
 	});
 	
 	// On click drop down of the category available to compensate
-	$('.modal-body').on('click', '.compensationDropdownMenu' , function() {
+	$('.modal-footer').on('click', '.compensationDropdownMenu' , function() {
 		let selectedCategoryId = lastElement(splitElement(this.id, '-'));
 		let compensationDisplay = document.getElementsByClassName('categoryChosenCompensation-1');
 		// Post a budget amount change to the user budget module and change to auto generated as false. 
@@ -1165,7 +1165,7 @@ $(document).ready(function(){
 		let categoryBudgetAvailable = userBudgetAndTotalAvailable[selectedCategoryId];
 		// Calculate the amount necessary
 		let recalculateUserBudgetOverspent = categoryTotalMapCache[categoryForModalOpened] - userBudgetCache[categoryForModalOpened].planned;
-		
+		debugger;
 		// As the recalculateUserBudgetOverspent is (-amount)
 		if(recalculateUserBudgetOverspent > categoryBudgetAvailable) {
 				values['planned'] = userBudgetCache[categoryForModalOpened].planned + categoryBudgetAvailable;
@@ -1207,7 +1207,6 @@ $(document).ready(function(){
 				$('#categoryCompensationModal').modal('hide');
 		}
 		
-		
 	});
 	
 	// Clones the anchor dropdown to the body of the compensation budget modal 
@@ -1245,7 +1244,7 @@ $(document).ready(function(){
 		newAnchorTag.appendChild(newDivWrapper);
 		
 		// Append the anchor fragment to the top of the list
-		referenceBodyModal.parentNode.insertBefore(anchorFragment, referenceBodyModal.childNodes[0]);
+		referenceBodyModal.appendChild(anchorFragment);
 	}
 	
 	// Save Budget by changing amount
@@ -1278,9 +1277,21 @@ $(document).ready(function(){
 		});
 	}
 	
-	// Remove the budget compensation
-	function removeCompensatedBudget() {
+	// Click the delete budget compensated
+	$('.modal-footer').on('click', '.removeAlreadyAddedCompensation' , function() {
+		let toDeleteCategoryId = lastElement(splitElement(element.id,'-'));
 		
+		if(categoryMap[toDeleteCategoryId] || userBudgetAndTotalAvailable[toDeleteCategoryId]) {
+			showNotification('Please refresh the page and try again!','top','center','danger');
+			return;
+		}
+		
+		removeCompensatedBudget(this, toDeleteCategoryId);
+	});
+	
+	// Remove the budget compensation
+	function removeCompensatedBudget(element, toDeleteCategoryId) {
+		userBudgetAndTotalAvailable[toDeleteCategoryId];
 	}
 	
 	

@@ -1,3 +1,4 @@
+"use strict";
 // Custom Javascript for dashboard
 //Stores the Loggedin User
 let currentUser = '';
