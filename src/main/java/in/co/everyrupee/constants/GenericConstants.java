@@ -93,4 +93,7 @@ public class GenericConstants {
     // Date Format
     public static final String DATE_FORMAT_FRONTEND = "ddMMyyyy";
 
+    // FinancialPortfolio validation
+    public static final int MAX_ALLOWED_LENGTH_FINANCIAL_PORTFOLIO = 60;
+
 }

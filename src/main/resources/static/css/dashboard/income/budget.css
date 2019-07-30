@@ -94,7 +94,7 @@
 	background-image: url("../../../img/dashboard/budget/icons8-merge-rose-16.png");
 }
 
-.deleteIconWrapper, .compensateBudgetImage {
+.deleteIconWrapper, .compensateBudgetImage, .closeElementCompensation {
 	color: #999;
 }
 
@@ -303,4 +303,30 @@
 
 .compensationDropdownMenu {
 	cursor: pointer;
+}
+
+.closeElementCompensation { 
+	font-size: 1.1rem;
+}
+
+.displaySelectedCompensationCat {
+	padding: 1rem;
+	cursor: pointer;
+}
+
+.displaySelectedCompensationCat:hover .text-center > i {
+	color: #e91e63;
+}
+
+.compensationCatSelectionName, .compensationCatSelectionAmount {
+	white-space: nowrap;
+	padding: 0 0.5rem;
+} 
+
+.displaySelectedCompensationCat:hover {
+	box-shadow: 0 14px 26px -12px rgba(250,250,250,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(250,250,250,0.2);
+	background-color: #fafafa;
+	border-color: #ccc;
+	margin-left: -10px;
+	margin-right: -10px;
 }

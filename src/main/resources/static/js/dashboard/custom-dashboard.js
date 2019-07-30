@@ -1,3 +1,4 @@
+"use strict";
 // Custom Javascript for dashboard
 //Stores the Loggedin User
 let currentUser = '';
@@ -11,7 +12,7 @@ let currentActiveSideBar = '';
 //Load Expense category and income category
 let expenseSelectionOptGroup = document.createDocumentFragment();
 let incomeSelectionOptGroup = document.createDocumentFragment();
-let fetchCurrentLoggedInUserUrl = "/api/user/";
+let fetchCurrentLoggedInUserUrl = "/user/";
 let fetchCategoriesUrl = "/api/category/";
 let categoryMap = {};
 //Expense Category
