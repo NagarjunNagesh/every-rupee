@@ -16,7 +16,7 @@ import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.service.login.ProfileService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
