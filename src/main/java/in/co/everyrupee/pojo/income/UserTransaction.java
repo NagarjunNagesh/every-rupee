@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -49,10 +51,12 @@ public class UserTransaction implements Serializable {
 
     @NotNull
     @Column(name = DashboardConstants.Transactions.FINANCIAL_PORTFOLIO_ID)
+    @Size(max = 60)
     private String financialPortfolioId;
 
     @NotNull
     @Column(name = DashboardConstants.Transactions.AMOUNT)
+    @PositiveOrZero
     private double amount;
 
     @NotNull

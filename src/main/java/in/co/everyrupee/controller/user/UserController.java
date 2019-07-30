@@ -1,6 +1,8 @@
 package in.co.everyrupee.controller.user;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class UserController {
 
     // Delete a User Transaction
     @GetMapping("/")
-    public Profile fetchUsersById(Principal userPrincipal) {
+    public Map<String, Object> fetchUsersById(Principal userPrincipal) {
 	if (userPrincipal == null) {
 	    throw new SecurityException();
 	}
@@ -30,7 +32,15 @@ public class UserController {
 	MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	Optional<Profile> profile = profileService.findUserByEmail(user.getUsername());
 
-	return profile.isPresent() ? profile.get() : null;
+	if (!profile.isPresent()) {
+	    return null;
+	}
+
+	Map<String, Object> profileInformation = new HashMap<String, Object>();
+	profileInformation.put("financialPortfolioId", profile.get().getFinancialPortfolioId());
+	profileInformation.put("locale", profile.get().getLocale());
+
+	return profileInformation;
     }
 
     // TODO Updates locale for the current user

@@ -1,5 +1,6 @@
 package in.co.everyrupee.service.login;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ import in.co.everyrupee.pojo.login.Role;
 import in.co.everyrupee.repository.login.ProfileRepository;
 import in.co.everyrupee.repository.login.RoleRepository;
 import in.co.everyrupee.security.LoginAttemptService;
+import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.utils.RegexUtils;
 
 /**
@@ -138,6 +141,26 @@ public class ProfileService {
 	    return getRequest().getRemoteAddr();
 	}
 	return xfHeader.split(",")[0];
+    }
+
+    /**
+     * SECURITY: Prevent Unauthorized access by Client Side Data Modification
+     * 
+     * @param userPrincipal
+     * @param financialPortfolioId
+     */
+    public void validateUser(Principal userPrincipal, String financialPortfolioId) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof MyUser) {
+	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    int clientSideFinancialPortfolioId = Integer.parseInt(financialPortfolioId);
+	    if (user.getFinancialPortfolioId() != clientSideFinancialPortfolioId) {
+		throw new SecurityException();
+	    }
+	}
     }
 
     public ProfileRepository getProfileRepository() {

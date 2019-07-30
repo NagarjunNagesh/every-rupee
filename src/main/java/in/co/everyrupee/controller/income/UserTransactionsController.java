@@ -18,6 +18,7 @@ import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.events.income.OnSaveTransactionCompleteEvent;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.service.income.IUserTransactionService;
+import in.co.everyrupee.service.login.ProfileService;
 import in.co.everyrupee.utils.GenericResponse;
 
 /**
@@ -36,6 +37,9 @@ public class UserTransactionsController {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
+    @Autowired
+    private ProfileService profileService;
+
     /**
      * Get a Single User Transaction
      * 
@@ -47,9 +51,7 @@ public class UserTransactionsController {
     public Object getUserTransactionByFinancialPortfolioId(@PathVariable String pFinancialPortfolioId,
 	    Principal userPrincipal,
 	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
+	getProfileService().validateUser(userPrincipal, pFinancialPortfolioId);
 
 	return userTransactionService.fetchUserTransaction(pFinancialPortfolioId, dateMeantFor);
     }
@@ -65,9 +67,7 @@ public class UserTransactionsController {
     public Map<Integer, Double> getCategoryTotalByFinancialPortfolioId(@PathVariable String pFinancialPortfolioId,
 	    Principal userPrincipal, @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor,
 	    @RequestParam(DashboardConstants.Transactions.UPDATE_BUDGET_PARAM) boolean updateBudget) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
+	getProfileService().validateUser(userPrincipal, pFinancialPortfolioId);
 
 	return userTransactionService.fetchCategoryTotalAndUpdateUserBudget(pFinancialPortfolioId, dateMeantFor,
 		updateBudget);
@@ -84,9 +84,7 @@ public class UserTransactionsController {
     @RequestMapping(value = "/save/{pFinancialPortfolioId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public UserTransaction save(@PathVariable String pFinancialPortfolioId,
 	    @RequestBody MultiValueMap<String, String> formData, Principal userPrincipal) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
+	getProfileService().validateUser(userPrincipal, pFinancialPortfolioId);
 
 	UserTransaction userTransactionResponse = userTransactionService.saveUserTransaction(formData,
 		pFinancialPortfolioId);
@@ -109,9 +107,7 @@ public class UserTransactionsController {
     public GenericResponse deleteUserTransactionById(@PathVariable String pFinancialPortfolioId,
 	    @PathVariable String transactionIds, Principal userPrincipal,
 	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) String dateMeantFor) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
+	getProfileService().validateUser(userPrincipal, pFinancialPortfolioId);
 
 	userTransactionService.deleteUserTransactions(transactionIds, pFinancialPortfolioId, dateMeantFor);
 
@@ -132,14 +128,16 @@ public class UserTransactionsController {
     public UserTransaction updateDescriptionByUserTransactionById(@PathVariable String pFinancialPortfolioId,
 	    @PathVariable String formFieldName, @RequestBody MultiValueMap<String, String> formData,
 	    Principal userPrincipal) {
-	if (userPrincipal == null) {
-	    throw new SecurityException();
-	}
+	getProfileService().validateUser(userPrincipal, pFinancialPortfolioId);
 
 	UserTransaction userTransactionSaved = userTransactionService.updateTransactions(formData, formFieldName,
 		pFinancialPortfolioId);
 
 	return userTransactionSaved;
+    }
+
+    private ProfileService getProfileService() {
+	return profileService;
     }
 
 }

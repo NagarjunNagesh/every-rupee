@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -35,6 +36,7 @@ public class Category implements Serializable {
 
     @NotNull
     @Column(name = DashboardConstants.Category.CATEGORY_NAME)
+    @Size(max = 60)
     private String categoryName;
 
     @NotNull
