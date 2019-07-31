@@ -99,7 +99,7 @@ $(document).ready(function(){
 		values['recurrence'] = recurrenceValue;
 		$.ajax({
 	          type: "POST",
-	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
+	          url: CUSTOM_DASHBOARD_CONSTANTS.saveTransactionsUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 	          data : values,
@@ -154,7 +154,7 @@ $(document).ready(function(){
 	function fetchJSONForTransactions(){
 		// Load all user transaction from API
 		jQuery.ajax({
-			url: transactionAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
+			url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate,
             type: 'GET',
             success: function(result) {
     			let totalExpensesTransactions = 0.00;
@@ -184,9 +184,9 @@ $(document).ready(function(){
      			   transactionsTableDiv.appendChild(createTableCategoryRows(key, countGrouped, categoryAmountTotal));
      			   transactionsTableDiv.appendChild(transactionsRowDocumentFragment);
      			   // Total Expenses and Total Income
-     			   if(categoryMap[key].parentCategory == expenseCategory) {
+     			   if(categoryMap[key].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
      				   totalExpensesTransactions += totalCategoryAmount;
-     			   } else if (categoryMap[key].parentCategory == incomeCategory) {
+     			   } else if (categoryMap[key].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.incomeCategory) {
      				   totalIncomeTransactions += totalCategoryAmount;
      			   }
              	}
@@ -214,7 +214,7 @@ $(document).ready(function(){
 	// Fetches the budget for all the category rows if present and updates the category row
 	function updateBudgetForIncome() {
 		jQuery.ajax({
-			url: budgetAPIUrl + currentUser.financialPortfolioId + dateMeantFor + chosenDate,
+			url: CUSTOM_DASHBOARD_CONSTANTS.budgetAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate,
             type: 'GET',
             success: function(data) {
             	let dataKeySet = Object.keys(data)
@@ -401,7 +401,7 @@ $(document).ready(function(){
 		amountDiv.tabIndex = 0;
 		
 		// Append a - sign if it is an expense
-	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+	   if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
 		   amountDiv.innerHTML = '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
 	   } else {
 		   amountDiv.innerHTML = $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
@@ -435,7 +435,7 @@ $(document).ready(function(){
 		tableRow.setAttribute('role' , 'button');
 		
 		// Change the table color if for expense vs income
-		if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
 			tableRow.className = 'toggle d-lg-table-row expenseCategory categoryTableRow-' + categoryId;
 		} else {
 			tableRow.className = 'toggle d-lg-table-row incomeCategory categoryTableRow-' + categoryId;
@@ -484,14 +484,14 @@ $(document).ready(function(){
 		let amountTransactionsRow = document.createElement('div');
 		amountTransactionsRow.setAttribute('id', 'amountCategory-' + categoryId);
 		
-		if(categoryMap[categoryId].parentCategory == expenseCategory) {
+		if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
 			amountTransactionsRow.className = 'text-right category-text-danger font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' spendingCategory';
 		} else {
 			amountTransactionsRow.className = 'text-right category-text-success font-weight-bold d-lg-table-cell amountCategoryId-' + categoryId + ' incomeCategory';
 		}
 		
 		// Append a - sign for the category if it is an expense
-	   if(categoryMap[categoryId].parentCategory == expenseCategory) {
+	   if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
 		   amountTransactionsRow.innerHTML = '-' + categoryAmountTotal;
 	   } else {
 		   amountTransactionsRow.innerHTML = categoryAmountTotal;
@@ -577,7 +577,7 @@ $(document).ready(function(){
 			                     transactionIds.join(",")
 			                     
 			                     jQuery.ajax({
-			                         url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds + dateMeantFor + chosenDate,
+			                         url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + '/' + transactionIds + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate,
 			                         type: 'DELETE',
 			                         contentType: "application/json; charset=utf-8", 
 			                         success: function() {
@@ -707,7 +707,7 @@ $(document).ready(function(){
 			values['dateMeantFor'] = chosenDate;
 			$.ajax({
 		          type: "POST",
-		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'category',
+		          url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.transactionsUpdateUrl + 'category',
 		          dataType: "json",
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 		          data : values,
@@ -796,7 +796,7 @@ $(document).ready(function(){
 		values['dateMeantFor'] = chosenDate;
 		$.ajax({
 	          type: "POST",
-	          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'description',
+	          url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.transactionsUpdateUrl + 'description',
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
@@ -874,7 +874,7 @@ $(document).ready(function(){
 			let totalAddedOrRemovedFromAmount = round(parseFloat(enteredText - previousText),2);
 			$.ajax({
 		          type: "POST",
-		          url: transactionAPIUrl + currentUser.financialPortfolioId + transactionsUpdateUrl + 'transaction',
+		          url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.transactionsUpdateUrl + 'transaction',
 		          dataType: "json",
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
@@ -904,7 +904,7 @@ $(document).ready(function(){
 	
 	// Automatically create a budget for the category if it is an income category
 	function autoCreateBudget(categoryId, totalAddedOrRemovedFromAmount) {
-		if(categoryMap[categoryId].parentCategory == incomeCategory) {
+		if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.incomeCategory) {
 			if(isEmpty(updateBudgetMap[categoryId])) {
 				updateBudgetMap[categoryId] = totalAddedOrRemovedFromAmount;
 			} else {
@@ -1019,7 +1019,7 @@ $(document).ready(function(){
 		
 		// Handle delete for individual row
 		jQuery.ajax({
-            url: transactionAPIUrl + currentUser.financialPortfolioId + '/' + id + dateMeantFor + chosenDate,
+            url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + currentUser.financialPortfolioId + '/' + id + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate,
             type: 'DELETE',
             success: function(data) {
             	let previousCategoryId = '';
@@ -1254,7 +1254,7 @@ $(document).ready(function(){
 		 values['dateMeantFor'] = chosenDate;
 		 $.ajax({
 	          type: "POST",
-	          url: saveTransactionsUrl + currentUser.financialPortfolioId,
+	          url: CUSTOM_DASHBOARD_CONSTANTS.saveTransactionsUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
@@ -1330,7 +1330,7 @@ $(document).ready(function(){
     	
 		// Load all user transaction from API
 		jQuery.ajax({
-			url: transactionAPIUrl + transactionFetchCategoryTotal + currentUser.financialPortfolioId + dateMeantFor + chosenDate + updateBudgetTrueParam,
+			url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + CUSTOM_DASHBOARD_CONSTANTS.transactionFetchCategoryTotal + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate + CUSTOM_DASHBOARD_CONSTANTS.updateBudgetTrueParam,
             type: 'GET',
             async: true,
             success: function(categoryTotalMap) {
@@ -1592,7 +1592,7 @@ $(document).ready(function(){
 			values['dateMeantFor'] = chosenDate;
 			$.ajax({
 		          type: "POST",
-		          url: budgetAPIUrl + budgetSaveUrl + currentUser.financialPortfolioId,
+		          url: CUSTOM_DASHBOARD_CONSTANTS.budgetAPIUrl + CUSTOM_DASHBOARD_CONSTANTS.budgetSaveUrl + currentUser.financialPortfolioId,
 		          dataType: "json",
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
