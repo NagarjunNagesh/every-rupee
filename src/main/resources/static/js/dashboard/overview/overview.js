@@ -25,8 +25,10 @@ $(document).ready(function(){
 	        		// TODO show custom message
 	        	}
 	        	
-	        	let resultKeySet = Object.keys(userTransactionsList)
-             	for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
+	        	let resultKeySet = Object.keys(userTransactionsList);
+	        	// Print only the first 20 records
+	        	let userBudgetLength = resultKeySet.length > 20 ? 20 : resultKeySet.length;
+             	for(let countGrouped = 0; countGrouped < userBudgetLength; countGrouped++) {
              	   let key = resultKeySet[countGrouped];
              	   let userTransaction = userTransactionsList[key];
              	   
@@ -43,9 +45,20 @@ $(document).ready(function(){
 	// Builds the rows for recent transactions
 	function buildTransactionRow(userTransaction) {
 		
+		let creationDateAndTime = splitElement(userTransaction.createDate,'T');
+		let creationDate = splitElement(fetchFirstElement(creationDateAndTime),'-');
+		
 		let tableRowTransaction = document.createElement('div');
 		tableRowTransaction.id = 'recentTransaction-' + userTransaction.transactionId;
 		tableRowTransaction.classList = 'd-lg-table-row recentTransactionEntry';
+		debugger;
+		let tableCellImagesWrapper = document.createElement('div');
+		tableCellImagesWrapper.classList = 'w-10';
+		
+		let cardImageDisplay = document.createElement('img');
+		cardImageDisplay.src = '../img/dashboard/overview/icons8-credit-card.svg';
+		tableCellImagesWrapper.appendChild(cardImageDisplay);
+		tableRowTransaction.appendChild(tableCellImagesWrapper);
 		
 		let tableCellTransactionDescription = document.createElement('div');
 		tableCellTransactionDescription.classList = 'descriptionCellRT d-lg-table-cell';
@@ -57,7 +70,7 @@ $(document).ready(function(){
 		
 		let elementWithCategoryName = document.createElement('div');
 		elementWithCategoryName.classList = 'small categoryNameRT w-100'
-		elementWithCategoryName.innerText = categoryMap[userTransaction.categoryId].categoryName + '•' + userTransaction.createDate;
+		elementWithCategoryName.innerText = categoryMap[userTransaction.categoryId].categoryName + ' • ' + lastElement(creationDate) + ' ' +  months[creationDate[1]-1].slice(0,3) + ' ' + fetchFirstElement(creationDate);
 		tableCellTransactionDescription.appendChild(elementWithCategoryName);
 		tableRowTransaction.appendChild(tableCellTransactionDescription);
 		

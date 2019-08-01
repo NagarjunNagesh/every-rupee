@@ -39,3 +39,15 @@
 .incomeCategory {
 	color: #58c65c;
 }
+
+.recentTransactionsBody {
+	overflow-y: auto;
+}
+
+.recentTransactionCard {
+	height: 30rem;
+}
+
+.w-10 {
+	width: 10%;	
+}

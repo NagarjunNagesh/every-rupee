@@ -266,7 +266,6 @@ public class UserTransactionService implements IUserTransactionService {
 	    logger.error(e + " Unable to add date to the user Transaction");
 	    return userTransactions;
 	}
-
 	userTransactions = userTransactionsRepository.findByFinancialPortfolioIdAndDate(financialPortfolioId.toString(),
 		date);
 
