@@ -163,6 +163,24 @@ public class ProfileService {
 	}
     }
 
+    /**
+     * SECURITY: Validate user login and send the financial portfolio id
+     * 
+     * @param userPrincipal
+     * @return
+     */
+    public Integer validateUser(Principal userPrincipal) {
+	if (userPrincipal == null) {
+	    throw new SecurityException();
+	}
+
+	if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof MyUser) {
+	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    return user.getFinancialPortfolioId();
+	}
+	return null;
+    }
+
     public ProfileRepository getProfileRepository() {
 	return profileRepository;
     }

@@ -35,6 +35,9 @@ Object.defineProperties(CUSTOM_DASHBOARD_CONSTANTS, {
 	'changeBudgetUrl': { value: 'changeCategory/', writable: false, configurable: false },
 });
 
+//Currency Preference
+const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
+
 let currentActiveSideBar = '';
 //Load Expense category and income category
 let expenseSelectionOptGroup = document.createDocumentFragment();

@@ -402,9 +402,9 @@ $(document).ready(function(){
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
-		   amountDiv.innerHTML = '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
+		   amountDiv.innerHTML = '-' + currentCurrencyPreference + formatNumber(userTransactionData.amount, currentUser.locale);
 	   } else {
-		   amountDiv.innerHTML = $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
+		   amountDiv.innerHTML = currentCurrencyPreference + formatNumber(userTransactionData.amount, currentUser.locale);
 	   }
 		
 	   amountTransactionsRow.appendChild(amountDiv);

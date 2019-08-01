@@ -36,6 +36,7 @@ import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
+import in.co.everyrupee.utils.ERStringUtils;
 
 @RunWith(SpringRunner.class)
 @WithMockUser
@@ -54,6 +55,8 @@ public class UserTransactionServiceTest {
     private List<Integer> categoryIdList;
 
     private static final String FINANCIAL_PORTFOLIO_ID = "193000000";
+
+    private static final Integer FINANCIAL_PORTFOLIO_ID_INT = 193000000;
 
     private static final String DATE_MEANT_FOR = "01062019";
 
@@ -119,6 +122,20 @@ public class UserTransactionServiceTest {
 		getDateMeantFor());
 	assertThat(categoryKeyAndUserTransactions).isNotEmpty();
 	assertTrue(CollectionUtils.isNotEmpty(categoryKeyAndUserTransactions.get(3)));
+    }
+
+    /**
+     * TEST: Fetch user transactions by creation Date
+     */
+    @Test
+    public void fetchUserTransactionByCreationDate() {
+
+	List<UserTransaction> categoryKeyAndUserTransactions = getUserTransactionService()
+		.fetchUserTransactionByCreationDate(FINANCIAL_PORTFOLIO_ID_INT, DATE_MEANT_FOR);
+	verify(getUserTransactionsRepository(), times(1)).findByFinancialPortfolioIdAndDate(FINANCIAL_PORTFOLIO_ID,
+		getDateMeantFor());
+	assertThat(categoryKeyAndUserTransactions).isNotEmpty();
+	assertTrue(ERStringUtils.isNotEmpty(categoryKeyAndUserTransactions.get(0).getFinancialPortfolioId()));
     }
 
     /**

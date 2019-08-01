@@ -16,6 +16,7 @@
     
     <div class="main-panel">
      <div th:replace="dashboard/dashboard-fragments/dashboard-head :: dashboard-top-nav">&copy; EveryRupee Dashboard Top Navigation</div>
+     <span id="currentCurrencySymbol" th:text="#{message.currencySumbol}" class="d-none"></span>
       <div class="content" id="mutableDashboard">
         
       </div>

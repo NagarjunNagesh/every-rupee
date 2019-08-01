@@ -1,5 +1,6 @@
 package in.co.everyrupee.service.income;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.util.MultiValueMap;
@@ -19,5 +20,7 @@ public interface IUserTransactionService {
 
     Map<Integer, Double> fetchCategoryTotalAndUpdateUserBudget(String financialPortfolioId, String dateMeantFor,
 	    boolean updateBudget);
+
+    List<UserTransaction> fetchUserTransactionByCreationDate(Integer financialPortfolioId, String dateMeantFor);
 
 }

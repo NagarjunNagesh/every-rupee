@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+.tableBodyDiv {
+	display: table-row-group;
+}
+
+.recentTransactionDescription {
+	color: #2e4369;
+	letter-spacing: 0;
+}
+
+.categoryNameRT {
+	margin-bottom: 0;
+	color: #5d7079;
+}
+
+.descriptionCellRT {
+	border-top: 1px solid #f6f6f6;
+	padding-top: 0.25rem;
+}
+
+.transactionAmountRT {
+	border-top: 1px solid #f6f6f6;
+	padding-top: 0.25rem;
+}
+
+.recentTransactionTitle {
+	color: #829ca9;
+	margin-top: 0;
+	margin-bottom: 0;
+	line-height: 48px;
+	font-size: 14px;
+}
+
+.expenseCategory {
+	color: #fc695f;
+}
+
+.incomeCategory {
+	color: #58c65c;
+}

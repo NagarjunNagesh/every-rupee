@@ -146,4 +146,12 @@ public class UserTransaction implements Serializable {
 	this.recurrence = recurrence;
     }
 
+    public Date getCreateDate() {
+	return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+	this.createDate = createDate;
+    }
+
 }
