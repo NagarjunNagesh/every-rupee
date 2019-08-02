@@ -15,8 +15,6 @@
 	clear: both;
 	overflow: hidden;
 	white-space: nowrap;
-	height: 1.6rem;
-	width: 20rem;
 }
 
 .categoryNameRT {
@@ -96,4 +94,15 @@
 	position:absolute;
 	left: 45%;
 	top: 40%;
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (min-width:992px) {	
+	.categoryNameRT, .recentTransactionDescription {
+		padding-left: 0.5rem;
+	}
+	
+	.recentTransactionDescription {
+	    font-size: 0.7rem;
+	}
 }
