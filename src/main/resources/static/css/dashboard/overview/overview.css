@@ -96,7 +96,7 @@
 	top: 40%;
 }
 
-.creditCardSvg, .plusRawSvg {
+.creditCardPath, .plusRawPath {
 	line-height:normal;
 	text-indent:0;
 	text-align:start;
@@ -117,5 +117,24 @@
 	
 	.recentTransactionDescription {
 	    font-size: 0.7rem;
+	}
+	
+	.categoryNameRT {
+		font-size: 0.6rem;
+	}
+	
+	.transactionAmountRT {
+		font-size: 0.8rem;
+	}
+	
+	.plusRawSvg, .creditCardSvg {
+		width: 50%;
+		height: 50%;
+	}
+	
+	.circleWrapperImageRT {
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
 	}
 }
