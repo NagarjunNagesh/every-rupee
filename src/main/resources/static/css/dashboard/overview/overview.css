@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+/**
+*
+* Recent Transactions CSS
+*
+*/
 .tableBodyDiv {
 	display: table-row-group;
 }
@@ -7,6 +12,11 @@
 .recentTransactionDescription {
 	color: #2e4369;
 	letter-spacing: 0;
+	clear: both;
+	overflow: hidden;
+	white-space: nowrap;
+	height: 1.6rem;
+	width: 20rem;
 }
 
 .categoryNameRT {
@@ -22,13 +32,14 @@
 .transactionAmountRT {
 	border-top: 1px solid #f6f6f6;
 	padding-top: 0.25rem;
+	padding-right: 1rem;
 }
 
 .recentTransactionTitle {
 	color: #829ca9;
 	margin-top: 0;
 	margin-bottom: 0;
-	line-height: 48px;
+	line-height: 30px;
 	font-size: 14px;
 }
 
@@ -48,6 +59,41 @@
 	height: 30rem;
 }
 
-.w-10 {
-	width: 10%;	
+.w-15 {
+	width: 15%;	
+}
+
+.imageWrapperCell {
+	border-top: 1px solid #f6f6f6;
+	padding: 0.25rem;
+}
+
+.circleWrapperImageRT {
+	background-color: #f2f5f7;
+	font-size: 16px;
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
+}
+
+.recentTransactionEntry:hover {
+	background-color: #f2f5f7;
+} 
+
+.recentTransactionEntry:hover .circleWrapperImageRT{
+	background-color: #fff;
+}
+ 
+.imagesTransactionEmpty {
+	padding-top: 6rem;
+}
+
+.tripleNineColor {
+	color:#999;
+}
+
+.rtSpinner {
+	position:absolute;
+	left: 45%;
+	top: 40%;
 }

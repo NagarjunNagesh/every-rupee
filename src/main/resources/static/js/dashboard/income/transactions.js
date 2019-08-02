@@ -761,8 +761,8 @@ $(document).ready(function(){
 	
 	// Description - disable enter key and submit request
 	$('#transactionsTable').on('keyup', '.transactionsTableDescription' , function(e) {
-		  var keyCode = e.keyCode || e.which;
-		  if (keyCode === 13) { 
+		  let keyCode = e.keyCode || e.which;
+		  if (keyCode === 13) {
 		    e.preventDefault();
 
 		    $(this).blur(); 
@@ -828,7 +828,7 @@ $(document).ready(function(){
 	
 	// Amount - disable enter key and submit request
 	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
-		  var keyCode = e.keyCode || e.which;
+		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
