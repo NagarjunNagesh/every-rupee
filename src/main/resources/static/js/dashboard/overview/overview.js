@@ -120,8 +120,8 @@ $(document).ready(function(){
 		svgElement.setAttribute('class','align-middle');
     	svgElement.setAttribute('x','0px');
     	svgElement.setAttribute('y','0px');
-    	svgElement.setAttribute('width','20');
-    	svgElement.setAttribute('height','20');
+    	svgElement.setAttribute('width','30');
+    	svgElement.setAttribute('height','30');
     	svgElement.setAttribute('viewBox','0 0 80 80');
     	svgElement.setAttribute('fill','#000000');
     	
