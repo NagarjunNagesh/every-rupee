@@ -66,7 +66,7 @@ $(document).ready(function(){
 		tableRowTransaction.classList = 'd-lg-table-row recentTransactionEntry';
 		
 		let tableCellImagesWrapper = document.createElement('div');
-		tableCellImagesWrapper.classList = 'w-15 d-lg-table-cell align-middle imageWrapperCell text-center';
+		tableCellImagesWrapper.classList = 'd-lg-table-cell align-middle imageWrapperCell text-center';
 		
 		let circleWrapperDiv = document.createElement('div');
 		circleWrapperDiv.classList = 'rounded-circle align-middle circleWrapperImageRT';

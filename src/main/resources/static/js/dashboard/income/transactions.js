@@ -759,8 +759,8 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Description - disable enter key and submit request
-	$('#transactionsTable').on('keyup', '.transactionsTableDescription' , function(e) {
+	// Description - disable enter key and submit request (key press and key up necessary)
+	$('#transactionsTable').on('keyup keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
 		    e.preventDefault();
