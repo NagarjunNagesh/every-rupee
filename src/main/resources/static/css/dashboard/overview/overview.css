@@ -96,8 +96,21 @@
 	top: 40%;
 }
 
+.creditCardSvg, .plusRawSvg {
+	line-height:normal;
+	text-indent:0;
+	text-align:start;
+	text-decoration-line:none;
+	text-decoration-style:solid;
+	text-decoration-color:#000;
+	text-transform:none;
+	block-progression:tb;
+	isolation:auto;
+	mix-blend-mode:normal
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
-@media (min-width:992px) {	
+@media (max-width:1300px) {
 	.categoryNameRT, .recentTransactionDescription {
 		padding-left: 0.5rem;
 	}
