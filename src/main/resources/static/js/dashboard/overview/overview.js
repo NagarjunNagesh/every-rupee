@@ -57,9 +57,10 @@ $(document).ready(function(){
 	
 	// Builds the rows for recent transactions
 	function buildTransactionRow(userTransaction) {
-		
-		let creationDateAndTime = splitElement(userTransaction.createDate,'T');
-		let creationDate = splitElement(fetchFirstElement(creationDateAndTime),'-');
+		// Convert date from UTC to user specific dates
+		let creationDateUserRelevant = new Date(userTransaction.createDate);
+		// Category Map 
+		let categoryMapForUT = categoryMap[userTransaction.categoryId];
 		
 		let tableRowTransaction = document.createElement('div');
 		tableRowTransaction.id = 'recentTransaction-' + userTransaction.transactionId;
@@ -90,8 +91,8 @@ $(document).ready(function(){
 		tableCellTransactionDescription.appendChild(elementWithDescription);
 		
 		let elementWithCategoryName = document.createElement('div');
-		elementWithCategoryName.classList = 'small categoryNameRT w-100'
-		elementWithCategoryName.innerText = categoryMap[userTransaction.categoryId].categoryName + ' • ' + lastElement(creationDate) + ' ' +  months[creationDate[1]-1].slice(0,3) + ' ' + fetchFirstElement(creationDate);
+		elementWithCategoryName.classList = 'small categoryNameRT w-100';
+		elementWithCategoryName.innerText = (categoryMapForUT.categoryName.length < 25 ? categoryMapForUT.categoryName : (categoryMapForUT.categoryName.slice(0,26) + '...')) + ' • ' + ("0" + creationDateUserRelevant.getDate()).slice(-2) + ' ' + months[creationDateUserRelevant.getMonth()].slice(0,3) + ' ' + creationDateUserRelevant.getFullYear() + ' ' + ("0" + creationDateUserRelevant.getHours()).slice(-2) + ':' + ("0" + creationDateUserRelevant.getMinutes()).slice(-2);
 		tableCellTransactionDescription.appendChild(elementWithCategoryName);
 		tableRowTransaction.appendChild(tableCellTransactionDescription);
 		

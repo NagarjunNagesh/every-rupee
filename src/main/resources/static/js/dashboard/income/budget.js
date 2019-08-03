@@ -1,7 +1,5 @@
 "use strict";
 $(document).ready(function(){
-	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// User Budget Map Cache
 	let userBudgetCache = {};
 	// User transaction category ID and total
@@ -1244,9 +1242,8 @@ $(document).ready(function(){
 		
 		let materialSpinnerElement = document.createElement('div');
     	materialSpinnerElement.id= 'deleteCompensationSpinner-' + selectedCategoryId;
-    	materialSpinnerElement.classList = 'material-spinner-small d-none';
+    	materialSpinnerElement.classList = 'material-spinner-small d-none position-absolute mx-auto top-20';
     	closeButtonWrapper.appendChild(materialSpinnerElement);
-    	
     	
 		newDivWrapper.appendChild(closeButtonWrapper);
 		newAnchorTag.appendChild(newDivWrapper);

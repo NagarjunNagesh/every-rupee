@@ -15,8 +15,6 @@ $(document).ready(function(){
 	let errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
 	// Bills & Fees Options selection
 	const selectedOption = '4';
-	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	// New Pie Chart Storage Variable
@@ -760,12 +758,12 @@ $(document).ready(function(){
 	});
 	
 	// Description - disable enter key and submit request (key press and key up necessary)
-	$('#transactionsTable').on('keyup keypress', '.transactionsTableDescription' , function(e) {
+	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
 		    e.preventDefault();
 
-		    $(this).blur(); 
+		    this.blur(); 
 		    return false;
 		  }
 	});
@@ -800,6 +798,10 @@ $(document).ready(function(){
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
+	          success: function() {
+	        	// Set the description to empty as the data need not be stored.
+	      		descriptionTextEdited = '';
+	          },
 	          error: function (thrownError) {
             	 var responseError = JSON.parse(thrownError.responseText);
                  	if(responseError.error.includes("Unauthorized")){
@@ -810,8 +812,9 @@ $(document).ready(function(){
              }
 	        });
 		
-		// Set the description to empty as the data need not be stored.
-		descriptionTextEdited = '';
+		// Prevent repeated enter button press from calling the server
+  		descriptionTextEdited = enteredText;
+		
 	}
 	
 	// Catch the amount when the user focuses on the transaction
@@ -827,12 +830,12 @@ $(document).ready(function(){
 	});
 	
 	// Amount - disable enter key and submit request
-	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
+	$('#transactionsTable').on('keypress', '.amountTransactionsRow' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    $(this).blur(); 
+		    this.blur(); 
 		    return false;
 		  }
 		  
@@ -879,6 +882,8 @@ $(document).ready(function(){
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
 		          success: function(userTransaction){
+		        	  // Set the amount to empty as the data need not be stored.
+		        	  amountEditedTransaction = '';
 		        	  let categoryRowElement = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
 		        	  autoCreateBudget(userTransaction.categoryId, totalAddedOrRemovedFromAmount);
@@ -898,8 +903,8 @@ $(document).ready(function(){
 		// replace the text with a trimmed version
 		appendCurrencyToAmount(element, enteredText);
 		
-		// Set the amount to empty as the data need not be stored.
-  	  	amountEditedTransaction = '';
+		// Prevent repeated enter button press from calling the server
+  	  	amountEditedTransaction = enteredText;
 	}
 	
 	// Automatically create a budget for the category if it is an income category

@@ -57,6 +57,7 @@ let chosenDate = '01'+("0" + (today.getMonth() + 1)).slice(-2) + today.getFullYe
 let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 // Freeze the months object
 Object.freeze(months);
+Object.seal(months);
 // Choose the current month from the user chosen date
 let userChosenMonthName = months[Number(chosenDate.slice(2, 4)) - 1]; 
 

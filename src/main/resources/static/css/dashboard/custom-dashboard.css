@@ -842,3 +842,7 @@ progress {
 .mild-text {
 	color: #999;
 }
+
+.top-20 {
+	top: 20%;
+}
