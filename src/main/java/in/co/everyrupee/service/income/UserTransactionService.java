@@ -25,6 +25,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -32,6 +33,7 @@ import org.springframework.util.MultiValueMap;
 import in.co.everyrupee.constants.GenericConstants;
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.events.income.OnFetchCategoryTotalCompleteEvent;
+import in.co.everyrupee.exception.InvalidAttributeValueException;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.RecurrencePeriod;
 import in.co.everyrupee.pojo.income.UserTransaction;
@@ -61,17 +63,17 @@ public class UserTransactionService implements IUserTransactionService {
     @Override
     @Cacheable(key = "{#pFinancialPortfolioId,#dateMeantFor}")
     public Object fetchUserTransaction(String pFinancialPortfolioId, String dateMeantFor) {
-
+	List<UserTransaction> userTransactions = new ArrayList<UserTransaction>();
 	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
 	Date date = new Date();
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
 	    logger.error(e + " Unable to add date to the user Transaction");
+	    return userTransactions;
 	}
 
-	List<UserTransaction> userTransactions = userTransactionsRepository
-		.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId, date);
+	userTransactions = userTransactionsRepository.findByFinancialPortfolioIdAndDate(pFinancialPortfolioId, date);
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -242,6 +244,37 @@ public class UserTransactionService implements IUserTransactionService {
 	}
 
 	return categoryAndTotalAmountMap;
+    }
+
+    /**
+     * OVERVIEW: Fetches the user transactions with by creation date (WITHOUT SORT)
+     */
+    @Override
+    public List<UserTransaction> fetchUserTransactionByCreationDate(Integer financialPortfolioId, String dateMeantFor) {
+
+	if (financialPortfolioId == null) {
+	    throw new InvalidAttributeValueException("fetchUserTransactionByCreationDate", "financialPortfolioId",
+		    financialPortfolioId);
+	}
+
+	List<UserTransaction> userTransactions = new ArrayList<UserTransaction>();
+	DateFormat format = new SimpleDateFormat(DashboardConstants.DATE_FORMAT, Locale.ENGLISH);
+	Date date = new Date();
+	try {
+	    date = format.parse(dateMeantFor);
+	} catch (ParseException e) {
+	    logger.error(e + " Unable to add date to the user Transaction");
+	    return userTransactions;
+	}
+	userTransactions = userTransactionsRepository.findByFinancialPortfolioIdAndDate(financialPortfolioId.toString(),
+		date);
+
+	if (CollectionUtils.isEmpty(userTransactions)) {
+	    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	}
+
+	return userTransactions;
     }
 
 }

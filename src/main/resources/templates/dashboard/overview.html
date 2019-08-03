@@ -1,17 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Overview</title>
+<link href="../css/dashboard/income/budget.min.css" rel="stylesheet" th:href="@{/css/dashboard/overview/overview.min.css}">
+<script defer th:src="@{/js/dashboard/overview/overview.min.js}" type="text/javascript"></script>
 </head>
 <body class="overview-dashboard" >
 	<div class="content" id="mutableDashboard">
 		<div class="container-fluid">
-			Spending
-			Income
-			Assets
-			Debts
-			Investments
-			Net Worth          
+        	<div class="row">
+				<div class="col-lg-4">
+					<div class="card recentTransactionCard">
+						<div class="card-header pb-0">
+							<div class="row">
+								<div class="col-lg-8">
+									<h3 class="recentTransactionTitle">Recent Transactions</h3>
+								</div>
+							</div>
+						</div>
+						<div class="card-body recentTransactionsBody">
+							<div class="table-responsive">
+								<div class="table table-fixed d-lg-table">
+									<div id="recentTransactions" class=" tableBodyDiv">
+										<div class="material-spinner rtSpinner"></div>
+										<!-- Recent transactions dynamic load -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="card optimizationBudgetAndGoal">
+						<div class="card-header pb-0">
+							<div class="row">
+								<div class="col-lg-8">
+									<h3 class="optimizationTitle">Optimizations</h3>
+								</div>
+							</div>
+						</div>
+						<div class="card-body optimizationsBody">
+							<div class="table-responsive">
+								<div class="table table-fixed d-lg-table">
+									<div class="tableHeadingDiv">
+										<div class="text-center w-20 d-lg-table-cell">
+											<div class="form-check">
+				                          		<label class="form-check-label">
+				                          		<input type="checkbox" class="form-check-input" id="checkAll">
+													<span class="form-check-sign">
+														<span class="check">
+														</span>
+													</span>
+												</label>
+											</div>
+										</div>
+										<div class="budgetOptimizationTitle w-50 d-lg-table-cell">Category Name</div>
+										<div class="budgetOptimizationTitle text-right w-30 d-lg-table-cell">Overspent</div>
+									</div>
+									<div id="optimizations" class=" tableBodyDiv">
+										<div class="material-spinner rtSpinner"></div>
+										<!-- Recent optimizations dynamic load -->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer">
+							<div class="row" > 
+								<div class="col-lg-8">
+									 <div class="form-check">
+		                          		<label class="form-check-label">
+		                          		<input type="checkbox" class="form-check-input" id="checkAll">
+											<span class="form-check-sign">
+												<span class="check">
+												</span>
+											</span>
+										</label>
+									 </div>
+									 <label>Select all</label> 
+								</div> 
+								<div class="col-lg-4"> 
+									 <span> None selected </span>
+								</div> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="card">
+						<div id="portfolioOverview" class="card-body">
+							Income
+							Expense
+							Assets
+							Debts
+							Networth
+							
+						</div>
+					</div>
+				</div>
+			</div>
      	</div>
     </div>
 </body>

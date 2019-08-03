@@ -1,0 +1,157 @@
+@charset "UTF-8";
+
+/**
+*
+* Recent Transactions CSS
+*
+*/
+.tableBodyDiv {
+	display: table-row-group;
+}
+
+.recentTransactionDescription {
+	color: #2e4369;
+	letter-spacing: 0;
+	clear: both;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.categoryNameRT {
+	margin-bottom: 0;
+	color: #5d7079;
+}
+
+.descriptionCellRT {
+	border-top: 1px solid #f6f6f6;
+	padding-top: 0.25rem;
+}
+
+.transactionAmountRT {
+	border-top: 1px solid #f6f6f6;
+	padding-top: 0.25rem;
+	padding-right: 1rem;
+}
+
+.recentTransactionTitle, .optimizationTitle {
+	color: #829ca9;
+	margin-top: 0;
+	margin-bottom: 0;
+	line-height: 30px;
+	font-size: 14px;
+}
+
+.expenseCategory {
+	color: #fc695f;
+}
+
+.incomeCategory {
+	color: #58c65c;
+}
+
+.recentTransactionsBody, .optimizationsBody {
+	overflow-y: auto;
+}
+
+.recentTransactionCard, .optimizationBudgetAndGoal {
+	height: 30rem;
+}
+
+.w-15 {
+	width: 15%;	
+}
+
+.imageWrapperCell, .checkListBO, .categoryNameBO, .budgetAmountBO {
+	border-top: 1px solid #f6f6f6;
+	padding: 0.25rem;
+}
+
+.circleWrapperImageRT {
+	background-color: #f2f5f7;
+	font-size: 16px;
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
+}
+
+.recentTransactionEntry:hover {
+	background-color: #f2f5f7;
+} 
+
+.recentTransactionEntry:hover .circleWrapperImageRT{
+	background-color: #fff;
+}
+ 
+.imagesTransactionEmpty {
+	padding-top: 6rem;
+}
+
+.tripleNineColor {
+	color:#999;
+}
+
+.rtSpinner {
+	position:absolute;
+	left: 45%;
+	top: 40%;
+}
+
+.creditCardPath, .plusRawPath {
+	line-height:normal;
+	text-indent:0;
+	text-align:start;
+	text-decoration-line:none;
+	text-decoration-style:solid;
+	text-decoration-color:#000;
+	text-transform:none;
+	block-progression:tb;
+	isolation:auto;
+	mix-blend-mode:normal
+}
+
+.tableHeadingDiv {
+	display: table-header-group;
+}
+
+.budgetOptimizationTitle {
+	text-transform: capitalize;
+	color: #8e999e;
+}
+
+.categoryNameBO {
+	color: #2e4369;
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (max-width:1300px) {
+	.categoryNameRT, .recentTransactionDescription {
+		padding-left: 0.5rem;
+	}
+	
+	.recentTransactionDescription {
+	    font-size: 0.7rem;
+	}
+	
+	.categoryNameRT {
+		font-size: 0.6rem;
+	}
+	
+	.transactionAmountRT, .budgetAmountBO, .categoryNameBO {
+		font-size: 0.8rem;
+	}
+	
+	.plusRawSvg, .creditCardSvg {
+		width: 50%;
+		height: 50%;
+	}
+	
+	.circleWrapperImageRT {
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+	}
+	
+	.budgetOptimizationTitle {
+		font-size: 95%;
+	}
+}

@@ -15,8 +15,6 @@ $(document).ready(function(){
 	let errorAddingTransactionDiv = '<div class="row ml-auto mr-auto"><i class="material-icons red-icon">highlight_off</i><p class="margin-bottom-zero red-icon margin-left-five">';
 	// Bills & Fees Options selection
 	const selectedOption = '4';
-	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// Delete Transaction Button Inside TD
 	const deleteButton = '<button class="btn btn-danger btn-sm removeRowTransaction">Remove</button>';
 	// New Pie Chart Storage Variable
@@ -301,7 +299,7 @@ $(document).ready(function(){
 		let tableRows = document.createElement("div");
 		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow ' + displayNoneProperty;
 		
-		// Row 1
+		// Cell 1
 		let indexTableCell = document.createElement('div');
 		indexTableCell.className = 'text-center d-lg-table-cell draggable-handle-wrapper';
 		indexTableCell.tabIndex = -1;
@@ -312,7 +310,7 @@ $(document).ready(function(){
 		dragHandle = cloneElementAndAppend(indexTableCell, dragHandle);
     	tableRows.appendChild(indexTableCell);
     	
-		// Table Row 2
+		// Table Cell 2
 		let formCheckDiv = document.createElement('div');
 		formCheckDiv.className = 'form-check';
 		formCheckDiv.tabIndex = -1;
@@ -344,7 +342,7 @@ $(document).ready(function(){
 		checkboxCell.appendChild(formCheckDiv);
 		tableRows.appendChild(checkboxCell);
 		
-		// Table Row 3
+		// Table Cell 3
 		let selectCategoryRow = document.createElement('div');
 		selectCategoryRow.className = 'd-lg-table-cell';
 		
@@ -371,7 +369,7 @@ $(document).ready(function(){
 		toSelectOption[0].selected = 'selected';
 		tableRows.appendChild(selectCategoryRow);
 		
-		// Table Row 4
+		// Table Cell 4
 		let descriptionTableRow = document.createElement('div');
 		descriptionTableRow.setAttribute('id', 'descriptionTransactionsRow-' + userTransactionData.transactionId);
 		descriptionTableRow.className = 'transactionsTableDescription d-lg-table-cell';
@@ -387,7 +385,7 @@ $(document).ready(function(){
 		descriptionTableRow.appendChild(descriptionDiv);
 		tableRows.appendChild(descriptionTableRow);
 		
-		// Table Row 5
+		// Table Cell 5
 		let amountTransactionsRow = document.createElement('div');
 		amountTransactionsRow.setAttribute('id', 'amountTransactionsRow-' + userTransactionData.transactionId);
 		amountTransactionsRow.className = 'text-right amountTransactionsRow d-lg-table-cell';
@@ -402,15 +400,15 @@ $(document).ready(function(){
 		
 		// Append a - sign if it is an expense
 	   if(categoryMap[categoryId].parentCategory == CUSTOM_DASHBOARD_CONSTANTS.expenseCategory) {
-		   amountDiv.innerHTML = '-' + $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
+		   amountDiv.innerHTML = '-' + currentCurrencyPreference + formatNumber(userTransactionData.amount, currentUser.locale);
 	   } else {
-		   amountDiv.innerHTML = $('#currentCurrencySymbol').text() + formatNumber(userTransactionData.amount, currentUser.locale);
+		   amountDiv.innerHTML = currentCurrencyPreference + formatNumber(userTransactionData.amount, currentUser.locale);
 	   }
 		
 	   amountTransactionsRow.appendChild(amountDiv);
 	   tableRows.appendChild(amountTransactionsRow);
 	   
-	   // Table Row 6
+	   // Table Cell 6
 	   let budgetTransactionRow = document.createElement('div');
 	   budgetTransactionRow.setAttribute('id', 'budgetTransactionsRow-' + userTransactionData.transactionId);
 	   budgetTransactionRow.className = 'text-right d-lg-table-cell categoryIdForBudget-' + categoryId;
@@ -759,10 +757,10 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Description - disable enter key and submit request
-	$('#transactionsTable').on('keyup', '.transactionsTableDescription' , function(e) {
-		  var keyCode = e.keyCode || e.which;
-		  if (keyCode === 13) { 
+	// Description - disable enter key and submit request (key press and key up necessary)
+	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
+		  let keyCode = e.keyCode || e.which;
+		  if (keyCode === 13) {
 		    e.preventDefault();
 
 		    $(this).blur(); 
@@ -800,6 +798,10 @@ $(document).ready(function(){
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
 	          data : values,
+	          success: function() {
+	        	// Set the description to empty as the data need not be stored.
+	      		descriptionTextEdited = '';
+	          },
 	          error: function (thrownError) {
             	 var responseError = JSON.parse(thrownError.responseText);
                  	if(responseError.error.includes("Unauthorized")){
@@ -810,8 +812,9 @@ $(document).ready(function(){
              }
 	        });
 		
-		// Set the description to empty as the data need not be stored.
-		descriptionTextEdited = '';
+		// Prevent repeated enter button press from calling the server
+  		descriptionTextEdited = enteredText;
+		
 	}
 	
 	// Catch the amount when the user focuses on the transaction
@@ -827,8 +830,8 @@ $(document).ready(function(){
 	});
 	
 	// Amount - disable enter key and submit request
-	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
-		  var keyCode = e.keyCode || e.which;
+	$('#transactionsTable').on('keypress', '.amountTransactionsRow' , function(e) {
+		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
@@ -879,6 +882,8 @@ $(document).ready(function(){
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
 		          success: function(userTransaction){
+		        	  // Set the amount to empty as the data need not be stored.
+		        	  amountEditedTransaction = '';
 		        	  let categoryRowElement = document.getElementById('categoryTableRow-' + userTransaction.categoryId);
 		        	  updateCategoryAmount(userTransaction.categoryId, totalAddedOrRemovedFromAmount, true);
 		        	  autoCreateBudget(userTransaction.categoryId, totalAddedOrRemovedFromAmount);
@@ -898,8 +903,8 @@ $(document).ready(function(){
 		// replace the text with a trimmed version
 		appendCurrencyToAmount(element, enteredText);
 		
-		// Set the amount to empty as the data need not be stored.
-  	  	amountEditedTransaction = '';
+		// Prevent repeated enter button press from calling the server
+  	  	amountEditedTransaction = enteredText;
 	}
 	
 	// Automatically create a budget for the category if it is an income category

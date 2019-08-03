@@ -1,7 +1,5 @@
 "use strict";
 $(document).ready(function(){
-	// Currency Preference
-	const currentCurrencyPreference = document.getElementById('currentCurrencySymbol').innerText;
 	// User Budget Map Cache
 	let userBudgetCache = {};
 	// User transaction category ID and total
@@ -172,6 +170,9 @@ $(document).ready(function(){
 		// Build a delete icon Div
 		let deleteIconDiv = document.createElement('div');
 		deleteIconDiv.classList = 'svg-container deleteIconWrapper d-lg-inline-block';
+		deleteIconDiv.setAttribute('data-toggle','tooltip');
+		deleteIconDiv.setAttribute('data-placement','bottom');
+		deleteIconDiv.setAttribute('title','Delete budget');
 		
 		// SVG for delete
 		let deleteSvgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
@@ -506,6 +507,9 @@ $(document).ready(function(){
 			let compensationIconsDiv = document.createElement('a');
 			compensationIconsDiv.classList = 'compensateAnchor';
 			compensationIconsDiv.id='compensateAnchor-' + categoryIdKey;
+			compensationIconsDiv.setAttribute('data-toggle','tooltip');
+			compensationIconsDiv.setAttribute('data-placement','bottom');
+			compensationIconsDiv.setAttribute('title','Compensate overspending');
 			
 			let compensationImage = document.createElement('img');
 			compensationImage.id= 'compensateBudgetImage-' + categoryIdKey;
@@ -1244,9 +1248,8 @@ $(document).ready(function(){
 		
 		let materialSpinnerElement = document.createElement('div');
     	materialSpinnerElement.id= 'deleteCompensationSpinner-' + selectedCategoryId;
-    	materialSpinnerElement.classList = 'material-spinner-small d-none';
+    	materialSpinnerElement.classList = 'material-spinner-small d-none position-absolute mx-auto top-20';
     	closeButtonWrapper.appendChild(materialSpinnerElement);
-    	
     	
 		newDivWrapper.appendChild(closeButtonWrapper);
 		newAnchorTag.appendChild(newDivWrapper);
