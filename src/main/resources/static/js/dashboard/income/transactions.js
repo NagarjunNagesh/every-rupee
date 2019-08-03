@@ -299,7 +299,7 @@ $(document).ready(function(){
 		let tableRows = document.createElement("div");
 		tableRows.className = 'hideableRow-' + categoryId + ' hideableRow ' + displayNoneProperty;
 		
-		// Row 1
+		// Cell 1
 		let indexTableCell = document.createElement('div');
 		indexTableCell.className = 'text-center d-lg-table-cell draggable-handle-wrapper';
 		indexTableCell.tabIndex = -1;
@@ -310,7 +310,7 @@ $(document).ready(function(){
 		dragHandle = cloneElementAndAppend(indexTableCell, dragHandle);
     	tableRows.appendChild(indexTableCell);
     	
-		// Table Row 2
+		// Table Cell 2
 		let formCheckDiv = document.createElement('div');
 		formCheckDiv.className = 'form-check';
 		formCheckDiv.tabIndex = -1;
@@ -342,7 +342,7 @@ $(document).ready(function(){
 		checkboxCell.appendChild(formCheckDiv);
 		tableRows.appendChild(checkboxCell);
 		
-		// Table Row 3
+		// Table Cell 3
 		let selectCategoryRow = document.createElement('div');
 		selectCategoryRow.className = 'd-lg-table-cell';
 		
@@ -369,7 +369,7 @@ $(document).ready(function(){
 		toSelectOption[0].selected = 'selected';
 		tableRows.appendChild(selectCategoryRow);
 		
-		// Table Row 4
+		// Table Cell 4
 		let descriptionTableRow = document.createElement('div');
 		descriptionTableRow.setAttribute('id', 'descriptionTransactionsRow-' + userTransactionData.transactionId);
 		descriptionTableRow.className = 'transactionsTableDescription d-lg-table-cell';
@@ -385,7 +385,7 @@ $(document).ready(function(){
 		descriptionTableRow.appendChild(descriptionDiv);
 		tableRows.appendChild(descriptionTableRow);
 		
-		// Table Row 5
+		// Table Cell 5
 		let amountTransactionsRow = document.createElement('div');
 		amountTransactionsRow.setAttribute('id', 'amountTransactionsRow-' + userTransactionData.transactionId);
 		amountTransactionsRow.className = 'text-right amountTransactionsRow d-lg-table-cell';
@@ -408,7 +408,7 @@ $(document).ready(function(){
 	   amountTransactionsRow.appendChild(amountDiv);
 	   tableRows.appendChild(amountTransactionsRow);
 	   
-	   // Table Row 6
+	   // Table Cell 6
 	   let budgetTransactionRow = document.createElement('div');
 	   budgetTransactionRow.setAttribute('id', 'budgetTransactionsRow-' + userTransactionData.transactionId);
 	   budgetTransactionRow.className = 'text-right d-lg-table-cell categoryIdForBudget-' + categoryId;
@@ -763,7 +763,7 @@ $(document).ready(function(){
 		  if (keyCode === 13) {
 		    e.preventDefault();
 
-		    this.blur(); 
+		    $(this).blur(); 
 		    return false;
 		  }
 	});
@@ -835,7 +835,7 @@ $(document).ready(function(){
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    this.blur(); 
+		    $(this).blur(); 
 		    return false;
 		  }
 		  

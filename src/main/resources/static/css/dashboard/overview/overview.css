@@ -33,7 +33,7 @@
 	padding-right: 1rem;
 }
 
-.recentTransactionTitle {
+.recentTransactionTitle, .optimizationTitle {
 	color: #829ca9;
 	margin-top: 0;
 	margin-bottom: 0;
@@ -49,11 +49,11 @@
 	color: #58c65c;
 }
 
-.recentTransactionsBody {
+.recentTransactionsBody, .optimizationsBody {
 	overflow-y: auto;
 }
 
-.recentTransactionCard {
+.recentTransactionCard, .optimizationBudgetAndGoal {
 	height: 30rem;
 }
 
@@ -61,7 +61,7 @@
 	width: 15%;	
 }
 
-.imageWrapperCell {
+.imageWrapperCell, .checkListBO, .categoryNameBO, .budgetAmountBO {
 	border-top: 1px solid #f6f6f6;
 	padding: 0.25rem;
 }
@@ -109,6 +109,19 @@
 	mix-blend-mode:normal
 }
 
+.tableHeadingDiv {
+	display: table-header-group;
+}
+
+.budgetOptimizationTitle {
+	text-transform: capitalize;
+	color: #8e999e;
+}
+
+.categoryNameBO {
+	color: #2e4369;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (max-width:1300px) {
 	.categoryNameRT, .recentTransactionDescription {
@@ -123,7 +136,7 @@
 		font-size: 0.6rem;
 	}
 	
-	.transactionAmountRT {
+	.transactionAmountRT, .budgetAmountBO, .categoryNameBO {
 		font-size: 0.8rem;
 	}
 	
@@ -136,5 +149,9 @@
 		width: 40px;
 		height: 40px;
 		line-height: 40px;
+	}
+	
+	.budgetOptimizationTitle {
+		font-size: 95%;
 	}
 }

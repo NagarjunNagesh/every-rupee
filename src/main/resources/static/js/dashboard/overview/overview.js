@@ -1,6 +1,10 @@
 "use strict";
 $(document).ready(function(){
-	
+	// User Budget Map Cache
+	let userBudgetCache = {};
+	// User transaction category ID and total
+	let categoryTotalMapCache = {};
+	// OVERVIEW CONSTANTS
 	const OVERVIEW_CONSTANTS = {};
 	
 	// SECURITY: Defining Immutable properties as constants
@@ -158,6 +162,122 @@ $(document).ready(function(){
     	
     	return svgElement;
 		
+	}
+	
+	/**
+	 * Optimizations Module
+	 */
+	// Fetch transaction total 
+	fetchCategoryTotalForTransactions();
+	
+	function fetchCategoryTotalForTransactions() {
+		jQuery.ajax({
+			url: CUSTOM_DASHBOARD_CONSTANTS.transactionAPIUrl + CUSTOM_DASHBOARD_CONSTANTS.transactionFetchCategoryTotal + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate + CUSTOM_DASHBOARD_CONSTANTS.updateBudgetFalseParam,
+            type: 'GET',
+            success: function(categoryTotalMap) {
+            	// Store the result in a cache
+            	categoryTotalMapCache = categoryTotalMap;
+            	
+            	// Populate Optimization of budgets
+            	populateOptimizationOfBudget();
+            	
+            }
+		});
+	}
+	
+	// Populate optimization of budgets
+	function populateOptimizationOfBudget() {
+		jQuery.ajax({
+			url: CUSTOM_DASHBOARD_CONSTANTS.budgetAPIUrl + currentUser.financialPortfolioId + CUSTOM_DASHBOARD_CONSTANTS.dateMeantFor + chosenDate,
+            type: 'GET',
+            success: function(userBudgetList) {
+            	let populateOptimizationBudgetDiv = document.getElementById('optimizations');
+	        	let populateOptimizationFragment = document.createDocumentFragment();
+            	let dataKeySet = Object.keys(userBudgetList);
+            	for(let count = 0, length = dataKeySet.length; count < length; count++){
+	            	let key = dataKeySet[count];
+	          	  	let userBudgetValue = userBudgetList[key];
+	          	  
+	          	  	if(isEmpty(userBudgetValue)) {
+	          	  		continue;
+	          	  	}
+	          	  	
+	          	  	// Store the values in a cache
+	          	  	userBudgetCache[userBudgetValue.categoryId] = value;
+	          	  	
+	          	    let categoryTotal = categoryTotalMapCache[userBudgetValue.categoryId];
+	          	    // Check for Overspent budget
+	          	    if(isNotEmpty(categoryTotal) && categoryTotal > userBudgetValue.planned) {
+	          	    	populateOptimizationFragment.appendChild(buildBudgetOptimizations(userBudgetValue, categoryTotal));
+	          	    }
+            	}
+            	
+            	// Empty the div optimizations
+            	populateOptimizationBudgetDiv.innerHTML = '';
+            	if(populateOptimizationFragment == null) {
+            		// TODO populate the empty optimization modal
+            	} else {
+            		populateOptimizationBudgetDiv.appendChild(populateOptimizationFragment);
+            	}
+	        }
+		});
+	}
+	
+	// Budget optimizations over budgeted
+	function buildBudgetOptimizations(userBudget, categoryTotal) {
+			
+		let overSpentBudget = Math.abs(categoryTotal - userBudget.planned);
+		
+		// Budget Optimization Row
+		let tableBudgetOptimization = document.createElement('div');
+		tableBudgetOptimization.id = 'budgetOptimization-' + userBudget.categoryId;
+		tableBudgetOptimization.classList = 'd-lg-table-row';
+		
+		// Table Cell 1
+		let checkboxCell = document.createElement('div');
+		checkboxCell.tabIndex = -1;
+		checkboxCell.className = 'd-lg-table-cell text-center checkListBO';
+		
+		let formCheckDiv = document.createElement('div');
+		formCheckDiv.className = 'form-check';
+		formCheckDiv.tabIndex = -1;
+		
+		let fromCheckLabel = document.createElement('label');
+		fromCheckLabel.className = 'form-check-label';
+		fromCheckLabel.tabIndex = -1;
+		
+		let inputFormCheckInput = document.createElement('input');
+		inputFormCheckInput.className = 'number form-check-input';
+		inputFormCheckInput.type = 'checkbox';
+		inputFormCheckInput.innerHTML = userBudget.categoryId;
+		inputFormCheckInput.tabIndex = -1;
+		
+		let formCheckSignSpan = document.createElement('span');
+		formCheckSignSpan.className = 'form-check-sign';
+		formCheckSignSpan.tabIndex = -1;
+		
+		let checkSpan = document.createElement('span');
+		checkSpan.className = 'check';
+		formCheckSignSpan.appendChild(checkSpan);
+		fromCheckLabel.appendChild(inputFormCheckInput);
+		fromCheckLabel.appendChild(formCheckSignSpan);
+		formCheckDiv.appendChild(fromCheckLabel);
+		checkboxCell.appendChild(formCheckDiv);
+		tableBudgetOptimization.appendChild(checkboxCell);
+		
+		// Table Cell 2 
+		let userBudgetNameDiv = document.createElement('div');
+		userBudgetNameDiv.classList = 'font-weight-bold categoryNameBO d-lg-table-cell';
+		userBudgetNameDiv.innerText = categoryMap[userBudget.categoryId].categoryName;
+		tableBudgetOptimization.appendChild(userBudgetNameDiv);
+		
+		// Table Cell 3 
+		let overspentAmountDiv = document.createElement('div');
+		overspentAmountDiv.classList = 'budgetAmountBO expenseCategory font-weight-bold d-lg-table-cell text-right align-middle';
+		overspentAmountDiv.innerHTML = '-' + currentCurrencyPreference + formatNumber(overSpentBudget, currentUser.locale);
+		tableBudgetOptimization.appendChild(overspentAmountDiv);
+		
+		return tableBudgetOptimization;
 	}
 	
 });

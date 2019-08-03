@@ -170,6 +170,9 @@ $(document).ready(function(){
 		// Build a delete icon Div
 		let deleteIconDiv = document.createElement('div');
 		deleteIconDiv.classList = 'svg-container deleteIconWrapper d-lg-inline-block';
+		deleteIconDiv.setAttribute('data-toggle','tooltip');
+		deleteIconDiv.setAttribute('data-placement','bottom');
+		deleteIconDiv.setAttribute('title','Delete budget');
 		
 		// SVG for delete
 		let deleteSvgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
@@ -504,6 +507,9 @@ $(document).ready(function(){
 			let compensationIconsDiv = document.createElement('a');
 			compensationIconsDiv.classList = 'compensateAnchor';
 			compensationIconsDiv.id='compensateAnchor-' + categoryIdKey;
+			compensationIconsDiv.setAttribute('data-toggle','tooltip');
+			compensationIconsDiv.setAttribute('data-placement','bottom');
+			compensationIconsDiv.setAttribute('title','Compensate overspending');
 			
 			let compensationImage = document.createElement('img');
 			compensationImage.id= 'compensateBudgetImage-' + categoryIdKey;
