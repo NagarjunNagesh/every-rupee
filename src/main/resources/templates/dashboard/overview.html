@@ -38,6 +38,16 @@
 									<h3 class="optimizationTitle">Optimizations</h3>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-lg-12">
+									<div id="budgetOrGoals" class="" data-gramm_editor="false" contenteditable="true">
+			                			<fieldset class="choose align-center">
+										    <label><input type="radio" value="Overspent Budget" name="budgetOrGoals" checked=""><span class="disable-select">Overspent Budget</span></label>
+										    <label><input type="radio" value="Underfunded Goals" name="budgetOrGoals"><span class="disable-select">Underfunded Goals</span></label>
+										</fieldset>
+			                		</div>
+								</div>
+							</div>
 						</div>
 						<div class="card-body optimizationsBody">
 							<div class="table-responsive">
@@ -64,23 +74,10 @@
 								</div>
 							</div>
 						</div>
-						<div class="card-footer">
-							<div class="row" > 
-								<div class="col-lg-8">
-									 <div class="form-check">
-		                          		<label class="form-check-label">
-		                          		<input type="checkbox" class="form-check-input" id="checkAll">
-											<span class="form-check-sign">
-												<span class="check">
-												</span>
-											</span>
-										</label>
-									 </div>
-									 <label>Select all</label> 
-								</div> 
-								<div class="col-lg-4"> 
-									 <span> None selected </span>
-								</div> 
+						<div id="optimizationFooter" class="row card-footer">
+							<div id="selectedOptimizations" class="col-lg-6 pl-2 font-weight-bold tripleNineColor">None Selected</div>
+							<div class="col-lg-6 pr-0">
+								<button id="optimizeButton" class="btn btn-sm btn-info ml-auto float-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one optimization">Optimize</button>
 							</div>
 						</div>
 					</div>

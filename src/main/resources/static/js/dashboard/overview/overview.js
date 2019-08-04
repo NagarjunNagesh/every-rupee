@@ -280,4 +280,53 @@ $(document).ready(function(){
 		return tableBudgetOptimization;
 	}
 	
+	/**
+	 * Check All Functionality
+	 */
+	
+	// Disable Button if no check box is clicked and vice versa
+	$( ".optimizationBudgetAndGoal" ).on( "click", ".number" ,function() {
+		let checkAllElementChecked = $("#checkAll:checked");
+		if(checkAllElementChecked.length > 0) {
+			// uncheck the check all if a check is clicked and if the check all is already clicked
+			checkAllElementChecked.prop('checked', false);
+		}
+		
+		// Click the checkAll is all the checkboxes are clicked
+		let allCheckedOptimizations = $(".number:checked");
+		let allTransactions = $(".number");
+		if(allCheckedOptimizations.length == allTransactions.length) {
+			$("#checkAll").prop('checked', true);
+		}
+		
+		// Choose all selected optimizations
+		let numberSelected = allCheckedOptimizations.length > 0 ? allCheckedOptimizations.length + ' Selected' : 'None Selected';
+		document.getElementById('selectedOptimizations').innerText = numberSelected;
+		
+		// Enable or disable optimizations buttons
+		manageOptimizationButton(allCheckedOptimizations.length);
+	});
+	
+	// Select all check boxes for Transactions
+	document.getElementById("checkAll").addEventListener("click",function(e){
+		$('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+		let allCheckedOptimizations = $(".number:checked");
+		
+		// Choose all selected optimizations
+		let numberSelected = allCheckedOptimizations.length > 0 ? allCheckedOptimizations.length + ' Selected' : 'None Selected';
+		document.getElementById('selectedOptimizations').innerText = numberSelected;
+		// Enable or disable optimizations buttons
+		manageOptimizationButton(allCheckedOptimizations.length);
+	});
+	
+	// Function to enable of disable the delete transactions button
+	function manageOptimizationButton(allCheckedLength){
+		let manageOptimizationsButton = document.getElementById('optimizeButton');
+		if(allCheckedLength > 0) {
+			manageOptimizationsButton.removeAttribute('disabled');
+		} else {
+			manageOptimizationsButton.setAttribute('disabled','disabled');
+		}  
+	}
+	
 });

@@ -122,6 +122,54 @@
 	color: #2e4369;
 }
 
+/* Choose module */
+.choose {
+	padding:0;
+	border:0;
+}
+
+.choose label {
+	text-align:center;
+	position:relative;
+  	cursor:pointer;
+  	margin-bottom: 0px;
+}
+.choose label span {
+	color: #686969;
+	line-height: 32px;
+	height: 32px;
+	padding: 0 16px;
+	display: block;
+	transition: all .2s ease;
+	border: 1px solid rgba(0,0,0,0.1);
+	font-size: 0.7rem;
+}
+.choose label:first-of-type span {
+	border-top-left-radius:6px;
+	border-bottom-left-radius:6px;
+	border-right:0;
+}
+.choose label:last-of-type span {
+	border-top-right-radius:6px;
+	border-bottom-right-radius:6px;
+	border-left:0;
+}
+.choose label input {
+	display:none
+}
+.choose label input:checked + span {
+	box-shadow:inset 0 0 0 32px rgba(0,0,0,0.1);
+}
+
+#budgetOrGoals {
+	padding-top: 1rem;
+}
+
+#optimizationFooter {
+	border-top: 1px solid #f6f6f6;
+	padding-top: 0.5rem;	
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (max-width:1300px) {
 	.categoryNameRT, .recentTransactionDescription {
@@ -153,5 +201,20 @@
 	
 	.budgetOptimizationTitle {
 		font-size: 95%;
+	}
+	
+	#selectedOptimizations {
+		font-size:90%
+	}
+}
+
+.overview-dashboard .form-check .form-check-input:checked+.form-check-sign .check {
+  background: #00bcd4;
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (min-width:1301px) {
+	.choose label span {
+		font-size: 0.875rem;	
 	}
 }

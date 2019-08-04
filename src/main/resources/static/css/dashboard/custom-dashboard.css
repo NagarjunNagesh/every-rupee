@@ -846,3 +846,9 @@ progress {
 .top-20 {
 	top: 20%;
 }
+
+.align-center {
+	display: block;
+    margin: 0 auto;
+    text-align: center;
+}

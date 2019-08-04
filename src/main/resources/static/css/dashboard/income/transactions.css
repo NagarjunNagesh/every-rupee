@@ -563,6 +563,10 @@ fildset > label {
 	padding-top:0.5rem;
 }
 
+#transactionsTable .form-check .form-check-input:checked+.form-check-sign .check {
+ background:#39843c
+}
+
 /** Change the size of the text if the width and height pf the screen are more **/
 @media (min-width:60em) and (min-height:43.75em) {
 	
