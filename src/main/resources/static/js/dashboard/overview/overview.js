@@ -308,7 +308,7 @@ $(document).ready(function(){
 	});
 	
 	// Select all check boxes for Transactions
-	document.getElementById("checkAll").addEventListener("click",function(e){
+	document.getElementById("checkAll").addEventListener("click",function(){
 		$('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 		let allCheckedOptimizations = $(".number:checked");
 		

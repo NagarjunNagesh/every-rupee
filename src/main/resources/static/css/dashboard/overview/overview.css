@@ -132,7 +132,7 @@
 	text-align:center;
 	position:relative;
   	cursor:pointer;
-  	margin-bottom: 0px;
+  	margin-bottom: 0;
 }
 .choose label span {
 	color: #686969;
