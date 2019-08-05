@@ -8,13 +8,95 @@
 <body class="overview-dashboard" >
 	<div class="content" id="mutableDashboard">
 		<div class="container-fluid">
-        	<div class="row">
+			<div class="row">
 				<div class="col-lg-4">
+					<div class="card">
+						<div class="card-header">
+							<h4 class="overviewHeadingTab">Overview</h4>
+						</div>
+						<div id="portfolioOverview" class="card-body">
+							<div class="row py-3 overviewEntryRow">	
+								<div class="col-lg-3">
+									<img src="../img/dashboard/overview/icons8-rupee-64.png" class="image-center">
+								</div>
+								<div class="col-lg-8">
+									<h4 class="font-weight-bold overviewHeading">Income </h4>
+								</div>
+								<div class="col-lg-1 icon-center">
+									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
+								</div>
+							</div>
+							<div class="row py-3 overviewEntryRow">	
+								<div class="col-lg-3" >
+									<img src="../img/dashboard/overview/icons8-card-in-use-64.png" class="image-center">
+								</div>
+								<div class="col-lg-8">
+									<h4 class="font-weight-bold overviewHeading">Expense </h4>
+								</div>
+								<div class="col-lg-1 icon-center">
+									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
+								</div>
+							</div>
+							<div class="row py-3 overviewEntryRow">	
+								<div class="col-lg-3" >
+									<img src="../img/dashboard/overview/icons8-bank-64.png" class="image-center">
+								</div>
+								<div class="col-lg-8">
+									<h4 class="font-weight-bold overviewHeading">Assets </h4>
+								</div>
+								<div class="col-lg-1 icon-center">
+									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
+								</div>
+							</div>
+							<div class="row py-3 overviewEntryRow">	
+								<div class="col-lg-3" >
+									<img src="../img/dashboard/overview/icons8-debt-64.png" class="image-center">
+								</div>
+								<div class="col-lg-8">
+									<h4 class="font-weight-bold overviewHeading">Debts </h4>
+								</div>
+								<div class="col-lg-1 icon-center">
+									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
+								</div>
+							</div>
+							<div class="row py-3 overviewEntryRow">	
+								<div class="col-lg-3" >
+									<img src="../img/dashboard/overview/icons8-money-bag-franc-64.png" class="image-center">
+								</div>
+								<div class="col-lg-8">
+									<h4 class="font-weight-bold overviewHeading">Networth</h4>
+								</div>
+								<div class="col-lg-1 icon-center">
+									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8">
+					<div class="card">
+	                  <div class="card-header card-header-icon card-header-info">
+	                    <div class="card-icon">
+	                      <i class="material-icons">timeline</i>
+	                    </div>
+	                    <h4 class="card-title">Coloured Line Chart
+	                      <small> - Rounded</small>
+	                    </h4>
+	                  </div>
+	                  <div class="card-body">
+	                    <div id="colouredRoundedLineChart" class="ct-chart"></div>
+	                    <div id="donutAnimation" class="ct-chart"></div>
+					  </div>
+					</div>
+				</div>
+			</div>
+        	<div class="row">
+				<div class="col-lg-6">
 					<div class="card recentTransactionCard">
 						<div class="card-header pb-0">
 							<div class="row">
 								<div class="col-lg-8">
-									<h3 class="recentTransactionTitle">Recent Transactions</h3>
+									<h4 class="recentTransactionTitle">Recent Transactions</h4>
 								</div>
 							</div>
 						</div>
@@ -30,28 +112,26 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-6">
 					<div class="card optimizationBudgetAndGoal">
 						<div class="card-header pb-0">
 							<div class="row">
 								<div class="col-lg-8">
-									<h3 class="optimizationTitle">Optimizations</h3>
+									<h4 class="optimizationTitle">Optimizations</h4>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-lg-12">
-									<div id="budgetOrGoals" class="" data-gramm_editor="false" contenteditable="true">
-			                			<fieldset class="choose align-center">
+									<div id="budgetOrGoals" class="">
+			                			<fieldset class="choose align-center pb-3">
 										    <label><input type="radio" value="Overspent Budget" name="budgetOrGoals" checked=""><span class="disable-select">Overspent Budget</span></label>
 										    <label><input type="radio" value="Underfunded Goals" name="budgetOrGoals"><span class="disable-select">Underfunded Goals</span></label>
 										</fieldset>
 			                		</div>
 								</div>
 							</div>
-						</div>
-						<div class="card-body optimizationsBody">
 							<div class="table-responsive">
-								<div class="table table-fixed d-lg-table">
+								<div class="table table-fixed d-lg-table mb-2">
 									<div class="tableHeadingDiv">
 										<div class="text-center w-20 d-lg-table-cell">
 											<div class="form-check">
@@ -67,6 +147,12 @@
 										<div class="budgetOptimizationTitle w-50 d-lg-table-cell">Category Name</div>
 										<div class="budgetOptimizationTitle text-right w-30 d-lg-table-cell">Overspent</div>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body optimizationsBody pt-0">
+							<div class="table-responsive">
+								<div class="table table-fixed d-lg-table">
 									<div id="optimizations" class=" tableBodyDiv">
 										<div class="material-spinner rtSpinner"></div>
 										<!-- Recent optimizations dynamic load -->
@@ -77,20 +163,8 @@
 						<div id="optimizationFooter" class="row card-footer">
 							<div id="selectedOptimizations" class="col-lg-6 pl-2 font-weight-bold tripleNineColor">None Selected</div>
 							<div class="col-lg-6 pr-0">
-								<button id="optimizeButton" class="btn btn-sm btn-info ml-auto float-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one optimization">Optimize</button>
+								<button id="optimizeButton" class="btn btn-info ml-auto float-right" disabled="disabled" data-toggle="tooltip" data-placement="bottom" title="Select atleast one optimization">Optimize</button>
 							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4">
-					<div class="card">
-						<div id="portfolioOverview" class="card-body">
-							Income
-							Expense
-							Assets
-							Debts
-							Networth
-							
 						</div>
 					</div>
 				</div>

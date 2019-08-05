@@ -329,4 +329,55 @@ $(document).ready(function(){
 		}  
 	}
 	
+	/**
+	 * Test Charts
+	 */ 
+	 
+	  /*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
+
+
+     dataColouredRoundedLineChart = {
+         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
+         series: [
+             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
+         ]
+     };
+     
+     optionsColouredRoundedLineChart = {
+             lineSmooth: Chartist.Interpolation.cardinal({
+                 tension: 10
+             }),
+             axisY: {
+                 showGrid: true,
+                 offset: 40
+             },
+             axisX: {
+                 showGrid: false,
+             },
+             low: 0,
+             high: 1000,
+             showPoint: true,
+             height: '300px'
+         };
+     
+     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart);
+
+     md.startAnimationForLineChart(colouredRoundedLineChart);
+     
+     // ANimate Donut Example
+     var donutChart = new Chartist.Pie('#donutAnimation', {
+    	  series: [20,80],
+    	  labels: [20,80]
+    	}, {
+    	  donut: true,
+   		  donutWidth: 50,
+   		  showLabel: true,
+   		  startAngle: 270,
+   		  height: '230px'
+    	});
+
+     // Animate Donut chart
+ 	 er.startAnimationDonutChart(donutChart);
+
+	
 });
