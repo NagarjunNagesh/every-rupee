@@ -161,8 +161,6 @@ $(document).ready(function(){
     			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
     			let checkAllBox = document.getElementById('checkAll');
-    			checkAllBox.setAttribute('checked', false);
-    			checkAllBox.removeAttribute('disabled');
     			// Fetch all the key set for the result
     			let resultKeySet = Object.keys(result)
              	for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
@@ -193,9 +191,12 @@ $(document).ready(function(){
     		   
     		   // Update table with empty message if the transactions are empty
     		   if(result.length == 0) {
+    			   checkAllBox.setAttribute('disabled', 'disabled');
     			   documentTbody.innerHTML = '';
     			   document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
     		   } else {
+    			   $('#checkAll').prop('checked', false);
+       			   checkAllBox.removeAttribute('disabled');
     			   documentTbody.innerHTML = '';
     			   documentTbody.appendChild(transactionsTableDiv);
     		   }
@@ -589,7 +590,7 @@ $(document).ready(function(){
 			                        	if(checkAllClicked){
 			                        		// uncheck the select all checkbox if checked
 			                        		let checkAllBox = document.getElementById('checkAll');
-			                        		checkAllBox.setAttribute('checked',false);
+			                        		$('#checkAll').prop('checked',false);
 			                        		checkAllBox.setAttribute('disabled','disabled');
 			                        		let documentTbody = document.getElementById(replaceTransactionsId);
 			                        		documentTbody.innerHTML = '';
@@ -1072,6 +1073,7 @@ $(document).ready(function(){
                     		tableBodyDiv.appendChild(fetchEmptyTableMessage());
                     		// uncheck the select all checkbox if checked
                 			let checkAllBox = document.getElementById('checkAll');
+                			$('#checkAll').prop('checked',false);
                 			checkAllBox.setAttribute('disabled', 'disabled');
                     	}
             		}
