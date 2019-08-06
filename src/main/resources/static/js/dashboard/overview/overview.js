@@ -214,11 +214,25 @@ $(document).ready(function(){
             	
             	// Empty the div optimizations
             	populateOptimizationBudgetDiv.innerHTML = '';
-            	if(populateOptimizationFragment == null) {
-            		// TODO populate the empty optimization modal
+            	if(populateOptimizationFragment.childElementCount === 0) {
+            		populateOptimizationFragment.appendChild(buildSvgFullyOptimized());
+            		
+            		let headingFullyOptimized = document.createElement('h4');
+            		headingFullyOptimized.classList = 'text-center font-weight-bold mt-1 optimizationHeadingColor';
+            		headingFullyOptimized.innerHTML = "Budget's are fully optimized";
+            		populateOptimizationFragment.appendChild(headingFullyOptimized);
+            		
+            		let paragraphOptimized = document.createElement('p');
+            		paragraphOptimized.classList = 'text-center tripleNineColor'
+            		paragraphOptimized.innerText = 'Awesomesauce!';
+            		populateOptimizationFragment.appendChild(paragraphOptimized);
             	} else {
-            		populateOptimizationBudgetDiv.appendChild(populateOptimizationFragment);
+            		let checkAllInput = document.getElementById('checkAll');
+            		checkAllInput.removeAttribute('disabled');
             	}
+            		
+            	populateOptimizationBudgetDiv.appendChild(populateOptimizationFragment);
+            	
 	        }
 		});
 	}
@@ -280,8 +294,67 @@ $(document).ready(function(){
 		return tableBudgetOptimization;
 	}
 	
+	// Builds an all optimized SVG meter
+	function buildSvgFullyOptimized() {
+		
+		let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+    	svgElement.setAttribute('viewBox','0 0 103.1 103.1');
+    	svgElement.setAttribute('class','optimization-empty-svg mt-5 svg-absolute-center');
+    	
+    	let gElement = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+    	
+    	let pathElement1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement1.setAttribute('class','optimization-empty-path-0');
+    	pathElement1.setAttribute('d','M51.5,0C23.1,0,0,23.1,0,51.5c0,28.5,23.1,51.5,51.5,51.5c3.7,0,7.3-0.4,10.7-1.1c22.8-4.8,40-24.8,40.8-48.8 c0-0.5,0-1.1,0-1.6C103.1,23.1,80,0,51.5,0z M67,90.2c-0.1,0.2-0.2,0.3-0.4,0.4c-4.9,1.6-11.6,2.4-15.8,2.4 c-3.6,0-10.2-0.8-15.3-2.3c-0.2-0.1-0.3-0.2-0.4-0.4c-0.1-0.2,0-0.4,0.1-0.5l4.2-5.8c0.1-0.2,0.3-0.2,0.5-0.2h23 c0.2,0,0.4,0.1,0.5,0.3l3.5,5.7C67.1,89.8,67.1,90,67,90.2z M97,51.8c-0.1,17-9.5,31.7-23.3,39.5l-6.5-10.4 c-0.8-1.3-2.2-2.1-3.7-2.1H39.4c-1.4,0-2.7,0.7-3.6,1.8l-7.4,10.1C15.1,82.9,6,68.3,6,51.5C6,26.4,26.4,6,51.5,6h0.3 C76.8,6.2,97,26.5,97,51.5V51.8z');
+    	gElement.appendChild(pathElement1);
+    	
+    	let pathElement2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement2.setAttribute('class','optimization-empty-path-1');
+    	pathElement2.setAttribute('d','M63.4,84c-0.1-0.2-0.3-0.3-0.5-0.3h-23c-0.2,0-0.4,0.1-0.5,0.2l-4.2,5.8c-0.1,0.2-0.1,0.4-0.1,0.5 c0.1,0.2,0.2,0.3,0.4,0.4c5.1,1.5,11.7,2.3,15.3,2.3c4.2,0,10.9-0.7,15.8-2.4c0.2-0.1,0.3-0.2,0.4-0.4c0.1-0.2,0-0.4-0.1-0.5 L63.4,84z');
+    	gElement.appendChild(pathElement2);
+    	
+    	let pathElement3 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement3.setAttribute('class','optimization-empty-path-1');
+    	pathElement3.setAttribute('d','M51.8,6h-0.3C26.4,6,6,26.4,6,51.5c0,16.7,9,31.3,22.4,39.2l7.4-10.1c0.8-1.1,2.2-1.8,3.6-1.8h24.1 c1.5,0,2.9,0.8,3.7,2.1l6.5,10.4C87.6,83.5,96.9,68.8,97,51.8v-0.3C97,26.5,76.8,6.2,51.8,6z M20.2,52.8c0,0.3-0.1,0.6-0.3,0.8 c-0.2,0.2-0.5,0.3-0.8,0.3h-8.3c-0.6,0-1.1-0.5-1.1-1.1l0-2.4c0-0.3,0.1-0.6,0.3-0.8c0.2-0.2,0.5-0.3,0.8-0.3H19 c0.6,0,1.1,0.5,1.1,1.1V52.8z M30.2,76.2l-5.9,5.9c-0.2,0.2-0.5,0.3-0.8,0.3c-0.3,0-0.6-0.1-0.8-0.3L21,80.3 c-0.2-0.2-0.3-0.5-0.3-0.8s0.1-0.6,0.3-0.8l5.9-5.9c0.2-0.2,0.5-0.3,0.8-0.3s0.6,0.1,0.8,0.3l1.7,1.7c0.2,0.2,0.3,0.5,0.3,0.8 C30.5,75.7,30.4,76,30.2,76.2z M30.2,28.5l-1.7,1.7c-0.2,0.2-0.5,0.3-0.8,0.3c-0.3,0-0.6-0.1-0.8-0.3L21,24.3 c-0.4-0.4-0.4-1.1,0-1.6l1.7-1.7c0.2-0.2,0.5-0.3,0.8-0.3c0.3,0,0.6,0.1,0.8,0.3l5.9,5.9C30.6,27.4,30.6,28.1,30.2,28.5z M49.2,10.7c0-0.6,0.5-1.1,1.1-1.1h2.4c0.6,0,1.1,0.5,1.1,1.1V19c0,0.6-0.5,1.1-1.1,1.1h-2.4c-0.6,0-1.1-0.5-1.1-1.1V10.7z M57,49.6c0.3,0.5,0.5,1.1,0.7,1.8c0.8,3.8-1.5,7.5-5.3,8.4c-3.8,0.8-7.5-1.5-8.4-5.3c-0.8-3.8,1.5-7.5,5.3-8.3 c0.5-0.1,0.9-0.2,1.3-0.2l19.6-26.7L57,49.6z M93.4,53.3C93,64.4,87.9,75.4,80.3,82.1c-0.2,0.2-0.5,0.3-0.7,0.3l0,0 c-0.3,0-0.6-0.1-0.8-0.3l-5.9-5.9c-0.2-0.2-0.3-0.5-0.3-0.8c0-0.3,0.1-0.6,0.3-0.8l1.7-1.7c0.2-0.2,0.5-0.3,0.8-0.3 s0.6,0.1,0.8,0.3l3.6,3.6c5.6-6.4,8.7-14.2,9.3-22.6l-5,0c-0.3,0-0.6-0.1-0.8-0.3c-0.2-0.2-0.3-0.5-0.3-0.8v-2.4 c0-0.3,0.1-0.6,0.3-0.8c0.2-0.2,0.5-0.3,0.8-0.3h5c-0.5-8.4-3.7-16.3-9.3-22.6l-3.6,3.6c-0.2,0.2-0.5,0.3-0.8,0.3s-0.6-0.1-0.8-0.3 l-1.7-1.7c-0.2-0.2-0.3-0.5-0.3-0.8c0-0.3,0.1-0.6,0.3-0.8l5.9-5.9c0.2-0.2,0.5-0.3,0.8-0.3c0.3,0,0.5,0.1,0.7,0.3 c7.6,6.7,12.7,17.8,13.1,28.9C93.5,51.4,93.5,51.5,93.4,53.3z');
+    	gElement.appendChild(pathElement3);
+    	
+    	let pathElement4 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement4.setAttribute('class','optimization-meter all-optimized');
+    	pathElement4.setAttribute('d','M80.3,21c-0.2-0.2-0.5-0.3-0.7-0.3c-0.3,0-0.6,0.1-0.8,0.3l-5.9,5.9c-0.2,0.2-0.3,0.5-0.3,0.8 c0,0.3,0.1,0.6,0.3,0.8l1.7,1.7c0.2,0.2,0.5,0.3,0.8,0.3s0.6-0.1,0.8-0.3l3.6-3.6c5.6,6.4,8.7,14.2,9.3,22.6h-5 c-0.3,0-0.6,0.1-0.8,0.3c-0.2,0.2-0.3,0.5-0.3,0.8v2.4c0,0.3,0.1,0.6,0.3,0.8c0.2,0.2,0.5,0.3,0.8,0.3l5,0 c-0.5,8.4-3.7,16.3-9.3,22.6l-3.6-3.6c-0.2-0.2-0.5-0.3-0.8-0.3s-0.6,0.1-0.8,0.3l-1.7,1.7c-0.2,0.2-0.3,0.5-0.3,0.8 c0,0.3,0.1,0.6,0.3,0.8l5.9,5.9c0.2,0.2,0.5,0.3,0.8,0.3l0,0c0.3,0,0.5-0.1,0.7-0.3c7.6-6.7,12.7-17.8,13.1-28.9 c0.1-1.8,0.1-1.8,0-3.4C93,38.7,87.9,27.7,80.3,21z');
+    	gElement.appendChild(pathElement4);
+    	
+    	let pathElement5 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement5.setAttribute('class','optimization-meter all-optimized');
+    	pathElement5.setAttribute('d','M49.3,46.1c-3.8,0.8-6.1,4.6-5.3,8.3c0.8,3.8,4.6,6.1,8.4,5.3c3.8-0.8,6.1-4.6,5.3-8.4 c-0.2-0.6-0.4-1.2-0.7-1.8l13.2-30.4L50.6,46C50.2,46,49.8,46,49.3,46.1z');
+    	gElement.appendChild(pathElement5);
+    	
+    	let pathElement6 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement6.setAttribute('class','optimization-empty-path-2');
+    	pathElement6.setAttribute('d','M50.3,20.2h2.4c0.6,0,1.1-0.5,1.1-1.1v-8.3c0-0.6-0.5-1.1-1.1-1.1h-2.4c-0.6,0-1.1,0.5-1.1,1.1V19 C49.2,19.7,49.7,20.2,50.3,20.2z');
+    	gElement.appendChild(pathElement6);
+    	
+    	let pathElement7 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement7.setAttribute('class','optimization-empty-path-2');
+    	pathElement7.setAttribute('d','M24.3,21c-0.2-0.2-0.5-0.3-0.8-0.3c-0.3,0-0.6,0.1-0.8,0.3L21,22.8c-0.4,0.4-0.4,1.1,0,1.6l5.9,5.9 c0.2,0.2,0.5,0.3,0.8,0.3c0.3,0,0.6-0.1,0.8-0.3l1.7-1.7c0.4-0.4,0.4-1.1,0-1.6L24.3,21z');
+    	gElement.appendChild(pathElement7);
+    	
+    	let pathElement8 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement8.setAttribute('class','optimization-empty-path-2');
+    	pathElement8.setAttribute('d','M19,49.2h-8.3c-0.3,0-0.6,0.1-0.8,0.3c-0.2,0.2-0.3,0.5-0.3,0.8l0,2.4c0,0.6,0.5,1.1,1.1,1.1H19 c0.3,0,0.6-0.1,0.8-0.3c0.2-0.2,0.3-0.5,0.3-0.8v-2.4C20.2,49.7,19.7,49.2,19,49.2z');
+    	gElement.appendChild(pathElement8);
+    	
+    	let pathElement9 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement9.setAttribute('class','optimization-empty-path-2');
+    	pathElement9.setAttribute('d','M28.5,72.9c-0.2-0.2-0.5-0.3-0.8-0.3s-0.6,0.1-0.8,0.3L21,78.8c-0.2,0.2-0.3,0.5-0.3,0.8s0.1,0.6,0.3,0.8 l1.7,1.7c0.2,0.2,0.5,0.3,0.8,0.3c0.3,0,0.6-0.1,0.8-0.3l5.9-5.9c0.2-0.2,0.3-0.5,0.3-0.8c0-0.3-0.1-0.6-0.3-0.8L28.5,72.9z');
+    	gElement.appendChild(pathElement9);
+    	
+    	svgElement.appendChild(gElement);
+    	
+    	return svgElement;
+	}
+	
 	/**
-	 * Check All Functionality
+	 * Select All  - Functionality
 	 */
 	
 	// Disable Button if no check box is clicked and vice versa
@@ -330,7 +403,8 @@ $(document).ready(function(){
 	}
 	
 	/**
-	 * Test Charts
+	 * Chart Mdule
+	 * 
 	 */ 
 	 
 	  /*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
@@ -364,20 +438,4 @@ $(document).ready(function(){
 
      md.startAnimationForLineChart(colouredRoundedLineChart);
      
-     // ANimate Donut Example
-     var donutChart = new Chartist.Pie('#donutAnimation', {
-    	  series: [20,80],
-    	  labels: [20,80]
-    	}, {
-    	  donut: true,
-   		  donutWidth: 50,
-   		  showLabel: true,
-   		  startAngle: 270,
-   		  height: '230px'
-    	});
-
-     // Animate Donut chart
- 	 er.startAnimationDonutChart(donutChart);
-
-	
 });

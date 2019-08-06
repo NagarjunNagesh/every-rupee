@@ -232,6 +232,32 @@
 	color: #8e999e;
 }
 
+.optimization-empty-svg {
+	height: 80px;
+	max-width: 90px;
+	padding: 10px;
+}
+
+.optimization-empty-path-0 {
+	fill: #D9D9D9;
+}
+
+.optimization-empty-path-1 {
+	fill: #FFF;
+}
+
+.optimization-meter.all-optimized {
+	fill: #00bcd4;
+}
+
+.optimization-empty-path-2 {
+	fill: #EEE;
+}
+
+.optimizationHeadingColor {
+	color: #2e4369;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

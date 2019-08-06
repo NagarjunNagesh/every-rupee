@@ -873,3 +873,13 @@ progress {
 	flex-direction: column;
 	-webkit-flex-direction: column;
 }
+
+.svg-absolute-center {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+#checkAll[disabled] {
+	cursor: default;
+}
