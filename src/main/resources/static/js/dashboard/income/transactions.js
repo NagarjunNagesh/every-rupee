@@ -160,7 +160,9 @@ $(document).ready(function(){
     			let transactionsTableDiv = document.createDocumentFragment();
     			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
-    			$("#checkAll").prop("checked", false); 
+    			let checkAllBox = document.getElementById('checkAll');
+    			checkAllBox.setAttribute('checked', false);
+    			checkAllBox.removeAttribute('disabled');
     			// Fetch all the key set for the result
     			let resultKeySet = Object.keys(result)
              	for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
@@ -586,7 +588,9 @@ $(document).ready(function(){
 			                        	// If Check All is clicked them empty div and reset pie chart
 			                        	if(checkAllClicked){
 			                        		// uncheck the select all checkbox if checked
-				                			$("#checkAll").prop("checked", false); 
+			                        		let checkAllBox = document.getElementById('checkAll');
+			                        		checkAllBox.setAttribute('checked',false);
+			                        		checkAllBox.setAttribute('disabled','disabled');
 			                        		let documentTbody = document.getElementById(replaceTransactionsId);
 			                        		documentTbody.innerHTML = '';
 			                 			   	document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
@@ -1062,9 +1066,16 @@ $(document).ready(function(){
                      	manageDeleteTransactionsButton();
                      	// Updates total transactions in category Modal if open with this category
         	        	updateTotalTransactionsInCategoryModal(previousCategoryId);
+        	        	// Display Table Empty Div if all the table rows are deleted
+        	        	let tableBodyDiv = document.getElementById(replaceTransactionsId);
+                    	if(tableBodyDiv.childElementCount === 0) {
+                    		tableBodyDiv.appendChild(fetchEmptyTableMessage());
+                    		// uncheck the select all checkbox if checked
+                			let checkAllBox = document.getElementById('checkAll');
+                			checkAllBox.setAttribute('disabled', 'disabled');
+                    	}
             		}
             	});
-            	
             },
             error: function (thrownError) {
            	 let responseError = JSON.parse(thrownError.responseText);
