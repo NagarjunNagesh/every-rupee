@@ -1122,7 +1122,7 @@ $(document).ready(function(){
 		
 		// Row 3
 		let categoryTableCell = document.createElement('div');
-		categoryTableCell.className = 'd-lg-table-cell';
+		categoryTableCell.className = 'd-lg-table-cell text-center align-middle';
 		categoryTableCell.appendChild(buildEmptyTransactionsSvg());
 		emptyTableRow.appendChild(categoryTableCell);
 		
@@ -1131,7 +1131,7 @@ $(document).ready(function(){
 		descriptionTableCell.className = 'd-lg-table-cell';
 		
 		let paragraphElement = document.createElement('p');
-		paragraphElement.className = 'text-secondary';
+		paragraphElement.className = 'text-secondary mb-0';
 		paragraphElement.innerHTML = 'There are no transactions yet. Start adding some to track your spending.';
 		
 		descriptionTableCell.appendChild(paragraphElement);
@@ -1157,7 +1157,7 @@ $(document).ready(function(){
 		svgElement.setAttribute('width','64');
 		svgElement.setAttribute('height','64');
     	svgElement.setAttribute('viewBox','0 0 64 64');
-    	svgElement.setAttribute('class','transactions-empty-svg svg-absolute-center');
+    	svgElement.setAttribute('class','transactions-empty-svg');
     	
     	let pathElement1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
     	pathElement1.setAttribute('d','M 5 8 C 3.346 8 2 9.346 2 11 L 2 53 C 2 54.654 3.346 56 5 56 L 59 56 C 60.654 56 62 54.654 62 53 L 62 11 C 62 9.346 60.654 8 59 8 L 5 8 z M 5 10 L 59 10 C 59.551 10 60 10.449 60 11 L 60 20 L 4 20 L 4 11 C 4 10.449 4.449 10 5 10 z M 28 12 C 26.897 12 26 12.897 26 14 L 26 16 C 26 17.103 26.897 18 28 18 L 56 18 C 57.103 18 58 17.103 58 16 L 58 14 C 58 12.897 57.103 12 56 12 L 28 12 z M 28 14 L 56 14 L 56.001953 16 L 28 16 L 28 14 z M 4 22 L 60 22 L 60 53 C 60 53.551 59.551 54 59 54 L 5 54 C 4.449 54 4 53.551 4 53 L 4 22 z'); 
