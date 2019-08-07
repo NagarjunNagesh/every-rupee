@@ -762,7 +762,7 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Description - disable enter key and submit request (key press and key up necessary)
+	// Description - disable enter key and submit request (key press necessary for prevention of a new line)
 	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
@@ -834,8 +834,8 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Amount - disable enter key and submit request
-	$('#transactionsTable').on('keypress', '.amountTransactionsRow' , function(e) {
+	// Amount - disable enter key and submit request (Key up for making sure that the remove button is shown)
+	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
@@ -928,14 +928,15 @@ $(document).ready(function(){
 	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
 		// append remove button if the transaction amount is zero
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]);
-	  if(enteredText == 0 || isNaN(enteredText)){
-		// Handles the addition of buttons in the budget column for the row
+		
+		if(enteredText == 0 || isNaN(enteredText)){
+		  // Handles the addition of buttons in the budget column for the row
 		  budgetTableCell.innerHTML = deleteButton;
 		  budgetTableCell.classList.add('fadeInAnimation');
-	  } else if(enteredText > 0 && budgetTableCell != null){
+		} else if(enteredText > 0 && budgetTableCell != null){
 		  budgetTableCell.classList.add('fadeOutAnimation');
 		  budgetTableCell.innerHTML = '';
-	  }
+		}
 	}
 	
 	// Update the category amount
@@ -996,8 +997,13 @@ $(document).ready(function(){
 		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(availableCash, currentUser.locale));
 		
 		// Update the pie chart
-		transactionsChart.update(updatePieChartTransactions(income, expense));
-		
+		let dataPreferencesChart = updatePieChartTransactions(income, expense);
+		// If the chart is empty then build the chart
+		if(isNotEmpty(transactionsChart)) {
+			transactionsChart.update(dataPreferencesChart);
+		} else {
+			buildPieChart(dataPreferencesChart, 'chartFinancialPosition');
+		}
 	}
 	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
@@ -1160,6 +1166,9 @@ $(document).ready(function(){
         };
         
         // Reset the chart
+        if(isNotEmpty(transactionsChart)) {
+        	transactionsChart.detach();
+        }
         replaceHTML(id, '');
         
         if(isNotEmpty(dataPreferences)) {

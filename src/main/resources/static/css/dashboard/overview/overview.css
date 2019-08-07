@@ -246,7 +246,7 @@
 	fill: #FFF;
 }
 
-.optimization-meter.all-optimized {
+.optimization-meter.all-optimized, .coloredTransactionLine {
 	fill: #00bcd4;
 }
 
@@ -258,9 +258,21 @@
 	color: #2e4369;
 }
 
+.transactions-empty-svg {
+	 fill:#D9D9D9;
+}
+
+.transactions-empty-svg {
+	margin-top: 8rem;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {
 		font-size: 0.875rem;	
+	}
+	
+	.checkListBO {
+		width: 7.2rem;
 	}
 }

@@ -879,7 +879,3 @@ progress {
 	margin-right: auto;
 	display: block;
 }
-
-#checkAll[disabled] {
-	cursor: default;
-}
