@@ -567,6 +567,14 @@ fildset > label {
  background:#39843c
 }
 
+.transactions-empty-svg {
+	 fill:#D9D9D9;
+}
+
+.coloredTransactionLine {
+	fill: #4caf50;
+}
+
 /** Change the size of the text if the width and height pf the screen are more **/
 @media (min-width:60em) and (min-height:43.75em) {
 	

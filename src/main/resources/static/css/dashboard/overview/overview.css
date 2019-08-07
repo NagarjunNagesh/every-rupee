@@ -260,10 +260,7 @@
 
 .transactions-empty-svg {
 	 fill:#D9D9D9;
-}
-
-.transactions-empty-svg {
-	margin-top: 8rem;
+	 margin-top: 8rem;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
