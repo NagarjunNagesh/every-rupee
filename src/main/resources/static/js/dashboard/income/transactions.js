@@ -1055,13 +1055,12 @@ $(document).ready(function(){
 	        			previousCategoryId = lastElement(splitElement(classItem,'-'));
 	        			let categoryAmount = er.convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText,currentCurrencyPreference);
 	        			
+	        			// Category Header Deletion
 	        			if(categoryAmount == 0) {
 	        				$('.amountCategoryId-' + previousCategoryId).parent().closest('div').fadeOut('slow', function(){ 
 	        					$(this).remove(); 
 	        					// Toggle Category Modal 
 	                        	toggleCategoryModal(false);
-	                        	// Check all functionality if all transactions are clicked
-	                        	checkAllIfAllAreChecked();
 	        				});
 	        			}
 	        			
@@ -1072,8 +1071,12 @@ $(document).ready(function(){
             	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
             	let closestTrLength = closestTr.length;
             	
+            	// Remove Transactions Row
             	closestTr.fadeOut('slow', function(){
             		$(this).remove(); 
+            		
+            		// Check all functionality if all transactions are clicked
+                	checkAllIfAllAreChecked();
             		
             		// Execute these transactions only once after all elements have faded out
             		if(!--closestTrLength) {
