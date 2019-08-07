@@ -518,16 +518,22 @@ $(document).ready(function(){
 		}
 		
 		// Click the checkAll is all the checkboxes are clicked
-		let allCheckedTransactions = $(".number:checked");
-		let allTransactions = $(".number");
-		if(allCheckedTransactions.length == allTransactions.length) {
-			$("#checkAll").prop('checked', true);
-		}
+		checkAllIfAllAreChecked();
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
 		$(this).parent().closest('div').parent().closest('div').parent().closest('div').toggleClass('background-snow', 300);
 	});
+	
+	// Check All if all of the checkbox is clicked
+	function checkAllIfAllAreChecked() {
+		// Click the checkAll is all the checkboxes are clicked
+		let allCheckedTransactions = $(".number:checked");
+		let allTransactions = $(".number");
+		if(allCheckedTransactions.length == allTransactions.length) {
+			$("#checkAll").prop('checked', true);
+		}
+	}
 	
 	// Select all check boxes for Transactions
 	$("#checkAll").click(function () {
@@ -1054,6 +1060,8 @@ $(document).ready(function(){
 	        					$(this).remove(); 
 	        					// Toggle Category Modal 
 	                        	toggleCategoryModal(false);
+	                        	// Check all functionality if all transactions are clicked
+	                        	checkAllIfAllAreChecked();
 	        				});
 	        			}
 	        			
