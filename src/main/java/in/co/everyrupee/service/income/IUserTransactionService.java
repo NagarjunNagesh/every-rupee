@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.util.MultiValueMap;
 
+import in.co.everyrupee.pojo.TransactionType;
 import in.co.everyrupee.pojo.income.UserTransaction;
 
 public interface IUserTransactionService {
@@ -22,5 +23,7 @@ public interface IUserTransactionService {
 	    boolean updateBudget);
 
     List<UserTransaction> fetchUserTransactionByCreationDate(Integer financialPortfolioId, String dateMeantFor);
+
+    Object fetchLifetimeCalculations(TransactionType type, boolean fetchAverage, Integer pFinancialPortfolioId);
 
 }

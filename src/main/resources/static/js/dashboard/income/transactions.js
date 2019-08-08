@@ -160,7 +160,7 @@ $(document).ready(function(){
     			let transactionsTableDiv = document.createDocumentFragment();
     			let documentTbody = document.getElementById(replaceTransactionsId);
     			// uncheck the select all checkbox if checked
-    			$("#checkAll").prop("checked", false); 
+    			let checkAllBox = document.getElementById('checkAll');
     			// Fetch all the key set for the result
     			let resultKeySet = Object.keys(result)
              	for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
@@ -191,9 +191,12 @@ $(document).ready(function(){
     		   
     		   // Update table with empty message if the transactions are empty
     		   if(result.length == 0) {
+    			   checkAllBox.setAttribute('disabled', 'disabled');
     			   documentTbody.innerHTML = '';
     			   document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
     		   } else {
+    			   $('#checkAll').prop('checked', false);
+       			   checkAllBox.removeAttribute('disabled');
     			   documentTbody.innerHTML = '';
     			   documentTbody.appendChild(transactionsTableDiv);
     		   }
@@ -515,16 +518,22 @@ $(document).ready(function(){
 		}
 		
 		// Click the checkAll is all the checkboxes are clicked
-		let allCheckedTransactions = $(".number:checked");
-		let allTransactions = $(".number");
-		if(allCheckedTransactions.length == allTransactions.length) {
-			$("#checkAll").prop('checked', true);
-		}
+		checkAllIfAllAreChecked();
 		manageDeleteTransactionsButton();
 		
 		// Change color of the background when the check box is checked
 		$(this).parent().closest('div').parent().closest('div').parent().closest('div').toggleClass('background-snow', 300);
 	});
+	
+	// Check All if all of the checkbox is clicked
+	function checkAllIfAllAreChecked() {
+		// Click the checkAll is all the checkboxes are clicked
+		let allCheckedTransactions = $(".number:checked");
+		let allTransactions = $(".number");
+		if(allCheckedTransactions.length == allTransactions.length) {
+			$("#checkAll").prop('checked', true);
+		}
+	}
 	
 	// Select all check boxes for Transactions
 	$("#checkAll").click(function () {
@@ -586,7 +595,9 @@ $(document).ready(function(){
 			                        	// If Check All is clicked them empty div and reset pie chart
 			                        	if(checkAllClicked){
 			                        		// uncheck the select all checkbox if checked
-				                			$("#checkAll").prop("checked", false); 
+			                        		let checkAllBox = document.getElementById('checkAll');
+			                        		$('#checkAll').prop('checked',false);
+			                        		checkAllBox.setAttribute('disabled','disabled');
 			                        		let documentTbody = document.getElementById(replaceTransactionsId);
 			                        		documentTbody.innerHTML = '';
 			                 			   	document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
@@ -757,7 +768,7 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Description - disable enter key and submit request (key press and key up necessary)
+	// Description - disable enter key and submit request (key press necessary for prevention of a new line)
 	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
@@ -829,8 +840,8 @@ $(document).ready(function(){
 		$(this).parent().closest('div').removeClass('tableRowTransactionHighlight');
 	});
 	
-	// Amount - disable enter key and submit request
-	$('#transactionsTable').on('keypress', '.amountTransactionsRow' , function(e) {
+	// Amount - disable enter key and submit request (Key up for making sure that the remove button is shown)
+	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
 		    e.preventDefault();
@@ -923,14 +934,15 @@ $(document).ready(function(){
 	function appendButtonForAmountEdition(enteredText, selectTransactionId) {
 		// append remove button if the transaction amount is zero
 		let budgetTableCell = document.getElementById('budgetTransactionsRow-' + selectTransactionId[selectTransactionId.length - 1]);
-	  if(enteredText == 0 || isNaN(enteredText)){
-		// Handles the addition of buttons in the budget column for the row
+		
+		if(enteredText == 0 || isNaN(enteredText)){
+		  // Handles the addition of buttons in the budget column for the row
 		  budgetTableCell.innerHTML = deleteButton;
 		  budgetTableCell.classList.add('fadeInAnimation');
-	  } else if(enteredText > 0 && budgetTableCell != null){
+		} else if(enteredText > 0 && budgetTableCell != null){
 		  budgetTableCell.classList.add('fadeOutAnimation');
 		  budgetTableCell.innerHTML = '';
-	  }
+		}
 	}
 	
 	// Update the category amount
@@ -991,8 +1003,13 @@ $(document).ready(function(){
 		replaceHTML('totalAvailableTransactions' , minusSign + currentCurrencyPreference + formatNumber(availableCash, currentUser.locale));
 		
 		// Update the pie chart
-		transactionsChart.update(updatePieChartTransactions(income, expense));
-		
+		let dataPreferencesChart = updatePieChartTransactions(income, expense);
+		// If the chart is empty then build the chart
+		if(isNotEmpty(transactionsChart)) {
+			transactionsChart.update(dataPreferencesChart);
+		} else {
+			buildPieChart(dataPreferencesChart, 'chartFinancialPosition');
+		}
 	}
 	
 	// Append currency to amount if it exist and a '-' sign if it is a transaction
@@ -1038,6 +1055,7 @@ $(document).ready(function(){
 	        			previousCategoryId = lastElement(splitElement(classItem,'-'));
 	        			let categoryAmount = er.convertToNumberFromCurrency($('.amountCategoryId-' + previousCategoryId)[0].innerText,currentCurrencyPreference);
 	        			
+	        			// Category Header Deletion
 	        			if(categoryAmount == 0) {
 	        				$('.amountCategoryId-' + previousCategoryId).parent().closest('div').fadeOut('slow', function(){ 
 	        					$(this).remove(); 
@@ -1053,8 +1071,12 @@ $(document).ready(function(){
             	let closestTr = $('#budgetTransactionsRow-' + id).parent().closest('div');
             	let closestTrLength = closestTr.length;
             	
+            	// Remove Transactions Row
             	closestTr.fadeOut('slow', function(){
             		$(this).remove(); 
+            		
+            		// Check all functionality if all transactions are clicked
+                	checkAllIfAllAreChecked();
             		
             		// Execute these transactions only once after all elements have faded out
             		if(!--closestTrLength) {
@@ -1062,9 +1084,17 @@ $(document).ready(function(){
                      	manageDeleteTransactionsButton();
                      	// Updates total transactions in category Modal if open with this category
         	        	updateTotalTransactionsInCategoryModal(previousCategoryId);
+        	        	// Display Table Empty Div if all the table rows are deleted
+        	        	let tableBodyDiv = document.getElementById(replaceTransactionsId);
+                    	if(tableBodyDiv.childElementCount === 0) {
+                    		tableBodyDiv.appendChild(fetchEmptyTableMessage());
+                    		// uncheck the select all checkbox if checked
+                			let checkAllBox = document.getElementById('checkAll');
+                			$('#checkAll').prop('checked',false);
+                			checkAllBox.setAttribute('disabled', 'disabled');
+                    	}
             		}
             	});
-            	
             },
             error: function (thrownError) {
            	 let responseError = JSON.parse(thrownError.responseText);
@@ -1103,10 +1133,8 @@ $(document).ready(function(){
 		
 		// Row 3
 		let categoryTableCell = document.createElement('div');
-		
-		let imgElement =  document.createElement('img');
-		imgElement.src = '../img/dashboard/icons8-document-128.png';
-		categoryTableCell.appendChild(imgElement);
+		categoryTableCell.className = 'd-lg-table-cell text-center align-middle';
+		categoryTableCell.appendChild(buildEmptyTransactionsSvg());
 		emptyTableRow.appendChild(categoryTableCell);
 		
 		// Row 4
@@ -1114,7 +1142,7 @@ $(document).ready(function(){
 		descriptionTableCell.className = 'd-lg-table-cell';
 		
 		let paragraphElement = document.createElement('p');
-		paragraphElement.className = 'text-secondary';
+		paragraphElement.className = 'text-secondary mb-0';
 		paragraphElement.innerHTML = 'There are no transactions yet. Start adding some to track your spending.';
 		
 		descriptionTableCell.appendChild(paragraphElement);
@@ -1133,6 +1161,63 @@ $(document).ready(function(){
 		return emptyTableRow;
 	}
 	
+	// Empty Transactions SVG
+	function buildEmptyTransactionsSvg() {
+		
+		let svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+		svgElement.setAttribute('width','64');
+		svgElement.setAttribute('height','64');
+    	svgElement.setAttribute('viewBox','0 0 64 64');
+    	svgElement.setAttribute('class','transactions-empty-svg');
+    	
+    	let pathElement1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement1.setAttribute('d','M 5 8 C 3.346 8 2 9.346 2 11 L 2 53 C 2 54.654 3.346 56 5 56 L 59 56 C 60.654 56 62 54.654 62 53 L 62 11 C 62 9.346 60.654 8 59 8 L 5 8 z M 5 10 L 59 10 C 59.551 10 60 10.449 60 11 L 60 20 L 4 20 L 4 11 C 4 10.449 4.449 10 5 10 z M 28 12 C 26.897 12 26 12.897 26 14 L 26 16 C 26 17.103 26.897 18 28 18 L 56 18 C 57.103 18 58 17.103 58 16 L 58 14 C 58 12.897 57.103 12 56 12 L 28 12 z M 28 14 L 56 14 L 56.001953 16 L 28 16 L 28 14 z M 4 22 L 60 22 L 60 53 C 60 53.551 59.551 54 59 54 L 5 54 C 4.449 54 4 53.551 4 53 L 4 22 z'); 
+    	svgElement.appendChild(pathElement1);
+    	
+    	let pathElement11 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement11.setAttribute('class','coloredTransactionLine');
+    	pathElement11.setAttribute('d',' M 8 13 A 2 2 0 0 0 6 15 A 2 2 0 0 0 8 17 A 2 2 0 0 0 10 15 A 2 2 0 0 0 8 13 z'); 
+    	svgElement.appendChild(pathElement11);
+    	
+    	let pathElement12 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement12.setAttribute('d',' M 14 13 A 2 2 0 0 0 12 15 A 2 2 0 0 0 14 17 A 2 2 0 0 0 16 15 A 2 2 0 0 0 14 13 z M 20 13 A 2 2 0 0 0 18 15 A 2 2 0 0 0 20 17 A 2 2 0 0 0 22 15 A 2 2 0 0 0 20 13 z '); 
+    	svgElement.appendChild(pathElement12);
+    	
+    	let pathElement2 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement2.setAttribute('class','coloredTransactionLine');
+    	pathElement2.setAttribute('d','M 11 27.974609 C 10.448 27.974609 10 28.422609 10 28.974609 C 10 29.526609 10.448 29.974609 11 29.974609 L 15 29.974609 C 15.552 29.974609 16 29.526609 16 28.974609 C 16 28.422609 15.552 27.974609 15 27.974609 L 11 27.974609 z M 19 27.974609 C 18.448 27.974609 18 28.422609 18 28.974609 C 18 29.526609 18.448 29.974609 19 29.974609 L 33 29.974609 C 33.552 29.974609 34 29.526609 34 28.974609 C 34 28.422609 33.552 27.974609 33 27.974609 L 19 27.974609 z'); 
+    	svgElement.appendChild(pathElement2);
+    	
+    	let pathElement21 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement21.setAttribute('d',' M 39 27.974609 C 38.448 27.974609 38 28.422609 38 28.974609 C 38 29.526609 38.448 29.974609 39 29.974609 L 41 29.974609 C 41.552 29.974609 42 29.526609 42 28.974609 C 42 28.422609 41.552 27.974609 41 27.974609 L 39 27.974609 z M 45 27.974609 C 44.448 27.974609 44 28.422609 44 28.974609 C 44 29.526609 44.448 29.974609 45 29.974609 L 47 29.974609 C 47.552 29.974609 48 29.526609 48 28.974609 C 48 28.422609 47.552 27.974609 47 27.974609 L 45 27.974609 z M 51 27.974609 C 50.448 27.974609 50 28.422609 50 28.974609 C 50 29.526609 50.448 29.974609 51 29.974609 L 53 29.974609 C 53.552 29.974609 54 29.526609 54 28.974609 C 54 28.422609 53.552 27.974609 53 27.974609 L 51 27.974609 z');
+    	svgElement.appendChild(pathElement21);
+    	
+    	let pathElement3 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement3.setAttribute('class','coloredTransactionLine');
+    	pathElement3.setAttribute('d','M 11 33.974609 C 10.448 33.974609 10 34.422609 10 34.974609 C 10 35.526609 10.448 35.974609 11 35.974609 L 15 35.974609 C 15.552 35.974609 16 35.526609 16 34.974609 C 16 34.422609 15.552 33.974609 15 33.974609 L 11 33.974609 z M 19 33.974609 C 18.448 33.974609 18 34.422609 18 34.974609 C 18 35.526609 18.448 35.974609 19 35.974609 L 33 35.974609 C 33.552 35.974609 34 35.526609 34 34.974609 C 34 34.422609 33.552 33.974609 33 33.974609 L 19 33.974609 z'); 
+    	svgElement.appendChild(pathElement3);
+    	
+    	let pathElement31 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement31.setAttribute('d',' M 45 33.974609 C 44.448 33.974609 44 34.422609 44 34.974609 C 44 35.526609 44.448 35.974609 45 35.974609 L 47 35.974609 C 47.552 35.974609 48 35.526609 48 34.974609 C 48 34.422609 47.552 33.974609 47 33.974609 L 45 33.974609 z M 51 33.974609 C 50.448 33.974609 50 34.422609 50 34.974609 C 50 35.526609 50.448 35.974609 51 35.974609 L 53 35.974609 C 53.552 35.974609 54 35.526609 54 34.974609 C 54 34.422609 53.552 33.974609 53 33.974609 L 51 33.974609 z'); 
+    	svgElement.appendChild(pathElement31);
+    	
+    	let pathElement4 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement4.setAttribute('class','coloredTransactionLine');
+    	pathElement4.setAttribute('d','M 11 39.974609 C 10.448 39.974609 10 40.422609 10 40.974609 C 10 41.526609 10.448 41.974609 11 41.974609 L 15 41.974609 C 15.552 41.974609 16 41.526609 16 40.974609 C 16 40.422609 15.552 39.974609 15 39.974609 L 11 39.974609 z M 19 39.974609 C 18.448 39.974609 18 40.422609 18 40.974609 C 18 41.526609 18.448 41.974609 19 41.974609 L 33 41.974609 C 33.552 41.974609 34 41.526609 34 40.974609 C 34 40.422609 33.552 39.974609 33 39.974609 L 19 39.974609 z'); 
+    	svgElement.appendChild(pathElement4);
+    	
+    	let pathElement41 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement41.setAttribute('d','M 39 39.974609 C 38.448 39.974609 38 40.422609 38 40.974609 C 38 41.526609 38.448 41.974609 39 41.974609 L 41 41.974609 C 41.552 41.974609 42 41.526609 42 40.974609 C 42 40.422609 41.552 39.974609 41 39.974609 L 39 39.974609 z M 45 39.974609 C 44.448 39.974609 44 40.422609 44 40.974609 C 44 41.526609 44.448 41.974609 45 41.974609 L 47 41.974609 C 47.552 41.974609 48 41.526609 48 40.974609 C 48 40.422609 47.552 39.974609 47 39.974609 L 45 39.974609 z M 51 39.974609 C 50.448 39.974609 50 40.422609 50 40.974609 C 50 41.526609 50.448 41.974609 51 41.974609 L 53 41.974609 C 53.552 41.974609 54 41.526609 54 40.974609 C 54 40.422609 53.552 39.974609 53 39.974609 L 51 39.974609 z ');
+    	svgElement.appendChild(pathElement41);
+    	
+    	let pathElement5 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    	pathElement5.setAttribute('d','M 7 48 C 6.448 48 6 48.448 6 49 L 6 51 C 6 51.552 6.448 52 7 52 C 7.552 52 8 51.552 8 51 L 8 49 C 8 48.448 7.552 48 7 48 z M 12 48 C 11.448 48 11 48.448 11 49 L 11 51 C 11 51.552 11.448 52 12 52 C 12.552 52 13 51.552 13 51 L 13 49 C 13 48.448 12.552 48 12 48 z M 17 48 C 16.448 48 16 48.448 16 49 L 16 51 C 16 51.552 16.448 52 17 52 C 17.552 52 18 51.552 18 51 L 18 49 C 18 48.448 17.552 48 17 48 z M 22 48 C 21.448 48 21 48.448 21 49 L 21 51 C 21 51.552 21.448 52 22 52 C 22.552 52 23 51.552 23 51 L 23 49 C 23 48.448 22.552 48 22 48 z M 27 48 C 26.448 48 26 48.448 26 49 L 26 51 C 26 51.552 26.448 52 27 52 C 27.552 52 28 51.552 28 51 L 28 49 C 28 48.448 27.552 48 27 48 z M 32 48 C 31.448 48 31 48.448 31 49 L 31 51 C 31 51.552 31.448 52 32 52 C 32.552 52 33 51.552 33 51 L 33 49 C 33 48.448 32.552 48 32 48 z M 37 48 C 36.448 48 36 48.448 36 49 L 36 51 C 36 51.552 36.448 52 37 52 C 37.552 52 38 51.552 38 51 L 38 49 C 38 48.448 37.552 48 37 48 z M 42 48 C 41.448 48 41 48.448 41 49 L 41 51 C 41 51.552 41.448 52 42 52 C 42.552 52 43 51.552 43 51 L 43 49 C 43 48.448 42.552 48 42 48 z M 47 48 C 46.448 48 46 48.448 46 49 L 46 51 C 46 51.552 46.448 52 47 52 C 47.552 52 48 51.552 48 51 L 48 49 C 48 48.448 47.552 48 47 48 z M 52 48 C 51.448 48 51 48.448 51 49 L 51 51 C 51 51.552 51.448 52 52 52 C 52.552 52 53 51.552 53 51 L 53 49 C 53 48.448 52.552 48 52 48 z M 57 48 C 56.448 48 56 48.448 56 49 L 56 51 C 56 51.552 56.448 52 57 52 C 57.552 52 58 51.552 58 51 L 58 49 C 58 48.448 57.552 48 57 48 z'); 
+    	svgElement.appendChild(pathElement5);
+
+    	return svgElement;
+    	
+	}
+	
 	// Introduce Chartist pie chart
 	function buildPieChart(dataPreferences, id) {
 		 /*  **************** Public Preferences - Pie Chart ******************** */
@@ -1147,6 +1232,9 @@ $(document).ready(function(){
         };
         
         // Reset the chart
+        if(isNotEmpty(transactionsChart)) {
+        	transactionsChart.detach();
+        }
         replaceHTML(id, '');
         
         if(isNotEmpty(dataPreferences)) {

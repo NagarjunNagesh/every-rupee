@@ -38,6 +38,8 @@ public class DashboardConstants {
 	public static final String CATEGORY_CACHE_NAME = "categories";
 	public static final String CATEGORY_ID_JSON = "categoryId";
 	public static final String CATEGORY_INCOME_OR_NOT = "categoryIncomePrediction";
+	public static final String INCOME_CATEGORY_ID = "2";
+	public static final String EXPENSE_CATEGORY_ID = "1";
     }
 
     public class Transactions {
@@ -57,5 +59,12 @@ public class DashboardConstants {
 	public static final String DATE_MEANT_FOR = "dateMeantFor";
 	public static final String RECURRENCE = "recurrence";
 	public static final String UPDATE_BUDGET_PARAM = "updateBudget";
+    }
+
+    public class Overview {
+	public static final String PARENT_CATEGORY_ID_PARAM = "parentCategoryId";
+	public static final String TYPE_PARAM = "type";
+	public static final String AVERAGE_PARAM = "average";
+	public static final String DATE_MEANT_FOR = "dateMeantFor";
     }
 }

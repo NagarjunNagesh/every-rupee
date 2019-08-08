@@ -9,7 +9,7 @@
 	display: table-row-group;
 }
 
-.recentTransactionDescription {
+.recentTransactionDescription, .overviewHeading {
 	color: #2e4369;
 	letter-spacing: 0;
 	clear: both;
@@ -33,12 +33,16 @@
 	padding-right: 1rem;
 }
 
-.recentTransactionTitle, .optimizationTitle {
+.overviewEntryRow {
+	cursor: pointer;
+	border-top: 1px solid #f6f6f6;
+}
+
+.recentTransactionTitle, .optimizationTitle, .overviewHeadingTab {
 	color: #829ca9;
 	margin-top: 0;
 	margin-bottom: 0;
 	line-height: 30px;
-	font-size: 14px;
 }
 
 .expenseCategory {
@@ -54,7 +58,7 @@
 }
 
 .recentTransactionCard, .optimizationBudgetAndGoal {
-	height: 30rem;
+	height: 35rem;
 }
 
 .w-15 {
@@ -170,6 +174,18 @@
 	padding-top: 0.5rem;	
 }
 
+.overviewEntryRow:hover {
+	background-color: #fafafa;
+}
+
+.overviewEntryRow:hover .overviewHeading {
+	color: #00bcd4;
+}
+
+.overviewEntryRow:hover .overviewChartDisplay {
+	color: #6a6a6a;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (max-width:1300px) {
 	.categoryNameRT, .recentTransactionDescription {
@@ -212,9 +228,89 @@
   background: #00bcd4;
 }
 
+.overviewChartDisplay {
+	color: #8e999e;
+}
+
+.optimization-empty-svg {
+	height: 80px;
+	max-width: 90px;
+	padding: 10px;
+}
+
+.optimization-empty-path-0 {
+	fill: #D9D9D9;
+}
+
+.optimization-empty-path-1 {
+	fill: #FFF;
+}
+
+.optimization-meter.all-optimized, .coloredTransactionLine {
+	fill: #00bcd4;
+}
+
+.optimization-empty-path-2 {
+	fill: #EEE;
+}
+
+.optimizationHeadingColor {
+	color: #2e4369;
+}
+
+.transactions-empty-svg {
+	 fill:#D9D9D9;
+	 margin-top: 8rem;
+}
+
+.incomeImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-rupee-64.png");
+	content: url("../../../img/dashboard/overview/icons8-rupee-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.expenseImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-card-in-use-64.png");
+	content: url("../../../img/dashboard/overview/icons8-card-in-use-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.assetsImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-bank-64.png");
+	content: url("../../../img/dashboard/overview/icons8-bank-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.debtImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-debt-64.png");
+	content: url("../../../img/dashboard/overview/icons8-debt-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.networthImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-money-bag-franc-64.png");
+	content: url("../../../img/dashboard/overview/icons8-money-bag-franc-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.descriptionAverages {
+	color: #5d7079;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {
 		font-size: 0.875rem;	
+	}
+	
+	.checkListBO {
+		width: 7.2rem;
 	}
 }
