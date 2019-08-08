@@ -500,36 +500,45 @@ $(document).ready(function(){
 	 * Chart Module
 	 * 
 	 */ 
+	
+	// Upon refresh call the income overview chart
+	incomeOverviewChart();
+	
+	function incomeOverviewChart() {
+		dataColouredRoundedLineChart = {
+		         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
+		         series: [
+		             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
+		         ]
+		     };
+		 
+		 coloredRounedLineChart(dataColouredRoundedLineChart);
+		 
+	}
 	 
-	  /*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
+	/*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
 
+	function coloredRounedLineChart(dataColouredRoundedLineChart) {
+		 optionsColouredRoundedLineChart = {
+	             lineSmooth: Chartist.Interpolation.cardinal({
+	                 tension: 10
+	             }),
+	             axisY: {
+	                 showGrid: true,
+	                 offset: 40
+	             },
+	             axisX: {
+	                 showGrid: false,
+	             },
+	             low: 0,
+	             high: 1000,
+	             showPoint: true,
+	             height: '300px'
+	         };
+	     
+	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart);
 
-     dataColouredRoundedLineChart = {
-         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
-         series: [
-             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
-         ]
-     };
-     
-     optionsColouredRoundedLineChart = {
-             lineSmooth: Chartist.Interpolation.cardinal({
-                 tension: 10
-             }),
-             axisY: {
-                 showGrid: true,
-                 offset: 40
-             },
-             axisX: {
-                 showGrid: false,
-             },
-             low: 0,
-             high: 1000,
-             showPoint: true,
-             height: '300px'
-         };
-     
-     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart);
+	     md.startAnimationForLineChart(colouredRoundedLineChart);
+	 }
 
-     md.startAnimationForLineChart(colouredRoundedLineChart);
-     
 });
