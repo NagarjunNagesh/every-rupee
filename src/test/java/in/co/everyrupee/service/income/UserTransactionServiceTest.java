@@ -34,6 +34,7 @@ import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.exception.ResourceNotFoundException;
+import in.co.everyrupee.pojo.TransactionType;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.utils.ERStringUtils;
@@ -47,6 +48,9 @@ public class UserTransactionServiceTest {
 
     @MockBean
     private UserTransactionsRepository userTransactionsRepository;
+
+    @MockBean
+    private CategoryService categoryService;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -194,6 +198,17 @@ public class UserTransactionServiceTest {
 	verify(getUserTransactionsRepository(), times(1)).save(Mockito.any());
     }
 
+    /**
+     * TEST: Fetch Average of total income or total expense
+     */
+    @Test
+    public void fetchLifetimeCalculations() {
+
+	getUserTransactionService().fetchLifetimeCalculations(TransactionType.EXPENSE, true, 3);
+	verify(getCategoryService(), times(1)).fetchCategories();
+	verify(getUserTransactionsRepository(), times(1)).findByFinancialPortfolioId(Mockito.any());
+    }
+
     private Date getDateMeantFor() {
 	return dateMeantFor;
     }
@@ -216,6 +231,14 @@ public class UserTransactionServiceTest {
 
     private UserTransactionsRepository getUserTransactionsRepository() {
 	return userTransactionsRepository;
+    }
+
+    public CategoryService getCategoryService() {
+	return categoryService;
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+	this.categoryService = categoryService;
     }
 
 }

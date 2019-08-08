@@ -11,6 +11,9 @@ $(document).ready(function(){
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
 		'overviewUrl': { value: '/api/overview/', writable: false, configurable: false },
 		'recentTransactionUrl': { value: 'recentTransactions/', writable: false, configurable: false },
+		'lifetimeUrl': { value:'lifetime/', writable: false, configurable: false },
+		'incomeAverageParam': { value:'?type=INCOME&average=true', writable: false, configurable: false },
+		'expenseAverageParam': { value:'?type=EXPENSE&average=true', writable: false, configurable: false }
 	});
 
 	// Populate Recent transactions
@@ -406,6 +409,11 @@ $(document).ready(function(){
     	return svgElement;
 	}
 	
+	// Click optimization Button functionality
+	document.getElementById("optimizeButton").addEventListener("click",function(e){
+		//TODO optimize button functionality
+	},false);
+	
 	/**
 	 * Select All  - Functionality
 	 */
@@ -453,6 +461,39 @@ $(document).ready(function(){
 		} else {
 			manageOptimizationsButton.setAttribute('disabled','disabled');
 		}  
+	}
+	
+	/**
+	 * Populate Income Average
+	 */
+	
+	populateIncomeAverage();
+	
+	// Populate Income Average
+	function populateIncomeAverage() {
+		jQuery.ajax({
+			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + OVERVIEW_CONSTANTS.incomeAverageParam,
+	        type: 'GET',
+	        success: function(averageIncome) {
+	        	document.getElementById('averageIncomeAmount').innerText = currentCurrencyPreference + formatNumber(averageIncome, currentUser.locale);
+	        }
+		});
+	}
+	
+	/**
+	 *  Populate Expense Average
+	 */
+	populateExpenseAverage();
+	
+	// Populate Expense Average
+	function  populateExpenseAverage() {
+		jQuery.ajax({
+			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + OVERVIEW_CONSTANTS.expenseAverageParam,
+	        type: 'GET',
+	        success: function(averageIncome) {
+	        	document.getElementById('averageExpenseAmount').innerText = currentCurrencyPreference + formatNumber(averageIncome, currentUser.locale);
+	        }
+		});
 	}
 	
 	/**

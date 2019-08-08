@@ -263,6 +263,47 @@
 	 margin-top: 8rem;
 }
 
+.incomeImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-rupee-64.png");
+	content: url("../../../img/dashboard/overview/icons8-rupee-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.expenseImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-card-in-use-64.png");
+	content: url("../../../img/dashboard/overview/icons8-card-in-use-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.assetsImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-bank-64.png");
+	content: url("../../../img/dashboard/overview/icons8-bank-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.debtImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-debt-64.png");
+	content: url("../../../img/dashboard/overview/icons8-debt-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.networthImage .image-center {
+	background-image: url("../../../img/dashboard/overview/icons8-money-bag-franc-64.png");
+	content: url("../../../img/dashboard/overview/icons8-money-bag-franc-64.png");
+	height: 64px;
+	width: 64px;
+}
+
+.descriptionAverages {
+	color: #5d7079;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

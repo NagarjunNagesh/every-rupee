@@ -2,6 +2,7 @@ package in.co.everyrupee.controller.overview;
 
 import java.security.Principal;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.co.everyrupee.constants.income.DashboardConstants;
+import in.co.everyrupee.pojo.TransactionType;
 import in.co.everyrupee.service.income.IUserTransactionService;
 import in.co.everyrupee.service.login.ProfileService;
 
@@ -42,11 +44,29 @@ public class OverviewController {
      */
     @RequestMapping(value = "/recentTransactions", method = RequestMethod.GET)
     public Object getUserTransactionByFinancialPortfolioId(Principal userPrincipal,
-	    @RequestParam(DashboardConstants.Transactions.DATE_MEANT_FOR) @Size(min = 0, max = 10) String dateMeantFor) {
+	    @RequestParam(DashboardConstants.Overview.DATE_MEANT_FOR) @Size(min = 0, max = 10) String dateMeantFor) {
 
 	Integer pFinancialPortfolioId = getProfileService().validateUser(userPrincipal);
 
 	return getUserTransactionService().fetchUserTransactionByCreationDate(pFinancialPortfolioId, dateMeantFor);
+    }
+
+    /**
+     * Fetch the lifetime average income / average expense /
+     * 
+     * @param userPrincipal
+     * @param type
+     * @param fetchAverage
+     * @return
+     */
+    @RequestMapping(value = "/lifetime", method = RequestMethod.GET)
+    public Object getLifetimeIncomeByFinancialPortfolioId(Principal userPrincipal,
+	    @Valid @RequestParam(DashboardConstants.Overview.TYPE_PARAM) TransactionType type,
+	    @RequestParam(DashboardConstants.Overview.AVERAGE_PARAM) boolean fetchAverage) {
+
+	Integer pFinancialPortfolioId = getProfileService().validateUser(userPrincipal);
+
+	return getUserTransactionService().fetchLifetimeCalculations(type, fetchAverage, pFinancialPortfolioId);
     }
 
     private ProfileService getProfileService() {

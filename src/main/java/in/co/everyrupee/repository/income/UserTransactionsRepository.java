@@ -21,6 +21,11 @@ import in.co.everyrupee.pojo.income.UserTransaction;
  */
 @Repository
 public interface UserTransactionsRepository extends JpaRepository<UserTransaction, Integer> {
+    /**
+     * 
+     * @param financialPortfolioId
+     * @return
+     */
     List<UserTransaction> findByFinancialPortfolioId(String financialPortfolioId);
 
     /**

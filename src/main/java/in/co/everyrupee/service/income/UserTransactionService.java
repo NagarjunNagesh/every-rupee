@@ -36,6 +36,8 @@ import in.co.everyrupee.events.income.OnFetchCategoryTotalCompleteEvent;
 import in.co.everyrupee.exception.InvalidAttributeValueException;
 import in.co.everyrupee.exception.ResourceNotFoundException;
 import in.co.everyrupee.pojo.RecurrencePeriod;
+import in.co.everyrupee.pojo.TransactionType;
+import in.co.everyrupee.pojo.income.Category;
 import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
@@ -51,6 +53,9 @@ public class UserTransactionService implements IUserTransactionService {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private CategoryService categoryService;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -275,6 +280,87 @@ public class UserTransactionService implements IUserTransactionService {
 	}
 
 	return userTransactions;
+    }
+
+    /**
+     * OVERVIEW: Fetch lifetime calculations
+     */
+    @Override
+    public Object fetchLifetimeCalculations(TransactionType type, boolean fetchAverage, Integer pfinancialPortfolioId) {
+
+	if (pfinancialPortfolioId == null) {
+	    throw new InvalidAttributeValueException("fetchUserTransactionByCreationDate", "financialPortfolioId",
+		    pfinancialPortfolioId);
+	}
+
+	switch (type) {
+
+	case INCOME:
+	    return calculateLifetimeForExpenseOrIncome(fetchAverage, pfinancialPortfolioId,
+		    DashboardConstants.Category.INCOME_CATEGORY_ID);
+	case EXPENSE:
+	    return calculateLifetimeForExpenseOrIncome(fetchAverage, pfinancialPortfolioId,
+		    DashboardConstants.Category.EXPENSE_CATEGORY_ID);
+
+	}
+	return null;
+    }
+
+    /**
+     * Calculate the lifetime expense with average or sends a list of all the income
+     * over a span of a year
+     * 
+     * @param fetchAverage
+     * @param pFinancialPortfolioId
+     */
+    private Object calculateLifetimeForExpenseOrIncome(boolean fetchAverage, Integer pFinancialPortfolioId,
+	    String parentCategoryId) {
+	List<UserTransaction> lifetimeTransactions = userTransactionsRepository
+		.findByFinancialPortfolioId(pFinancialPortfolioId.toString());
+
+	List<Category> categories = categoryService.fetchCategories();
+
+	if (fetchAverage) {
+	    return fetchAverageAmount(parentCategoryId, lifetimeTransactions, categories);
+	}
+
+	return null;
+    }
+
+    /**
+     * Fetch average amount parent category
+     * 
+     * @param parentCategoryId
+     * @param lifetimeTransactions
+     * @param categories
+     * @return
+     */
+    private Object fetchAverageAmount(String parentCategoryId, List<UserTransaction> lifetimeTransactions,
+	    List<Category> categories) {
+	Set<Date> dateMeantForSet = new HashSet<Date>();
+
+	// Iterate all the transactions within which iterate all the categories and then
+	// store all the income total
+	List<Double> incomeCategoryTotal = lifetimeTransactions.stream().map(userTransaction -> {
+	    Category currentCategory = categories.stream()
+		    .filter(categoryItem -> userTransaction.getCategoryId() == categoryItem.getCategoryId()).findAny()
+		    .orElse(null);
+	    if (currentCategory != null
+		    && ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), parentCategoryId)) {
+		dateMeantForSet.add(userTransaction.getDateMeantFor());
+		return userTransaction.getAmount();
+	    }
+	    return 0d;
+	}).collect(Collectors.toList());
+
+	// Calculate the total income
+	Double incomeTotal = incomeCategoryTotal.stream().mapToDouble(incomeAmount -> incomeAmount.doubleValue()).sum();
+
+	if (dateMeantForSet.size() == 0) {
+	    return 0d;
+	} else {
+	    return (incomeTotal / dateMeantForSet.size());
+	}
     }
 
 }

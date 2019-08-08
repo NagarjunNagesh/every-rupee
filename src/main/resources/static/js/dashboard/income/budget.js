@@ -306,9 +306,12 @@ $(document).ready(function(){
 		} else if(detachChart) {
 			// Remove the donut chart from the DOM
 			let chartDonutSVG = document.getElementsByClassName('ct-chart-donut');
-			chartDonutSVG[0].parentNode.removeChild(chartDonutSVG[0]);
-			// Detach the chart
-			budgetCategoryChart.detach();
+			
+			if(chartDonutSVG.length > 0) {
+				chartDonutSVG[0].parentNode.removeChild(chartDonutSVG[0]);
+				// Detach the chart
+				budgetCategoryChart.detach();
+			}
 		} else  {
 			budgetCategoryChart.update(dataPreferences);
 		}
