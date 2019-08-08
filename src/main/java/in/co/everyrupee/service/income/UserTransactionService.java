@@ -57,7 +57,7 @@ public class UserTransactionService implements IUserTransactionService {
     @Autowired
     private CategoryService categoryService;
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     /**
      * fetches User Transactions for a particular user
@@ -74,7 +74,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user Transaction");
+	    LOGGER.error(e + " Unable to add date to the user Transaction");
 	    return userTransactions;
 	}
 
@@ -82,7 +82,7 @@ public class UserTransactionService implements IUserTransactionService {
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    LOGGER.warn("user transactions data is empty for user ", user.getUsername());
 	    return userTransactions;
 	}
 
@@ -105,7 +105,7 @@ public class UserTransactionService implements IUserTransactionService {
 	    }
 	}
 
-	logger.debug("finished sorting for the financial portfolio - " + pFinancialPortfolioId);
+	LOGGER.debug("finished sorting for the financial portfolio - " + pFinancialPortfolioId);
 
 	return userTransactionsMap;
     }
@@ -144,7 +144,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    userTransaction.setDateMeantFor(new SimpleDateFormat(DashboardConstants.DATE_FORMAT).parse(dateString));
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user budget");
+	    LOGGER.error(e + " Unable to add date to the user budget");
 	}
 
 	UserTransaction userTransactionResponse = userTransactionsRepository.save(userTransaction);
@@ -220,7 +220,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user transaction");
+	    LOGGER.error(e + " Unable to add date to the user transaction");
 	}
 
 	List<UserTransaction> userTransactions = userTransactionsRepository
@@ -228,7 +228,7 @@ public class UserTransactionService implements IUserTransactionService {
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    MyUser user = (MyUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    LOGGER.warn("user transactions data is empty for user ", user.getUsername());
 	    return categoryAndTotalAmountMap;
 	}
 
@@ -268,7 +268,7 @@ public class UserTransactionService implements IUserTransactionService {
 	try {
 	    date = format.parse(dateMeantFor);
 	} catch (ParseException e) {
-	    logger.error(e + " Unable to add date to the user Transaction");
+	    LOGGER.error(e + " Unable to add date to the user Transaction");
 	    return userTransactions;
 	}
 	userTransactions = userTransactionsRepository.findByFinancialPortfolioIdAndDate(financialPortfolioId.toString(),
@@ -276,7 +276,7 @@ public class UserTransactionService implements IUserTransactionService {
 
 	if (CollectionUtils.isEmpty(userTransactions)) {
 	    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	    logger.warn("user transactions data is empty for user ", user.getUsername());
+	    LOGGER.warn("user transactions data is empty for user ", user.getUsername());
 	}
 
 	return userTransactions;
@@ -301,6 +301,9 @@ public class UserTransactionService implements IUserTransactionService {
 	case EXPENSE:
 	    return calculateLifetimeForExpenseOrIncome(fetchAverage, pfinancialPortfolioId,
 		    DashboardConstants.Category.EXPENSE_CATEGORY_ID);
+	default:
+	    LOGGER.error("fetchLifetimeCalculations: TransactionType is not mapped to the ENUM class");
+	    break;
 
 	}
 	return null;

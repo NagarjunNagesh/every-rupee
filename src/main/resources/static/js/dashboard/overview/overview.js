@@ -410,7 +410,7 @@ $(document).ready(function(){
 	}
 	
 	// Click optimization Button functionality
-	document.getElementById("optimizeButton").addEventListener("click",function(e){
+	document.getElementById("optimizeButton").addEventListener("click",function(){
 		//TODO optimize button functionality
 	},false);
 	
