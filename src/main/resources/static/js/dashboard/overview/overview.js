@@ -221,7 +221,7 @@ $(document).ready(function(){
 	}
 	
 	/**
-	 * Optimizations Module
+	 * Optimizations Functionality
 	 */
 	// Fetch transaction total 
 	fetchCategoryTotalForTransactions();
@@ -497,7 +497,7 @@ $(document).ready(function(){
 	}
 	
 	/**
-	 * Chart Module
+	 * Chart Functionality
 	 * 
 	 */ 
 	
