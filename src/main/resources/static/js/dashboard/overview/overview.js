@@ -14,6 +14,7 @@ $(document).ready(function(){
 		'lifetimeUrl': { value:'lifetime/', writable: false, configurable: false },
 		'incomeAverageParam': { value:'?type=INCOME&average=true', writable: false, configurable: false },
 		'expenseAverageParam': { value:'?type=EXPENSE&average=true', writable: false, configurable: false }
+		'incomeTotalParam': { value:'?type=INCOME&average=false', writable: false, configurable: false }
 	});
 
 	// Populate Recent transactions
@@ -505,15 +506,20 @@ $(document).ready(function(){
 	incomeOverviewChart();
 	
 	function incomeOverviewChart() {
-		dataColouredRoundedLineChart = {
-		         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
-		         series: [
-		             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
-		         ]
-		     };
-		 
-		 coloredRounedLineChart(dataColouredRoundedLineChart);
-		 
+		jQuery.ajax({
+			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + OVERVIEW_CONSTANTS.incomeTotalParam,
+	        type: 'GET',
+	        success: function(totalIncome) {
+	        	dataColouredRoundedLineChart = {
+	   		         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
+	   		         series: [
+	   		             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
+	   		         ]
+	   		     };
+	   		 
+	   		 	coloredRounedLineChart(dataColouredRoundedLineChart);
+	        }
+		});
 	}
 	 
 	/*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
