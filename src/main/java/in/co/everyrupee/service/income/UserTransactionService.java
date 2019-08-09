@@ -354,8 +354,9 @@ public class UserTransactionService implements IUserTransactionService {
 	// Fetch all the unique dates
 	Map<Date, Double> dateAndAmountAsList = new HashMap<Date, Double>();
 
-	// Map of Date and Sum of all the transaction amounts
-	dateAndAmountAsList = lifetimeTransactions.stream().collect(Collectors
+	// Map of Date and Sum of all the transaction amounts and sorts by the
+	// datemeantfor
+	dateAndAmountAsList = lifetimeTransactions.stream().sorted().collect(Collectors
 		.groupingBy(UserTransaction::getDateMeantFor, Collectors.summingDouble(UserTransaction::getAmount)));
 
 	return dateAndAmountAsList;

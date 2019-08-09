@@ -53,7 +53,7 @@ public interface UserTransactionsRepository extends JpaRepository<UserTransactio
      * @param financialPortfolioId
      * @return
      */
-    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.categoryId in ?2 order by date(createDate) desc ")
+    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.categoryId in ?2 order by date(createDate) asc ")
     List<UserTransaction> findByFinancialPortfolioIdAndCategories(String financialPortfolioId,
 	    List<Integer> categoryIds);
 }
