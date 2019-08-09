@@ -1,5 +1,9 @@
 package in.co.everyrupee.utils;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -16,6 +20,10 @@ public class GenericUtils {
 	} catch (Exception e) {
 	    throw new RuntimeException(e);
 	}
+    }
+
+    public static List<Integer> removeAll(List<Integer> list, int element) {
+	return list.stream().filter(e -> !Objects.equals(e, element)).collect(Collectors.toList());
     }
 
 }

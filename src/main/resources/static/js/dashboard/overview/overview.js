@@ -6,6 +6,8 @@ $(document).ready(function(){
 	let categoryTotalMapCache = {};
 	// OVERVIEW CONSTANTS
 	const OVERVIEW_CONSTANTS = {};
+	// Lifetime Income Transactions cache
+	let liftimeIncomeTransactionsCache = {};
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -13,7 +15,7 @@ $(document).ready(function(){
 		'recentTransactionUrl': { value: 'recentTransactions/', writable: false, configurable: false },
 		'lifetimeUrl': { value:'lifetime/', writable: false, configurable: false },
 		'incomeAverageParam': { value:'?type=INCOME&average=true', writable: false, configurable: false },
-		'expenseAverageParam': { value:'?type=EXPENSE&average=true', writable: false, configurable: false }
+		'expenseAverageParam': { value:'?type=EXPENSE&average=true', writable: false, configurable: false },
 		'incomeTotalParam': { value:'?type=INCOME&average=false', writable: false, configurable: false }
 	});
 
@@ -506,17 +508,42 @@ $(document).ready(function(){
 	incomeOverviewChart();
 	
 	function incomeOverviewChart() {
+		let labelsArray = [];
+		let seriesArray = [];
 		jQuery.ajax({
 			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + OVERVIEW_CONSTANTS.incomeTotalParam,
 	        type: 'GET',
-	        success: function(totalIncome) {
+	        success: function(dateAndAmountAsList) {
+	        	// Store it in a cache
+	        	liftimeIncomeTransactionsCache = dateAndAmountAsList;
+	        	// Make it reasonably immutable
+	        	Object.freeze(liftimeIncomeTransactionsCache);
+	        	Object.seal(liftimeIncomeTransactionsCache);
+	        	
+	        	let resultKeySet = Object.keys(dateAndAmountAsList);
+	        	// One year of data at a time;
+	        	let length = resultKeySet.length > 12 ? 12 : resultKeySet.length;
+	        	for(let countGrouped = 0; countGrouped < length; countGrouped++) {
+	        		let dateKey = resultKeySet[countGrouped];
+	             	let userAmountAsListValue = dateAndAmountAsList[dateKey];
+	             	
+	             	// Convert the date key as date
+	             	let dateAsDate = new Date(dateKey);
+	             	labelsArray.push(months[dateAsDate.getMonth()] + ' ' + dateAsDate.getFullYear());
+	             	
+	             	// Build the series array with total amount for date
+	             	seriesArray.push(userAmountAsListValue);
+	             	
+	        	}
+	        	
+	        	// Build the data for the line chart
 	        	dataColouredRoundedLineChart = {
-	   		         labels: ['\'06', '\'07', '\'08', '\'09', '\'10', '\'11', '\'12', '\'13', '\'14', '\'15'],
+	   		         labels: labelsArray,
 	   		         series: [
-	   		             [287, 480, 290, 554, 690, 690, 500, 752, 650, 900, 944]
+	   		        	seriesArray
 	   		         ]
 	   		     };
-	   		 
+	        	// Display the line chart
 	   		 	coloredRounedLineChart(dataColouredRoundedLineChart);
 	        }
 		});

@@ -49,7 +49,6 @@ public class OverviewIntegrationTest {
     private MockMvc mvc;
 
     private static final String DATE_MEANT_FOR = "01082019";
-    private static final String FINANCIAL_PORTFOLIO_ID = "1";
 
     @Before
     public void setUp() {
@@ -88,7 +87,8 @@ public class OverviewIntegrationTest {
 		.param(DashboardConstants.Overview.TYPE_PARAM, TransactionType.INCOME.toString())
 		.param(DashboardConstants.Overview.AVERAGE_PARAM, "true")).andExpect(status().isOk());
 
-	verify(getUserTransactionRepository(), times(1)).findByFinancialPortfolioId(FINANCIAL_PORTFOLIO_ID);
+	verify(getUserTransactionRepository(), times(1)).findByFinancialPortfolioIdAndCategories(Mockito.anyString(),
+		Mockito.any());
     }
 
     private MockMvc getMvc() {

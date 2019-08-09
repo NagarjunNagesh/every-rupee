@@ -206,7 +206,8 @@ public class UserTransactionServiceTest {
 
 	getUserTransactionService().fetchLifetimeCalculations(TransactionType.EXPENSE, true, 3);
 	verify(getCategoryService(), times(1)).fetchCategories();
-	verify(getUserTransactionsRepository(), times(1)).findByFinancialPortfolioId(Mockito.any());
+	verify(getUserTransactionsRepository(), times(1)).findByFinancialPortfolioIdAndCategories(Mockito.anyString(),
+		Mockito.any());
     }
 
     private Date getDateMeantFor() {

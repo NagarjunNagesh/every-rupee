@@ -47,4 +47,13 @@ public interface UserTransactionsRepository extends JpaRepository<UserTransactio
     @Modifying
     @Query("delete from UserTransaction u where u.id in ?1 and u.financialPortfolioId in ?2")
     void deleteUsersWithIds(List<Integer> ids, String financialPortfolioId);
+
+    /**
+     * 
+     * @param financialPortfolioId
+     * @return
+     */
+    @Query("select u from UserTransaction u where u.financialPortfolioId in ?1 and u.categoryId in ?2 order by date(createDate) desc ")
+    List<UserTransaction> findByFinancialPortfolioIdAndCategories(String financialPortfolioId,
+	    List<Integer> categoryIds);
 }
