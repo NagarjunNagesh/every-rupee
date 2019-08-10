@@ -10,40 +10,40 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-lg-4">
-					<div class="card">
-						<div class="card-header">
+					<div class="card overviewAverageHeaderCard">
+						<div class="card-header overviewHeadingWrapper">
 							<h4 class="overviewHeadingTab">Overview</h4>
 						</div>
 						<div id="portfolioOverview" class="card-body">
 							<div class="row py-3 overviewEntryRow">	
-								<div class="col-lg-3 incomeImage">
+								<div class="col-lg-3 incomeImage image-center">
 									<div class="image-center"></div>
 								</div>
-								<div class="col-lg-8">
+								<div class="col-lg-8 namdAndDescription">
 									<h4 class="font-weight-bold overviewHeading">Income </h4>
-									<div class="descriptionAverages"><span>You earn an average of </span><span id="averageIncomeAmount" class="font-weight-bold"></span><span class="font-weight-bold"> per month</span></div>
+									<div class="descriptionAverages"><span>You earn an average of </span><span id="averageIncomeAmount" class="font-weight-bold"><span id="currentCurrencySymbol" th:text="#{message.currencySymbol}"></span>0.00</span><span class="font-weight-bold"> per month</span></div>
 								</div>
 								<div class="col-lg-1 icon-center">
 									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
 								</div>
 							</div>
 							<div class="row py-3 overviewEntryRow">	
-								<div class="col-lg-3 expenseImage" >
+								<div class="col-lg-3 expenseImage image-center" >
 									<div class="image-center"></div>
 								</div>
-								<div class="col-lg-8">
+								<div class="col-lg-8 namdAndDescription">
 									<h4 class="font-weight-bold overviewHeading">Expense </h4>
-									<div class="descriptionAverages"><span>You spend an average of </span><span id="averageExpenseAmount" class="font-weight-bold"></span><span class="font-weight-bold"> per month</span></div>
+									<div class="descriptionAverages"><span>You spend an average of </span><span id="averageExpenseAmount" class="font-weight-bold"><span id="currentCurrencySymbol" th:text="#{message.currencySymbol}"></span>0.00</span><span class="font-weight-bold"> per month</span></div>
 								</div>
 								<div class="col-lg-1 icon-center">
 									<i class="material-icons overviewChartDisplay">keyboard_arrow_right</i>
 								</div>
 							</div>
 							<div class="row py-3 overviewEntryRow">	
-								<div class="col-lg-3 assetsImage" >
+								<div class="col-lg-3 assetsImage image-center" >
 									<div class="image-center"></div>
 								</div>
-								<div class="col-lg-8">
+								<div class="col-lg-8 namdAndDescription">
 									<h4 class="font-weight-bold overviewHeading">Assets </h4>
 								</div>
 								<div class="col-lg-1 icon-center">
@@ -51,10 +51,10 @@
 								</div>
 							</div>
 							<div class="row py-3 overviewEntryRow">	
-								<div class="col-lg-3 debtImage" >
+								<div class="col-lg-3 debtImage image-center" >
 									<div class="image-center"></div>
 								</div>
-								<div class="col-lg-8">
+								<div class="col-lg-8 namdAndDescription">
 									<h4 class="font-weight-bold overviewHeading">Debts </h4>
 								</div>
 								<div class="col-lg-1 icon-center">
@@ -62,10 +62,10 @@
 								</div>
 							</div>
 							<div class="row py-3 overviewEntryRow">	
-								<div class="col-lg-3 networthImage" >
+								<div class="col-lg-3 networthImage image-center" >
 									<div class="image-center"></div>
 								</div>
-								<div class="col-lg-8">
+								<div class="col-lg-8 namdAndDescription">
 									<h4 class="font-weight-bold overviewHeading">Networth</h4>
 								</div>
 								<div class="col-lg-1 icon-center">
@@ -76,17 +76,20 @@
 					</div>
 				</div>
 				<div class="col-lg-8">
-					<div class="card">
+					<div class="card chartDisplayCard">
 	                  <div class="card-header card-header-icon card-header-info">
 	                    <div class="card-icon">
 	                      <i class="material-icons">timeline</i>
 	                    </div>
-	                    <h4 class="card-title">Coloured Line Chart
-	                      <small> - Rounded</small>
+	                    <h4 id="chartDisplayTitle" class="card-title">Income Earned
+	                      <small> - Every Month</small>
 	                    </h4>
 	                  </div>
 	                  <div class="card-body">
-	                    <div id="colouredRoundedLineChart" class="ct-chart"></div>
+	                    <div id="colouredRoundedLineChart" class="ct-chart">
+	                    	<div class="material-spinner rtSpinner"></div>
+							<!-- Charts dynamic load -->
+	                    </div>
 					  </div>
 					</div>
 				</div>

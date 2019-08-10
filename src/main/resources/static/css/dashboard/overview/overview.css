@@ -174,54 +174,16 @@
 	padding-top: 0.5rem;	
 }
 
-.overviewEntryRow:hover {
+.overviewEntryRow:hover, .highlightOverviewSelected {
 	background-color: #fafafa;
 }
 
-.overviewEntryRow:hover .overviewHeading {
+.overviewEntryRow:hover .overviewHeading, .highlightOverviewSelected  .overviewHeading {
 	color: #00bcd4;
 }
 
-.overviewEntryRow:hover .overviewChartDisplay {
+.overviewEntryRow:hover .overviewChartDisplay,.highlightOverviewSelected .overviewChartDisplay {
 	color: #6a6a6a;
-}
-
-/** Change the size of the text if the width and height of the screen are less **/
-@media (max-width:1300px) {
-	.categoryNameRT, .recentTransactionDescription {
-		padding-left: 0.5rem;
-	}
-	
-	.recentTransactionDescription {
-	    font-size: 0.7rem;
-	}
-	
-	.categoryNameRT {
-		font-size: 0.6rem;
-	}
-	
-	.transactionAmountRT, .budgetAmountBO, .categoryNameBO {
-		font-size: 0.8rem;
-	}
-	
-	.plusRawSvg, .creditCardSvg {
-		width: 50%;
-		height: 50%;
-	}
-	
-	.circleWrapperImageRT {
-		width: 40px;
-		height: 40px;
-		line-height: 40px;
-	}
-	
-	.budgetOptimizationTitle {
-		font-size: 95%;
-	}
-	
-	#selectedOptimizations {
-		font-size:90%
-	}
 }
 
 .overview-dashboard .form-check .form-check-input:checked+.form-check-sign .check {
@@ -302,6 +264,30 @@
 	color: #5d7079;
 	-webkit-transition: .2s;
 	transition: .2s;
+	line-height:1.5
+}
+
+#colouredRoundedLineChart .ct-series.ct-series-a .ct-label {
+	display:none;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
+#colouredRoundedLineChart .ct-series.ct-series-a:hover .ct-label {
+	display:flex;
+	display: -webkit-flex;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
+.chartDisplayCard, .overviewAverageHeaderCard {
+	height: 30rem;
+}
+
+.noDataChartIcon {
+	margin-top: 6.5rem;
+	font-size: 5rem;
+	color: #00bcd4;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
@@ -313,4 +299,102 @@
 	.checkListBO {
 		width: 7.2rem;
 	}
+	
 }
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (max-width:1300px) {
+	.recentTransactionDescription {
+	    font-size: 0.7rem;
+	}
+	
+	.categoryNameRT {
+		font-size: 0.6rem;
+	}
+	
+	.transactionAmountRT, .budgetAmountBO, .categoryNameBO {
+		font-size: 0.8rem;
+	}
+	
+	.plusRawSvg, .creditCardSvg {
+		width: 50%;
+		height: 50%;
+	}
+	
+	.circleWrapperImageRT {
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+	}
+	
+	.budgetOptimizationTitle {
+		font-size: 95%;
+	}
+	
+	#selectedOptimizations {
+		font-size:90%
+	}
+	
+	.incomeImage .image-center {
+		background-image: url("../../../img/dashboard/overview/icons8-rupee-35.png");
+		content: url("../../../img/dashboard/overview/icons8-rupee-35.png");
+		height: 35px;
+		width: 35px;
+	}
+	
+	.expenseImage .image-center {
+		background-image: url("../../../img/dashboard/overview/icons8-card-in-use-35.png");
+		content: url("../../../img/dashboard/overview/icons8-card-in-use-35.png");
+		height: 35px;
+		width: 35px;
+	}
+	
+	.assetsImage .image-center {
+		background-image: url("../../../img/dashboard/overview/icons8-bank-35.png");
+		content: url("../../../img/dashboard/overview/icons8-bank-35.png");
+		height: 35px;
+		width: 35px;
+	}
+	
+	.debtImage .image-center {
+		background-image: url("../../../img/dashboard/overview/icons8-debt-35.png");
+		content: url("../../../img/dashboard/overview/icons8-debt-35.png");
+		height: 35px;
+		width: 35px;
+	}
+	
+	.networthImage .image-center {
+		background-image: url("../../../img/dashboard/overview/icons8-money-bag-franc-35.png");
+		content: url("../../../img/dashboard/overview/icons8-money-bag-franc-35.png");
+		height: 35px;
+		width: 35px;
+	}
+	
+	.descriptionAverages {
+		font-size: 0.7rem;
+	}
+	
+	.overviewChartDisplay {
+		padding:0;
+		font-size: 1.2rem;
+	}
+	
+	.overviewEntryRow .icon-center, .overviewEntryRow .namdAndDescription  {
+		padding:0;
+	}
+	
+	.overviewHeading {
+		font-size: 0.9rem;
+	}
+	
+	.overviewHeadingWrapper {
+		padding-bottom: 0;
+		padding-top: 0.25rem;
+	}
+	
+	.checkListBO {
+		width: 3.9rem;
+	}
+	
+}
+

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,6 +43,7 @@ import in.co.everyrupee.pojo.income.UserTransaction;
 import in.co.everyrupee.repository.income.UserTransactionsRepository;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 import in.co.everyrupee.utils.ERStringUtils;
+import in.co.everyrupee.utils.GenericUtils;
 
 @Transactional
 @Service
@@ -318,46 +320,70 @@ public class UserTransactionService implements IUserTransactionService {
      */
     private Object calculateLifetimeForExpenseOrIncome(boolean fetchAverage, Integer pFinancialPortfolioId,
 	    String parentCategoryId) {
-	List<UserTransaction> lifetimeTransactions = userTransactionsRepository
-		.findByFinancialPortfolioId(pFinancialPortfolioId.toString());
 
 	List<Category> categories = categoryService.fetchCategories();
 
-	if (fetchAverage) {
-	    return fetchAverageAmount(parentCategoryId, lifetimeTransactions, categories);
+	// Fetch all the categories that match the current parent category
+	List<Integer> currentCategories = categories.stream().map(categoryItem -> {
+	    if (ERStringUtils.equalsIgnoreCase(categoryItem.getParentCategory(), parentCategoryId)) {
+		return categoryItem.getCategoryId();
+	    }
+	    return -1;
+	}).collect(Collectors.toList());
+
+	// Remove all occurrences of -1
+	currentCategories = GenericUtils.removeAll(currentCategories, -1);
+
+	List<UserTransaction> lifetimeTransactions = userTransactionsRepository
+		.findByFinancialPortfolioIdAndCategories(pFinancialPortfolioId.toString(), currentCategories);
+
+	// If the transaction is empty then return null
+	if (CollectionUtils.isEmpty(lifetimeTransactions)) {
+	    return null;
 	}
 
-	return null;
+	// If fetch average then calculate average
+	if (fetchAverage) {
+	    return fetchAverageAmount(lifetimeTransactions);
+	} else {
+	    return fetchOneYearData(lifetimeTransactions);
+	}
+    }
+
+    /**
+     * Fetch one year data for income or expense
+     * 
+     * @param lifetimeTransactions
+     * @return
+     */
+    private Object fetchOneYearData(List<UserTransaction> lifetimeTransactions) {
+	// Fetch all the unique dates
+	Map<Date, Double> dateAndAmountAsList = new HashMap<Date, Double>();
+
+	// Map of Date and Sum of all the transaction amounts and sorts by the
+	// datemeantfor (TREEMAP sorts the map by the key)
+	dateAndAmountAsList = lifetimeTransactions.stream().collect(Collectors.groupingBy(
+		UserTransaction::getDateMeantFor, TreeMap::new, Collectors.summingDouble(UserTransaction::getAmount)));
+
+	return dateAndAmountAsList;
     }
 
     /**
      * Fetch average amount parent category
      * 
-     * @param parentCategoryId
      * @param lifetimeTransactions
-     * @param categories
      * @return
      */
-    private Object fetchAverageAmount(String parentCategoryId, List<UserTransaction> lifetimeTransactions,
-	    List<Category> categories) {
-	Set<Date> dateMeantForSet = new HashSet<Date>();
+    private Object fetchAverageAmount(List<UserTransaction> lifetimeTransactions) {
 
-	// Iterate all the transactions within which iterate all the categories and then
-	// store all the income total
-	List<Double> incomeCategoryTotal = lifetimeTransactions.stream().map(userTransaction -> {
-	    Category currentCategory = categories.stream()
-		    .filter(categoryItem -> userTransaction.getCategoryId() == categoryItem.getCategoryId()).findAny()
-		    .orElse(null);
-	    if (currentCategory != null
-		    && ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), parentCategoryId)) {
-		dateMeantForSet.add(userTransaction.getDateMeantFor());
-		return userTransaction.getAmount();
-	    }
-	    return 0d;
-	}).collect(Collectors.toList());
+	// Fetch all the unique dates
+	Set<Date> dateMeantForSet = lifetimeTransactions.stream().map(userTransaction -> {
+	    return userTransaction.getDateMeantFor();
+	}).collect(Collectors.toSet());
 
 	// Calculate the total income
-	Double incomeTotal = incomeCategoryTotal.stream().mapToDouble(incomeAmount -> incomeAmount.doubleValue()).sum();
+	Double incomeTotal = lifetimeTransactions.stream().mapToDouble(userTransaction -> userTransaction.getAmount())
+		.sum();
 
 	if (dateMeantForSet.size() == 0) {
 	    return 0d;
