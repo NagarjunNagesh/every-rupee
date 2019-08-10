@@ -557,7 +557,7 @@ $(document).ready(function(){
 			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + incomeTotalParameter,
 	        type: 'GET',
 	        success: function(dateAndAmountAsList) {
-	        	debugger;
+	        	
 	        	if(isEmpty(dateAndAmountAsList)) {
 	        		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
 	        		let emptyMessageDocumentFragment = document.createDocumentFragment();
