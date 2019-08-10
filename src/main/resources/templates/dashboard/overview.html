@@ -10,7 +10,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-lg-4">
-					<div class="card">
+					<div class="card overviewAverageHeaderCard">
 						<div class="card-header overviewHeadingWrapper">
 							<h4 class="overviewHeadingTab">Overview</h4>
 						</div>
@@ -76,17 +76,20 @@
 					</div>
 				</div>
 				<div class="col-lg-8">
-					<div class="card">
+					<div class="card chartDisplayCard">
 	                  <div class="card-header card-header-icon card-header-info">
 	                    <div class="card-icon">
 	                      <i class="material-icons">timeline</i>
 	                    </div>
-	                    <h4 class="card-title">Coloured Line Chart
-	                      <small> - Rounded</small>
+	                    <h4 id="chartDisplayTitle" class="card-title">Income Earned
+	                      <small> - Every Month</small>
 	                    </h4>
 	                  </div>
 	                  <div class="card-body">
-	                    <div id="colouredRoundedLineChart" class="ct-chart"></div>
+	                    <div id="colouredRoundedLineChart" class="ct-chart">
+	                    	<div class="material-spinner rtSpinner"></div>
+							<!-- Charts dynamic load -->
+	                    </div>
 					  </div>
 					</div>
 				</div>

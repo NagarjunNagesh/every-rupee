@@ -174,15 +174,15 @@
 	padding-top: 0.5rem;	
 }
 
-.overviewEntryRow:hover {
+.overviewEntryRow:hover, .highlightOverviewSelected {
 	background-color: #fafafa;
 }
 
-.overviewEntryRow:hover .overviewHeading {
+.overviewEntryRow:hover .overviewHeading, .highlightOverviewSelected  .overviewHeading {
 	color: #00bcd4;
 }
 
-.overviewEntryRow:hover .overviewChartDisplay {
+.overviewEntryRow:hover .overviewChartDisplay,.highlightOverviewSelected .overviewChartDisplay {
 	color: #6a6a6a;
 }
 
@@ -264,6 +264,30 @@
 	color: #5d7079;
 	-webkit-transition: .2s;
 	transition: .2s;
+	line-height:1.5
+}
+
+#colouredRoundedLineChart .ct-series.ct-series-a .ct-label {
+	display:none;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
+#colouredRoundedLineChart .ct-series.ct-series-a:hover .ct-label {
+	display:flex;
+	display: -webkit-flex;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+
+.chartDisplayCard, .overviewAverageHeaderCard {
+	height: 30rem;
+}
+
+.noDataChartIcon {
+	margin-top: 6.5rem;
+	font-size: 5rem;
+	color: #00bcd4;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/

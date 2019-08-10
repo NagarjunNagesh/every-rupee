@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -336,6 +337,11 @@ public class UserTransactionService implements IUserTransactionService {
 	List<UserTransaction> lifetimeTransactions = userTransactionsRepository
 		.findByFinancialPortfolioIdAndCategories(pFinancialPortfolioId.toString(), currentCategories);
 
+	// If the transaction is empty then return null
+	if (CollectionUtils.isEmpty(lifetimeTransactions)) {
+	    return null;
+	}
+
 	// If fetch average then calculate average
 	if (fetchAverage) {
 	    return fetchAverageAmount(lifetimeTransactions);
@@ -355,9 +361,9 @@ public class UserTransactionService implements IUserTransactionService {
 	Map<Date, Double> dateAndAmountAsList = new HashMap<Date, Double>();
 
 	// Map of Date and Sum of all the transaction amounts and sorts by the
-	// datemeantfor
-	dateAndAmountAsList = lifetimeTransactions.stream().sorted().collect(Collectors
-		.groupingBy(UserTransaction::getDateMeantFor, Collectors.summingDouble(UserTransaction::getAmount)));
+	// datemeantfor (TREEMAP sorts the map by the key)
+	dateAndAmountAsList = lifetimeTransactions.stream().collect(Collectors.groupingBy(
+		UserTransaction::getDateMeantFor, TreeMap::new, Collectors.summingDouble(UserTransaction::getAmount)));
 
 	return dateAndAmountAsList;
     }

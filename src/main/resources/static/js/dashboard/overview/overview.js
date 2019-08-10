@@ -16,7 +16,8 @@ $(document).ready(function(){
 		'lifetimeUrl': { value:'lifetime/', writable: false, configurable: false },
 		'incomeAverageParam': { value:'?type=INCOME&average=true', writable: false, configurable: false },
 		'expenseAverageParam': { value:'?type=EXPENSE&average=true', writable: false, configurable: false },
-		'incomeTotalParam': { value:'?type=INCOME&average=false', writable: false, configurable: false }
+		'incomeTotalParam': { value:'?type=INCOME&average=false', writable: false, configurable: false },
+		'expenseTotalParam': { value:'?type=EXPENSE&average=false', writable: false, configurable: false },
 	});
 
 	// Populate Recent transactions
@@ -57,7 +58,15 @@ $(document).ready(function(){
 	        	recentTransactionsDiv.innerHTML = '';
 	        	recentTransactionsDiv.appendChild(recentTransactionsFragment);
              	   
-	        }
+	        },
+	        error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to populate recent transactions. Please refresh the page & try again!','top','center','danger');
+            	}
+            }
 		});
 	}
 	
@@ -240,6 +249,14 @@ $(document).ready(function(){
             	// Populate Optimization of budgets
             	populateOptimizationOfBudget();
             	
+            },
+            error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to calculate the budget optimization. Please refresh the page & try again!','top','center','danger');
+            	}
             }
 		});
 	}
@@ -292,7 +309,15 @@ $(document).ready(function(){
             		
             	populateOptimizationBudgetDiv.appendChild(populateOptimizationFragment);
             	
-	        }
+	        },
+	        error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to calculate the budget optimization. Please refresh the page & try again!','top','center','danger');
+            	}
+            }
 		});
 	}
 	
@@ -479,7 +504,15 @@ $(document).ready(function(){
 	        type: 'GET',
 	        success: function(averageIncome) {
 	        	document.getElementById('averageIncomeAmount').innerText = currentCurrencyPreference + formatNumber(averageIncome, currentUser.locale);
-	        }
+	        },
+	        error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to populate income average. Please refresh the page and try again!','top','center','danger');
+            	}
+            }
 		});
 	}
 	
@@ -495,7 +528,15 @@ $(document).ready(function(){
 	        type: 'GET',
 	        success: function(averageIncome) {
 	        	document.getElementById('averageExpenseAmount').innerText = currentCurrencyPreference + formatNumber(averageIncome, currentUser.locale);
-	        }
+	        },
+	        error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to populate expense average. Please refresh the page and try again!','top','center','danger');
+            	}
+            }
 		});
 	}
 	
@@ -505,15 +546,27 @@ $(document).ready(function(){
 	 */ 
 	
 	// Upon refresh call the income overview chart
-	incomeOverviewChart();
+	incomeOrExpenseOverviewChart(OVERVIEW_CONSTANTS.incomeTotalParam);
+	// Add highlighted element to the income
+	document.getElementsByClassName('incomeImage')[0].parentNode.classList.add('highlightOverviewSelected');
 	
-	function incomeOverviewChart() {
+	function incomeOrExpenseOverviewChart(incomeTotalParameter) {
 		let labelsArray = [];
 		let seriesArray = [];
 		jQuery.ajax({
-			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + OVERVIEW_CONSTANTS.incomeTotalParam,
+			url: OVERVIEW_CONSTANTS.overviewUrl + OVERVIEW_CONSTANTS.lifetimeUrl + incomeTotalParameter,
 	        type: 'GET',
 	        success: function(dateAndAmountAsList) {
+	        	debugger;
+	        	if(isEmpty(dateAndAmountAsList)) {
+	        		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+	        		let emptyMessageDocumentFragment = document.createDocumentFragment();
+	        		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+	        		chartAppendingDiv.innerHTML = '';
+	        		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
+	        		return;
+	        	}
+	        	
 	        	// Store it in a cache
 	        	liftimeIncomeTransactionsCache = dateAndAmountAsList;
 	        	// Make it reasonably immutable
@@ -529,7 +582,7 @@ $(document).ready(function(){
 	             	
 	             	// Convert the date key as date
 	             	let dateAsDate = new Date(dateKey);
-	             	labelsArray.push(months[dateAsDate.getMonth()] + ' ' + dateAsDate.getFullYear());
+	             	labelsArray.push(months[dateAsDate.getMonth()].slice(0,3) + " '" + dateAsDate.getFullYear().toString().slice(-2));
 	             	
 	             	// Build the series array with total amount for date
 	             	seriesArray.push(userAmountAsListValue);
@@ -545,9 +598,55 @@ $(document).ready(function(){
 	   		     };
 	        	// Display the line chart
 	   		 	coloredRounedLineChart(dataColouredRoundedLineChart);
-	        }
+	        },
+	        error:  function (thrownError) {
+           	 var responseError = JSON.parse(thrownError.responseText);
+            	if(responseError.error.includes("Unauthorized")){
+            		er.sessionExpiredSwal(thrownError);
+            	} else{
+            		showNotification('Unable to populate the chart at this moment. Please try again!','top','center','danger');
+            	}
+            }
 		});
 	}
+	
+	$('.overviewEntryRow').click(function(){
+		// Append spinner
+		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+		let materialSpinnerDocumentFragment = document.createDocumentFragment();
+		materialSpinnerDocumentFragment.appendChild(buildMaterialSpinner());
+		chartAppendingDiv.innerHTML = '';
+		chartAppendingDiv.appendChild(materialSpinnerDocumentFragment);
+		
+		// Start requesting the chart  
+		let firstChildClassList = this.children[0].classList;
+		if(firstChildClassList.contains('incomeImage')) {
+			incomeOrExpenseOverviewChart(OVERVIEW_CONSTANTS.incomeTotalParam);
+			document.getElementById('chartDisplayTitle').innerHTML = 'Income Earned <small> - Every Month</small>';
+		} else if(firstChildClassList.contains('expenseImage')) {
+			incomeOrExpenseOverviewChart(OVERVIEW_CONSTANTS.expenseTotalParam);
+			document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
+		} else if(firstChildClassList.contains('assetsImage')) {
+			
+		} else if(firstChildClassList.contains('debtImage')) {
+			
+		} else if(firstChildClassList.contains('networthImage')) {
+			
+		}
+		
+		// Remove the old highlighted element
+		let overviewEntryrow = document.getElementsByClassName('overviewEntryRow');
+		for(let count = 0, length = overviewEntryrow.length; count < length; count++) {
+			let overviewEntryElement = overviewEntryrow[count];
+			
+			if(overviewEntryElement.classList.contains('highlightOverviewSelected')) {
+				overviewEntryElement.classList.remove('highlightOverviewSelected');
+			}
+		}
+		
+		// Add the highlight to the element
+		this.classList.add('highlightOverviewSelected');
+	});
 	 
 	/*  **************** Coloured Rounded Line Chart - Line Chart ******************** */
 
@@ -557,21 +656,66 @@ $(document).ready(function(){
 	                 tension: 10
 	             }),
 	             axisY: {
-	                 showGrid: true,
-	                 offset: 40
+	            	 	showGrid: true,
+	            	 	offset: 40,
+	            	    labelInterpolationFnc: function(value) {
+	            	      if(value.length > 4) {
+	            	    	  value = (value / 1000) + 'k';
+	            	      }
+	            	      return currentCurrencyPreference + value;
+	            	    },
+	            	    scaleMinSpace: 15
 	             },
 	             axisX: {
 	                 showGrid: false,
 	             },
-	             low: 0,
-	             high: 1000,
+	             plugins: [
+	            	Chartist.plugins.ctPointLabels({
+	        	      textAnchor: 'start',
+	        	      labelInterpolationFnc: function(value) {return currentCurrencyPreference + value.toFixed(2)}
+	        	    })
+	        	 ],
 	             showPoint: true,
-	             height: '300px'
+	             height: '400px'
 	         };
 	     
+		 // Empty the chart div
+		 document.getElementById('colouredRoundedLineChart').innerHTML = '';
+		 
 	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart);
 
 	     md.startAnimationForLineChart(colouredRoundedLineChart);
 	 }
+	
+	// Build material Spinner
+	function buildMaterialSpinner() {
+		let materialSpinnerDiv = document.createElement('div');
+		materialSpinnerDiv.classList = 'material-spinner rtSpinner';
+		
+		return materialSpinnerDiv;
+	}
+	
+	// Build Empty chart
+	function buildEmptyChartMessage() {
+		let emptyChartMessage = document.createElement('div');
+		emptyChartMessage.classList = 'text-center align-middle';
+		
+		let divIconWrapper = document.createElement('div');
+		divIconWrapper.classList = 'icon-center';
+		
+		let iconChart = document.createElement('i');
+		iconChart.classList = 'material-icons noDataChartIcon';
+		iconChart.innerText = 'multiline_chart';
+		divIconWrapper.appendChild(iconChart);
+		emptyChartMessage.appendChild(divIconWrapper);
+		
+		let emptyMessage = document.createElement('div');
+		emptyMessage.classList = 'font-weight-bold tripleNineColor';
+		emptyMessage.innerText = "There's not enough data! Start adding transactions..";
+		emptyChartMessage.appendChild(emptyMessage);
+		
+		return emptyChartMessage;
+		
+	}
 
 });
