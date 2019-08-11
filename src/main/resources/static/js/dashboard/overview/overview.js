@@ -558,6 +558,7 @@ $(document).ready(function(){
 	        type: 'GET',
 	        success: function(dateAndAmountAsList) {
 	        	
+	        	// Replace with empty chart message
 	        	if(isEmpty(dateAndAmountAsList)) {
 	        		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
 	        		let emptyMessageDocumentFragment = document.createDocumentFragment();
