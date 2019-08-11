@@ -577,6 +577,7 @@ $(document).ready(function(){
 	        		  budgetOptimizationDiv.remove();
 	        		  userBudgetWithFund[userBudget.categoryId] = 0;
 	        	  } else if(totalOptimizationPending > 0) {
+	        		  // Replace the text with the pending values
 	        		  budgetOptimizationDiv.lastChild.innerText = '-' + currentCurrencyPreference + formatNumber(Math.abs(totalOptimizationPending), currentUser.locale);
 	        		  userBudgetWithFund[userBudget.categoryId] = totalOptimizationPending;
 	        	  }
