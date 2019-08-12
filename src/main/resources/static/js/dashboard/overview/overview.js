@@ -486,37 +486,45 @@ $(document).ready(function(){
         				  continue;
         			  }
         			  
-        			  if(budgetWithFund.amount < totalOptimization) {
+        			  if(totalOptimization >= budgetWithFund.amount) {
+        				  debugger;
+        				  // A budget cannot be < 0
+        				  if((userBudgetCache[categoryIdKey].planned - budgetWithFund.amount) < 0) {
+        					  continue;
+        				  }
         				 
+        				  // Calculate remaining optimization necesary
         				  let totalOptimizationPending = totalOptimization - budgetWithFund.amount;
         				  
         				  // Update the budget that needs optimization
         				  amountToUpdateForBudget += budgetWithFund.amount;
         				  
+        				  // Call budget amount (param2 and param3 has to be false and 0 respectively) for entries not present in optimization 
         				  values['planned'] = userBudgetCache[categoryIdKey].planned - budgetWithFund.amount;
         				  values['category_id'] =  categoryIdKey;
-        				  callBudgetAmountChange(values, false, 0, budgetWithFund.amount);
+        				  callBudgetAmountChange(values, false, 0);
         				  
-        				  // Update the User BUdget cache and the budget with fund
-        				  userBudgetCache[categoryIdKey].planned = userBudgetCache[categoryIdKey].planned - budgetWithFund.amount;
-        				  userBudgetWithFund[categoryIdKey].amount = budgetWithFund.amount - totalOptimization;
         				  console.log('A : optimization provider - ' + categoryMap[categoryIdKey].categoryName + ' And amount is - ' + budgetWithFund.amount);
         				  
         				  totalOptimization = totalOptimizationPending;
-        			  } else {
+        			  } else if(totalOptimization < budgetWithFund.amount) {
+        				  
+        				  // A budget cannot be < 0
+        				  if((userBudgetCache[categoryIdKey].planned - totalOptimization) < 0) {
+        					  continue;
+        				  }
+        				  
         				  console.log('more - ' + totalOptimization);
         				  fullyOptimized = true;
         				  
         				  // Update the budget that needs optimization
         				  amountToUpdateForBudget += totalOptimization;
         				  
+        				  // Call budget amount (param2 and param3 has to be false and 0 respectively) for entries not present in optimization
         				  values['planned'] = userBudgetCache[categoryIdKey].planned - totalOptimization;
         				  values['category_id'] =  categoryIdKey;
-        				  callBudgetAmountChange(values, false, 0, totalOptimization);
+        				  callBudgetAmountChange(values, false, 0);
         				  
-        				  // Update the User BUdget cache and the budget with fund
-        				  userBudgetCache[categoryIdKey].planned = userBudgetCache[categoryIdKey].planned - totalOptimization;
-        				  userBudgetWithFund[categoryIdKey].amount = budgetWithFund.amount - totalOptimization;
         				  console.log('B : optimization provider - ' + categoryMap[categoryIdKey].categoryName + ' And amount is - ' + totalOptimization);
         				  totalOptimization = 0;
         			  }
@@ -540,7 +548,7 @@ $(document).ready(function(){
         		  // Update the amount of budget that needs optimization at the end
             	  values['planned'] = amountToUpdateForBudget;
     			  values['category_id'] =  categoryId;
-    			  callBudgetAmountChange(values, fullyOptimized, optimizedAmountForBudget, 0);
+    			  callBudgetAmountChange(values, fullyOptimized, optimizedAmountForBudget);
         	  }
         	  
           }
@@ -570,19 +578,30 @@ $(document).ready(function(){
 	},false);
 	
 	// Call budget amount change
-	function callBudgetAmountChange(values, fullyOptimized, totalOptimizationPending, totalCorrection) {
+	function callBudgetAmountChange(values, fullyOptimized, totalOptimizationPending) {
 		$.ajax({
 	          type: "POST",
 	          url: CUSTOM_DASHBOARD_CONSTANTS.budgetAPIUrl + CUSTOM_DASHBOARD_CONSTANTS.budgetSaveUrl + currentUser.financialPortfolioId,
 	          dataType: "json",
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 	          data : values,
+	          async: false,
 	          success: function(userBudget){
 	        	  
 	        	  // Update the cache
 	        	  userBudgetCache[userBudget.categoryId] = userBudget;
 	        	  
+	        	  // Update the total funds available
+	        	  if(isNotEmpty(userBudgetWithFund[userBudget.categoryId])) {
+	        		  userBudgetWithFund[userBudget.categoryId].amount =  categoryTotalMapCache[userBudget.categoryId] - userBudget.planned;
+	        	  }
+	        	  
 	        	  let budgetOptimizationDiv = document.getElementById('budgetOptimization-' + userBudget.categoryId);
+	        	  
+	        	  // If the document is null then return
+	        	  if(budgetOptimizationDiv == null) {
+	        		  return;
+	        	  }
 	        	  
 	        	  if(fullyOptimized) {
 	        		  budgetOptimizationDiv.remove();
@@ -599,8 +618,6 @@ $(document).ready(function(){
 	        		  showNotification('Unable to change the budget category amount at this moment. Please try again!','top','center','danger');
 	        	  }
 	        	  
-	        	  // Correct the total of userbudget cache
-	        	  userBudgetCache[userBudget.categoryId].planned += totalCorrection;
 	          }
 		});
 	}	
