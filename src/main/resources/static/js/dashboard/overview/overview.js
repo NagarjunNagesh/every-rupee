@@ -465,6 +465,7 @@ $(document).ready(function(){
 		for(let i = 0, lengthParent = checkedbudgetOptimizations.length; i < lengthParent; i++) {
           // To remove the select all check box values
           let categoryId = checkedbudgetOptimizations[i].innerHTML;
+          console.log('processing - ' + categoryId);
           let userBudget = userBudgetCache[categoryId];
 		  let categoryTotal = categoryTotalMapCache[categoryId];
 		  let totalOptimization = categoryTotal - userBudget.planned;
@@ -486,7 +487,7 @@ $(document).ready(function(){
         			  }
         			  
         			  if(budgetWithFund.amount < totalOptimization) {
-        				  console.log('less - ' + totalOptimization);
+        				 
         				  let totalOptimizationPending = totalOptimization - budgetWithFund.amount;
         				  
         				  // Update the budget that needs optimization
@@ -494,7 +495,12 @@ $(document).ready(function(){
         				  
         				  values['planned'] = userBudgetCache[categoryIdKey].planned - budgetWithFund.amount;
         				  values['category_id'] =  categoryIdKey;
-        				  callBudgetAmountChange(values, false, 0);
+        				  callBudgetAmountChange(values, false, 0, budgetWithFund.amount);
+        				  
+        				  // Update the User BUdget cache and the budget with fund
+        				  userBudgetCache[categoryIdKey].planned = userBudgetCache[categoryIdKey].planned - budgetWithFund.amount;
+        				  userBudgetWithFund[categoryIdKey].amount = budgetWithFund.amount - totalOptimization;
+        				  console.log('A : optimization provider - ' + categoryMap[categoryIdKey].categoryName + ' And amount is - ' + budgetWithFund.amount);
         				  
         				  totalOptimization = totalOptimizationPending;
         			  } else {
@@ -506,7 +512,13 @@ $(document).ready(function(){
         				  
         				  values['planned'] = userBudgetCache[categoryIdKey].planned - totalOptimization;
         				  values['category_id'] =  categoryIdKey;
-        				  callBudgetAmountChange(values, false, 0);
+        				  callBudgetAmountChange(values, false, 0, totalOptimization);
+        				  
+        				  // Update the User BUdget cache and the budget with fund
+        				  userBudgetCache[categoryIdKey].planned = userBudgetCache[categoryIdKey].planned - totalOptimization;
+        				  userBudgetWithFund[categoryIdKey].amount = budgetWithFund.amount - totalOptimization;
+        				  console.log('B : optimization provider - ' + categoryMap[categoryIdKey].categoryName + ' And amount is - ' + totalOptimization);
+        				  totalOptimization = 0;
         			  }
         			  
         			  // Set optimized some to true;
@@ -528,8 +540,7 @@ $(document).ready(function(){
         		  // Update the amount of budget that needs optimization at the end
             	  values['planned'] = amountToUpdateForBudget;
     			  values['category_id'] =  categoryId;
-    			  console.log(optimizedAmountForBudget);
-    			  callBudgetAmountChange(values, fullyOptimized, optimizedAmountForBudget);
+    			  callBudgetAmountChange(values, fullyOptimized, optimizedAmountForBudget, 0);
         	  }
         	  
           }
@@ -559,7 +570,7 @@ $(document).ready(function(){
 	},false);
 	
 	// Call budget amount change
-	function callBudgetAmountChange(values, fullyOptimized, totalOptimizationPending) {
+	function callBudgetAmountChange(values, fullyOptimized, totalOptimizationPending, totalCorrection) {
 		$.ajax({
 	          type: "POST",
 	          url: CUSTOM_DASHBOARD_CONSTANTS.budgetAPIUrl + CUSTOM_DASHBOARD_CONSTANTS.budgetSaveUrl + currentUser.financialPortfolioId,
@@ -575,11 +586,9 @@ $(document).ready(function(){
 	        	  
 	        	  if(fullyOptimized) {
 	        		  budgetOptimizationDiv.remove();
-	        		  userBudgetWithFund[userBudget.categoryId] = 0;
 	        	  } else if(totalOptimizationPending > 0) {
 	        		  // Replace the text with the pending values
 	        		  budgetOptimizationDiv.lastChild.innerText = '-' + currentCurrencyPreference + formatNumber(Math.abs(totalOptimizationPending), currentUser.locale);
-	        		  userBudgetWithFund[userBudget.categoryId] = totalOptimizationPending;
 	        	  }
 	          },
 	          error: function(thrownError) {
@@ -589,6 +598,9 @@ $(document).ready(function(){
 	        	  } else{
 	        		  showNotification('Unable to change the budget category amount at this moment. Please try again!','top','center','danger');
 	        	  }
+	        	  
+	        	  // Correct the total of userbudget cache
+	        	  userBudgetCache[userBudget.categoryId].planned += totalCorrection;
 	          }
 		});
 	}	

@@ -280,10 +280,6 @@
 	transition: .2s;
 }
 
-.chartDisplayCard, .overviewAverageHeaderCard {
-	height: 30rem;
-}
-
 .noDataChartIcon {
 	margin-top: 6.5rem;
 	font-size: 5rem;
@@ -394,6 +390,10 @@
 	
 	.checkListBO {
 		width: 3.9rem;
+	}
+	
+	.chartDisplayCard, .overviewAverageHeaderCard {
+		height: 30rem;
 	}
 	
 }
