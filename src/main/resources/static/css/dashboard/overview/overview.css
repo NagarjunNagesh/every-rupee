@@ -286,6 +286,10 @@
 	color: #00bcd4;
 }
 
+.chartDisplayCard {
+		height: 30rem;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

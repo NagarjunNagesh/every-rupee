@@ -299,15 +299,8 @@ $(document).ready(function(){
             	if(populateOptimizationFragment.childElementCount === 0) {
             		populateOptimizationFragment.appendChild(buildSvgFullyOptimized());
             		
-            		let headingFullyOptimized = document.createElement('h4');
-            		headingFullyOptimized.classList = 'text-center font-weight-bold mt-1 optimizationHeadingColor';
-            		headingFullyOptimized.innerHTML = "Budget's are fully optimized";
-            		populateOptimizationFragment.appendChild(headingFullyOptimized);
+            		populateFullyOptimizedDesc(populateOptimizationFragment);
             		
-            		let paragraphOptimized = document.createElement('p');
-            		paragraphOptimized.classList = 'text-center tripleNineColor'
-            		paragraphOptimized.innerText = 'Awesomesauce!';
-            		populateOptimizationFragment.appendChild(paragraphOptimized);
             	} else {
             		let checkAllInput = document.getElementById('checkAll');
             		checkAllInput.removeAttribute('disabled');
@@ -325,6 +318,20 @@ $(document).ready(function(){
             	}
             }
 		});
+	}
+	
+	// Populate the fully optimized description 
+	function populateFullyOptimizedDesc(populateOptimizationFragment) {
+		let headingFullyOptimized = document.createElement('h4');
+		headingFullyOptimized.classList = 'text-center font-weight-bold mt-1 optimizationHeadingColor';
+		headingFullyOptimized.innerHTML = "Budget's are fully optimized";
+		populateOptimizationFragment.appendChild(headingFullyOptimized);
+		
+		let paragraphOptimized = document.createElement('p');
+		paragraphOptimized.classList = 'text-center tripleNineColor'
+		paragraphOptimized.innerText = 'Awesomesauce!';
+		populateOptimizationFragment.appendChild(paragraphOptimized);
+		
 	}
 	
 	// Budget optimizations over budgeted
@@ -563,12 +570,25 @@ $(document).ready(function(){
 	   checkAllValues.prop('checked', false);
 	   checkAllValues.prop('disabled', true);
 	   
-	   // Revert the d-none to the spinner
+	   // Revert the spinner
+	   document.getElementById('optimizationSpinner').classList.toggle('d-none');
+	   // Hide the ** Selected message
+	   document.getElementById('selectedOptimizations').innerText = 'None Selected';
+	   // Show the Optimization Button as disabled
 	   this.classList.toggle('d-none');
+	   
+	   // If the optimization body is null then show the fully optimized image
+	   let optimizationBody = document.getElementById('optimizations');
+	   if(optimizationBody.childElementCount == 0) {
+		   let populateOptimizationFragment = document.createDocumentFragment();
+		   populateOptimizationFragment.appendChild(buildSvgFullyOptimized());
+   		   populateFullyOptimizedDesc(populateOptimizationFragment);
+   		   optimizationBody.appendChild(populateOptimizationFragment);
+	   }
 	   
 	},false);
 	
-	// Call budget amount change
+	// Call budget amount change (Synchronous Ajax Call)
 	function callBudgetAmountChange(values, fullyOptimized, totalOptimizationPending) {
 		$.ajax({
 	          type: "POST",
@@ -806,11 +826,25 @@ $(document).ready(function(){
 			incomeOrExpenseOverviewChart(OVERVIEW_CONSTANTS.expenseTotalParam);
 			document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
 		} else if(firstChildClassList.contains('assetsImage')) {
+			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+    		chartAppendingDiv.innerHTML = '';
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 			
 		} else if(firstChildClassList.contains('debtImage')) {
+			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+    		chartAppendingDiv.innerHTML = '';
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 			
 		} else if(firstChildClassList.contains('networthImage')) {
-			
+			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+    		chartAppendingDiv.innerHTML = '';
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 		}
 		
 		// Remove the old highlighted element
