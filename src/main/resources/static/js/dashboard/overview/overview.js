@@ -452,7 +452,6 @@ $(document).ready(function(){
 	
 	// Click optimization Button functionality
 	document.getElementById("optimizeButton").addEventListener("click",function(){
-		
 		// disable the button
 		this.setAttribute('disabled','disabled');
 		this.classList.toggle('d-none');
@@ -478,6 +477,12 @@ $(document).ready(function(){
 		for(let i = 0, lengthParent = checkedbudgetOptimizations.length; i < lengthParent; i++) {
           // To remove the select all check box values
           let categoryId = checkedbudgetOptimizations[i].innerHTML;
+          
+          // Google Chrome Compatibility 
+          if(isEmpty(categoryId) || isEmpty(categoryMap[categoryId])) {
+        	  categoryId = checkedbudgetOptimizations[i].childNodes[0].nodeValue; 
+          }
+          
           let userBudget = userBudgetCache[categoryId];
 		  let categoryTotal = categoryTotalMapCache[categoryId];
 		  let totalOptimization = categoryTotal - userBudget.planned;
