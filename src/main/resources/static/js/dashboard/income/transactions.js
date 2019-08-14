@@ -576,6 +576,17 @@ $(document).ready(function(){
 			                     for(let i = 0, length = allCheckedItems.length; i < length; i++) {
 			                     	// To remove the select all check box values
 			                    	let transactionId = allCheckedItems[i].innerHTML;
+			                    	
+			                    	// Remove the check all from the list
+			                    	if(isEqual(allCheckedItems[i].id, 'checkAll')) {
+			                    		continue;
+			                    	}
+			                    	
+			                    	// Google Chrome Compatibility 
+			                        if(isEmpty(transactionId)) {
+			                        	transactionId = allCheckedItems[i].childNodes[0].nodeValue; 
+			                        }
+			                    	
 			                     	if(transactionId != "on" && isNotBlank(transactionId)){
 			                     		transactionIds.push(transactionId);
 			                     	}
@@ -772,9 +783,9 @@ $(document).ready(function(){
 	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
+			document.activeElement.blur();
 		    e.preventDefault();
-
-		    $(this).blur(); 
+		    e.stopPropagation();
 		    return false;
 		  }
 	});
@@ -844,9 +855,9 @@ $(document).ready(function(){
 	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
+			document.activeElement.blur();
 		    e.preventDefault();
-
-		    $(this).blur(); 
+		    e.stopPropagation();
 		    return false;
 		  }
 		  
@@ -1637,7 +1648,7 @@ $(document).ready(function(){
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    $(this).blur(); 
+		    document.activeElement.blur();
 		    return false;
 		  }
 	},false);

@@ -359,7 +359,7 @@ $(document).ready(function(){
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    $(this).blur(); 
+		    document.activeElement.blur();
 		    return false;
 		  }
 	});

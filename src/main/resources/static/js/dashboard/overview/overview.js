@@ -814,6 +814,7 @@ $(document).ready(function(){
 		});
 	}
 	
+	// Click the overview card items
 	$('.overviewEntryRow').click(function(){
 		// Append spinner
 		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
