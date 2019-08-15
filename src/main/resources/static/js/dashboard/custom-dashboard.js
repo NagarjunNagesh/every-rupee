@@ -408,6 +408,16 @@ window.onload = function () {
 			iterateThroughChildren[8].firstElementChild.innerText = months[fourNext].slice(0,3);
 			iterateThroughChildren[8].lastElementChild.innerText = currentYear;
 			
+			// Tone the variables
+			onePrevious = ("0" + (onePrevious + 1)).slice(-2);
+			twoPrevious = ("0" + (twoPrevious + 1)).slice(-2);
+			threePrevious = ("0" + (threePrevious + 1)).slice(-2);
+			fourPrevious = ("0" + (fourPrevious + 1)).slice(-2);
+			oneNext = ("0" + (oneNext + 1)).slice(-2);
+			twoNext = ("0" + (twoNext + 1)).slice(-2);
+			threeNext = ("0" + (threeNext + 1)).slice(-2);
+			fourNext = ("0" + (fourNext + 1)).slice(-2);
+			
 			// popover Cache
 			popoverDates = [onePrevious + currentYear, twoPrevious + currentYear, threePrevious + currentYear, fourPrevious + currentYear, currentDate.getMonth() + currentYear, oneNext + currentYear, twoNext + currentYear, threeNext + currentYear, fourNext + currentYear];
 		}
