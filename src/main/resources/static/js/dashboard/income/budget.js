@@ -1396,7 +1396,7 @@ $(document).ready(function(){
 	// On click month
 	$('.monthPickerMonth').click(function(e) {
 		
-		er.setChosenDateWithSelected(elem);
+		er.setChosenDateWithSelected(this);
 		fetchAllUserBudget();
 	});
 	
