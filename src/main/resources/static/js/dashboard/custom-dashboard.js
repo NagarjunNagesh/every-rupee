@@ -628,9 +628,22 @@ er = {
 			positionId = Number(positionId);
 			
 			let chosenMonth = popoverDates[positionId - 1];
-			chosenMonth = Number(chosenMonth);
+			chosenMonth = ("0" + Number(chosenMonth)).slice(-6);
 			
 			chosenDate = "01" + chosenMonth;
+			
+			// Hide the modal
+			let dateControl = document.getElementById('dateControl');
+			if(!dateControl.classList.contains('d-none')){
+				dateControl.classList.toggle('d-none');
+			}
+			
+			// Change the text of the month
+			let overviewHeading = document.getElementById('overviewMonthHeading');
+			overviewHeading = months[("0" + Number(chosenMonth.slice(0,2)) - 1).slice(-2)];
+			
+			// Print the year
+			overviewHeading.firstElementChild.innerText = chosenMonth.slice(-4);
 		}
 		
 }
