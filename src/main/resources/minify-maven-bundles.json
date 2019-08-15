@@ -34,7 +34,7 @@
                 "/dashboard/sidebar/sidebar.js",
                 "/plugins/sweetalert2.js",
                 "/plugins/chartist.min.js",
-                "plugins/chartist-plugin-pointlabels.js"
+                "/plugins/chartist-plugin-pointlabels.js"
             ]
         }
     ]
