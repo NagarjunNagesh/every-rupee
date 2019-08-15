@@ -61,6 +61,9 @@ Object.seal(months);
 // Choose the current month from the user chosen date
 let userChosenMonthName = months[Number(chosenDate.slice(2, 4)) - 1]; 
 
+//Popover Cache
+let popoverDates = [];
+
 window.onload = function () {
 	$(document).ready(function(){
 		
@@ -156,6 +159,13 @@ window.onload = function () {
 		    /* Create a cookie to store user preference */
 		    document.cookie =  "currentPage=" + id + "; expires=" + expirationDate.toGMTString();
 			
+		    // Set visibility of date month
+		    let overviewDateWrapper = document.getElementsByClassName('overviewDateWrapper')[0];
+		    if(overviewDateWrapper.classList.contains('d-none')) {
+		    	overviewDateWrapper.classList.toggle('d-none');
+		    }
+		    
+		    // Fetches Current date
 			fetchCurrentPage(id);
 		});
 		
@@ -200,6 +210,8 @@ window.onload = function () {
 				url = '/dashboard/overview';
 				color = 'azure';
 				imageUrl = '../img/dashboard/sidebar/sidebar-3.jpg';
+				// hides the date div
+				hideDateElem();
 			    break;
 			case 'investmentsPage':
 				url = '/dashboard/investment';
@@ -277,6 +289,15 @@ window.onload = function () {
 			});
 		}
 		
+		// Hides the date element in the header
+		function hideDateElem() {
+			// Set visibility to 0 of date month
+		    let overviewDateWrapper = document.getElementsByClassName('overviewDateWrapper')[0];
+		    if(!overviewDateWrapper.classList.contains('d-none')) {
+		    	overviewDateWrapper.classList.toggle('d-none');
+		    }
+		}
+		
 		function closeCategoryModalIfOpen() {
 			// Hide category modal if open
 			if($('#GSCCModal').hasClass('show')) {
@@ -308,6 +329,105 @@ window.onload = function () {
 			document.getElementById('loginModalCloseButton').disabled=true;
 			
 		}
+		
+		/**
+		 *  Popover Date Time Funcationality
+		 */
+		
+		// Build the popover of the month and year
+		buildMonthAndYear();
+		
+		// Add appropriate month and year on startup
+		function buildMonthAndYear() {
+			let iterateThroughChildren = document.getElementsByClassName('monthPickerMonths')[0].children;
+			let currentDate = new Date();
+			let currentYear = currentDate.getFullYear();
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[4].firstElementChild.innerText = months[currentDate.getMonth()].slice(0,3);
+			iterateThroughChildren[4].lastElementChild.innerText = currentYear;
+			
+			// Set All previous months
+			let onePrevious = 0;
+			let twoPrevious = 0;
+			let threePrevious = 0;
+			let fourPrevious = 0;
+			
+			// If the month is less than May
+			let setDate = currentDate.getMonth() - 1;
+				
+			onePrevious = setDate < 0 ? 11 : setDate;
+			twoPrevious = --setDate < 0 ? (onePrevious == 11 ? 10 : 11) : setDate;
+			threePrevious = --setDate < 0 ? (twoPrevious == 11 ? 10 : (twoPrevious == 10) ? 9 : 11) : setDate;
+			let threePreviousPosition = (threePrevious == 11 ? 10 : (threePrevious == 10 ? 9 : (threePrevious == 9 ? 8 : 11)));
+			fourPrevious = --setDate < 0 ? threePreviousPosition : setDate;
+					
+			// Build current Month information in date popover
+			iterateThroughChildren[3].firstElementChild.innerText = months[onePrevious].slice(0,3);
+			iterateThroughChildren[3].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[2].firstElementChild.innerText = months[twoPrevious].slice(0,3);
+			iterateThroughChildren[2].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[1].firstElementChild.innerText = months[threePrevious].slice(0,3);
+			iterateThroughChildren[1].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[0].firstElementChild.innerText = months[fourPrevious].slice(0,3);
+			iterateThroughChildren[0].lastElementChild.innerText = currentYear;
+			
+			// Set all Next Months
+			let oneNext = 0;
+			let twoNext = 0;
+			let threeNext = 0;
+			let fourNext = 0;
+			
+			let nextDate = currentDate.getMonth() + 1;
+			
+			oneNext = nextDate > 11 ? 0 : nextDate;
+			twoNext = ++nextDate > 11 ? (oneNext == 0 ? 1 : 0) : nextDate;
+			threeNext = ++nextDate > 11 ? (twoNext == 1 ? 2 : (twoNext == 0 ? 1 : 0)) : nextDate;
+			let threeNextPosition = threeNext == 0 ? 1 : (threeNext == 1 ? 2 : (threeNext == 2 ? 3 : 0));
+			fourNext = ++nextDate > 11 ? threeNextPosition : nextDate;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[5].firstElementChild.innerText = months[oneNext].slice(0,3);
+			iterateThroughChildren[5].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[6].firstElementChild.innerText = months[twoNext].slice(0,3);
+			iterateThroughChildren[6].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[7].firstElementChild.innerText = months[threeNext].slice(0,3);
+			iterateThroughChildren[7].lastElementChild.innerText = currentYear;
+			
+			// Build current Month information in date popover
+			iterateThroughChildren[8].firstElementChild.innerText = months[fourNext].slice(0,3);
+			iterateThroughChildren[8].lastElementChild.innerText = currentYear;
+			
+			// popover Cache
+			popoverDates = [onePrevious + currentYear, twoPrevious + currentYear, threePrevious + currentYear, fourPrevious + currentYear, currentDate.getMonth() + currentYear, oneNext + currentYear, twoNext + currentYear, threeNext + currentYear, fourNext + currentYear];
+		}
+		
+		// Click event for month picker
+		document.getElementById('overviewMonthHeading').addEventListener("click",function(e){
+			e.stopPropagation();
+			
+			document.getElementById('dateControl').classList.toggle('d-none');
+		});
+		
+		// Previous Button Date Time Click
+		document.getElementById('monthPickerPrev').addEventListener("click",function(e){
+			// TODO
+		});
+		
+		// Next Button Date Time Click
+		document.getElementById('monthPickerNext').addEventListener("click",function(e){
+			// TODO
+		});
 		
 	});
 	
@@ -491,6 +611,16 @@ er = {
 				  }
 			});
 			
+		},
+		
+		setChosenDateWithSelected(elem) {
+			let positionId = lastElement(splitElement(elem.id,'-'));
+			positionId = Number(positionId);
+			
+			let chosenMonth = popoverDates[positionId - 1];
+			chosenMonth = Number(chosenMonth);
+			
+			chosenDate = "01" + chosenMonth;
 		}
 		
 }

@@ -290,6 +290,22 @@
 		height: 30rem;
 }
 
+/** Date time picker **/
+.monthPickerMonthSelected {
+    border-color: #00bcd4;
+    background-color: #00bcd4;
+    color: #fff;
+}
+
+.monthPickerMonth:hover, .monthPickerNext:hover, .monthPickerPrev:hover {
+	border-color: #00bcd4;
+	color: #00bcd4;
+}
+
+.monthPickerMonthSelected:hover {
+	color: #fff;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

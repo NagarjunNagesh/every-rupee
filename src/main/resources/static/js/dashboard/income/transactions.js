@@ -671,7 +671,7 @@ $(document).ready(function(){
 	function toggleDropdown(categoryId, closestTrElement) {
 		let classToHide = '.hideableRow-' + categoryId;
 		let childCategories = $(classToHide);
-		let dropdownArrowDiv = closestTrElement.firstChild.classList;
+		let dropdownArrowDiv = closestTrElement.firstElementChild.classList;
 		// Hide all child categories
 		childCategories.toggleClass('d-none').toggleClass('d-lg-table-row');
 		// Toggle the drop down arrow

@@ -1141,8 +1141,8 @@ $(document).ready(function(){
 	$('#categoryCompensationModal').on('hidden.bs.modal', function () {
 		// Remove all anchors from the dropdown menu
 		let compensationDropdownMenu = document.getElementById('compensationDropdownMenu-1');
-		while (compensationDropdownMenu.firstChild) {
-			compensationDropdownMenu.removeChild(compensationDropdownMenu.firstChild);
+		while (compensationDropdownMenu.firstElementChild) {
+			compensationDropdownMenu.removeChild(compensationDropdownMenu.firstElementChild);
 		}
 		
 		let compensationDisplay = document.getElementsByClassName('categoryChosenCompensation-1');
@@ -1392,5 +1392,12 @@ $(document).ready(function(){
 	    
 	}
 	
+	// Date Picker
+	// On click month
+	$('.monthPickerMonth').click(function(e) {
+		
+		er.setChosenDateWithSelected(elem);
+		fetchAllUserBudget();
+	});
 	
 });
