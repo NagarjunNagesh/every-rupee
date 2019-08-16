@@ -1392,12 +1392,16 @@ $(document).ready(function(){
 	    
 	}
 	
-	// Date Picker
-	// On click month
+	/**
+	 * Date Picker Module
+	 */
+	
+	// Date Picker On click month
 	$('.monthPickerMonth').click(function(e) {
-		
 		er.setChosenDateWithSelected(this);
 		fetchAllUserBudget();
 	});
+	
+	
 	
 });

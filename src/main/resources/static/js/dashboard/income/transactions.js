@@ -1749,6 +1749,14 @@ $(document).ready(function(){
 		
 	}
 	
+	// Date Picker
+	// On click month
+	$('.monthPickerMonth').click(function(e) {
+		
+		er.setChosenDateWithSelected(this);
+		fetchJSONForTransactions();
+	});
+	
 });
 
 //# sourceURL=transaction.js
