@@ -890,6 +890,8 @@ progress {
     display: inline-flex;
     -ms-flex-align: center;
     align-items: center;
+    left: 41%;
+    position: absolute;
 }
 
 .overviewMonthHeading {
@@ -937,7 +939,7 @@ progress {
     transform: rotate(45deg) translateZ(0);
     position: absolute;
     z-index: -1;
-    left: 25%;
+    left: 50%;
     box-shadow: -1px -1px 0 #d9dcdd;
     background: #fff;
     width: 1.5rem;
@@ -1042,8 +1044,8 @@ progress {
 }
 
 #dateControl {
-	top: 5rem;
-	left: 2rem;
+	top: 2.9rem;
+	left: -25rem;
 }
 
 .transformUpwardArrow {
@@ -1052,4 +1054,14 @@ progress {
 
 #monthPickerDisplay {
 	cursor: pointer;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }	

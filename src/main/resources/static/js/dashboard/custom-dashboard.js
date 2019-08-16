@@ -390,6 +390,8 @@ window.onload = function () {
 			calcCurrentMonthSelected();
 			// Reset the month picker existing budget / transactions / goals / investments
 			resetMonthExistingPicker();
+			
+			
 		});
 		
 		// Next Button Date Time Click
