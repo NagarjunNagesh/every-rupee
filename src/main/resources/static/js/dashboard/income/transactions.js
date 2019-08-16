@@ -1752,9 +1752,18 @@ $(document).ready(function(){
 	// Date Picker
 	// On click month
 	$('.monthPickerMonth').click(function(e) {
+		let transactionTable = document.getElementById('transactionsTable');
 		
+		if(transactionTable == null) {
+			return;
+		}
+		
+		// Set chosen Date
 		er.setChosenDateWithSelected(this);
+		
+		// Call transactions
 		fetchJSONForTransactions();
+		
 	});
 	
 });

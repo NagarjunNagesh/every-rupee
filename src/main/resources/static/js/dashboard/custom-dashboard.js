@@ -250,6 +250,8 @@ window.onload = function () {
         	changeColorOfSidebar(color);
         	// Change Image of sidebar
         	changeImageOfSidebar(imageUrl);
+        	// Reset the month existing date picker
+        	resetMonthExistingPicker();
 			
         	// Check if the user is authenticated. Then call the page to be dynamically loaded
 			$.ajax({
@@ -372,11 +374,11 @@ window.onload = function () {
 			dateControl.toggle('d-none');
 			
 			// Change the SVG to down arrow or up arrow
-			let overvierDateArrow = document.getElementsByClassName('overviewDateArrow')[0];
+			let overvierDateArrow = document.getElementsByClassName('overviewDateArrow')[0].classList;
 			if(dateControl.contains('d-none')) {
-				overvierDateArrow.firstElementChild.style.transform = 'rotate(0)';
+				overvierDateArrow.remove('transformUpwardArrow');
 			} else {
-				overvierDateArrow.firstElementChild.style.transform = 'rotate(180 20 20)';
+				overvierDateArrow.add('transformUpwardArrow');
 			}
 			
 		});
@@ -386,6 +388,8 @@ window.onload = function () {
 			buildYear(Number(popoverYear) - 1);
 			calcCurrentMonthInPopover();
 			calcCurrentMonthSelected();
+			// Reset the month picker existing budget / transactions / goals / investments
+			resetMonthExistingPicker();
 		});
 		
 		// Next Button Date Time Click
@@ -393,6 +397,8 @@ window.onload = function () {
 			buildYear(Number(popoverYear) + 1);
 			calcCurrentMonthInPopover();
 			calcCurrentMonthSelected();
+			// Reset the month picker existing budget / transactions / goals / investments
+			resetMonthExistingPicker();
 		});
 		
 		// Function that appends today to current month
@@ -420,6 +426,12 @@ window.onload = function () {
 			} else if(selectedMonthDiv.length != 0) {
 				selectedMonthDiv[0].classList.remove('monthPickerMonthSelected');
 			}
+		}
+		
+		// Reset the month picker existing budget / transactions / goals / investments
+		function resetMonthExistingPicker() {
+			// Remove all the existing class
+			$(".monthPickerMonthExists").removeClass("monthPickerMonthExists");
 		}
 		
 	});
@@ -628,11 +640,16 @@ er = {
 			overviewYearHeading.innerText = popoverYear;
 			
 			// Remove selected from current
-			let monthsSelected = document.getElementsByClassName('monthPickerMonthSelected')[0];
-			monthsSelected.classList.remove('monthPickerMonthSelected');
+			let monthsSelected = document.getElementsByClassName('monthPickerMonthSelected');
+			if(monthsSelected.length != 0) {
+				monthsSelected[0].classList.remove('monthPickerMonthSelected');
+			}
 			
 			// Append Month select to current
 			elem.classList.add('monthPickerMonthSelected');
+			
+			// Rotate the arrow head in the month display
+			document.getElementsByClassName('overviewDateArrow')[0].classList.remove('transformUpwardArrow');
 		}
 		
 }

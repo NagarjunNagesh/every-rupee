@@ -595,6 +595,9 @@ $(document).ready(function(){
 	
 	// Copy all budget from previous modal if budget is empty
 	function createCopyFromPreviousMonthModal() {
+		// User chosen month
+		userChosenMonthName = months[Number(chosenDate.slice(2, 4)) - 1];
+		
 		let card = document.createElement("div");
 		card.id = 'emptyBudgetCard';
 		card.classList = 'card text-center';
@@ -742,9 +745,13 @@ $(document).ready(function(){
             	// Update the latest budget month
             	for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++) {
             		let userBudgetDate = datesWithUserBudgetData[count];
+            		
+            		// Update the date picker with existing budgets
+                	updateExistingBudgetInDatePicker(userBudgetDate);
+            		
             		if(isEmpty(lastBudgetMonth) || userBudgetDate > lastBudgetMonth) {
             			// Append preceeding zero
-            			lastBudgetMonth = '0' + userBudgetDate;
+            			lastBudgetMonth = ('0' + userBudgetDate).slice(-8);
             		}
             	}
             	
@@ -1398,10 +1405,46 @@ $(document).ready(function(){
 	
 	// Date Picker On click month
 	$('.monthPickerMonth').click(function(e) {
+		let budgetAmountDiv = document.getElementById('budgetAmount');
+		
+		// If other pages are present then return this event
+		if(budgetAmountDiv == null) {
+			return;
+		}
+		
+		// Set chosen date
 		er.setChosenDateWithSelected(this);
+		
+		// User Budget Map Cache
+		userBudgetCache = {};
+		// User transaction category ID and total
+		categoryTotalMapCache = {};
+		// Store the budget amount edited previously to compare
+		budgetAmountEditedPreviously = '';
+		// store the budget chart in the cache to update later
+		budgetCategoryChart = '';
+		// Fetch all dates from the user budget
+		datesWithUserBudgetData = [];
+		// last Budgeted Month
+		lastBudgetedMonthName = '';
+		lastBudgetMonth = 0;
+		// Category Compensation Modal Values
+		userBudgetAndTotalAvailable = {};
+		// Category modal user budget category id;
+		categoryForModalOpened = '';
+		
+		// Call the user budget
 		fetchAllUserBudget();
+		
 	});
 	
-	
+	// Update existing date picker with existing budget
+	function updateExistingBudgetInDatePicker(userBudgetDate) {
+		userBudgetDate = ('0' + userBudgetDate).slice(-8);
+		if(popoverYear == userBudgetDate.slice(-4)) {
+			let monthToAppend = Number(userBudgetDate.slice(2,4));
+			document.getElementById('monthPicker-' + monthToAppend).classList.add('monthPickerMonthExists');
+		}
+	}
 	
 });

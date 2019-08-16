@@ -900,7 +900,6 @@ progress {
     line-height: 1.5;
     color: #495257;
     font-weight: 700;
-    cursor: pointer;
     font-size: 1.2rem;
 }
 
@@ -1047,4 +1046,10 @@ progress {
 	left: 2rem;
 }
 
-	
+.transformUpwardArrow {
+	transform: rotate(180deg);
+}
+
+#monthPickerDisplay {
+	cursor: pointer;
+}	
