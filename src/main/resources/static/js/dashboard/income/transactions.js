@@ -1751,7 +1751,7 @@ $(document).ready(function(){
 	
 	// Date Picker
 	// On click month
-	$('.monthPickerMonth').click(function(e) {
+	$('.monthPickerMonth').click(function() {
 		let transactionTable = document.getElementById('transactionsTable');
 		
 		if(transactionTable == null) {

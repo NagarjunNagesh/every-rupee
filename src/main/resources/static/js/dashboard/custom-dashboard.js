@@ -406,7 +406,7 @@ window.onload = function () {
 		});
 		
 		// Previous Button Date Time Click
-		document.getElementById('monthPickerPrev').addEventListener("click",function(e){
+		document.getElementById('monthPickerPrev').addEventListener("click",function(){
 			// Build year after calculating the current month 
 			buildYear(Number(popoverYear) - 1);
 			calcCurrentMonthInPopover();
@@ -422,7 +422,7 @@ window.onload = function () {
 		});
 		
 		// Next Button Date Time Click
-		document.getElementById('monthPickerNext').addEventListener("click",function(e){
+		document.getElementById('monthPickerNext').addEventListener("click",function(){
 			// Build year after calculating the current month 
 			buildYear(Number(popoverYear) + 1);
 			calcCurrentMonthInPopover();
@@ -505,7 +505,7 @@ window.onload = function () {
 		}
 		
 		// Date Picker On click month
-		$('.monthPickerMonth').click(function(e) {
+		$('.monthPickerMonth').click(function() {
 			// Remove event listener once the function performed its task
 			document.removeEventListener('mouseup', closeMonthPickerModal, false);
 		});

@@ -1402,7 +1402,7 @@ $(document).ready(function(){
 	 */
 	
 	// Date Picker On click month
-	$('.monthPickerMonth').click(function(e) {
+	$('.monthPickerMonth').click(function() {
 		let budgetAmountDiv = document.getElementById('budgetAmount');
 		
 		// If other pages are present then return this event
