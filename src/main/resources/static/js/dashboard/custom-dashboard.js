@@ -33,6 +33,10 @@ Object.defineProperties(CUSTOM_DASHBOARD_CONSTANTS, {
 	'updateBudgetTrueParam': { value: '&updateBudget=true', writable: false, configurable: false },
 	'updateBudgetFalseParam': { value: '&updateBudget=false', writable: false, configurable: false },
 	'changeBudgetUrl': { value: 'changeCategory/', writable: false, configurable: false },
+	'incomeTotalParam': { value:'?type=INCOME&average=false', writable: false, configurable: false },
+	'expenseTotalParam': { value:'?type=EXPENSE&average=false', writable: false, configurable: false },
+	'overviewUrl': { value: '/api/overview/', writable: false, configurable: false },
+	'lifetimeUrl': { value:'lifetime/', writable: false, configurable: false },
 });
 
 //Currency Preference
@@ -67,8 +71,15 @@ let popoverYear = new Date().getFullYear();
 // Position for month selection
 let positionMonthCache = 0;
 
+// Fetch all dates from the user budget
+let datesWithUserBudgetData = [];
+
 window.onload = function () {
 	$(document).ready(function(){
+		
+		// Transactions total income cache
+		let transactionsTotalIncomeOrExpenseCache = []; 
+
 		
 		// Append "active" class name to toggle sidebar color change
 		if($('.overview-dashboard').length) {
@@ -336,7 +347,7 @@ window.onload = function () {
 		}
 		
 		/**
-		 *  Popover Date Time Funcationality
+		 *  Popover Date Time Functionality
 		 */
 		// Build Year
 		buildYear(new Date().getFullYear())
@@ -370,37 +381,60 @@ window.onload = function () {
 		document.getElementById('monthPickerDisplay').addEventListener("click",function(e){
 			e.stopPropagation();
 			
-			let dateControl = document.getElementById('dateControl').classList;
-			dateControl.toggle('d-none');
+			// Show the modal (Do not close)
+			let dateControlClass = document.getElementById('dateControl').classList;
+			dateControlClass.toggle('d-none');
 			
 			// Change the SVG to down arrow or up arrow
 			let overvierDateArrow = document.getElementsByClassName('overviewDateArrow')[0].classList;
-			if(dateControl.contains('d-none')) {
+			if(dateControlClass.contains('d-none')) {
 				overvierDateArrow.remove('transformUpwardArrow');
+				// Remove event listener once the function performed its task
+				document.removeEventListener('mouseup', closeMonthPickerModal, false);
 			} else {
 				overvierDateArrow.add('transformUpwardArrow');
+				// Add click outside event listener to close the modal
+				document.addEventListener('mouseup', closeMonthPickerModal, false);
+				// Store in position cache if the month picker is displayed
+				let selectedMonthDiv = document.getElementsByClassName('monthPickerMonthSelected');
+				positionMonthCache = selectedMonthDiv.length > 0 ? ("0" + lastElement(splitElement(selectedMonthDiv[0].id,'-'))).slice(-2) + popoverYear : positionMonthCache;
+				
+				// Fetch the transactions data if the tab is open
+				updateExistingTransactionsInMonthPicker();
 			}
 			
 		});
 		
 		// Previous Button Date Time Click
 		document.getElementById('monthPickerPrev').addEventListener("click",function(e){
+			// Build year after calculating the current month 
 			buildYear(Number(popoverYear) - 1);
 			calcCurrentMonthInPopover();
+			// Calculate the month selected
 			calcCurrentMonthSelected();
 			// Reset the month picker existing budget / transactions / goals / investments
 			resetMonthExistingPicker();
-			
+			// Update existing date in month picker
+			updateExistingBudgetInMonthPicker();
+			// Update existing date for Transactions
+			updateExistingTransactionsInMonthPicker();
 			
 		});
 		
 		// Next Button Date Time Click
 		document.getElementById('monthPickerNext').addEventListener("click",function(e){
+			// Build year after calculating the current month 
 			buildYear(Number(popoverYear) + 1);
 			calcCurrentMonthInPopover();
+			// Calculate the month selected
 			calcCurrentMonthSelected();
 			// Reset the month picker existing budget / transactions / goals / investments
 			resetMonthExistingPicker();
+			// Update existing date in month picker
+			updateExistingBudgetInMonthPicker();
+			// Update existing date for Transactions
+			updateExistingTransactionsInMonthPicker();
+			
 		});
 		
 		// Function that appends today to current month
@@ -419,12 +453,10 @@ window.onload = function () {
 		// Calculate the current month selected
 		function calcCurrentMonthSelected() {
 			let selectedMonthDiv = document.getElementsByClassName('monthPickerMonthSelected');
-			let currentDate = new Date();
-			// Store in position cache
-			positionMonthCache = selectedMonthDiv.length > 0 ? lastElement(splitElement(selectedMonthDiv[0].id,'-')) : positionMonthCache;
-			
-			if((popoverYear == currentDate.getFullYear()) && selectedMonthDiv.length === 0) {
-				document.getElementById('monthPicker-' + positionMonthCache).classList.add('monthPickerMonthSelected');
+
+			if(selectedMonthDiv.length === 0 && Number(positionMonthCache.slice(-4)) == popoverYear) {
+				let positionElement = Number(positionMonthCache.slice(0,2));
+				document.getElementById('monthPicker-' + positionElement).classList.add('monthPickerMonthSelected');
 			} else if(selectedMonthDiv.length != 0) {
 				selectedMonthDiv[0].classList.remove('monthPickerMonthSelected');
 			}
@@ -434,6 +466,100 @@ window.onload = function () {
 		function resetMonthExistingPicker() {
 			// Remove all the existing class
 			$(".monthPickerMonthExists").removeClass("monthPickerMonthExists");
+		}
+		
+		// Update existing date picker with existing budget
+		function updateExistingBudgetInMonthPicker() {
+			
+			let budgetAmountDiv = document.getElementById('budgetAmount');
+			
+			// If other pages are present then return this event
+			if(budgetAmountDiv == null) {
+				return;
+			}
+			
+			// Update the latest budget month
+        	for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++) {
+        		let userBudgetDate = datesWithUserBudgetData[count];
+        		userBudgetDate = ('0' + userBudgetDate).slice(-8);
+				if(popoverYear == userBudgetDate.slice(-4)) {
+					let monthToAppend = Number(userBudgetDate.slice(2,4));
+					document.getElementById('monthPicker-' + monthToAppend).classList.add('monthPickerMonthExists');
+				}
+        	}
+		}
+		
+		// Event to close the month picker
+		function closeMonthPickerModal(event) {
+			let dateControlDiv = document.getElementById('dateControl');
+			let overvierDateArrow = document.getElementsByClassName('overviewDateArrow')[0].classList;
+			let monthPickerDisplay = document.getElementById('monthPickerDisplay');
+			if (!(dateControlDiv.contains(event.target) || monthPickerDisplay.contains(event.target)) && !dateControlDiv.classList.contains('d-none')){
+			    // Click outside the modal
+				dateControlDiv.classList.add('d-none');
+				// Remove upward arrow
+				overvierDateArrow.remove('transformUpwardArrow');
+				// Remove event listener once the function performed its task
+				document.removeEventListener('mouseup', closeMonthPickerModal, false);
+			}
+		}
+		
+		// Date Picker On click month
+		$('.monthPickerMonth').click(function(e) {
+			// Remove event listener once the function performed its task
+			document.removeEventListener('mouseup', closeMonthPickerModal, false);
+		});
+		
+		// Update Transactions in month picker
+		function updateExistingTransactionsInMonthPicker() {
+			
+			let transactionAmountDiv = document.getElementsByClassName('information-modal');
+			
+			// If other pages are present then return this event
+			if(transactionAmountDiv.length == 0) {
+				return;
+			}
+			
+			if(isEmpty(transactionsTotalIncomeOrExpenseCache)) {
+				fetchIncomeTotalOrExpeseTotal(CUSTOM_DASHBOARD_CONSTANTS.incomeTotalParam);
+				fetchIncomeTotalOrExpeseTotal(CUSTOM_DASHBOARD_CONSTANTS.expenseTotalParam);
+			} else {
+				updateMonthExistsWithTransactionData(transactionsTotalIncomeOrExpenseCache);
+			}
+		}
+		
+		// Fetch income total or expense total
+		function fetchIncomeTotalOrExpeseTotal(incomeTotalParameter) {
+			jQuery.ajax({
+				url: CUSTOM_DASHBOARD_CONSTANTS.overviewUrl + CUSTOM_DASHBOARD_CONSTANTS.lifetimeUrl + incomeTotalParameter,
+		        type: 'GET',
+		        success: function(dateAndAmountAsList) {
+		        	updateMonthExistsWithTransactionData(dateAndAmountAsList);
+		        }
+			});
+		}
+		
+		// Fetch the transactions data to update month exists in Month Picker
+		function updateMonthExistsWithTransactionData(dateAndAmountAsList) {
+			if(isNotEmpty(dateAndAmountAsList)) {
+        		let resultKeySet = Object.keys(dateAndAmountAsList);
+	        	for(let countGrouped = 0, length = resultKeySet.length; countGrouped < length; countGrouped++) {
+	        		let dateKey = resultKeySet[countGrouped];
+	        		
+	        		// Convert the date key as date
+	             	let dateAsDate = new Date(dateKey);
+	             	
+	             	if(popoverYear != dateAsDate.getFullYear()) {
+	             		continue;
+	             	}
+	             	
+	             	let currentMonth = dateAsDate.getMonth() + 1;
+	             	let monthPickerClass = document.getElementById('monthPicker-' + currentMonth).classList;
+	             	if(!monthPickerClass.contains('monthPickerMonthExists')) {
+	             		monthPickerClass.add('monthPickerMonthExists');
+	             	}
+	        	}
+        	}
 		}
 		
 	});

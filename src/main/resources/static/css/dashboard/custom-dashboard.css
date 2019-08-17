@@ -911,10 +911,10 @@ progress {
 }
 
 .overviewDateArrow {
-	margin-left: .6rem;
-    width: 1rem;
-    height: 1rem;
-    fill: #0097a8;
+	margin-left: .3rem;
+    width: .8rem;
+    height: .8rem;
+    fill: #999;
 }
 
 .overviewNavigationControl {
@@ -1005,7 +1005,7 @@ progress {
     justify-content: center;
     margin-right: 1%;
     margin-left: 1%;
-    border: .05rem dashed #e6e9ea;
+    border: .05rem dashed #cacdce;
     border-radius: .5rem;
     width: 5rem;
     height: 5rem;
@@ -1040,7 +1040,7 @@ progress {
     width: 100%;
     color: #b6bec2;
     font-size: 0.7rem;
-    content: "Today";
+    content: "Now";
 }
 
 #dateControl {

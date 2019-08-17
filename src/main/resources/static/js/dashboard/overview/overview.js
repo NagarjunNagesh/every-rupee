@@ -779,8 +779,8 @@ $(document).ready(function(){
 	        	
 	        	let resultKeySet = Object.keys(dateAndAmountAsList);
 	        	// One year of data at a time;
-	        	let length = resultKeySet.length > 12 ? 12 : resultKeySet.length;
-	        	for(let countGrouped = 0; countGrouped < length; countGrouped++) {
+	        	let countValue = resultKeySet.length > 12 ? (resultKeySet.length - 12) : 0;
+	        	for(let countGrouped = countValue, length = resultKeySet.length; countGrouped < length; countGrouped++) {
 	        		let dateKey = resultKeySet[countGrouped];
 	             	let userAmountAsListValue = dateAndAmountAsList[dateKey];
 	             	
