@@ -576,6 +576,17 @@ $(document).ready(function(){
 			                     for(let i = 0, length = allCheckedItems.length; i < length; i++) {
 			                     	// To remove the select all check box values
 			                    	let transactionId = allCheckedItems[i].innerHTML;
+			                    	
+			                    	// Remove the check all from the list
+			                    	if(isEqual(allCheckedItems[i].id, 'checkAll')) {
+			                    		continue;
+			                    	}
+			                    	
+			                    	// Google Chrome Compatibility 
+			                        if(isEmpty(transactionId)) {
+			                        	transactionId = allCheckedItems[i].childNodes[0].nodeValue; 
+			                        }
+			                    	
 			                     	if(transactionId != "on" && isNotBlank(transactionId)){
 			                     		transactionIds.push(transactionId);
 			                     	}
@@ -660,7 +671,7 @@ $(document).ready(function(){
 	function toggleDropdown(categoryId, closestTrElement) {
 		let classToHide = '.hideableRow-' + categoryId;
 		let childCategories = $(classToHide);
-		let dropdownArrowDiv = closestTrElement.firstChild.classList;
+		let dropdownArrowDiv = closestTrElement.firstElementChild.classList;
 		// Hide all child categories
 		childCategories.toggleClass('d-none').toggleClass('d-lg-table-row');
 		// Toggle the drop down arrow
@@ -772,9 +783,9 @@ $(document).ready(function(){
 	$('#transactionsTable').on('keypress', '.transactionsTableDescription' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) {
+			document.activeElement.blur();
 		    e.preventDefault();
-
-		    $(this).blur(); 
+		    e.stopPropagation();
 		    return false;
 		  }
 	});
@@ -844,9 +855,9 @@ $(document).ready(function(){
 	$('#transactionsTable').on('keyup', '.amountTransactionsRow' , function(e) {
 		  let keyCode = e.keyCode || e.which;
 		  if (keyCode === 13) { 
+			document.activeElement.blur();
 		    e.preventDefault();
-
-		    $(this).blur(); 
+		    e.stopPropagation();
 		    return false;
 		  }
 		  
@@ -1637,7 +1648,7 @@ $(document).ready(function(){
 		  if (keyCode === 13) { 
 		    e.preventDefault();
 
-		    $(this).blur(); 
+		    document.activeElement.blur();
 		    return false;
 		  }
 	},false);
@@ -1737,6 +1748,23 @@ $(document).ready(function(){
 		budgetImageDiv.src = '../img/dashboard/transactions/icons8-restaurant-40.png';
 		
 	}
+	
+	// Date Picker
+	// On click month
+	$('.monthPickerMonth').click(function() {
+		let transactionTable = document.getElementById('transactionsTable');
+		
+		if(transactionTable == null) {
+			return;
+		}
+		
+		// Set chosen Date
+		er.setChosenDateWithSelected(this);
+		
+		// Call transactions
+		fetchJSONForTransactions();
+		
+	});
 	
 });
 

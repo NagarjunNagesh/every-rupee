@@ -575,6 +575,22 @@ fildset > label {
 	fill: #4caf50;
 }
 
+/** Date time picker **/
+.monthPickerMonthSelected {
+    border-color: #4caf50;
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.monthPickerMonth:hover, .monthPickerNext:hover, .monthPickerPrev:hover {
+	border-color: #4caf50;	
+	color: #4caf50;
+}
+
+.monthPickerMonthSelected:hover {
+	color: #fff;
+}
+
 /** Change the size of the text if the width and height pf the screen are more **/
 @media (min-width:60em) and (min-height:43.75em) {
 	

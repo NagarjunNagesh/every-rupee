@@ -126,7 +126,7 @@
 
 .previousMonth {
 	top: 18%;
-	left: 55%;
+	left: 55.5%;
 	position: absolute;
 	font-weight: 700;
 	color: #24007594;
@@ -341,4 +341,20 @@
 
 .w-30 {
 	width:30%;
+}
+
+/** Date time picker **/
+.monthPickerMonthSelected {
+    border-color: #e91e63;
+    background-color: #e91e63;
+    color: #fff;
+}
+
+.monthPickerMonth:hover, .monthPickerNext:hover, .monthPickerPrev:hover {
+	border-color: #e91e63;
+	color: #e91e63;
+}
+
+.monthPickerMonthSelected:hover {
+	color: #fff;
 }
