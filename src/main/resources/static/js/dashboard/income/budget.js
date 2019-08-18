@@ -251,9 +251,10 @@ $(document).ready(function(){
 		let totalBudgetedCategoriesDiv = document.getElementById('totalBudgetedCategories');
 		let toBeBudgetedDiv = document.getElementById('toBeBudgeted');
 		let detachChart = false;
-		
 		if(isNotEmpty(userBudgetCacheKeys)) {
 			totalBudgetedCategoriesDiv.innerText = userBudgetCacheKeys.length;
+			// If empty then update the chart with the 0
+			toBeBudgetedDiv.innerText = 0;
 			
 			if(isNotEmpty(categoryTotalKeys)) {
 				let toBeBudgetedAvailable = 0;
@@ -277,7 +278,6 @@ $(document).ready(function(){
 	                labels: [userBudgetPercentage + '%',toBeBudgetedPercentage + '%'],
 	                series: [userBudgetPercentage,toBeBudgetedPercentage]
 	            };
-				
 			}
 		} else {
 			// If empty then update the chart with the 0
@@ -485,7 +485,7 @@ $(document).ready(function(){
 			// Set the value and percentage of the progress bar
 			progressBarCategoryModal.setAttribute('aria-valuenow', progressBarPercentage);
 			progressBarCategoryModal.style.width = progressBarPercentage + '%'; 
-		} else if(progressBarCategoryModal != null){
+		} else if(progressBarCategoryModal != null) {
 			remainingAmountPercentageDiv.innerText = 'NA';
 			// Set the value and percentage of the progress bar
 			progressBarCategoryModal.setAttribute('aria-valuenow', 0);

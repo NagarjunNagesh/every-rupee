@@ -924,6 +924,7 @@ function formatNumber(num, locale) {
 	if(isEmpty(locale)){
 		locale = "en-IN";
 	}
-	  return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+	
+	return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
