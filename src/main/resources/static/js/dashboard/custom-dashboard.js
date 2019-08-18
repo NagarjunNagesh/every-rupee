@@ -78,7 +78,7 @@ window.onload = function () {
 	$(document).ready(function(){
 		
 		// Transactions total income cache
-		let transactionsTotalIncomeOrExpenseCache = []; 
+		let transactionsTotalIncomeOrExpenseCache = {}; 
 
 		
 		// Append "active" class name to toggle sidebar color change
@@ -173,12 +173,6 @@ window.onload = function () {
 		    /* Create a cookie to store user preference */
 		    document.cookie =  "currentPage=" + id + "; expires=" + expirationDate.toGMTString();
 			
-		    // Set visibility of date month
-		    let overviewDateWrapper = document.getElementsByClassName('overviewDateWrapper')[0];
-		    if(overviewDateWrapper.classList.contains('d-none')) {
-		    	overviewDateWrapper.classList.toggle('d-none');
-		    }
-		    
 		    // Fetches Current date
 			fetchCurrentPage(id);
 		});
@@ -224,8 +218,6 @@ window.onload = function () {
 				url = '/dashboard/overview';
 				color = 'azure';
 				imageUrl = '../img/dashboard/sidebar/sidebar-3.jpg';
-				// hides the date div
-				hideDateElem();
 			    break;
 			case 'investmentsPage':
 				url = '/dashboard/investment';
@@ -303,15 +295,6 @@ window.onload = function () {
 		           	}
 		        }
 			});
-		}
-		
-		// Hides the date element in the header
-		function hideDateElem() {
-			// Set visibility to 0 of date month
-		    let overviewDateWrapper = document.getElementsByClassName('overviewDateWrapper')[0];
-		    if(!overviewDateWrapper.classList.contains('d-none')) {
-		    	overviewDateWrapper.classList.toggle('d-none');
-		    }
 		}
 		
 		function closeCategoryModalIfOpen() {
@@ -545,7 +528,11 @@ window.onload = function () {
         		let resultKeySet = Object.keys(dateAndAmountAsList);
 	        	for(let countGrouped = 0, length = resultKeySet.length; countGrouped < length; countGrouped++) {
 	        		let dateKey = resultKeySet[countGrouped];
-	        		
+	        		let value = dateAndAmountAsList[dateKey];
+
+	        		// push values to cache
+		        	transactionsTotalIncomeOrExpenseCache[dateKey] = value;
+		        	
 	        		// Convert the date key as date
 	             	let dateAsDate = new Date(dateKey);
 	             	

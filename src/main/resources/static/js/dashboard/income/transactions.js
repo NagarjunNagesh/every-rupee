@@ -1758,6 +1758,10 @@ $(document).ready(function(){
 			return;
 		}
 		
+		// Replace Transactions Table with empty spinner
+		replaceTransactionsWithMSpinner();
+		replacePieChartWithMSpinner();
+		
 		// Set chosen Date
 		er.setChosenDateWithSelected(this);
 		
@@ -1765,6 +1769,52 @@ $(document).ready(function(){
 		fetchJSONForTransactions();
 		
 	});
+	
+	// Replace transactions table with empty spinner
+	function replaceTransactionsWithMSpinner() {
+		// Replace Transactions Table
+		let materialSpinnerFrag = document.createDocumentFragment();
+		
+		let tableRow = document.createElement('div');
+		tableRow.classList = 'd-lg-table-row';
+		
+		let firstCell = document.createElement('div');
+		firstCell.classList = 'd-lg-table-cell';
+		tableRow.appendChild(firstCell);
+		
+		let secCell = document.createElement('div');
+		secCell.classList = 'd-lg-table-cell';
+		tableRow.appendChild(secCell);
+		
+		let thirdCell = document.createElement('div');
+		thirdCell.classList = 'd-lg-table-cell';
+		tableRow.appendChild(thirdCell);
+		
+		let fourthCell = document.createElement('div');
+		fourthCell.classList = 'd-lg-table-cell';
+		let mSpinnerDiv = document.createElement('div');
+		mSpinnerDiv.classList = 'material-spinner';
+		fourthCell.appendChild(mSpinnerDiv);
+		tableRow.appendChild(fourthCell);
+		
+		materialSpinnerFrag.appendChild(tableRow);
+		
+		// Replace the product json with empty table
+		let productJsonDiv = document.getElementById(replaceTransactionsId);
+		productJsonDiv.innerHTML = '';
+		productJsonDiv.appendChild(materialSpinnerFrag);
+	}
+	
+	// Replace Pie Chart with Material Spinner
+	function replacePieChartWithMSpinner() {
+		// Reset the chart
+        if(isNotEmpty(transactionsChart)) {
+        	transactionsChart.detach();
+        }
+        
+		let chartFinPosition = document.getElementById('chartFinancialPosition');
+		chartFinPosition.innerHTML = '<div class="material-spinner"></div>';
+	}
 	
 });
 

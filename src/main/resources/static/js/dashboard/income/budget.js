@@ -1413,6 +1413,16 @@ $(document).ready(function(){
 		// Set chosen date
 		er.setChosenDateWithSelected(this);
 		
+		// Reset the User Budget with Loader
+		resetUserBudgetWithLoader();
+		
+		// Call the user budget
+		fetchAllUserBudget();
+		
+	});
+	
+	// Reset the user budget with loader
+	function resetUserBudgetWithLoader() {
 		// User Budget Map Cache
 		userBudgetCache = {};
 		// User transaction category ID and total
@@ -1431,10 +1441,114 @@ $(document).ready(function(){
 		// Category modal user budget category id;
 		categoryForModalOpened = '';
 		
-		// Call the user budget
-		fetchAllUserBudget();
+		// Append Empty Budget Loader
+		let emptyDocumentFragment = document.createDocumentFragment();
 		
-	});
+		let cardDiv = document.createElement('div');
+		cardDiv.classList = 'card';
+		
+		let cardBody = document.createElement('div');
+		cardBody.classList = 'card-body';
+		
+		// Row 1
+		let animationBudgetRowDiv = document.createElement('div');
+		animationBudgetRowDiv.classList = 'row';
+		
+		let threePortionDiv = document.createElement('div');
+		threePortionDiv.classList = 'col-lg-3';
+		
+		let animationBudget = document.createElement('div');
+		animationBudget.classList = 'w-100 animationBudget';
+		threePortionDiv.appendChild(animationBudget);
+		animationBudgetRowDiv.appendChild(threePortionDiv);
+		
+		let remainingTextDiv = document.createElement('div');
+		remainingTextDiv.classList = 'col-lg-9 text-right headingDiv justify-content-center align-self-center mild-text';
+		remainingTextDiv.innerText = 'Remaining (%)';
+		animationBudgetRowDiv.appendChild(remainingTextDiv);
+		cardBody.appendChild(animationBudgetRowDiv);
+		
+		// Row 2
+		let emptyRowTwo = document.createElement('div');
+		emptyRowTwo.classList = 'row';
+		
+		let threePortionTwo = document.createElement('div');
+		threePortionTwo.classList = 'col-lg-3';
+		
+		let animationBudgetTwo = document.createElement('div');
+		animationBudgetTwo.classList = 'w-50 animationBudget';
+		threePortionTwo.appendChild(animationBudgetTwo);
+		emptyRowTwo.appendChild(threePortionTwo);
+		
+		let percentageAvailable = document.createElement('div');
+		percentageAvailable.classList = 'col-lg-9 text-right percentageAvailable';
+		emptyRowTwo.appendChild(percentageAvailable);
+		cardBody.appendChild(emptyRowTwo);
+		
+		// Row 3
+		let emptyRowThree = document.createElement('div');
+		emptyRowThree.classList = 'row';
+		
+		let twelveColumnRow = document.createElement('div');
+		twelveColumnRow.classList = 'col-lg-12';
+		
+		let progressThree = document.createElement('div');
+		progressThree.classList = 'progress';
+
+		let animationProgressThree = document.createElement('div');
+		animationProgressThree.id='animationProgressBar';
+		animationProgressThree.classList = 'progress-bar progress-bar-budget-striped';
+		animationProgressThree.setAttribute('role', 'progressbar');
+		animationProgressThree.setAttribute('aria-valuenow','0');
+		animationProgressThree.setAttribute('aria-valuemin','0');
+		animationProgressThree.setAttribute('aria-valuemax','100');
+		progressThree.appendChild(animationProgressThree);
+		twelveColumnRow.appendChild(progressThree);
+		emptyRowThree.appendChild(twelveColumnRow);
+		cardBody.appendChild(emptyRowThree);
+		
+		// Row 4
+		let emptyRowFour = document.createElement('div');
+		emptyRowFour.classList = 'row';
+		
+		let elevenColumnRow = document.createElement('div');
+		elevenColumnRow.classList = 'col-lg-11';
+		
+		let remainingAmountMock = document.createElement('div');
+		remainingAmountMock.id = 'remainingAmountMock';
+		remainingAmountMock.classList = 'd-lg-inline-block animationBudget';
+		elevenColumnRow.appendChild(remainingAmountMock);
+		emptyRowFour.appendChild(elevenColumnRow);
+		cardBody.appendChild(emptyRowFour);
+
+		// Row 5
+		let deleteBudgetPosition = document.createElement('div');
+		deleteBudgetPosition.classList = 'row';
+		
+		let emptyElevenDiv = document.createElement('div');
+		emptyElevenDiv.classList = 'col-lg-11';
+		deleteBudgetPosition.appendChild(emptyElevenDiv);
+		
+		let oneColFive = document.createElement('div');
+		oneColFive.classList = 'col-lg-1';
+		
+		let animationBudgetFive = document.createElement('div');
+		animationBudgetFive.classList = 'w-100 animationBudget';
+		oneColFive.appendChild(animationBudgetFive);
+		deleteBudgetPosition.appendChild(oneColFive);
+		cardBody.appendChild(deleteBudgetPosition);
+		
+		cardDiv.appendChild(cardBody);
+		emptyDocumentFragment.appendChild(cardDiv);
+		
+		let budgetAmountBody = document.getElementById('budgetAmount');
+		budgetAmountBody.innerHTML = '';
+		budgetAmountBody.appendChild(emptyDocumentFragment);
+		
+		// Budget Visualization
+		let chartVisualization = document.getElementById('chartBudgetVisualization');
+		chartVisualization.innerHTML = '<div class="material-spinner"></div>';
+	}
 	
 	// Update existing date picker with existing budget
 	function updateExistingBudgetInDatePicker(userBudgetDate) {

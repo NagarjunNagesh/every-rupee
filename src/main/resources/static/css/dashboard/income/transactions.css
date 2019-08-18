@@ -591,6 +591,7 @@ fildset > label {
 	color: #fff;
 }
 
+
 /** Change the size of the text if the width and height pf the screen are more **/
 @media (min-width:60em) and (min-height:43.75em) {
 	

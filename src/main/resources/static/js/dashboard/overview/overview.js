@@ -936,5 +936,36 @@ $(document).ready(function(){
 		return emptyChartMessage;
 		
 	}
+	
+	/**
+	 * Date Picker
+	 */
+	
+	// Date Picker on click month
+	$('.monthPickerMonth').click(function() {
+		let recentTransactionsDiv = document.getElementsByClassName('recentTransactionCard');
+		
+		// If other pages are present then return this event
+		if(recentTransactionsDiv.length == 0) {
+			return;
+		}
+		
+		// Reset the optimizations and recent transactions tab
+		let optimizationsModule = document.getElementById('optimizations');
+		optimizationsModule.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		
+		let recentTransactionsTab = document.getElementById('recentTransactions');
+		recentTransactionsTab.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		
+		// Set chosen date
+		er.setChosenDateWithSelected(this);
+		
+		// Populate Recent transactions
+		populateRecentTransactions();
+		
+		// Fetch transaction total 
+		fetchCategoryTotalForTransactions();
+		
+	});
 
 });
