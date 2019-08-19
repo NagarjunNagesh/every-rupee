@@ -878,9 +878,8 @@ $(document).ready(function(){
 	            	 	showGrid: true,
 	            	 	offset: 40,
 	            	    labelInterpolationFnc: function(value) {
-	            	      if(value.length > 4) {
-	            	    	  value = (value / 1000) + 'k';
-	            	      }
+	            	      
+	            	      value = formatLargeCurrencies(value);
 	            	      return currentCurrencyPreference + value;
 	            	    },
 	            	    scaleMinSpace: 15
@@ -891,7 +890,9 @@ $(document).ready(function(){
 	             plugins: [
 	            	Chartist.plugins.ctPointLabels({
 	        	      textAnchor: 'start',
-	        	      labelInterpolationFnc: function(value) {return currentCurrencyPreference + value.toFixed(2)}
+	        	      labelInterpolationFnc: function(value) {
+	        	    	  return currentCurrencyPreference + formatNumber(value, currentUser.locale);
+	        	      }
 	        	    })
 	        	 ],
 	             showPoint: true,
@@ -936,5 +937,36 @@ $(document).ready(function(){
 		return emptyChartMessage;
 		
 	}
+	
+	/**
+	 * Date Picker
+	 */
+	
+	// Date Picker on click month
+	$('.monthPickerMonth').click(function() {
+		let recentTransactionsDiv = document.getElementsByClassName('recentTransactionCard');
+		
+		// If other pages are present then return this event
+		if(recentTransactionsDiv.length == 0) {
+			return;
+		}
+		
+		// Reset the optimizations and recent transactions tab
+		let optimizationsModule = document.getElementById('optimizations');
+		optimizationsModule.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		
+		let recentTransactionsTab = document.getElementById('recentTransactions');
+		recentTransactionsTab.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		
+		// Set chosen date
+		er.setChosenDateWithSelected(this);
+		
+		// Populate Recent transactions
+		populateRecentTransactions();
+		
+		// Fetch transaction total 
+		fetchCategoryTotalForTransactions();
+		
+	});
 
 });

@@ -160,11 +160,11 @@
 @media (min-width:60em) and (min-height:43.75em) {
 	
 	.currentMonth {
-		left: 48.5%;
+		left: 49%;
 	}
 	
 	.previousMonth {
-		left: 53.5%;
+		left: 54%;
 	}
 }
 
@@ -185,17 +185,16 @@
  }
  
 .animationBudget {
- 	 height: 10px;
-  	 animation-duration: 1.25s;
-     animation-fill-mode: forwards;
-     animation-iteration-count: infinite;
-     animation-name: placeHolderShimmer;
-     animation-timing-function: linear;
-     background: #F6F6F6;
-     background: linear-gradient(to right, #F6F6F6 8%, #F0F0F0 18%, #F6F6F6 33%);
-     background-size: 800px 104px;
-     position: relative;
-     margin: 0.25rem 0;
+ 	height: 10px;
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: linear-gradient(to right,#f2f2f2 8%,#f9f9f9 18%,#f6f6f6 33%);
+    background-size: 800px 104px;
+    position: relative;
+    margin: .25rem 0;
  }
  
 @keyframes placeHolderShimmer{

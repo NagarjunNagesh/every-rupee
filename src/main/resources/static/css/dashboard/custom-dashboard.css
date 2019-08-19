@@ -906,8 +906,8 @@ progress {
 }
 
 .overviewYearHeading {
-	color: #69757a;
-    font-weight: 300;
+	color: #999;
+    font-weight: 400;
 }
 
 .overviewDateArrow {
@@ -1054,6 +1054,15 @@ progress {
 
 #monthPickerDisplay {
 	cursor: pointer;
+}
+
+#monthPickerDisplay:hover .overviewDateArrow, #monthPickerDisplay:hover .overviewYearHeading {
+	fill: #6a6a6a;
+	color: #6a6a6a;
+}
+
+#monthPickerDisplay:hover .overviewMonthHeading {
+	color: #2b3133;	
 }
 
 .noselect {
