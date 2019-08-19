@@ -972,29 +972,29 @@ $(document).ready(function(){
 	}
 	
 	// Chart Income One Year Overview
-	$( ".chooseCategoryDD" ).on( "click", ".chartOverviewIncome" ,function(event) {
+	$( "#chooseCategoryDD" ).on( "click", ".chartOverviewIncome" ,function() {
 		replaceChartChosenLabel('One Year Overview');
 	});
 	
 	// Chart Income One Year Overview
-	$( ".chooseCategoryDD" ).on( "click", ".chartBreakdownIncome" ,function(event) {
+	$( "#chooseCategoryDD" ).on( "click", ".chartBreakdownIncome" ,function() {
 		replaceChartChosenLabel('Income Overview');
 	});
 	
 	// Chart Expense One Year Overview
-	$( ".chooseCategoryDD" ).on( "click", ".chartOverviewExpense" ,function(event) {
+	$( "#chooseCategoryDD" ).on( "click", ".chartOverviewExpense" ,function() {
 		replaceChartChosenLabel('One Year Overview');
 	});
 	
 	// Chart Expense One Year Overview
-	$( ".chooseCategoryDD" ).on( "click", ".chartBreakdownExpense" ,function(event) {
+	$( "#chooseCategoryDD" ).on( "click", ".chartBreakdownExpense" ,function() {
 		replaceChartChosenLabel('Expense Breakdown');
 	});
 	
 	// Replaces the text of the chart chosen
 	function replaceChartChosenLabel(chosenChartText) {
 		let chosenChartLabel = document.getElementsByClassName('chosenChart');
-		chosenChartLabel.innerText = chosenChartText;
+		chosenChartLabel[0].innerText = chosenChartText;
 	}
 	
 	/**
