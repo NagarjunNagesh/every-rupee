@@ -8,6 +8,8 @@ $(document).ready(function(){
 	const OVERVIEW_CONSTANTS = {};
 	// Lifetime Income Transactions cache
 	let liftimeIncomeTransactionsCache = {};
+	// Lifetime Expense Transactions Cache
+	let liftimeExpenseTransactionsCache = {};
 	// Available Transactions with fund
 	let userBudgetWithFund = {};
 	
@@ -771,12 +773,6 @@ $(document).ready(function(){
 	        		return;
 	        	}
 	        	
-	        	// Store it in a cache
-	        	liftimeIncomeTransactionsCache = dateAndAmountAsList;
-	        	// Make it reasonably immutable
-	        	Object.freeze(liftimeIncomeTransactionsCache);
-	        	Object.seal(liftimeIncomeTransactionsCache);
-	        	
 	        	let resultKeySet = Object.keys(dateAndAmountAsList);
 	        	// One year of data at a time;
 	        	let countValue = resultKeySet.length > 12 ? (resultKeySet.length - 12) : 0;
@@ -804,7 +800,27 @@ $(document).ready(function(){
 	   		 	coloredRounedLineChart(dataColouredRoundedLineChart);
 	   		 	
 	   		 	// Income or Expense Chart Options
-	   		 	let incomeOrExpense = isEqual(OVERVIEW_CONSTANTS.incomeTotalParam,incomeTotalParameter) ? 'Income' : 'Expense';
+	   		 	let incomeOrExpense = '';
+	   		 	
+   		 		if(isEqual(OVERVIEW_CONSTANTS.incomeTotalParam,incomeTotalParameter)) {
+   		 			// Store it in a cache
+   		        	liftimeIncomeTransactionsCache = dateAndAmountAsList;
+   		        	// Make it reasonably immutable
+   		        	Object.freeze(liftimeIncomeTransactionsCache);
+   		        	Object.seal(liftimeIncomeTransactionsCache);
+   		        	
+   		        	incomeOrExpense ='Income';
+   		        	
+   		 		}  else {
+   		 			// Store it in a cache
+   		        	liftimeExpenseTransactionsCache = dateAndAmountAsList;
+   		        	// Make it reasonably immutable
+   		        	Object.freeze(liftimeExpenseTransactionsCache);
+   		        	Object.seal(liftimeExpenseTransactionsCache);
+   		        	
+   		 			incomeOrExpense = 'Expense';
+   		 		}
+	   		 	
 	   		 	let chooseCategoryDD = document.getElementById('chooseCategoryDD');
 	   		    chooseCategoryDD.innerHTML = '';
 	   		    chooseCategoryDD.appendChild(appendChartOptionsForIncomeOrExpense(incomeOrExpense));
@@ -974,6 +990,7 @@ $(document).ready(function(){
 	// Chart Income One Year Overview
 	$( "#chooseCategoryDD" ).on( "click", ".chartOverviewIncome" ,function() {
 		replaceChartChosenLabel('One Year Overview');
+		populateOverviewIncomeCache();
 	});
 	
 	// Chart Income One Year Overview
@@ -995,6 +1012,11 @@ $(document).ready(function(){
 	function replaceChartChosenLabel(chosenChartText) {
 		let chosenChartLabel = document.getElementsByClassName('chosenChart');
 		chosenChartLabel[0].innerText = chosenChartText;
+	}
+	
+	// Populate with income cache if present
+	function populateOverviewIncomeCache() {
+		// TODO
 	}
 	
 	/**
