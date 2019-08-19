@@ -306,6 +306,19 @@
 	color: #fff;
 }
 
+.dropdown-menu .dropdown-item.chartOverviewExpense:hover,
+.dropdown-menu .dropdown-item.chartBreakdownExpense:hover,
+.dropdown-menu .dropdown-item.chartOverviewIncome:hover,
+.dropdown-menu .dropdown-item.chartBreakdownIncome:hover {
+	box-shadow: 0 4px 20px 0 rgba(0,0,0,0.14), 0 7px 10px -5px rgba(0,188,212,0.4);
+	background-color: #00bcd4;
+	color: #fff;
+}
+
+#chooseCategoryDD {
+	cursor: pointer;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

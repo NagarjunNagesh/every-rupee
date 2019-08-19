@@ -802,6 +802,12 @@ $(document).ready(function(){
 	   		     };
 	        	// Display the line chart
 	   		 	coloredRounedLineChart(dataColouredRoundedLineChart);
+	   		 	
+	   		 	// Income or Expense Chart Options
+	   		 	let incomeOrExpense = isEqual(OVERVIEW_CONSTANTS.incomeTotalParam,incomeTotalParameter) ? 'Income' : 'Expense';
+	   		 	let chooseCategoryDD = document.getElementById('chooseCategoryDD');
+	   		    chooseCategoryDD.innerHTML = '';
+	   		    chooseCategoryDD.appendChild(appendChartOptionsForIncomeOrExpense(incomeOrExpense));
 	        },
 	        error:  function (thrownError) {
            	 var responseError = JSON.parse(thrownError.responseText);
@@ -939,6 +945,59 @@ $(document).ready(function(){
 	}
 	
 	/**
+	 * Chart Overview Drop Down (Income / Expense)
+	 */
+	function appendChartOptionsForIncomeOrExpense(incomeOrExpenseParam) {
+		let anchorFragment = document.createDocumentFragment();
+		
+		let anchorDropdownItem = document.createElement('a');
+		anchorDropdownItem.classList = 'dropdown-item chartOverview' + incomeOrExpenseParam;
+		
+		let categoryLabelDiv = document.createElement('div');
+		categoryLabelDiv.classList = 'font-weight-bold';
+		categoryLabelDiv.innerText = 'One Year Overview';
+		anchorDropdownItem.appendChild(categoryLabelDiv);
+		anchorFragment.appendChild(anchorDropdownItem);
+		
+		let anchorDropdownItem1 = document.createElement('a');
+		anchorDropdownItem1.classList = 'dropdown-item chartBreakdown' + incomeOrExpenseParam;
+		
+		let categoryLabelDiv1 = document.createElement('div');
+		categoryLabelDiv1.classList = 'font-weight-bold';
+		categoryLabelDiv1.innerText = incomeOrExpenseParam + ' Breakdown';
+		anchorDropdownItem1.appendChild(categoryLabelDiv1);
+		anchorFragment.appendChild(anchorDropdownItem1);
+		
+		return anchorFragment;
+	}
+	
+	// Chart Income One Year Overview
+	$( ".chooseCategoryDD" ).on( "click", ".chartOverviewIncome" ,function(event) {
+		replaceChartChosenLabel('One Year Overview');
+	});
+	
+	// Chart Income One Year Overview
+	$( ".chooseCategoryDD" ).on( "click", ".chartBreakdownIncome" ,function(event) {
+		replaceChartChosenLabel('Income Overview');
+	});
+	
+	// Chart Expense One Year Overview
+	$( ".chooseCategoryDD" ).on( "click", ".chartOverviewExpense" ,function(event) {
+		replaceChartChosenLabel('One Year Overview');
+	});
+	
+	// Chart Expense One Year Overview
+	$( ".chooseCategoryDD" ).on( "click", ".chartBreakdownExpense" ,function(event) {
+		replaceChartChosenLabel('Expense Breakdown');
+	});
+	
+	// Replaces the text of the chart chosen
+	function replaceChartChosenLabel(chosenChartText) {
+		let chosenChartLabel = document.getElementsByClassName('chosenChart');
+		chosenChartLabel.innerText = chosenChartText;
+	}
+	
+	/**
 	 * Date Picker
 	 */
 	
@@ -968,5 +1027,5 @@ $(document).ready(function(){
 		fetchCategoryTotalForTransactions();
 		
 	});
-
+	
 });
