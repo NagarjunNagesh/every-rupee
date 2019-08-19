@@ -81,9 +81,18 @@
 	                    <div class="card-icon">
 	                      <i class="material-icons">timeline</i>
 	                    </div>
-	                    <h4 id="chartDisplayTitle" class="card-title">Income Earned
+	                    <h4 id="chartDisplayTitle" class="card-title d-lg-inline-block">Income Earned
 	                      <small> - Every Month</small>
 	                    </h4>
+	                    <!-- Drop Down Button -->
+			        	<div class="btn-group btnGroup-1 float-right">
+						  <button class="chosenChart btn btn-secondary" disabled>One Year Overview</button>
+						  <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    <span class="sr-only">Toggle Dropdown</span>
+						  </button>
+						  <div id='chooseCategoryDD' class="dropdown-menu">
+						  </div>
+						</div>
 	                  </div>
 	                  <div class="card-body">
 	                    <div id="colouredRoundedLineChart" class="ct-chart">

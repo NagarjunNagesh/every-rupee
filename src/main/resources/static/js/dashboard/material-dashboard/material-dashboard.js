@@ -55,7 +55,7 @@ $(document).ready(function() {
   md.checkSidebarImage();
 
   //  Activate the tooltips
-  $('[rel="tooltip"]').tooltip();
+  $('[data-toggle="tooltip"], [rel="tooltip"]').tooltip();
 
   $('.form-control').on("focus", function() {
     $(this).parent('.input-group').addClass("input-group-focus");

@@ -878,9 +878,8 @@ $(document).ready(function(){
 	            	 	showGrid: true,
 	            	 	offset: 40,
 	            	    labelInterpolationFnc: function(value) {
-	            	      if(value.length > 4) {
-	            	    	  value = (value / 1000) + 'k';
-	            	      }
+	            	      
+	            	      value = formatLargeCurrencies(value);
 	            	      return currentCurrencyPreference + value;
 	            	    },
 	            	    scaleMinSpace: 15
@@ -891,7 +890,9 @@ $(document).ready(function(){
 	             plugins: [
 	            	Chartist.plugins.ctPointLabels({
 	        	      textAnchor: 'start',
-	        	      labelInterpolationFnc: function(value) {return currentCurrencyPreference + value.toFixed(2)}
+	        	      labelInterpolationFnc: function(value) {
+	        	    	  return currentCurrencyPreference + formatNumber(value, currentUser.locale);
+	        	      }
 	        	    })
 	        	 ],
 	             showPoint: true,

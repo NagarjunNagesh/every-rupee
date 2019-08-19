@@ -144,6 +144,8 @@ $(document).ready(function(){
 			fetchJSONForTransactions();
 			// Do not refresh the transactions if no new transactions are added
 			resiteredNewTransaction = false;
+			// Close category modal
+         	closeCategoryModal();
 		}
 		
 	});
@@ -1001,8 +1003,8 @@ $(document).ready(function(){
 		}
 		
 		// Update the total available 
-		let income = er.convertToNumberFromCurrency($("#totalIncomeTransactions")[0].innerText,currentCurrencyPreference);
-		let expense = er.convertToNumberFromCurrency($("#totalExpensesTransactions")[0].innerText,currentCurrencyPreference);
+		let income = er.convertToNumberFromCurrency(document.getElementById('totalIncomeTransactions').innerText,currentCurrencyPreference);
+		let expense = er.convertToNumberFromCurrency(document.getElementById('totalExpensesTransactions').innerText,currentCurrencyPreference);
 
 		let minusSign = '';
 		let availableCash = income-expense;
@@ -1599,6 +1601,9 @@ $(document).ready(function(){
 			categoryModalDiv[0].classList.remove('d-none');
 			financialPositionDiv[0].classList.add('d-none');
 		} else {
+			// Update the chart and redraw it
+			rebuildPieChart();
+			
 			// Find all the category rows that are expanded
 			let categoryRowsDiv = document.getElementsByClassName('dropdown-toggle');
 			
@@ -1623,9 +1628,29 @@ $(document).ready(function(){
 	function closeCategoryModal() {
 		let financialPositionDiv = document.getElementsByClassName('transactions-chart');
 		let categoryModalDiv = document.getElementsByClassName('category-modal');
+		
+		// If the category modal is already closed then return
+		if(categoryModalDiv[0].classList.contains('d-none')) {
+			return;
+		}
+		
 		// show the financial position div and hide the category modal
 		categoryModalDiv[0].classList.add('d-none');
 		financialPositionDiv[0].classList.remove('d-none');
+		
+		// Rebuilds the pie chart from scratch
+		rebuildPieChart();
+	}
+	
+	// Rebuilds the pie chart from scratch
+	function rebuildPieChart() {
+		// Update the total available 
+		let income = er.convertToNumberFromCurrency(document.getElementById('totalIncomeTransactions').innerText,currentCurrencyPreference);
+		let expense = er.convertToNumberFromCurrency(document.getElementById('totalExpensesTransactions').innerText,currentCurrencyPreference);
+		// Update the pie chart
+		let dataPreferencesChart = updatePieChartTransactions(income, expense);
+		// Update the chart and redraw it
+		buildPieChart(dataPreferencesChart, 'chartFinancialPosition');
 	}
 	
 	// Close Button functionality for category Modal
