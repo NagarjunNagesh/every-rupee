@@ -822,7 +822,7 @@ $(document).ready(function(){
     	for(let countGrouped = countValue, length = resultKeySet.length; countGrouped < length; countGrouped++) {
     		let dateKey = resultKeySet[countGrouped];
          	let userAmountAsListValue = dateAndAmountAsList[dateKey];
-         	
+
          	// Convert the date key as date
          	let dateAsDate = new Date(dateKey);
          	labelsArray.push(months[dateAsDate.getMonth()].slice(0,3) + " '" + dateAsDate.getFullYear().toString().slice(-2));
@@ -1011,9 +1011,8 @@ $(document).ready(function(){
 	$( "#chooseCategoryDD" ).on( "click", ".chartBreakdownIncome" ,function() {
 		replaceChartChosenLabel('Income Overview');
 		
-		// Reset the line chart with spinner
-		let colouredRoundedLineChart = document.getElementById('colouredRoundedLineChart');
-		colouredRoundedLineChart.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		// Populate Breakdown Category
+		populateCategoryBreakdown(true);
 	});
 	
 	// Chart Expense One Year Overview
@@ -1028,11 +1027,83 @@ $(document).ready(function(){
 	$( "#chooseCategoryDD" ).on( "click", ".chartBreakdownExpense" ,function() {
 		replaceChartChosenLabel('Expense Breakdown');
 		
+		// Populate Breakdown Category
+		populateCategoryBreakdown(false);
+		
+	});
+	
+	// Populate Breakdown Category
+	function populateCategoryBreakdown(fetchIncome) {
+		let labelsArray = [];
+		let seriesArray = [];
+		
 		// Reset the line chart with spinner
 		let colouredRoundedLineChart = document.getElementById('colouredRoundedLineChart');
 		colouredRoundedLineChart.innerHTML = '<div class="material-spinner rtSpinner"></div>';
 		
-	});
+		let incomeTotalForDate = 0;
+		let dateKeysTotal = Object.keys(liftimeIncomeTransactionsCache);
+		for(let countGrouped = 0, length = dateKeysTotal.length; countGrouped < length; countGrouped++) {
+			let dateKey = dateKeysTotal[countGrouped];
+			let totalForMonth = liftimeIncomeTransactionsCache[dateKey];
+
+			let dateMonth = ('0' + dateKey.slice(5,8)).slice(-2);
+			let dateYear = dateKey.slice(0,4);
+			console.log(' dateMonth - ' + dateMonth + ' DateYear - ' + dateYear);
+			if(dateMonth == chosenDate.slice(2,4) && dateYear == chosenDate.slice(-4)) {
+				incomeTotalForDate = totalForMonth;
+			}
+		}
+		
+		let categoryKeys = Object.keys(categoryTotalMapCache);
+		for(let count = 0, length = categoryKeys.length; count < length; count++) {
+			let categoryId = categoryKeys[count];
+			let categoryTotal = categoryTotalMapCache[categoryId];
+			
+			let incomeCategory = fetchIncome ? CUSTOM_DASHBOARD_CONSTANTS.incomeCategory : CUSTOM_DASHBOARD_CONSTANTS.expenseCategory;
+			let categoryObject = categoryMap[categoryId];
+			if(categoryObject.parentCategory == incomeCategory) {
+				let categorySpentPctg = (categoryTotal/incomeTotalForDate) * 100;
+				labelsArray.push(categoryObject.categoryName);
+				seriesArray.push(categorySpentPctg);
+			}
+		}
+		
+		// Build the data for the line chart
+    	let dataSimpleBarChart = {
+		         labels: labelsArray,
+		         series: [
+		        	seriesArray
+		         ]
+    	}
+		console.log(seriesArray);
+		let optionsSimpleBarChart = {
+            seriesBarDistance: 10,
+            axisX: {
+                showGrid: false
+            }
+        };
+
+        let responsiveOptionsSimpleBarChart = [
+            ['screen and (max-width: 640px)', {
+                seriesBarDistance: 5,
+                axisX: {
+                    labelInterpolationFnc: function(value) {
+                        return value[0];
+                    }
+                }
+            }]
+        ];
+        
+        // Empty the chart div
+		document.getElementById('colouredRoundedLineChart').innerHTML = '';
+
+        let simpleBarChart = Chartist.Bar('#colouredRoundedLineChart', dataSimpleBarChart, optionsSimpleBarChart, responsiveOptionsSimpleBarChart);
+
+        //start animation for the Emails Subscription Chart
+        md.startAnimationForBarChart(simpleBarChart);
+
+	}
 	
 	// Populate the line chart from cache
 	function populateLineChart(dateAndTimeAsList, incomeChart) {
