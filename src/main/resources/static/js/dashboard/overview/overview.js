@@ -1047,7 +1047,7 @@ $(document).ready(function(){
 			let dateKey = dateKeysTotal[countGrouped];
 			let totalForMonth = liftimeIncomeTransactionsCache[dateKey];
 
-			let dateMonth = ('0' + dateKey.slice(5,8)).slice(-2);
+			let dateMonth = dateKey.slice(5,7);
 			let dateYear = dateKey.slice(0,4);
 			console.log(' dateMonth - ' + dateMonth + ' DateYear - ' + dateYear);
 			if(dateMonth == chosenDate.slice(2,4) && dateYear == chosenDate.slice(-4)) {
