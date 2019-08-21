@@ -12,6 +12,10 @@ $(document).ready(function(){
 	let liftimeExpenseTransactionsCache = {};
 	// Available Transactions with fund
 	let userBudgetWithFund = {};
+	// populate category breakdown for income or expense
+	let fetchIncomeBreakDownCache = true;
+	// Doughnut breakdown open
+	let doughnutBreakdownOpen = false;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -250,6 +254,12 @@ $(document).ready(function(){
             success: function(categoryTotalMap) {
             	// Store the result in a cache
             	categoryTotalMapCache = categoryTotalMap;
+            	
+            	// Populate Category Break down Chart if present
+            	console.log(doughnutBreakdownOpen);
+            	if(doughnutBreakdownOpen) {
+            		populateCategoryBreakdown(fetchIncomeBreakDownCache);
+            	}
             	
             	// Populate Optimization of budgets
             	populateOptimizationOfBudget();
@@ -1009,6 +1019,8 @@ $(document).ready(function(){
 		
 		// populate the income line chart from cache
 		populateLineChart(liftimeIncomeTransactionsCache, true);
+		// Dough nut breakdown open cache
+		doughnutBreakdownOpen = false;
 	});
 	
 	// Chart Income Breakdown Chart
@@ -1017,6 +1029,10 @@ $(document).ready(function(){
 		
 		// Populate Breakdown Category
 		populateCategoryBreakdown(true);
+		// Populate cache for income or expense breakdown
+		fetchIncomeBreakDownCache = true;
+		// Dough nut breakdown open cache
+		doughnutBreakdownOpen = true;
 	});
 	
 	// Chart Expense One Year Overview
@@ -1025,6 +1041,8 @@ $(document).ready(function(){
 		
 		// Populate the expense line chart from cache
 		populateLineChart(liftimeExpenseTransactionsCache, false);
+		// Dough nut breakdown open cache
+		doughnutBreakdownOpen = false;
 	});
 	
 	// Chart Expense  Breakdown Chart
@@ -1033,6 +1051,10 @@ $(document).ready(function(){
 		
 		// Populate Breakdown Category
 		populateCategoryBreakdown(false);
+		// Populate cache for income or expense breakdown
+		fetchIncomeBreakDownCache = false;
+		// Dough nut breakdown open cache
+		doughnutBreakdownOpen = true;
 		
 	});
 	
@@ -1105,8 +1127,8 @@ $(document).ready(function(){
 		         series: seriesArray
 		         
     	}
-    	buildPieChart(dataSimpleBarChart, 'colouredRoundedLineChart');
 
+    	buildPieChart(dataSimpleBarChart, 'colouredRoundedLineChart');
 	}
 	
 	// Introduce Chartist pie chart
@@ -1124,17 +1146,23 @@ $(document).ready(function(){
         
         var responsiveOptions = [
     	  ['screen and (min-width: 640px)', {
-    	    chartPadding: 20,
+    	    chartPadding: 40,
     	    labelOffset: 50,
     	    labelDirection: 'explode',
     	    labelInterpolationFnc: function(value) {
     	      return value;
     	    }
     	  }],
-    	  ['screen and (min-width: 1024px)', {
+    	  ['screen and (min-width: 1301px)', {
     	    labelOffset: 30,
     	    chartPadding: 10
-    	  }]
+    	  }],
+    	  ['screen and (min-width: 992px)', {
+      	    labelOffset: 45,
+      	    chartPadding: 40,
+      	    labelDirection: 'explode',
+      	  }],
+    	  
     	];
         
         // Reset the chart
@@ -1142,8 +1170,22 @@ $(document).ready(function(){
         
         if(isNotEmpty(dataPreferences)) {
         	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions);
+        	// Append Legend Description
+        	appendLegendDescription();
         }
         
+	}
+	
+	// Append legend description
+	function appendLegendDescription() {
+		// Append the category breakdown label description
+    	let roundLineChart = document.getElementById('colouredRoundedLineChart');
+    	let roundFragment = document.createDocumentFragment();
+    	
+    	let labelsWrapperDiv = document.createElement('div');
+    	labelsWrapperDiv.id = 'doughnutBreakdown';
+    	roundFragment.appendChild(labelsWrapperDiv);
+    	roundLineChart.appendChild(roundFragment);
 	}
 	
 	// Populate the line chart from cache
