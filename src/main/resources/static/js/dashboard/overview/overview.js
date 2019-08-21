@@ -786,9 +786,7 @@ $(document).ready(function(){
    		 			incomeOrExpense = 'Expense';
    		 		}
 	   		 	
-	   		 	let chooseCategoryDD = document.getElementById('chooseCategoryDD');
-	   		    chooseCategoryDD.innerHTML = '';
-	   		    chooseCategoryDD.appendChild(appendChartOptionsForIncomeOrExpense(incomeOrExpense));
+	   		 	appendChartOptionsForIncomeOrExpense(incomeOrExpense);
 	        },
 	        error:  function (thrownError) {
            	 var responseError = JSON.parse(thrownError.responseText);
@@ -860,11 +858,15 @@ $(document).ready(function(){
 			document.getElementById('chartDisplayTitle').innerHTML = 'Income Earned <small> - Every Month</small>';
 			// Replace the Drop down with one year view
 			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+			// Replace the drop down for chart options
+			appendChartOptionsForIncomeOrExpense('Income');
 		} else if(firstChildClassList.contains('expenseImage')) {
 			populateLineChart(liftimeExpenseTransactionsCache, false);
 			document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
 			// Replace the Drop down with one year view
 			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+			// Replace the drop down for chart options
+			appendChartOptionsForIncomeOrExpense('Expense');
 		} else if(firstChildClassList.contains('assetsImage')) {
 			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
@@ -996,7 +998,9 @@ $(document).ready(function(){
 		anchorDropdownItem1.appendChild(categoryLabelDiv1);
 		anchorFragment.appendChild(anchorDropdownItem1);
 		
-		return anchorFragment;
+		let chooseCategoryDD = document.getElementById('chooseCategoryDD');
+	    chooseCategoryDD.innerHTML = '';
+	    chooseCategoryDD.appendChild(anchorFragment);
 	}
 	
 	// Chart Income One Year Overview
@@ -1036,26 +1040,26 @@ $(document).ready(function(){
 	function populateCategoryBreakdown(fetchIncome) {
 		let labelsArray = [];
 		let seriesArray = [];
+		let absoluteTotal = 0;
+		let othersTotal = 0;
+		let otherLabels = [];
 		
 		// Reset the line chart with spinner
 		let colouredRoundedLineChart = document.getElementById('colouredRoundedLineChart');
 		colouredRoundedLineChart.innerHTML = '<div class="material-spinner rtSpinner"></div>';
+		let incomeOrExpenseLifetime = fetchIncome ? liftimeIncomeTransactionsCache : liftimeExpenseTransactionsCache;
 		
-		let incomeTotalForDate = 0;
-		let dateKeysTotal = Object.keys(liftimeIncomeTransactionsCache);
-		for(let countGrouped = 0, length = dateKeysTotal.length; countGrouped < length; countGrouped++) {
-			let dateKey = dateKeysTotal[countGrouped];
-			let totalForMonth = liftimeIncomeTransactionsCache[dateKey];
-
-			let dateMonth = dateKey.slice(5,7);
-			let dateYear = dateKey.slice(0,4);
-			console.log(' dateMonth - ' + dateMonth + ' DateYear - ' + dateYear);
-			if(dateMonth == chosenDate.slice(2,4) && dateYear == chosenDate.slice(-4)) {
-				incomeTotalForDate = totalForMonth;
-			}
+		
+		// Build the Absolute total 
+		let categoryKeys = Object.keys(categoryTotalMapCache);
+		for(let count = 0, length = categoryKeys.length; count < length; count++) {
+			let categoryId = categoryKeys[count];
+			let categoryTotal = categoryTotalMapCache[categoryId];
+			// Add the category total to absolute total
+			absoluteTotal += categoryTotal;
 		}
 		
-		let categoryKeys = Object.keys(categoryTotalMapCache);
+		// Build the legend and the series array
 		for(let count = 0, length = categoryKeys.length; count < length; count++) {
 			let categoryId = categoryKeys[count];
 			let categoryTotal = categoryTotalMapCache[categoryId];
@@ -1063,46 +1067,83 @@ $(document).ready(function(){
 			let incomeCategory = fetchIncome ? CUSTOM_DASHBOARD_CONSTANTS.incomeCategory : CUSTOM_DASHBOARD_CONSTANTS.expenseCategory;
 			let categoryObject = categoryMap[categoryId];
 			if(categoryObject.parentCategory == incomeCategory) {
-				let categorySpentPctg = (categoryTotal/incomeTotalForDate) * 100;
-				labelsArray.push(categoryObject.categoryName);
-				seriesArray.push(categorySpentPctg);
+				let percentageOfTotal = (categoryTotal / absoluteTotal) * 100;
+				// If the total is greater than 5 % then print it separate else accumulate it with others
+				if(percentageOfTotal > 5) {
+					labelsArray.push(categoryObject.categoryName);
+					seriesArray.push(categoryTotal);
+				} else {
+					othersTotal += categoryTotal;
+					otherLabels.push(categoryObject.categoryName);
+				}
 			}
 		}
+		
+		// If others total is > 0 then print it. 
+		if(othersTotal > 0) {
+			if(otherLabels.length > 1) {
+				labelsArray.push('Others');
+			} else {
+				labelsArray.push(otherLabels[0]);
+			}
+			seriesArray.push(othersTotal);
+		}
+		
+		// Replace with empty chart message
+    	if(isEmpty(seriesArray)) {
+    		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+    		chartAppendingDiv.innerHTML = '';
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
+    		return;
+    	}
 		
 		// Build the data for the line chart
     	let dataSimpleBarChart = {
 		         labels: labelsArray,
-		         series: [
-		        	seriesArray
-		         ]
+		         series: seriesArray
+		         
     	}
-		console.log(seriesArray);
-		let optionsSimpleBarChart = {
-            seriesBarDistance: 10,
-            axisX: {
-                showGrid: false
-            }
+    	buildPieChart(dataSimpleBarChart, 'colouredRoundedLineChart');
+
+	}
+	
+	// Introduce Chartist pie chart
+	function buildPieChart(dataPreferences, id) {
+		 /*  **************** Public Preferences - Pie Chart ******************** */
+
+        var optionsPreferences = {
+		  donut: true,
+		  donutWidth: 50,
+		  donutSolid: true,
+		  startAngle: 270,
+		  showLabel: true,
+		  height: '300px'
         };
-
-        let responsiveOptionsSimpleBarChart = [
-            ['screen and (max-width: 640px)', {
-                seriesBarDistance: 5,
-                axisX: {
-                    labelInterpolationFnc: function(value) {
-                        return value[0];
-                    }
-                }
-            }]
-        ];
         
-        // Empty the chart div
-		document.getElementById('colouredRoundedLineChart').innerHTML = '';
-
-        let simpleBarChart = Chartist.Bar('#colouredRoundedLineChart', dataSimpleBarChart, optionsSimpleBarChart, responsiveOptionsSimpleBarChart);
-
-        //start animation for the Emails Subscription Chart
-        md.startAnimationForBarChart(simpleBarChart);
-
+        var responsiveOptions = [
+    	  ['screen and (min-width: 640px)', {
+    	    chartPadding: 20,
+    	    labelOffset: 50,
+    	    labelDirection: 'explode',
+    	    labelInterpolationFnc: function(value) {
+    	      return value;
+    	    }
+    	  }],
+    	  ['screen and (min-width: 1024px)', {
+    	    labelOffset: 30,
+    	    chartPadding: 10
+    	  }]
+    	];
+        
+        // Reset the chart
+        replaceHTML(id, '');
+        
+        if(isNotEmpty(dataPreferences)) {
+        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions);
+        }
+        
 	}
 	
 	// Populate the line chart from cache

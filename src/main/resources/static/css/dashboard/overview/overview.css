@@ -319,6 +319,17 @@
 	cursor: pointer;
 }
 
+/* .ct-chart .ct-label.ct-horizontal.ct-end { */
+/* 	width: 299px; */
+/*     height: 20px; */
+/*     position: relative; */
+/*     justify-content: flex-end; */
+/*     text-align: right; */
+/*     transform-origin: 100% 0; */
+/*     transform: translate(-100%) rotate(-45deg); */
+/*     white-space: nowrap; */
+/* } */
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {
