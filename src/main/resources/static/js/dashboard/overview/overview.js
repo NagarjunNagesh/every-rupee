@@ -1073,12 +1073,16 @@ $(document).ready(function(){
 		
 		
 		// Build the Absolute total 
+		let incomeCategory = fetchIncome ? CUSTOM_DASHBOARD_CONSTANTS.incomeCategory : CUSTOM_DASHBOARD_CONSTANTS.expenseCategory;
 		let categoryKeys = Object.keys(categoryTotalMapCache);
 		for(let count = 0, length = categoryKeys.length; count < length; count++) {
 			let categoryId = categoryKeys[count];
 			let categoryTotal = categoryTotalMapCache[categoryId];
-			// Add the category total to absolute total
-			absoluteTotal += categoryTotal;
+			let categoryObject = categoryMap[categoryId];
+			if(categoryObject.parentCategory == incomeCategory) {
+				// Add the category total to absolute total
+				absoluteTotal += categoryTotal;
+			}
 		}
 		
 		// Build the legend and the series array
@@ -1086,7 +1090,6 @@ $(document).ready(function(){
 			let categoryId = categoryKeys[count];
 			let categoryTotal = categoryTotalMapCache[categoryId];
 			
-			let incomeCategory = fetchIncome ? CUSTOM_DASHBOARD_CONSTANTS.incomeCategory : CUSTOM_DASHBOARD_CONSTANTS.expenseCategory;
 			let categoryObject = categoryMap[categoryId];
 			if(categoryObject.parentCategory == incomeCategory) {
 				let percentageOfTotal = (categoryTotal / absoluteTotal) * 100;
@@ -1098,6 +1101,7 @@ $(document).ready(function(){
 					othersTotal += categoryTotal;
 					otherLabels.push(categoryObject.categoryName);
 				}
+				
 			}
 		}
 		
@@ -1135,7 +1139,7 @@ $(document).ready(function(){
 	function buildPieChart(dataPreferences, id) {
 		 /*  **************** Public Preferences - Pie Chart ******************** */
 
-        var optionsPreferences = {
+        let optionsPreferences = {
 		  donut: true,
 		  donutWidth: 50,
 		  donutSolid: true,
@@ -1144,13 +1148,14 @@ $(document).ready(function(){
 		  height: '300px'
         };
         
-        var responsiveOptions = [
+        let responsiveOptions = [
     	  ['screen and (min-width: 640px)', {
     	    chartPadding: 40,
     	    labelOffset: 50,
     	    labelDirection: 'explode',
     	    labelInterpolationFnc: function(value) {
-    	      return value;
+    	      let percentage = Math.round(value / data.series.reduce(sum) * 100) + '%';
+    	      return value + ' ' + percentage;
     	    }
     	  }],
     	  ['screen and (min-width: 1301px)', {

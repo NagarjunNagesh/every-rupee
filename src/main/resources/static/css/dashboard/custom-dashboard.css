@@ -1074,3 +1074,8 @@ progress {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }	
+
+.logo-mini svg {
+	width: 48px;
+	height: 48px;
+}
