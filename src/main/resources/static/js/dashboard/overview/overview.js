@@ -933,14 +933,6 @@ $(document).ready(function(){
 	             axisX: {
 	                 showGrid: false,
 	             },
-	             plugins: [
-	            	Chartist.plugins.ctPointLabels({
-	        	      textAnchor: 'start',
-	        	      labelInterpolationFnc: function(value) {
-	        	    	  return currentCurrencyPreference + formatNumber(value, currentUser.locale);
-	        	      }
-	        	    })
-	        	 ],
 	             showPoint: true,
 	             height: '400px'
 	         };
@@ -948,7 +940,20 @@ $(document).ready(function(){
 		 // Empty the chart div
 		 document.getElementById('colouredRoundedLineChart').innerHTML = '';
 		 
-	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart);
+		 // Append tooltip with line chart
+	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart).on("draw", function(data) {
+	    		if (data.type === "point") {
+	    			data.element._node.setAttribute("title", "Total: " + currentCurrencyPreference + formatNumber(data.value.y, currentUser.locale));
+	    			data.element._node.setAttribute("data-chart-tooltip", "colouredRoundedLineChart");
+	    		}
+	    	}).on("created", function() {
+	    		// Initiate Tooltip
+	    		$("#colouredRoundedLineChart").tooltip({
+	    			selector: '[data-chart-tooltip="colouredRoundedLineChart"]',
+	    			container: "#colouredRoundedLineChart",
+	    			html: true
+	    		});
+	    	});
 
 	     md.startAnimationForLineChart(colouredRoundedLineChart);
 	 }
@@ -1132,11 +1137,11 @@ $(document).ready(function(){
 		         
     	}
 
-    	buildPieChart(dataSimpleBarChart, 'colouredRoundedLineChart');
+    	buildPieChart(dataSimpleBarChart, 'colouredRoundedLineChart', absoluteTotal);
 	}
 	
 	// Introduce Chartist pie chart
-	function buildPieChart(dataPreferences, id) {
+	function buildPieChart(dataPreferences, id, absoluteTotal) {
 		 /*  **************** Public Preferences - Pie Chart ******************** */
 
         let optionsPreferences = {
@@ -1153,9 +1158,10 @@ $(document).ready(function(){
     	    chartPadding: 40,
     	    labelOffset: 50,
     	    labelDirection: 'explode',
-    	    labelInterpolationFnc: function(value) {
-    	      let percentage = Math.round(value / data.series.reduce(sum) * 100) + '%';
-    	      return value + ' ' + percentage;
+    	    labelInterpolationFnc: function(value, idx) {
+    	      // Calculates the percentage of category total vs absolute total
+    	      let percentage = round((dataPreferences.series[idx] / absoluteTotal * 100),2) + '%';
+    	      return value + ': ' + percentage;
     	    }
     	  }],
     	  ['screen and (min-width: 1301px)', {
@@ -1165,7 +1171,6 @@ $(document).ready(function(){
     	  ['screen and (min-width: 992px)', {
       	    labelOffset: 45,
       	    chartPadding: 40,
-      	    labelDirection: 'explode',
       	  }],
     	  
     	];
@@ -1175,22 +1180,8 @@ $(document).ready(function(){
         
         if(isNotEmpty(dataPreferences)) {
         	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions);
-        	// Append Legend Description
-        	appendLegendDescription();
         }
         
-	}
-	
-	// Append legend description
-	function appendLegendDescription() {
-		// Append the category breakdown label description
-    	let roundLineChart = document.getElementById('colouredRoundedLineChart');
-    	let roundFragment = document.createDocumentFragment();
-    	
-    	let labelsWrapperDiv = document.createElement('div');
-    	labelsWrapperDiv.id = 'doughnutBreakdown';
-    	roundFragment.appendChild(labelsWrapperDiv);
-    	roundLineChart.appendChild(roundFragment);
 	}
 	
 	// Populate the line chart from cache
