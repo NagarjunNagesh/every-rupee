@@ -943,7 +943,7 @@ $(document).ready(function(){
 		 // Append tooltip with line chart
 	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart).on("draw", function(data) {
 	    		if (data.type === "point") {
-	    			data.element._node.setAttribute("title", "Total: " + currentCurrencyPreference + formatNumber(data.value.y, currentUser.locale));
+	    			data.element._node.setAttribute("title", "Total: <strong>" + currentCurrencyPreference + formatNumber(data.value.y, currentUser.locale) + '</strong>');
 	    			data.element._node.setAttribute("data-chart-tooltip", "colouredRoundedLineChart");
 	    		}
 	    	}).on("created", function() {

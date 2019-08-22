@@ -319,7 +319,7 @@
 	cursor: pointer;
 }
 
-.ct-point {
+#colouredRoundedLineChart.ct-chart .ct-point {
 	stroke-width: 15px;
 	cursor: pointer;
 }
