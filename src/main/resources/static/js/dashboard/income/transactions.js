@@ -1249,9 +1249,27 @@ $(document).ready(function(){
         	transactionsChart.detach();
         }
         replaceHTML(id, '');
+        // Dispose tooltips
+        $("#" + id).tooltip('dispose');
         
         if(isNotEmpty(dataPreferences)) {
-        	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences).on('draw', function(data) {
+      		  if(data.type === 'slice') {
+		        	let sliceValue = data.element._node.getAttribute('ct:value');
+		        	data.element._node.setAttribute("title", "Percentage: <strong>" + round(Number(sliceValue),2) + '%</strong>');
+					data.element._node.setAttribute("data-chart-tooltip", id);
+      		  }
+			}).on("created", function() {
+				// Initiate Tooltip
+				$("#" + id).tooltip({
+					selector: '[data-chart-tooltip="' + id + '"]',
+					container: "#" + id,
+					html: true,
+					placement: 'auto',
+					delay: { "show": 300, "hide": 100 }
+				});
+			});
+        	
         	let chartLegend = document.getElementById('chartLegend');
         	let incomeAmount = document.getElementById('totalIncomeTransactions');
         	let expenseAmount = document.getElementById('totalExpensesTransactions');

@@ -320,8 +320,28 @@
 }
 
 #colouredRoundedLineChart.ct-chart .ct-point {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
 	stroke-width: 15px;
 	cursor: pointer;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-point:hover {
+	stroke-width: 25px;
+	transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut-solid {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut-solid:hover {
+	stroke: white;
+    stroke-width: 2px;
+    transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/

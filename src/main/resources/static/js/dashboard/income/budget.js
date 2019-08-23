@@ -333,9 +333,27 @@ $(document).ready(function(){
         
         // Reset the chart
         replaceHTML(id, '');
+        // Dispose the previous tooltips created
+        $("#" + id).tooltip('dispose');
         
         if(isNotEmpty(dataPreferences)) {
-        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	// Build chart and Add tooltip for the doughnut chart
+        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences).on('draw', function(data) {
+      		  if(data.type === 'slice') {
+		        	let sliceValue = data.element._node.getAttribute('ct:value');
+		        	data.element._node.setAttribute("title", "Percentage: <strong>" + round(Number(sliceValue),2) + '%</strong>');
+					data.element._node.setAttribute("data-chart-tooltip", id);
+      		  }
+			}).on("created", function() {
+				// Initiate Tooltip
+				$("#" + id).tooltip({
+					selector: '[data-chart-tooltip="' + id + '"]',
+					container: "#" + id,
+					html: true,
+					placement: 'auto',
+					delay: { "show": 300, "hide": 100 }
+				});
+			});
         }
         
 	}

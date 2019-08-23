@@ -256,7 +256,6 @@ $(document).ready(function(){
             	categoryTotalMapCache = categoryTotalMap;
             	
             	// Populate Category Break down Chart if present
-            	console.log(doughnutBreakdownOpen);
             	if(doughnutBreakdownOpen) {
             		populateCategoryBreakdown(fetchIncomeBreakDownCache);
             	}
@@ -939,6 +938,8 @@ $(document).ready(function(){
 	     
 		 // Empty the chart div
 		 document.getElementById('colouredRoundedLineChart').innerHTML = '';
+		 // Dispose the previous tooltips created
+		 $("#colouredRoundedLineChart").tooltip('dispose');
 		 
 		 // Append tooltip with line chart
 	     var colouredRoundedLineChart = new Chartist.Line('#colouredRoundedLineChart', dataColouredRoundedLineChart, optionsColouredRoundedLineChart).on("draw", function(data) {
@@ -951,7 +952,9 @@ $(document).ready(function(){
 	    		$("#colouredRoundedLineChart").tooltip({
 	    			selector: '[data-chart-tooltip="colouredRoundedLineChart"]',
 	    			container: "#colouredRoundedLineChart",
-	    			html: true
+	    			html: true,
+	    			placement: 'auto',
+					delay: { "show": 300, "hide": 100 }
 	    		});
 	    	});
 
@@ -1177,9 +1180,26 @@ $(document).ready(function(){
         
         // Reset the chart
         replaceHTML(id, '');
+        $("#" + id).tooltip('dispose');
         
+        // Append Tooltip for Doughnut chart
         if(isNotEmpty(dataPreferences)) {
-        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions);
+        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions).on('draw', function(data) {
+        		  if(data.type === 'slice') {
+		        	let sliceValue = data.element._node.getAttribute('ct:value');
+		        	data.element._node.setAttribute("title", "Total: <strong>" + currentCurrencyPreference + formatNumber(Number(sliceValue), currentUser.locale) + '</strong>');
+					data.element._node.setAttribute("data-chart-tooltip", id);
+        		  }
+			}).on("created", function() {
+				// Initiate Tooltip
+				$("#" + id).tooltip({
+					selector: '[data-chart-tooltip="' + id + '"]',
+					container: "#" + id,
+					html: true,
+					placement: 'auto',
+					delay: { "show": 300, "hide": 100 }
+				});
+			});
         }
         
 	}
