@@ -701,12 +701,24 @@ er = {
 				    data.element.attr({
 				      'stroke-dasharray': pathLength + 'px ' + pathLength + 'px'
 				    });
+				    
+				    // Change the duration of the animation based on the length of the series
+				    let durAnim = 1000;
+				    if(chart.data.series.length > 12) {
+				    	durAnim = 100;
+				    } else if(chart.data.series.length > 9) {
+				    	durAnim = 200;
+				    } else if (chart.data.series.length > 6) {
+				    	durAnim = 400;
+				    } else if (chart.data.series.length > 3) {
+				    	durAnim = 600;
+				    }
 
 				    // Create animation definition while also assigning an ID to the animation for later sync usage
 				    var animationDefinition = {
 				      'stroke-dashoffset': {
 				        id: 'anim' + data.index,
-				        dur: 1000,
+				        dur: durAnim,
 				        from: -pathLength + 'px',
 				        to:  '0px',
 				        easing: Chartist.Svg.Easing.easeOutQuint,

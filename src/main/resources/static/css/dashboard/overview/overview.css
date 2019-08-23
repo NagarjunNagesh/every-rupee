@@ -344,6 +344,17 @@
 	-webkit-transition: stroke-width 0.3s ease-out;
 }
 
+#colouredRoundedLineChart.ct-chart .ct-slice-donut {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut:hover {
+    stroke-width: 2px;
+    transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

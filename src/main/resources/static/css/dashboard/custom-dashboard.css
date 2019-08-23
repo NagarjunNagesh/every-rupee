@@ -1101,3 +1101,18 @@ progress {
 	-webkit-transition: fill-opacity 0.3s ease-in;
     transition: fill-opacity 0.3s ease-in;
 }
+
+.ct-slice-donut:hover {
+	fill-opacity: 0.8;
+	-webkit-transition: fill-opacity 0.3s ease-out;
+    transition: fill-opacity 0.3s ease-out;
+}
+
+.ct-slice-donut {
+	-webkit-transition: fill-opacity 0.3s ease-in;
+    transition: fill-opacity 0.3s ease-in;
+}
+
+.ct-series path {
+	fill: transparent;
+}

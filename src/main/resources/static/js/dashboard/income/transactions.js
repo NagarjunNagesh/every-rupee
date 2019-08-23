@@ -271,7 +271,7 @@ $(document).ready(function(){
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
 		                labels: [totalIncomeAsPercentageOfExpense + '%',,totalDeficitAsPercentageOfExpense + '%'],
-		                series: [totalIncomeAsPercentageOfExpense,,totalDeficitAsPercentageOfExpense]
+		                series: [totalIncomeTransactions,,totalDeficitDifference]
 		            };
 			
 			replaceHTML('legendPieChart', 'Total Income & Total Overspent as a percentage of Total Expense');
@@ -286,7 +286,7 @@ $(document).ready(function(){
 			// labels: [INCOME,EXPENSE,AVAILABLE]
 			dataPreferences = {
 		                labels: [, totalExpenseAsPercentageOfIncome + '%',totalAvailableAsPercentageOfIncome + '%'],
-		                series: [, totalExpenseAsPercentageOfIncome,totalAvailableAsPercentageOfIncome]
+		                series: [, totalExpensesTransactions,totalAvailable]
 		            };
 			
 			replaceHTML('legendPieChart', 'Total Expense & Total Available as a percentage of Total Income');
@@ -1238,7 +1238,6 @@ $(document).ready(function(){
         var optionsPreferences = {
 		  donut: true,
 		  donutWidth: 50,
-		  donutSolid: true,
 		  startAngle: 270,
 		  showLabel: true,
 		  height: '230px'
@@ -1256,47 +1255,45 @@ $(document).ready(function(){
         	transactionsChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences).on('draw', function(data) {
       		  if(data.type === 'slice') {
 		        	let sliceValue = data.element._node.getAttribute('ct:value');
-		        	data.element._node.setAttribute("title", "Percentage: <strong>" + round(Number(sliceValue),2) + '%</strong>');
+		        	data.element._node.setAttribute("title", "Value: <strong>" + currentCurrencyPreference + formatNumber(Number(sliceValue), currentUser.locale) + '</strong>');
 					data.element._node.setAttribute("data-chart-tooltip", id);
       		  }
 			}).on("created", function() {
-				// Initiate Tooltip
-				$("#" + id).tooltip({
-					selector: '[data-chart-tooltip="' + id + '"]',
-					container: "#" + id,
-					html: true,
-					placement: 'auto',
-					delay: { "show": 300, "hide": 100 }
-				});
+			  let chartLegend = document.getElementById('chartLegend');
+	          let incomeAmount = document.getElementById('totalIncomeTransactions');
+	          let expenseAmount = document.getElementById('totalExpensesTransactions');
+	          let totalAvailable = document.getElementById('totalAvailableTransactions');
+	        	
+			  // Initiate Tooltip
+			  $("#" + id).tooltip({
+				  selector: '[data-chart-tooltip="' + id + '"]',
+				  container: "#" + id,
+				  html: true,
+				  placement: 'auto',
+				  delay: { "show": 300, "hide": 100 }
+			  });
+				
+			  $('.ct-slice-donut').on('mouseover mouseout', function() {
+       			  chartLegend.classList.toggle('hiddenAfterHalfASec');
+       			  chartLegend.classList.toggle('visibleAfterHalfASec');
+       		  });
+       		  
+       		  $('.ct-series-a').on('mouseover mouseout', function() {
+       			  incomeAmount.classList.toggle('transitionTextToNormal');
+       			  incomeAmount.classList.toggle('transitionTextTo120');
+       		  });
+       		  
+       		  $('.ct-series-b').on('mouseover mouseout', function() {
+       			  expenseAmount.classList.toggle('transitionTextToNormal');
+       			  expenseAmount.classList.toggle('transitionTextTo120');
+       		  });
+       		  
+       		  $('.ct-series-c').on('mouseover mouseout', function() {
+       			  totalAvailable.classList.toggle('transitionTextToNormal');
+       			  totalAvailable.classList.toggle('transitionTextTo120');
+       		  });
 			});
         	
-        	let chartLegend = document.getElementById('chartLegend');
-        	let incomeAmount = document.getElementById('totalIncomeTransactions');
-        	let expenseAmount = document.getElementById('totalExpensesTransactions');
-        	let totalAvailable = document.getElementById('totalAvailableTransactions');
-        	
-        	transactionsChart.on('created', function(donut) {
-        		  $('.ct-slice-donut-solid').on('mouseover mouseout', function() {
-        			  chartLegend.classList.toggle('hiddenAfterHalfASec');
-        			  chartLegend.classList.toggle('visibleAfterHalfASec');
-        		  });
-        		  
-        		  $('.ct-series-a').on('mouseover mouseout', function() {
-        			  incomeAmount.classList.toggle('transitionTextToNormal');
-        			  incomeAmount.classList.toggle('transitionTextTo120');
-        		  });
-        		  
-        		  $('.ct-series-b').on('mouseover mouseout', function() {
-        			  expenseAmount.classList.toggle('transitionTextToNormal');
-        			  expenseAmount.classList.toggle('transitionTextTo120');
-        		  });
-        		  
-        		  $('.ct-series-c').on('mouseover mouseout', function() {
-        			  totalAvailable.classList.toggle('transitionTextToNormal');
-        			  totalAvailable.classList.toggle('transitionTextTo120');
-        		  });
-        			  
-        		});
         }
         
 	}

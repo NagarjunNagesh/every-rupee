@@ -863,17 +863,35 @@ $(document).ready(function(){
 		// Start requesting the chart  
 		let firstChildClassList = this.children[0].classList;
 		if(firstChildClassList.contains('incomeImage')) {
-			populateLineChart(liftimeIncomeTransactionsCache, true);
-			document.getElementById('chartDisplayTitle').innerHTML = 'Income Earned <small> - Every Month</small>';
-			// Replace the Drop down with one year view
-			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+			// Populate Category Break down Chart if present
+        	if(doughnutBreakdownOpen) {
+        		// Fetch the expense cache 
+        		fetchIncomeBreakDownCache = true;
+        		populateCategoryBreakdown(fetchIncomeBreakDownCache);
+        		// Replace the Drop down with one year view
+    			replaceChartChosenLabel('Income Breakdown');
+        	} else {
+        		// Replace the Drop down with one year view
+    			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+    			populateLineChart(liftimeIncomeTransactionsCache, true);
+        	}
+        	document.getElementById('chartDisplayTitle').innerHTML = 'Income Earned <small> - Every Month</small>';
 			// Replace the drop down for chart options
 			appendChartOptionsForIncomeOrExpense('Income');
 		} else if(firstChildClassList.contains('expenseImage')) {
-			populateLineChart(liftimeExpenseTransactionsCache, false);
-			document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
-			// Replace the Drop down with one year view
-			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+			// Populate Category Break down Chart if present
+        	if(doughnutBreakdownOpen) {
+        		// Fetch the expense cache 
+        		fetchIncomeBreakDownCache = false;
+        		populateCategoryBreakdown(fetchIncomeBreakDownCache);
+        		// Replace the Drop down with one year view
+    			replaceChartChosenLabel('Expense Breakdown');
+        	} else {
+        		populateLineChart(liftimeExpenseTransactionsCache, false);
+    			// Replace the Drop down with one year view
+    			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+        	}
+        	document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
 			// Replace the drop down for chart options
 			appendChartOptionsForIncomeOrExpense('Expense');
 		} else if(firstChildClassList.contains('assetsImage')) {
@@ -1150,7 +1168,6 @@ $(document).ready(function(){
         let optionsPreferences = {
 		  donut: true,
 		  donutWidth: 50,
-		  donutSolid: true,
 		  startAngle: 270,
 		  showLabel: true,
 		  height: '300px'
@@ -1184,7 +1201,7 @@ $(document).ready(function(){
         
         // Append Tooltip for Doughnut chart
         if(isNotEmpty(dataPreferences)) {
-        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions).on('draw', function(data) {
+        	let categoryBreakdownChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences, responsiveOptions).on('draw', function(data) {
         		  if(data.type === 'slice') {
 		        	let sliceValue = data.element._node.getAttribute('ct:value');
 		        	data.element._node.setAttribute("title", "Total: <strong>" + currentCurrencyPreference + formatNumber(Number(sliceValue), currentUser.locale) + '</strong>');
@@ -1200,6 +1217,9 @@ $(document).ready(function(){
 					delay: { "show": 300, "hide": 100 }
 				});
 			});
+        	
+        	// Animate the doughnut chart
+        	er.startAnimationDonutChart(categoryBreakdownChart);
         }
         
 	}

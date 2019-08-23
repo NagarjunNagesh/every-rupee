@@ -325,7 +325,6 @@ $(document).ready(function(){
         var optionsPreferences = {
 		  donut: true,
 		  donutWidth: 50,
-		  donutSolid: true,
 		  startAngle: 270,
 		  showLabel: true,
 		  height: '230px'
@@ -354,6 +353,9 @@ $(document).ready(function(){
 					delay: { "show": 300, "hide": 100 }
 				});
 			});
+        	
+        	// Animate the doughnut chart
+        	er.startAnimationDonutChart(budgetCategoryChart);
         }
         
 	}
