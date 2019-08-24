@@ -276,7 +276,7 @@ $(document).ready(function(){
 				// labels: [Total Budgeted Category, To Be Budgeted]
 				dataPreferences = {
 	                labels: [userBudgetPercentage + '%',toBeBudgetedPercentage + '%'],
-	                series: [userBudgetPercentage,toBeBudgetedPercentage]
+	                series: [userBudgetCacheKeys.length,toBeBudgetedAvailable]
 	            };
 			}
 		} else {
@@ -340,7 +340,7 @@ $(document).ready(function(){
         	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences).on('draw', function(data) {
       		  if(data.type === 'slice') {
 		        	let sliceValue = data.element._node.getAttribute('ct:value');
-		        	data.element._node.setAttribute("title", "Percentage: <strong>" + round(Number(sliceValue),2) + '%</strong>');
+		        	data.element._node.setAttribute("title", "Total Categories: <strong>" + sliceValue + '</strong>');
 					data.element._node.setAttribute("data-chart-tooltip", id);
       		  }
 			}).on("created", function() {
@@ -763,9 +763,6 @@ $(document).ready(function(){
             	// Update the latest budget month
             	for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++) {
             		let userBudgetDate = datesWithUserBudgetData[count];
-            		
-            		// Update the date picker with existing budgets
-                	updateExistingBudgetInDatePicker(userBudgetDate);
             		
             		if(isEmpty(lastBudgetMonth) || userBudgetDate > lastBudgetMonth) {
             			// Append preceeding zero
@@ -1568,15 +1565,6 @@ $(document).ready(function(){
 		// Budget Visualization
 		let chartVisualization = document.getElementById('chartBudgetVisualization');
 		chartVisualization.innerHTML = '<div class="material-spinner"></div>';
-	}
-	
-	// Update existing date picker with existing budget
-	function updateExistingBudgetInDatePicker(userBudgetDate) {
-		userBudgetDate = ('0' + userBudgetDate).slice(-8);
-		if(popoverYear == userBudgetDate.slice(-4)) {
-			let monthToAppend = Number(userBudgetDate.slice(2,4));
-			document.getElementById('monthPicker-' + monthToAppend).classList.add('monthPickerMonthExists');
-		}
 	}
 	
 });

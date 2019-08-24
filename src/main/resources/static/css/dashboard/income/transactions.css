@@ -176,6 +176,10 @@
 	stroke: #4caf50;
 }
 
+.ct-chart .ct-series-a .ct-slice-donut {
+	stroke: #4caf50;
+}
+
 .material-icons.text-success, .material-icons.text-danger, .material-icons.text-info {
 	margin-right: 0.2rem;
 }

@@ -173,10 +173,18 @@
 	stroke: #fd679a;
 }
 
+#budgetChart .ct-chart .ct-series-a .ct-slice-donut {
+ stroke: #fd679a;
+}
+
 #budgetChart .ct-chart .ct-series-b .ct-slice-donut-solid {
  	fill: #ff9800;
 	stroke: #ff9800;
- }
+}
+
+#budgetChart .ct-chart .ct-series-b .ct-slice-donut {
+	stroke: #ff9800;
+}
  
 .budget-chart {
  	position: -webkit-sticky;

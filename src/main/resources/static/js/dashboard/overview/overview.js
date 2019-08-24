@@ -16,6 +16,8 @@ $(document).ready(function(){
 	let fetchIncomeBreakDownCache = true;
 	// Doughnut breakdown open
 	let doughnutBreakdownOpen = false;
+	// Choose Two Dates
+	let alreadyChosenADate = false;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -1046,6 +1048,7 @@ $(document).ready(function(){
 		// populate the income line chart from cache
 		populateLineChart(liftimeIncomeTransactionsCache, true);
 		// Dough nut breakdown open cache
+		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = false;
 	});
 	
@@ -1068,6 +1071,7 @@ $(document).ready(function(){
 		// Populate the expense line chart from cache
 		populateLineChart(liftimeExpenseTransactionsCache, false);
 		// Dough nut breakdown open cache
+		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = false;
 	});
 	
@@ -1080,6 +1084,7 @@ $(document).ready(function(){
 		// Populate cache for income or expense breakdown
 		fetchIncomeBreakDownCache = false;
 		// Dough nut breakdown open cache
+		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = true;
 		
 	});
@@ -1253,7 +1258,7 @@ $(document).ready(function(){
 	// Date Picker on click month
 	$('.monthPickerMonth').click(function() {
 		let recentTransactionsDiv = document.getElementsByClassName('recentTransactionCard');
-		
+
 		// If other pages are present then return this event
 		if(recentTransactionsDiv.length == 0) {
 			return;
@@ -1272,7 +1277,7 @@ $(document).ready(function(){
 		// Populate Recent transactions
 		populateRecentTransactions();
 		
-		// Fetch transaction total 
+		// Fetch transaction total and Optimizations (Populate Category Breakdown chart if open)
 		fetchCategoryTotalForTransactions();
 		
 	});
