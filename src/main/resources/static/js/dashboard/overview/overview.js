@@ -356,7 +356,7 @@ $(document).ready(function(){
 		// Budget Optimization Row
 		let tableBudgetOptimization = document.createElement('div');
 		tableBudgetOptimization.id = 'budgetOptimization-' + userBudget.categoryId;
-		tableBudgetOptimization.classList = 'd-lg-table-row';
+		tableBudgetOptimization.classList = 'budgetOptimization d-lg-table-row';
 		
 		// Table Cell 1
 		let checkboxCell = document.createElement('div');
@@ -665,6 +665,11 @@ $(document).ready(function(){
 	
 	// Disable Button if no check box is clicked and vice versa
 	$( ".optimizationBudgetAndGoal" ).on( "click", ".number" ,function() {
+		checkOrUncheckOptimization();
+	});
+	
+	// Check or Uncheck Optimization
+	function checkOrUncheckOptimization() {
 		let checkAllElementChecked = $("#checkAll:checked");
 		if(checkAllElementChecked.length > 0) {
 			// uncheck the check all if a check is clicked and if the check all is already clicked
@@ -684,7 +689,7 @@ $(document).ready(function(){
 		
 		// Enable or disable optimizations buttons
 		manageOptimizationButton(allCheckedOptimizations.length);
-	});
+	}
 	
 	// Select all check boxes for Transactions
 	document.getElementById("checkAll").addEventListener("click",function(){
@@ -696,6 +701,16 @@ $(document).ready(function(){
 		document.getElementById('selectedOptimizations').innerText = numberSelected;
 		// Enable or disable optimizations buttons
 		manageOptimizationButton(allCheckedOptimizations.length);
+	});
+	
+	// Click budget row
+	$('.optimizationBudgetAndGoal').on('click', '.budgetOptimization', function() {
+		// Check the row as selected / unselected
+		let checkboxInElem = this.getElementsByClassName('number');
+		checkboxInElem = $(checkboxInElem);
+		checkboxInElem.prop('checked', !checkboxInElem.prop('checked'));
+		// Common action for toggling checkbox
+		checkOrUncheckOptimization();
 	});
 	
 	// Function to enable of disable the delete transactions button
@@ -877,7 +892,7 @@ $(document).ready(function(){
     			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
     			populateLineChart(liftimeIncomeTransactionsCache, true);
         	}
-        	document.getElementById('chartDisplayTitle').innerHTML = 'Income Earned <small> - Every Month</small>';
+        	document.getElementById('chartDisplayTitle').firstChild.nodeValue = 'Income Overview';
 			// Replace the drop down for chart options
 			appendChartOptionsForIncomeOrExpense('Income');
 		} else if(firstChildClassList.contains('expenseImage')) {
@@ -893,7 +908,7 @@ $(document).ready(function(){
     			// Replace the Drop down with one year view
     			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
         	}
-        	document.getElementById('chartDisplayTitle').innerHTML = 'Expense Earned <small> - Every Month</small>';
+        	document.getElementById('chartDisplayTitle').firstChild.nodeValue = 'Expense Overview';
 			// Replace the drop down for chart options
 			appendChartOptionsForIncomeOrExpense('Expense');
 		} else if(firstChildClassList.contains('assetsImage')) {
@@ -1281,5 +1296,45 @@ $(document).ready(function(){
 		fetchCategoryTotalForTransactions();
 		
 	});
+	
+	/**
+	 * Overview Chart Month Display
+	 */
+	overviewChartMonthDisplay();
+	
+	// Display Month Chart Display
+	function overviewChartMonthDisplay() {
+		let monthDisplay = document.getElementById('overviewChartMonth');
+		
+		// Year Display
+		let currentDate = new Date();
+		
+		// If month is December then show only the current year 
+		if(currentDate.getMonth() == 11) {
+			monthDisplay.innerText = currentDate.getFullYear();
+		} else {
+			monthDisplay.innerText = (Number(currentDate.getFullYear()) - 1) + ' - ' + currentDate.getFullYear()
+		}
+	}
+	
+	/**
+	 * Year Picker
+	 */
+	document.getElementById("dateMonthArrow").addEventListener("click",function(){
+		showYearPopover(this);
+	});
+	
+	document.getElementById('overviewChartMonth').addEventListener("click", function() {
+		showYearPopover(this);
+	});
+	
+	// Show popover year
+	function showYearPopover(elem) {
+		// Show the popover
+		document.getElementById('overviewYearPicker').classList.toggle('d-none');
+		
+		// Convert SVG to upward arrow
+		elem.classList.toggle('transformUpwardArrow');
+	}
 	
 });
