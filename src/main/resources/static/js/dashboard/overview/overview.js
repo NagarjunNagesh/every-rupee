@@ -16,8 +16,6 @@ $(document).ready(function(){
 	let fetchIncomeBreakDownCache = true;
 	// Doughnut breakdown open
 	let doughnutBreakdownOpen = false;
-	// Choose Two Dates
-	let alreadyChosenADate = false;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -1115,7 +1113,6 @@ $(document).ready(function(){
 		// Reset the line chart with spinner
 		let colouredRoundedLineChart = document.getElementById('colouredRoundedLineChart');
 		colouredRoundedLineChart.innerHTML = '<div class="material-spinner rtSpinner"></div>';
-		let incomeOrExpenseLifetime = fetchIncome ? liftimeIncomeTransactionsCache : liftimeExpenseTransactionsCache;
 		
 		
 		// Build the Absolute total 
