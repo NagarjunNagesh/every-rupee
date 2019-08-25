@@ -306,6 +306,55 @@
 	color: #fff;
 }
 
+.dropdown-menu .dropdown-item.chartOverviewExpense:hover,
+.dropdown-menu .dropdown-item.chartBreakdownExpense:hover,
+.dropdown-menu .dropdown-item.chartOverviewIncome:hover,
+.dropdown-menu .dropdown-item.chartBreakdownIncome:hover {
+	box-shadow: 0 4px 20px 0 rgba(0,0,0,0.14), 0 7px 10px -5px rgba(0,188,212,0.4);
+	background-color: #00bcd4;
+	color: #fff;
+}
+
+#chooseCategoryDD {
+	cursor: pointer;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-point {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
+	stroke-width: 15px;
+	cursor: pointer;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-point:hover {
+	stroke-width: 25px;
+	transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut-solid {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut-solid:hover {
+	stroke: white;
+    stroke-width: 2px;
+    transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut {
+	-webkit-transition: stroke-width 0.3s ease-in;
+	transition: stroke-width 0.3s ease-in;
+}
+
+#colouredRoundedLineChart.ct-chart .ct-slice-donut:hover {
+    stroke-width: 2px;
+    transition: stroke-width 0.3s ease-out;
+	-webkit-transition: stroke-width 0.3s ease-out;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {
@@ -418,3 +467,75 @@
 	
 }
 
+.budgetOptimization {
+	cursor: pointer;
+}
+
+#overviewChartMonth, .dateMonthArrow {
+	color: #2b3133;	
+}
+
+.dateMonthArrow {
+	margin-left: .3rem;
+    width: .8rem;
+    height: .8rem;
+}
+
+#chartDisplayTitle {
+	color: #999;
+}
+
+#overviewYearPicker {
+	top: 3.5rem;
+	left: 7.5rem;
+}
+
+.overviewNavigationYear {
+	position: absolute;
+    top: 5.3rem;
+    right: -1.2rem;
+    left: 1.2rem;
+    min-width: 6rem;
+    height: 8rem;
+    min-height: 8rem;
+    text-align: center;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    border: 1px solid #d9dcdd;
+    border-radius: 5px;
+    background: #fff;
+    z-index: 10;
+}
+
+.overviewNavigationYear:after {
+	content: "";
+    transform: rotate(45deg) translateZ(0);
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    box-shadow: -1px -1px 0 #d9dcdd;
+    background: #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: -.75rem;
+    top: -.75rem;	
+}
+
+#overviewChartMonth, #dateMonthArrow {
+	cursor: pointer;
+}
+
+.yearPickerWrapper {
+	position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all .5s ease-in;
+    -webkit-transition: all .5s ease-in;
+    width: 100%;
+    height: 5rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    padding: 3.5rem 0;
+}

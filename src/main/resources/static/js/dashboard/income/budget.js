@@ -276,7 +276,7 @@ $(document).ready(function(){
 				// labels: [Total Budgeted Category, To Be Budgeted]
 				dataPreferences = {
 	                labels: [userBudgetPercentage + '%',toBeBudgetedPercentage + '%'],
-	                series: [userBudgetPercentage,toBeBudgetedPercentage]
+	                series: [userBudgetCacheKeys.length,toBeBudgetedAvailable]
 	            };
 			}
 		} else {
@@ -325,7 +325,6 @@ $(document).ready(function(){
         var optionsPreferences = {
 		  donut: true,
 		  donutWidth: 50,
-		  donutSolid: true,
 		  startAngle: 270,
 		  showLabel: true,
 		  height: '230px'
@@ -333,9 +332,30 @@ $(document).ready(function(){
         
         // Reset the chart
         replaceHTML(id, '');
+        // Dispose the previous tooltips created
+        $("#" + id).tooltip('dispose');
         
         if(isNotEmpty(dataPreferences)) {
-        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences);
+        	// Build chart and Add tooltip for the doughnut chart
+        	budgetCategoryChart = new Chartist.Pie('#' + id, dataPreferences, optionsPreferences).on('draw', function(data) {
+      		  if(data.type === 'slice') {
+		        	let sliceValue = data.element._node.getAttribute('ct:value');
+		        	data.element._node.setAttribute("title", "Total Categories: <strong>" + sliceValue + '</strong>');
+					data.element._node.setAttribute("data-chart-tooltip", id);
+      		  }
+			}).on("created", function() {
+				// Initiate Tooltip
+				$("#" + id).tooltip({
+					selector: '[data-chart-tooltip="' + id + '"]',
+					container: "#" + id,
+					html: true,
+					placement: 'auto',
+					delay: { "show": 300, "hide": 100 }
+				});
+			});
+        	
+        	// Animate the doughnut chart
+        	er.startAnimationDonutChart(budgetCategoryChart);
         }
         
 	}
@@ -743,9 +763,6 @@ $(document).ready(function(){
             	// Update the latest budget month
             	for(let count = 0, length = datesWithUserBudgetData.length; count < length; count++) {
             		let userBudgetDate = datesWithUserBudgetData[count];
-            		
-            		// Update the date picker with existing budgets
-                	updateExistingBudgetInDatePicker(userBudgetDate);
             		
             		if(isEmpty(lastBudgetMonth) || userBudgetDate > lastBudgetMonth) {
             			// Append preceeding zero
@@ -1548,15 +1565,6 @@ $(document).ready(function(){
 		// Budget Visualization
 		let chartVisualization = document.getElementById('chartBudgetVisualization');
 		chartVisualization.innerHTML = '<div class="material-spinner"></div>';
-	}
-	
-	// Update existing date picker with existing budget
-	function updateExistingBudgetInDatePicker(userBudgetDate) {
-		userBudgetDate = ('0' + userBudgetDate).slice(-8);
-		if(popoverYear == userBudgetDate.slice(-4)) {
-			let monthToAppend = Number(userBudgetDate.slice(2,4));
-			document.getElementById('monthPicker-' + monthToAppend).classList.add('monthPickerMonthExists');
-		}
 	}
 	
 });

@@ -17602,6 +17602,178 @@ Copyright (c) 2015 Daniel Eden
   stroke: #ff9800;
 }
 
+.ct-chart .ct-series-d .ct-point,
+.ct-chart .ct-series-d .ct-line,
+.ct-chart .ct-series-d .ct-bar,
+.ct-chart .ct-series-d .ct-slice-donut,
+.ct-chart .ct-series-d .ct-slice-pie,
+.ct-chart .ct-series-d .ct-slice-donut-solid,
+.ct-chart .ct-series-d .ct-area {
+  stroke: #795548;
+}
+
+.ct-chart .ct-series-e .ct-point,
+.ct-chart .ct-series-e .ct-line,
+.ct-chart .ct-series-e .ct-bar,
+.ct-chart .ct-series-e .ct-slice-donut,
+.ct-chart .ct-series-e .ct-slice-pie,
+.ct-chart .ct-series-e .ct-slice-donut-solid,
+.ct-chart .ct-series-e .ct-area {
+  stroke: #cddc39;
+}
+
+.ct-chart .ct-series-f .ct-point,
+.ct-chart .ct-series-f .ct-line,
+.ct-chart .ct-series-f .ct-bar,
+.ct-chart .ct-series-f .ct-slice-donut,
+.ct-chart .ct-series-f .ct-slice-pie,
+.ct-chart .ct-series-f .ct-slice-donut-solid,
+.ct-chart .ct-series-f .ct-area {
+  stroke: #03a9f4;
+}
+
+.ct-chart .ct-series-g .ct-point,
+.ct-chart .ct-series-g .ct-line,
+.ct-chart .ct-series-g .ct-bar,
+.ct-chart .ct-series-g .ct-slice-donut,
+.ct-chart .ct-series-g .ct-slice-pie,
+.ct-chart .ct-series-g .ct-slice-donut-solid,
+.ct-chart .ct-series-g .ct-area {
+  stroke: #9c27b0;
+}
+
+.ct-chart .ct-series-h .ct-point,
+.ct-chart .ct-series-h .ct-line,
+.ct-chart .ct-series-h .ct-bar,
+.ct-chart .ct-series-h .ct-slice-donut,
+.ct-chart .ct-series-h .ct-slice-pie,
+.ct-chart .ct-series-h .ct-slice-donut-solid,
+.ct-chart .ct-series-h .ct-area {
+  stroke: #e91e63;
+}
+
+.ct-chart .ct-series-i .ct-point,
+.ct-chart .ct-series-i .ct-line,
+.ct-chart .ct-series-i .ct-bar,
+.ct-chart .ct-series-i .ct-slice-donut,
+.ct-chart .ct-series-i .ct-slice-pie,
+.ct-chart .ct-series-i .ct-slice-donut-solid,
+.ct-chart .ct-series-i .ct-area {
+  stroke: #8bc34a;
+}
+
+.ct-chart .ct-series-j .ct-point,
+.ct-chart .ct-series-j .ct-line,
+.ct-chart .ct-series-j .ct-bar,
+.ct-chart .ct-series-j .ct-slice-donut,
+.ct-chart .ct-series-j .ct-slice-pie,
+.ct-chart .ct-series-j .ct-slice-donut-solid,
+.ct-chart .ct-series-j .ct-area {
+  stroke: #c62828;
+}
+
+.ct-chart .ct-series-k .ct-point,
+.ct-chart .ct-series-k .ct-line,
+.ct-chart .ct-series-k .ct-bar,
+.ct-chart .ct-series-k .ct-slice-donut,
+.ct-chart .ct-series-k .ct-slice-pie,
+.ct-chart .ct-series-k .ct-slice-donut-solid,
+.ct-chart .ct-series-k .ct-area {
+  stroke: #ad1457;
+}
+
+.ct-chart .ct-series-l .ct-point,
+.ct-chart .ct-series-l .ct-line,
+.ct-chart .ct-series-l .ct-bar,
+.ct-chart .ct-series-l .ct-slice-donut,
+.ct-chart .ct-series-l .ct-slice-pie,
+.ct-chart .ct-series-l .ct-slice-donut-solid,
+.ct-chart .ct-series-l .ct-area {
+  stroke: #2e7d32;
+}
+
+.ct-chart .ct-series-m .ct-point,
+.ct-chart .ct-series-m .ct-line,
+.ct-chart .ct-series-m .ct-bar,
+.ct-chart .ct-series-m .ct-slice-donut,
+.ct-chart .ct-series-m .ct-slice-pie,
+.ct-chart .ct-series-m .ct-slice-donut-solid,
+.ct-chart .ct-series-m .ct-area {
+  stroke: #d84315;
+}
+
+
+.ct-chart .ct-series-n .ct-point,
+.ct-chart .ct-series-n .ct-line,
+.ct-chart .ct-series-n .ct-bar,
+.ct-chart .ct-series-n .ct-slice-donut,
+.ct-chart .ct-series-n .ct-slice-pie,
+.ct-chart .ct-series-n .ct-slice-donut-solid,
+.ct-chart .ct-series-n .ct-area {
+  stroke: #004c8c;
+}
+
+.ct-chart .ct-series-o .ct-point,
+.ct-chart .ct-series-o .ct-line,
+.ct-chart .ct-series-o .ct-bar,
+.ct-chart .ct-series-o .ct-slice-donut,
+.ct-chart .ct-series-o .ct-slice-pie,
+.ct-chart .ct-series-o .ct-slice-donut-solid,
+.ct-chart .ct-series-o .ct-area {
+  stroke: #102027;
+}
+
+.ct-chart .ct-series-p .ct-point,
+.ct-chart .ct-series-p .ct-line,
+.ct-chart .ct-series-p .ct-bar,
+.ct-chart .ct-series-p .ct-slice-donut,
+.ct-chart .ct-series-p .ct-slice-pie,
+.ct-chart .ct-series-p .ct-slice-donut-solid,
+.ct-chart .ct-series-p .ct-area {
+  stroke: #c50e29;
+}
+
+.ct-chart .ct-series-q .ct-point,
+.ct-chart .ct-series-q .ct-line,
+.ct-chart .ct-series-q .ct-bar,
+.ct-chart .ct-series-q .ct-slice-donut,
+.ct-chart .ct-series-q .ct-slice-pie,
+.ct-chart .ct-series-q .ct-slice-donut-solid,
+.ct-chart .ct-series-q .ct-area {
+  stroke: #aa00c7;
+}
+
+.ct-chart .ct-series-r .ct-point,
+.ct-chart .ct-series-r .ct-line,
+.ct-chart .ct-series-r .ct-bar,
+.ct-chart .ct-series-r .ct-slice-donut,
+.ct-chart .ct-series-r .ct-slice-pie,
+.ct-chart .ct-series-r .ct-slice-donut-solid,
+.ct-chart .ct-series-r .ct-area {
+  stroke: #448aff;
+}
+
+
+.ct-chart .ct-series-s .ct-point,
+.ct-chart .ct-series-s .ct-line,
+.ct-chart .ct-series-s .ct-bar,
+.ct-chart .ct-series-s .ct-slice-donut,
+.ct-chart .ct-series-s .ct-slice-pie,
+.ct-chart .ct-series-s .ct-slice-donut-solid,
+.ct-chart .ct-series-s .ct-area {
+  stroke: #7ecb20;
+}
+
+.ct-chart .ct-series-t .ct-point,
+.ct-chart .ct-series-t .ct-line,
+.ct-chart .ct-series-t .ct-bar,
+.ct-chart .ct-series-t .ct-slice-donut,
+.ct-chart .ct-series-t .ct-slice-pie,
+.ct-chart .ct-series-t .ct-slice-donut-solid,
+.ct-chart .ct-series-t .ct-area {
+  stroke: #d50000;
+}
+
 .ct-chart .ct-bar {
   fill: none;
   stroke-width: 10px;

@@ -382,6 +382,8 @@ window.onload = function () {
 				let selectedMonthDiv = document.getElementsByClassName('monthPickerMonthSelected');
 				positionMonthCache = selectedMonthDiv.length > 0 ? ("0" + lastElement(splitElement(selectedMonthDiv[0].id,'-'))).slice(-2) + popoverYear : positionMonthCache;
 				
+				// Fetch the budget data if the tab is open
+				updateExistingBudgetInMonthPicker();
 				// Fetch the transactions data if the tab is open
 				updateExistingTransactionsInMonthPicker();
 			}
@@ -455,9 +457,10 @@ window.onload = function () {
 		function updateExistingBudgetInMonthPicker() {
 			
 			let budgetAmountDiv = document.getElementById('budgetAmount');
+			let colouredLineChartDiv = document.getElementById('colouredRoundedLineChart');
 			
 			// If other pages are present then return this event
-			if(budgetAmountDiv == null) {
+			if(budgetAmountDiv == null && colouredLineChartDiv == null) {
 				return;
 			}
 			
@@ -497,9 +500,10 @@ window.onload = function () {
 		function updateExistingTransactionsInMonthPicker() {
 			
 			let transactionAmountDiv = document.getElementsByClassName('information-modal');
+			let colouredLineChartDiv = document.getElementById('colouredRoundedLineChart');
 			
 			// If other pages are present then return this event
-			if(transactionAmountDiv.length == 0) {
+			if(transactionAmountDiv.length == 0 && colouredLineChartDiv == null) {
 				return;
 			}
 			
@@ -701,12 +705,24 @@ er = {
 				    data.element.attr({
 				      'stroke-dasharray': pathLength + 'px ' + pathLength + 'px'
 				    });
+				    
+				    // Change the duration of the animation based on the length of the series
+				    let durAnim = 1000;
+				    if(chart.data.series.length > 12) {
+				    	durAnim = 100;
+				    } else if(chart.data.series.length > 9) {
+				    	durAnim = 200;
+				    } else if (chart.data.series.length > 6) {
+				    	durAnim = 400;
+				    } else if (chart.data.series.length > 3) {
+				    	durAnim = 600;
+				    }
 
 				    // Create animation definition while also assigning an ID to the animation for later sync usage
 				    var animationDefinition = {
 				      'stroke-dashoffset': {
 				        id: 'anim' + data.index,
-				        dur: 1000,
+				        dur: durAnim,
 				        from: -pathLength + 'px',
 				        to:  '0px',
 				        easing: Chartist.Svg.Easing.easeOutQuint,
