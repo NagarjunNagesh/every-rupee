@@ -1317,11 +1317,7 @@ $(document).ready(function(){
 	/**
 	 * Year Picker
 	 */
-	document.getElementById("dateMonthArrow").addEventListener("click",function(){
-		showYearPopover(this);
-	});
-	
-	document.getElementById('overviewChartMonth').addEventListener("click", function() {
+	document.getElementById("chartDisplayTitle").addEventListener("click",function(){
 		showYearPopover(this);
 	});
 	
@@ -1331,7 +1327,23 @@ $(document).ready(function(){
 		document.getElementById('overviewYearPicker').classList.toggle('d-none');
 		
 		// Convert SVG to upward arrow
-		elem.classList.toggle('transformUpwardArrow');
+		elem.lastElementChild.classList.toggle('transformUpwardArrow');
+	}
+	
+	// Dynamically generate year
+	dynamicYearGeneration();
+	
+	function dynamicYearGeneration() {
+		let yearPickerParent = document.getElementById('yearPicker');
+		
+		appendChildYears(yearPickerParent);
+		
+	}
+	
+	// Append child years
+	function appendChildYears(yearPickerParent) {
+		<div class="currentPickerYear">2019</div>
+		<div class="currentPickerYear">2019</div>
 	}
 	
 });

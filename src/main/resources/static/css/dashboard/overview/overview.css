@@ -355,6 +355,121 @@
 	-webkit-transition: stroke-width 0.3s ease-out;
 }
 
+.budgetOptimization {
+	cursor: pointer;
+}
+
+#overviewChartMonth, .dateMonthArrow {
+	color: #2b3133;	
+}
+
+.dateMonthArrow {
+	margin-left: .3rem;
+    width: .8rem;
+    height: .8rem;
+}
+
+#chartDisplayTitle {
+	color: #999;
+}
+
+#overviewYearPicker {
+	top: 3.5rem;
+	left: 7.5rem;
+}
+
+.overviewNavigationYear {
+	position: absolute;
+    top: 5.3rem;
+    right: -1.2rem;
+    left: 1.2rem;
+    min-width: 6rem;
+    height: 8rem;
+    min-height: 8rem;
+    text-align: center;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    border: 1px solid #d9dcdd;
+    border-radius: 5px;
+    background: #fff;
+    z-index: 10;
+}
+
+.overviewNavigationYear:after {
+	content: "";
+    transform: rotate(45deg) translateZ(0);
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    box-shadow: -1px -1px 0 #d9dcdd;
+    background: #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: -.75rem;
+    top: -.75rem;	
+}
+
+#overviewChartMonth, #dateMonthArrow {
+	cursor: pointer;
+}
+
+.yearPickerWrapper {
+	position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all .5s ease-in;
+    -webkit-transition: all .5s ease-in;
+    width: 100%;
+    height: 5rem;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    padding: 3.5rem 0;
+}
+
+.monthPickerDown,
+.monthPickerUp {
+	width: 2rem;
+    height: 2rem;
+    position: absolute;
+    top: 50%;
+    z-index: 9;
+    font-size: 2rem;
+    color: #6a6a6a;
+    cursor: pointer;
+    left: 45%;
+}
+
+.monthPickerDown {
+	transform: translateY(100%);
+}
+
+.monthPickerUp {
+	transform: translateY(-200%);
+}
+
+.yearPicker {
+	transform: translateZ(0);
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -ms-flex: 1 auto;
+    flex: 1 auto;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-right: 1%;
+    margin-left: 1%;
+    width: 5rem;
+    color: #2e4369;
+    font-size: 2rem;
+    text-align: center;
+    cursor: pointer;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {
@@ -465,77 +580,4 @@
 		height: 30rem;
 	}
 	
-}
-
-.budgetOptimization {
-	cursor: pointer;
-}
-
-#overviewChartMonth, .dateMonthArrow {
-	color: #2b3133;	
-}
-
-.dateMonthArrow {
-	margin-left: .3rem;
-    width: .8rem;
-    height: .8rem;
-}
-
-#chartDisplayTitle {
-	color: #999;
-}
-
-#overviewYearPicker {
-	top: 3.5rem;
-	left: 7.5rem;
-}
-
-.overviewNavigationYear {
-	position: absolute;
-    top: 5.3rem;
-    right: -1.2rem;
-    left: 1.2rem;
-    min-width: 6rem;
-    height: 8rem;
-    min-height: 8rem;
-    text-align: center;
-    display: inline-block;
-    box-shadow: 0 4px 10px rgba(0,0,0,.3);
-    border: 1px solid #d9dcdd;
-    border-radius: 5px;
-    background: #fff;
-    z-index: 10;
-}
-
-.overviewNavigationYear:after {
-	content: "";
-    transform: rotate(45deg) translateZ(0);
-    position: absolute;
-    z-index: -1;
-    left: 50%;
-    box-shadow: -1px -1px 0 #d9dcdd;
-    background: #fff;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-left: -.75rem;
-    top: -.75rem;	
-}
-
-#overviewChartMonth, #dateMonthArrow {
-	cursor: pointer;
-}
-
-.yearPickerWrapper {
-	position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all .5s ease-in;
-    -webkit-transition: all .5s ease-in;
-    width: 100%;
-    height: 5rem;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex: 1 0 auto;
-    flex: 1 0 auto;
-    padding: 3.5rem 0;
 }
