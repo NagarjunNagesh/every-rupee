@@ -1334,16 +1334,43 @@ $(document).ready(function(){
 	dynamicYearGeneration();
 	
 	function dynamicYearGeneration() {
-		let yearPickerParent = document.getElementById('yearPicker');
+		let yearPickerParent = document.getElementsByClassName('yearPicker');
 		
-		appendChildYears(yearPickerParent);
+		appendChildYears(yearPickerParent[0]);
 		
 	}
 	
 	// Append child years
 	function appendChildYears(yearPickerParent) {
-		<div class="currentPickerYear">2019</div>
-		<div class="currentPickerYear">2019</div>
+		let fiveYearDisplay = document.createDocumentFragment();
+		let currentyear = new Date().getFullYear();
+		
+		let minusTwoYear = document.createElement('div');
+		minusTwoYear.classList = 'yearPickerDisplay';
+		minusTwoYear.innerText = currentyear-2;
+		fiveYearDisplay.appendChild(minusTwoYear);
+		
+		let minusOneYear = document.createElement('div');
+		minusOneYear.classList = 'yearPickerDisplay';
+		minusOneYear.innerText = currentyear-1;
+		fiveYearDisplay.appendChild(minusOneYear);
+		
+		let currentYearDis = document.createElement('div');
+		currentYearDis.classList = 'yearPickerDisplay';
+		currentYearDis.innerText = currentyear;
+		fiveYearDisplay.appendChild(currentYearDis);
+		
+		let plusOneYear = document.createElement('div');
+		plusOneYear.classList = 'yearPickerDisplay';
+		plusOneYear.innerText = currentyear+1;
+		fiveYearDisplay.appendChild(plusOneYear);
+		
+		let plusTwoYear = document.createElement('div');
+		plusTwoYear.classList = 'yearPickerDisplay';
+		plusTwoYear.innerText = currentyear+2;
+		fiveYearDisplay.appendChild(plusTwoYear);
+		yearPickerParent.appendChild(fiveYearDisplay);
+		
 	}
 	
 });

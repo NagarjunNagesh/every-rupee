@@ -384,7 +384,7 @@
     right: -1.2rem;
     left: 1.2rem;
     min-width: 6rem;
-    height: 8rem;
+    height: 14rem;
     min-height: 8rem;
     text-align: center;
     display: inline-block;
@@ -442,11 +442,11 @@
 }
 
 .monthPickerDown {
-	transform: translateY(100%);
+	transform: translateY(240%);
 }
 
 .monthPickerUp {
-	transform: translateY(-200%);
+	transform: translateY(-340%);
 }
 
 .yearPicker {
@@ -465,7 +465,7 @@
     margin-left: 1%;
     width: 5rem;
     color: #2e4369;
-    font-size: 2rem;
+    font-size: 1rem;
     text-align: center;
     cursor: pointer;
 }
