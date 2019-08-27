@@ -468,6 +468,11 @@
     cursor: pointer;
 }
 
+.yearPickerDisplay:hover, .monthPickerUp:hover, .monthPickerDown:hover {
+	font-weight: 700;
+	color: #2b3133;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	.choose label span {

@@ -17,9 +17,12 @@ $(document).ready(function(){
 	// Doughnut breakdown open
 	let doughnutBreakdownOpen = false;
 	// Cache the previous year picker date
-	let previousDateYearPicker = new Date().getFullYear() - 2;
+	let currentYearSelect = new Date().getFullYear();
+	let previousDateYearPicker = currentYearSelect - 2;
 	// Cache the next year Picker data
-	let nextDateYearPicker = new Date().getFullYear()+2;
+	let nextDateYearPicker = currentYearSelect+2;
+	// Selected Year Picker
+	let selectedYearPickerCache = currentYearSelect;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -1386,15 +1389,37 @@ $(document).ready(function(){
 	// Click the up button for year picker
 	document.getElementById("monthPickerUp").addEventListener("click",function(){
 		let yearPickerParent = document.getElementsByClassName('yearPicker');
-		yearPickerParent[0].innerHTML = '';
-		appendChildYears(yearPickerParent[0], previousDateYearPicker);
+		let minusFourDateCache = previousDateYearPicker-5;
+		yearPickerParent[0].children[0].innerText = minusFourDateCache;
+		yearPickerParent[0].children[1].innerText = previousDateYearPicker-4;
+		yearPickerParent[0].children[2].innerText = previousDateYearPicker-3;
+		yearPickerParent[0].children[3].innerText = previousDateYearPicker-2;
+		yearPickerParent[0].children[4].innerText = previousDateYearPicker-1;
+		
+		// Load the cache with next dates
+		nextDateYearPicker = previousDateYearPicker;
+		
+		// Load the cache with previous dates
+		previousDateYearPicker = minusFourDateCache;
+		
 	});
 	
 	// Click the down button for year picker
 	document.getElementById("monthPickerDown").addEventListener("click",function(){
 		let yearPickerParent = document.getElementsByClassName('yearPicker');
-		yearPickerParent[0].innerHTML = '';
-		appendChildYears(yearPickerParent[0], nextDateYearPicker);
+		let plusFourDateCache = nextDateYearPicker+4;
+		yearPickerParent[0].children[0].innerText = nextDateYearPicker;
+		yearPickerParent[0].children[1].innerText = nextDateYearPicker+1;
+		yearPickerParent[0].children[2].innerText = nextDateYearPicker+2;
+		yearPickerParent[0].children[3].innerText = nextDateYearPicker+3;
+		yearPickerParent[0].children[4].innerText = plusFourDateCache;
+		
+		// Load the cache with previous dates
+		previousDateYearPicker = nextDateYearPicker;
+		
+		// Load the cache with next dates
+		nextDateYearPicker = plusFourDateCache+1;
+		
 	});
 	
 });
