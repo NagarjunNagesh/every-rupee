@@ -16,6 +16,10 @@ $(document).ready(function(){
 	let fetchIncomeBreakDownCache = true;
 	// Doughnut breakdown open
 	let doughnutBreakdownOpen = false;
+	// Cache the previous year picker date
+	let previousDateYearPicker = new Date().getFullYear() - 2;
+	// Cache the next year Picker data
+	let nextDateYearPicker = new Date().getFullYear()+2;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -1336,18 +1340,18 @@ $(document).ready(function(){
 	function dynamicYearGeneration() {
 		let yearPickerParent = document.getElementsByClassName('yearPicker');
 		
-		appendChildYears(yearPickerParent[0]);
-		
+		appendChildYears(yearPickerParent[0], new Date().getFullYear());
 	}
 	
 	// Append child years
-	function appendChildYears(yearPickerParent) {
+	function appendChildYears(yearPickerParent, currentyear) {
 		let fiveYearDisplay = document.createDocumentFragment();
-		let currentyear = new Date().getFullYear();
+		let minusTwoYearCache = currentyear-2;
+		let plusTwoYearCache = currentyear+2;
 		
 		let minusTwoYear = document.createElement('div');
 		minusTwoYear.classList = 'yearPickerDisplay';
-		minusTwoYear.innerText = currentyear-2;
+		minusTwoYear.innerText = minusTwoYearCache;
 		fiveYearDisplay.appendChild(minusTwoYear);
 		
 		let minusOneYear = document.createElement('div');
@@ -1356,7 +1360,7 @@ $(document).ready(function(){
 		fiveYearDisplay.appendChild(minusOneYear);
 		
 		let currentYearDis = document.createElement('div');
-		currentYearDis.classList = 'yearPickerDisplay';
+		currentYearDis.classList = 'yearPickerDisplay font-weight-bold twoBThreeOneColor';
 		currentYearDis.innerText = currentyear;
 		fiveYearDisplay.appendChild(currentYearDis);
 		
@@ -1367,10 +1371,30 @@ $(document).ready(function(){
 		
 		let plusTwoYear = document.createElement('div');
 		plusTwoYear.classList = 'yearPickerDisplay';
-		plusTwoYear.innerText = currentyear+2;
+		plusTwoYear.innerText = plusTwoYearCache;
 		fiveYearDisplay.appendChild(plusTwoYear);
+		
 		yearPickerParent.appendChild(fiveYearDisplay);
 		
+		// Load the cache with previous dates
+		previousDateYearPicker = minusTwoYearCache;
+		
+		// Load the cache with next dates
+		nextDateYearPicker = plusTwoYearCache;
 	}
+	
+	// Click the up button for year picker
+	document.getElementById("monthPickerUp").addEventListener("click",function(){
+		let yearPickerParent = document.getElementsByClassName('yearPicker');
+		yearPickerParent[0].innerHTML = '';
+		appendChildYears(yearPickerParent[0], previousDateYearPicker);
+	});
+	
+	// Click the down button for year picker
+	document.getElementById("monthPickerDown").addEventListener("click",function(){
+		let yearPickerParent = document.getElementsByClassName('yearPicker');
+		yearPickerParent[0].innerHTML = '';
+		appendChildYears(yearPickerParent[0], nextDateYearPicker);
+	});
 	
 });
