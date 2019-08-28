@@ -1325,13 +1325,19 @@ $(document).ready(function(){
 	 * Year Picker
 	 */
 	document.getElementById("chartDisplayTitle").addEventListener("click",function(){
-		showYearPopover(this);
+		showOrHideYearPopover(this);
 	});
 	
 	// Show popover year
-	function showYearPopover(elem) {
+	function showOrHideYearPopover(elem) {
+		let overviewYearPickerClass = document.getElementById('overviewYearPicker').classList;
+		if(overviewYearPickerClass.contains('d-none')) {
+			// Add click outside event listener to close the modal
+			document.addEventListener('mouseup', closeYearPickerModal, false);
+		}
+		
 		// Show the popover
-		document.getElementById('overviewYearPicker').classList.toggle('d-none');
+		overviewYearPickerClass.toggle('d-none');
 		
 		// Convert SVG to upward arrow
 		elem.lastElementChild.classList.toggle('transformUpwardArrow');
@@ -1388,13 +1394,14 @@ $(document).ready(function(){
 	
 	// Click the up button for year picker
 	document.getElementById("monthPickerUp").addEventListener("click",function(){
-		let yearPickerParent = document.getElementsByClassName('yearPicker');
+		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
+		$(yearPickerParent).removeClass('font-weight-bold twoBThreeOneColor');
 		let minusFourDateCache = previousDateYearPicker-5;
-		yearPickerParent[0].children[0].innerText = minusFourDateCache;
-		yearPickerParent[0].children[1].innerText = previousDateYearPicker-4;
-		yearPickerParent[0].children[2].innerText = previousDateYearPicker-3;
-		yearPickerParent[0].children[3].innerText = previousDateYearPicker-2;
-		yearPickerParent[0].children[4].innerText = previousDateYearPicker-1;
+		yearPickerParent[0].innerText = minusFourDateCache;
+		yearPickerParent[1].innerText = previousDateYearPicker-4;
+		yearPickerParent[2].innerText = previousDateYearPicker-3;
+		yearPickerParent[3].innerText = previousDateYearPicker-2;
+		yearPickerParent[4].innerText = previousDateYearPicker-1;
 		
 		// Load the cache with next dates
 		nextDateYearPicker = previousDateYearPicker;
@@ -1406,13 +1413,14 @@ $(document).ready(function(){
 	
 	// Click the down button for year picker
 	document.getElementById("monthPickerDown").addEventListener("click",function(){
-		let yearPickerParent = document.getElementsByClassName('yearPicker');
+		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
+		$(yearPickerParent).removeClass('font-weight-bold twoBThreeOneColor');
 		let plusFourDateCache = nextDateYearPicker+4;
-		yearPickerParent[0].children[0].innerText = nextDateYearPicker;
-		yearPickerParent[0].children[1].innerText = nextDateYearPicker+1;
-		yearPickerParent[0].children[2].innerText = nextDateYearPicker+2;
-		yearPickerParent[0].children[3].innerText = nextDateYearPicker+3;
-		yearPickerParent[0].children[4].innerText = plusFourDateCache;
+		yearPickerParent[0].innerText = nextDateYearPicker;
+		yearPickerParent[1].innerText = nextDateYearPicker+1;
+		yearPickerParent[2].innerText = nextDateYearPicker+2;
+		yearPickerParent[3].innerText = nextDateYearPicker+3;
+		yearPickerParent[4].innerText = plusFourDateCache;
 		
 		// Load the cache with previous dates
 		previousDateYearPicker = nextDateYearPicker;
@@ -1420,6 +1428,36 @@ $(document).ready(function(){
 		// Load the cache with next dates
 		nextDateYearPicker = plusFourDateCache+1;
 		
+	});
+	
+	// Properly closes the year picker modal and performs year picker actions.
+	function closeYearPickerModal(event) {
+		
+		let yearPickerParent = document.getElementsByClassName('yearPickerWrapper')[0];
+		let overviewTitle = document.getElementById("chartDisplayTitle");
+		
+		if(overviewTitle.contains(event.target)) {
+			// Remove event listener once the function performed its task
+			document.removeEventListener('mouseup', closeYearPickerModal, false);
+			
+		} else if(!yearPickerParent.contains(event.target)) {
+			showOrHideYearPopover(document.getElementById("chartDisplayTitle"));
+			// Remove event listener once the function performed its task
+			document.removeEventListener('mouseup', closeYearPickerModal, false);
+		} 
+	}
+	
+	// On click year in year picker
+	$('.yearPicker').on('click', '.yearPickerDisplay', function() {
+		let chosenYear = this.innerText;
+		// Append to cache
+		selectedYearPickerCache = chosenYear;
+		// Display the month
+		document.getElementById('overviewChartMonth').innerText = chosenYear;
+		// Show or hide year picker
+		showOrHideYearPopover(document.getElementById("chartDisplayTitle"));
+		// Remove event listener once the function performed its task
+		document.removeEventListener('mouseup', closeYearPickerModal, false);
 	});
 	
 });
