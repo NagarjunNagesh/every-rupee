@@ -23,6 +23,10 @@ $(document).ready(function(){
 	let nextDateYearPicker = currentYearSelect+2;
 	// Selected Year Picker
 	let selectedYearPickerCache = currentYearSelect;
+	// populate category breakdown for income or expense
+	let fetchIncomeLineChartCache = true;
+	// selected year in year picker
+	let selectedYearIYPCache = 0;
 	
 	// SECURITY: Defining Immutable properties as constants
 	Object.defineProperties(OVERVIEW_CONSTANTS, {
@@ -71,7 +75,10 @@ $(document).ready(function(){
 	             	}
 	        	}
 	        	
-	        	recentTransactionsDiv.innerHTML = '';
+	        	// Empty HTML
+	        	while (recentTransactionsDiv.firstChild) {
+	        		recentTransactionsDiv.removeChild(recentTransactionsDiv.firstChild);
+	    		}
 	        	recentTransactionsDiv.appendChild(recentTransactionsFragment);
              	   
 	        },
@@ -314,7 +321,9 @@ $(document).ready(function(){
              	}
             	
             	// Empty the div optimizations
-            	populateOptimizationBudgetDiv.innerHTML = '';
+            	while (populateOptimizationBudgetDiv.firstChild) {
+            		populateOptimizationBudgetDiv.removeChild(populateOptimizationBudgetDiv.firstChild);
+        		}
             	if(populateOptimizationFragment.childElementCount === 0) {
             		populateOptimizationFragment.appendChild(buildSvgFullyOptimized());
             		
@@ -840,25 +849,59 @@ $(document).ready(function(){
     		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
     		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
-    		chartAppendingDiv.innerHTML = '';
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
     		return;
     	}
     	
     	let resultKeySet = Object.keys(dateAndAmountAsList);
-    	// One year of data at a time;
-    	let countValue = resultKeySet.length > 12 ? (resultKeySet.length - 12) : 0;
+    	// If year selected in IYP then 
+    	let countValue = 0;
+    	if(!selectedYearIYPCache) {
+    		// One year of data at a time;
+        	countValue = resultKeySet.length > 12 ? (resultKeySet.length - 12) : 0;
+    	}
+    	
     	for(let countGrouped = countValue, length = resultKeySet.length; countGrouped < length; countGrouped++) {
     		let dateKey = resultKeySet[countGrouped];
          	let userAmountAsListValue = dateAndAmountAsList[dateKey];
 
          	// Convert the date key as date
          	let dateAsDate = new Date(dateKey);
+         	
+         	// If selected year is present
+         	if(selectedYearIYPCache) {
+         		if(selectedYearIYPCache == dateAsDate.getFullYear()) {
+         			labelsArray.push(months[dateAsDate.getMonth()].slice(0,3) + " '" + dateAsDate.getFullYear().toString().slice(-2));
+                 	
+                 	// Build the series array with total amount for date
+                 	seriesArray.push(userAmountAsListValue);
+         		}
+         		// If year is valid then skip the next lines in for loop
+         		continue;
+         	}
+         	
          	labelsArray.push(months[dateAsDate.getMonth()].slice(0,3) + " '" + dateAsDate.getFullYear().toString().slice(-2));
          	
          	// Build the series array with total amount for date
          	seriesArray.push(userAmountAsListValue);
          	
+    	}
+    	
+    	// Replace with empty chart message (selectedYearIYPCache == 'EXISTS')
+    	if(isEmpty(seriesArray)) {
+    		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
+    		return;
     	}
     	
     	// Build the data for the line chart
@@ -879,7 +922,10 @@ $(document).ready(function(){
 		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
 		let materialSpinnerDocumentFragment = document.createDocumentFragment();
 		materialSpinnerDocumentFragment.appendChild(buildMaterialSpinner());
-		chartAppendingDiv.innerHTML = '';
+		// Replace inner HTML with EMPTY
+		while (chartAppendingDiv.firstChild) {
+			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+		}
 		chartAppendingDiv.appendChild(materialSpinnerDocumentFragment);
 		
 		// Start requesting the chart  
@@ -893,8 +939,16 @@ $(document).ready(function(){
         		// Replace the Drop down with one year view
     			replaceChartChosenLabel('Income Breakdown');
         	} else {
+        		// Fetch line chart Income or expense cache
+        		fetchIncomeLineChartCache = true;
         		// Replace the Drop down with one year view
     			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+    			// Replace the selected year picker cache to 0
+    			selectedYearIYPCache = 0;
+    			// Replace with current year display
+    			overviewChartMonthDisplay();
+    			// Generate Year Picker and replace it with current Year
+    			dynamicYearGeneration();
     			populateLineChart(liftimeIncomeTransactionsCache, true);
         	}
         	document.getElementById('chartDisplayTitle').firstChild.nodeValue = 'Income Overview';
@@ -909,6 +963,14 @@ $(document).ready(function(){
         		// Replace the Drop down with one year view
     			replaceChartChosenLabel('Expense Breakdown');
         	} else {
+        		// Fetch line chart Income or expense cache
+        		fetchIncomeLineChartCache = false;
+        		// Replace the selected year picker cache to 0
+    			selectedYearIYPCache = 0;
+    			// Replace with current year display
+    			overviewChartMonthDisplay();
+    			// Generate Year Picker and replace it with current Year
+    			dynamicYearGeneration();
         		populateLineChart(liftimeExpenseTransactionsCache, false);
     			// Replace the Drop down with one year view
     			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
@@ -920,21 +982,30 @@ $(document).ready(function(){
 			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
     		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
-    		chartAppendingDiv.innerHTML = '';
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 			
 		} else if(firstChildClassList.contains('debtImage')) {
 			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
     		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
-    		chartAppendingDiv.innerHTML = '';
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 			
 		} else if(firstChildClassList.contains('networthImage')) {
 			let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
     		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
-    		chartAppendingDiv.innerHTML = '';
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
 		}
 		
@@ -977,7 +1048,11 @@ $(document).ready(function(){
 	         };
 	     
 		 // Empty the chart div
-		 document.getElementById('colouredRoundedLineChart').innerHTML = '';
+		 let coloredChartDiv = document.getElementById('colouredRoundedLineChart');
+		// Replace inner HTML with EMPTY
+ 		while (coloredChartDiv.firstChild) {
+ 			coloredChartDiv.removeChild(coloredChartDiv.firstChild);
+ 		}
 		 // Dispose the previous tooltips created
 		 $("#colouredRoundedLineChart").tooltip('dispose');
 		 
@@ -1057,7 +1132,10 @@ $(document).ready(function(){
 		anchorFragment.appendChild(anchorDropdownItem1);
 		
 		let chooseCategoryDD = document.getElementById('chooseCategoryDD');
-	    chooseCategoryDD.innerHTML = '';
+	    // Replace inner HTML with EMPTY
+ 		while (chooseCategoryDD.firstChild) {
+ 			chooseCategoryDD.removeChild(chooseCategoryDD.firstChild);
+ 		}
 	    chooseCategoryDD.appendChild(anchorFragment);
 	}
 	
@@ -1065,11 +1143,18 @@ $(document).ready(function(){
 	$( "#chooseCategoryDD" ).on( "click", ".chartOverviewIncome" ,function() {
 		replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
 		
+		// Replace the selected year picker cache to 0
+		selectedYearIYPCache = 0;
+		// Replace with current year display
+		overviewChartMonthDisplay();
+		// Generate Year Picker and replace it with current Year
+		dynamicYearGeneration();
 		// populate the income line chart from cache
 		populateLineChart(liftimeIncomeTransactionsCache, true);
 		// Dough nut breakdown open cache
-		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = false;
+		// Fetch income or expense line chart
+		fetchIncomeLineChartCache = true;
 	});
 	
 	// Chart Income Breakdown Chart
@@ -1088,11 +1173,18 @@ $(document).ready(function(){
 	$( "#chooseCategoryDD" ).on( "click", ".chartOverviewExpense" ,function() {
 		replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
 		
+		// Replace the selected year picker cache to 0
+		selectedYearIYPCache = 0;
+		// Replace with current year display
+		overviewChartMonthDisplay();
+		// Generate Year Picker and replace it with current Year
+		dynamicYearGeneration();
 		// Populate the expense line chart from cache
 		populateLineChart(liftimeExpenseTransactionsCache, false);
 		// Dough nut breakdown open cache
-		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = false;
+		// Fetch income or expense line chart
+		fetchIncomeLineChartCache = false;
 	});
 	
 	// Chart Expense  Breakdown Chart
@@ -1104,7 +1196,6 @@ $(document).ready(function(){
 		// Populate cache for income or expense breakdown
 		fetchIncomeBreakDownCache = false;
 		// Dough nut breakdown open cache
-		console.log(doughnutBreakdownOpen);
 		doughnutBreakdownOpen = true;
 		
 	});
@@ -1170,7 +1261,10 @@ $(document).ready(function(){
     		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
     		let emptyMessageDocumentFragment = document.createDocumentFragment();
     		emptyMessageDocumentFragment.appendChild(buildEmptyChartMessage());
-    		chartAppendingDiv.innerHTML = '';
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
     		return;
     	}
@@ -1348,7 +1442,11 @@ $(document).ready(function(){
 	
 	function dynamicYearGeneration() {
 		let yearPickerParent = document.getElementsByClassName('yearPicker');
-		
+		// Replace inner HTML with EMPTY
+		while (yearPickerParent[0].firstChild) {
+			yearPickerParent[0].removeChild(yearPickerParent[0].firstChild);
+		}
+		// Append Child Years
 		appendChildYears(yearPickerParent[0], new Date().getFullYear());
 	}
 	
@@ -1394,8 +1492,7 @@ $(document).ready(function(){
 	
 	// Click the up button for year picker
 	document.getElementById("monthPickerUp").addEventListener("click",function(){
-		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
-		$(yearPickerParent).removeClass('font-weight-bold twoBThreeOneColor');
+		removeSelectedIYP();
 		let minusFourDateCache = previousDateYearPicker-5;
 		yearPickerParent[0].innerText = minusFourDateCache;
 		yearPickerParent[1].innerText = previousDateYearPicker-4;
@@ -1413,8 +1510,7 @@ $(document).ready(function(){
 	
 	// Click the down button for year picker
 	document.getElementById("monthPickerDown").addEventListener("click",function(){
-		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
-		$(yearPickerParent).removeClass('font-weight-bold twoBThreeOneColor');
+		removeSelectedIYP();
 		let plusFourDateCache = nextDateYearPicker+4;
 		yearPickerParent[0].innerText = nextDateYearPicker;
 		yearPickerParent[1].innerText = nextDateYearPicker+1;
@@ -1429,6 +1525,12 @@ $(document).ready(function(){
 		nextDateYearPicker = plusFourDateCache+1;
 		
 	});
+	
+	// remove selected in year picker
+	function removeSelectedIYP() {
+		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
+		$(yearPickerParent).removeClass('font-weight-bold twoBThreeOneColor');
+	}
 	
 	// Properly closes the year picker modal and performs year picker actions.
 	function closeYearPickerModal(event) {
@@ -1449,15 +1551,29 @@ $(document).ready(function(){
 	
 	// On click year in year picker
 	$('.yearPicker').on('click', '.yearPickerDisplay', function() {
-		let chosenYear = this.innerText;
+		// Remove the selected in year picker
+		removeSelectedIYP();
+		// Fetch the year and store in Cache
+		selectedYearIYPCache = Number(this.innerText);
 		// Append to cache
-		selectedYearPickerCache = chosenYear;
+		selectedYearPickerCache = selectedYearIYPCache;
 		// Display the month
-		document.getElementById('overviewChartMonth').innerText = chosenYear;
+		document.getElementById('overviewChartMonth').innerText = selectedYearIYPCache;
 		// Show or hide year picker
 		showOrHideYearPopover(document.getElementById("chartDisplayTitle"));
 		// Remove event listener once the function performed its task
 		document.removeEventListener('mouseup', closeYearPickerModal, false);
+		// High light the selected
+		this.classList.add("font-weight-bold", "twoBThreeOneColor");
+		// Upon refresh call the income overview chart
+		if(!doughnutBreakdownOpen) {
+			if(fetchIncomeLineChartCache) {
+				populateLineChart(liftimeIncomeTransactionsCache, true);
+			} else {
+				populateLineChart(liftimeExpenseTransactionsCache, false);
+			}
+		}
+		
 	});
 	
 });

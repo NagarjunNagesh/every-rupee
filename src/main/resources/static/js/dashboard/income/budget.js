@@ -48,7 +48,10 @@ $(document).ready(function(){
             	
             	// paints them to the budget dashboard
             	let budgetAmount = document.getElementById('budgetAmount');
-            	budgetAmount.innerHTML = '';
+            	// Replace HTML with Empty
+        		while (budgetAmount.firstChild) {
+        			budgetAmount.removeChild(budgetAmount.firstChild);
+        		}
             	budgetAmount.appendChild(budgetDivFragment);
           	  	
           		fetchTransactions();
@@ -295,7 +298,9 @@ $(document).ready(function(){
 			// Replace the HTML of the empty modal
 			let budgetAmountDiv = document.getElementById('budgetAmount');
 			// Replace the HTML to empty and then append child
-			budgetAmountDiv.innerHTML = '';
+    		while (budgetAmountDiv.firstChild) {
+    			budgetAmountDiv.removeChild(budgetAmountDiv.firstChild);
+    		}
 			budgetAmountDiv.appendChild(emptyBudgetDocumentFragment);
 		}
 		
@@ -717,7 +722,9 @@ $(document).ready(function(){
             	}
             	
             	// paints them to the budget dashboard
-            	budgetAmount.innerHTML = '';
+        		while (budgetAmount.firstChild) {
+        			budgetAmount.removeChild(budgetAmount.firstChild);
+        		}
             	budgetAmount.appendChild(budgetDivFragment);
 
 	        	
@@ -818,7 +825,11 @@ $(document).ready(function(){
           	  	userBudgetCache[userBudget.categoryId] = userBudget;
           	  	
           	  	let categoryNameDiv = budgetDivFragment.getElementById('categoryName-' + userBudget.categoryId);
-          	  	categoryNameDiv.innerHTML = '';
+    			// Replace HTML with Empty
+        		while (categoryNameDiv.firstChild) {
+        			categoryNameDiv.removeChild(categoryNameDiv.firstChild);
+        		}
+
           	  	
           	  	// Container for inlining the select form
           	  	let containerForSelect = document.createElement('div');
@@ -865,7 +876,9 @@ $(document).ready(function(){
 	      		// paints them to the budget dashboard if the empty budget div is not null
 	      		if(document.getElementById('emptyBudgetCard') !== null) {
 	      			// Empty the div
-	      			budgetAmountDiv.innerHTML = '';
+	      			while (budgetAmount.firstChild) {
+	        			budgetAmount.removeChild(budgetAmount.firstChild);
+	        		}
 	      			budgetAmountDiv.appendChild(budgetDivFragment);
 	      		} else if(budgetAmountDiv.childNodes[0] != null) {
 	      			budgetAmountDiv.insertBefore(budgetDivFragment,budgetAmountDiv.childNodes[0]);
@@ -1559,7 +1572,10 @@ $(document).ready(function(){
 		emptyDocumentFragment.appendChild(cardDiv);
 		
 		let budgetAmountBody = document.getElementById('budgetAmount');
-		budgetAmountBody.innerHTML = '';
+		// Replace HTML with Empty
+		while (budgetAmountBody.firstChild) {
+			budgetAmountBody.removeChild(budgetAmountBody.firstChild);
+		}
 		budgetAmountBody.appendChild(emptyDocumentFragment);
 		
 		// Budget Visualization
