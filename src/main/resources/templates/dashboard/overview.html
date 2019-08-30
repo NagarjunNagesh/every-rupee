@@ -81,9 +81,9 @@
 	                    <div class="card-icon">
 	                      <i class="material-icons">timeline</i>
 	                    </div>
-	                    <h4 id="chartDisplayTitle" class="card-title d-lg-inline-block">Income Overview
-	                      <small>  </small><small id="overviewChartMonth" class="noselect">Every Month</small>
-	                      <svg id="dateMonthArrow" class="dateMonthArrow noselect" viewBox="0 0 40 40"><path d="M22.1374,28.03471a3.1012,3.1012,0,0,1-4.29536-.00148L5.14816,15.64438a2.79272,2.79272,0,0,1-.40086-3.88443,2.79274,2.79274,0,0,1,3.893.30632L17.844,21.04885c1.94327,2.06586,2.882,1.41479,4.29533.00147l9.22081-8.987a2.79286,2.79286,0,0,1,3.8935-.30338,2.79284,2.79284,0,0,1-.40329,3.88441Z"></path></svg>
+	                    <h4 id="chartDisplayTitle" class="card-title d-lg-inline-block noselect">Income Overview
+	                      <small> - </small><small id="overviewChartMonth" class="">Every Month</small>
+	                      <svg id="dateMonthArrow" class="dateMonthArrow" height="15" width="15" viewBox="0 0 40 40"><path d="M22.1374,28.03471a3.1012,3.1012,0,0,1-4.29536-.00148L5.14816,15.64438a2.79272,2.79272,0,0,1-.40086-3.88443,2.79274,2.79274,0,0,1,3.893.30632L17.844,21.04885c1.94327,2.06586,2.882,1.41479,4.29533.00147l9.22081-8.987a2.79286,2.79286,0,0,1,3.8935-.30338,2.79284,2.79284,0,0,1-.40329,3.88441Z"></path></svg>
 	                    </h4>
 	                    <!-- Drop Down Button -->
 			        	<div class="btn-group btnGroup-1 float-right">
@@ -98,13 +98,13 @@
 						
 						<div id="overviewYearPicker" class="popover overviewNavigationYear d-none">
 							<div class="yearPickerWrapper">
-								<div id="monthPickerUp" class="monthPickerUp">
+								<div id="monthPickerUp" class="monthPickerUp noselect">
 	            					<i class="material-icons">keyboard_arrow_up</i>
 	            				</div>
 								<div class="yearPicker">
-	           						<div class="currentPickerYear">2019</div>
+									<!-- Dynamic Year Generation -->
 			            		</div>
-			            		<div id="monthPickerDown" class="monthPickerDown">
+			            		<div id="monthPickerDown" class="monthPickerDown noselect">
 	            					<i class="material-icons">keyboard_arrow_down</i>
 	            				</div>
 							</div>

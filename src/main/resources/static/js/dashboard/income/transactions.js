@@ -194,12 +194,20 @@ $(document).ready(function(){
     		   // Update table with empty message if the transactions are empty
     		   if(result.length == 0) {
     			   checkAllBox.setAttribute('disabled', 'disabled');
-    			   documentTbody.innerHTML = '';
+       				// Replace HTML with Empty
+           			while (documentTbody.firstChild) {
+           				documentTbody.removeChild(documentTbody.firstChild);
+           			}
+
     			   document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
     		   } else {
     			   $('#checkAll').prop('checked', false);
        			   checkAllBox.removeAttribute('disabled');
-    			   documentTbody.innerHTML = '';
+      			   // Replace HTML with Empty
+          		   while (documentTbody.firstChild) {
+          			 documentTbody.removeChild(documentTbody.firstChild);
+          		   }
+
     			   documentTbody.appendChild(transactionsTableDiv);
     		   }
     		   
@@ -308,7 +316,6 @@ $(document).ready(function(){
 		let indexTableCell = document.createElement('div');
 		indexTableCell.className = 'text-center d-lg-table-cell draggable-handle-wrapper';
 		indexTableCell.tabIndex = -1;
-		indexTableCell.innerHTML = '';
 		indexTableCell.draggable = true;
 		
 		// obtains the drag handle and clones them into index cell
@@ -612,7 +619,10 @@ $(document).ready(function(){
 			                        		$('#checkAll').prop('checked',false);
 			                        		checkAllBox.setAttribute('disabled','disabled');
 			                        		let documentTbody = document.getElementById(replaceTransactionsId);
-			                        		documentTbody.innerHTML = '';
+			                        		// Replace HTML with Empty
+			                       		   	while (documentTbody.firstChild) {
+			                       		   		documentTbody.removeChild(documentTbody.firstChild);
+			                       		   	}
 			                 			   	document.getElementById(replaceTransactionsId).appendChild(fetchEmptyTableMessage());
 			                 			   	// update the Total Available Section with 0
 			                 	    		updateTotalAvailableSection(0 , 0);
@@ -804,7 +814,10 @@ $(document).ready(function(){
 			documentDescription.tabIndex = 0;
 			documentDescription.className = 'descriptionDivCentering';
 			documentDescription.innerHTML = enteredText;
-			element.innerHTML = '';
+			// Replace HTML with Empty
+			while (element.firstChild) {
+				element.removeChild(element.firstChild);
+			}
 			element.appendChild(documentDescription);
 			// Set the description to empty as the data need not be stored.
 			descriptionTextEdited = '';
@@ -954,7 +967,10 @@ $(document).ready(function(){
 		  budgetTableCell.classList.add('fadeInAnimation');
 		} else if(enteredText > 0 && budgetTableCell != null){
 		  budgetTableCell.classList.add('fadeOutAnimation');
-		  budgetTableCell.innerHTML = '';
+		  // Replace HTML with Empty
+ 		  while (budgetTableCell.firstChild) {
+ 			 budgetTableCell.removeChild(budgetTableCell.firstChild);
+ 		  }
 		}
 	}
 	
@@ -1038,7 +1054,10 @@ $(document).ready(function(){
 		replaceEnteredText.setAttribute('contenteditable', true);
 		replaceEnteredText.tabIndex = 0;
 		replaceEnteredText.innerHTML = trimElement(changeInnerTextAmount).replace(/ +/g, "");
-		element.innerHTML = '';
+		// Replace HTML with Empty
+		while (element.firstChild) {
+			element.removeChild(element.firstChild);
+		}
 		element.appendChild(replaceEnteredText);
 	}
 	
@@ -1841,7 +1860,10 @@ $(document).ready(function(){
 		
 		// Replace the product json with empty table
 		let productJsonDiv = document.getElementById(replaceTransactionsId);
-		productJsonDiv.innerHTML = '';
+		// Replace HTML with Empty
+		while (productJsonDiv.firstChild) {
+			productJsonDiv.removeChild(productJsonDiv.firstChild);
+		}
 		productJsonDiv.appendChild(materialSpinnerFrag);
 	}
 	
