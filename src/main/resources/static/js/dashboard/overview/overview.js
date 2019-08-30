@@ -21,8 +21,6 @@ $(document).ready(function(){
 	let previousDateYearPicker = currentYearSelect - 2;
 	// Cache the next year Picker data
 	let nextDateYearPicker = currentYearSelect+2;
-	// Selected Year Picker
-	let selectedYearPickerCache = currentYearSelect;
 	// populate category breakdown for income or expense
 	let fetchIncomeLineChartCache = true;
 	// selected year in year picker
@@ -1608,8 +1606,6 @@ $(document).ready(function(){
 		removeSelectedIYP();
 		// Fetch the year and store in Cache
 		selectedYearIYPCache = Number(this.innerText);
-		// Append to cache
-		selectedYearPickerCache = selectedYearIYPCache;
 		// Display the month
 		document.getElementById('overviewChartMonth').innerText = selectedYearIYPCache;
 		// Show or hide year picker
