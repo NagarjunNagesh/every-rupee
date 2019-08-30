@@ -902,6 +902,16 @@ $(document).ready(function(){
     		}
     		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
     		return;
+    	} else if(seriesArray.length == 1){
+    		let chartAppendingDiv = document.getElementById('colouredRoundedLineChart');
+    		let emptyMessageDocumentFragment = document.createDocumentFragment();
+    		emptyMessageDocumentFragment.appendChild(buildInsufficientInfoMessage());
+    		// Replace inner HTML with EMPTY
+    		while (chartAppendingDiv.firstChild) {
+    			chartAppendingDiv.removeChild(chartAppendingDiv.firstChild);
+    		}
+    		chartAppendingDiv.appendChild(emptyMessageDocumentFragment);
+    		return;
     	}
     	
     	// Build the data for the line chart
@@ -938,6 +948,8 @@ $(document).ready(function(){
         		populateCategoryBreakdown(fetchIncomeBreakDownCache);
         		// Replace the Drop down with one year view
     			replaceChartChosenLabel('Income Breakdown');
+    			// Hide the Year Picker in Overview Chart Display
+    			hideYearPickerICD(true);
         	} else {
         		// Fetch line chart Income or expense cache
         		fetchIncomeLineChartCache = true;
@@ -950,6 +962,8 @@ $(document).ready(function(){
     			// Generate Year Picker and replace it with current Year
     			dynamicYearGeneration();
     			populateLineChart(liftimeIncomeTransactionsCache, true);
+    			// Hide the Year Picker in Overview Chart Display
+    			hideYearPickerICD(false);
         	}
         	document.getElementById('chartDisplayTitle').firstChild.nodeValue = 'Income Overview';
 			// Replace the drop down for chart options
@@ -962,6 +976,8 @@ $(document).ready(function(){
         		populateCategoryBreakdown(fetchIncomeBreakDownCache);
         		// Replace the Drop down with one year view
     			replaceChartChosenLabel('Expense Breakdown');
+    			// Hide the Year Picker in Overview Chart Display
+    			hideYearPickerICD(true);
         	} else {
         		// Fetch line chart Income or expense cache
         		fetchIncomeLineChartCache = false;
@@ -974,6 +990,8 @@ $(document).ready(function(){
         		populateLineChart(liftimeExpenseTransactionsCache, false);
     			// Replace the Drop down with one year view
     			replaceChartChosenLabel(OVERVIEW_CONSTANTS.yearlyOverview);
+    			// Hide the Year Picker in Overview Chart Display
+    			hideYearPickerICD(false);
         	}
         	document.getElementById('chartDisplayTitle').firstChild.nodeValue = 'Expense Overview';
 			// Replace the drop down for chart options
@@ -1107,6 +1125,29 @@ $(document).ready(function(){
 		
 	}
 	
+	// Build Insufficient Information Message
+	function buildInsufficientInfoMessage() {
+		let emptyChartMessage = document.createElement('div');
+		emptyChartMessage.classList = 'text-center align-middle';
+		
+		let divIconWrapper = document.createElement('div');
+		divIconWrapper.classList = 'icon-center';
+		
+		let iconChart = document.createElement('i');
+		iconChart.classList = 'material-icons noDataChartIcon';
+		iconChart.innerText = 'bubble_chart';
+		divIconWrapper.appendChild(iconChart);
+		emptyChartMessage.appendChild(divIconWrapper);
+		
+		let emptyMessage = document.createElement('div');
+		emptyMessage.classList = 'font-weight-bold tripleNineColor';
+		emptyMessage.innerText = "There's not enough data! We need transactions in atleast 2 categories..";
+		emptyChartMessage.appendChild(emptyMessage);
+		
+		return emptyChartMessage;
+		
+	}
+	
 	/**
 	 * Chart Overview Drop Down (Income / Expense)
 	 */
@@ -1155,6 +1196,8 @@ $(document).ready(function(){
 		doughnutBreakdownOpen = false;
 		// Fetch income or expense line chart
 		fetchIncomeLineChartCache = true;
+		// Show the Year Picker for line chart
+		hideYearPickerICD(false);
 	});
 	
 	// Chart Income Breakdown Chart
@@ -1167,6 +1210,8 @@ $(document).ready(function(){
 		fetchIncomeBreakDownCache = true;
 		// Dough nut breakdown open cache
 		doughnutBreakdownOpen = true;
+		// Hide the Year Picker for line chart
+		hideYearPickerICD(true);
 	});
 	
 	// Chart Expense One Year Overview
@@ -1185,6 +1230,8 @@ $(document).ready(function(){
 		doughnutBreakdownOpen = false;
 		// Fetch income or expense line chart
 		fetchIncomeLineChartCache = false;
+		// Show the Year Picker for line chart
+		hideYearPickerICD(false);
 	});
 	
 	// Chart Expense  Breakdown Chart
@@ -1197,7 +1244,8 @@ $(document).ready(function(){
 		fetchIncomeBreakDownCache = false;
 		// Dough nut breakdown open cache
 		doughnutBreakdownOpen = true;
-		
+		// Hide the Year Picker for line chart
+		hideYearPickerICD(true);
 	});
 	
 	// Populate Breakdown Category
@@ -1419,6 +1467,11 @@ $(document).ready(function(){
 	 * Year Picker
 	 */
 	document.getElementById("chartDisplayTitle").addEventListener("click",function(){
+		// If the doughnut chart is open then return
+		if(doughnutBreakdownOpen) {
+			return;
+		}
+		
 		showOrHideYearPopover(this);
 	});
 	
@@ -1575,5 +1628,29 @@ $(document).ready(function(){
 		}
 		
 	});
+	
+	// Toggle Year picker in chart display
+	function hideYearPickerICD(hideElement) {
+		let overviewChartMonthDiv = document.getElementById('overviewChartMonth');
+		let dateMonthArrowDiv = document.getElementById('dateMonthArrow');
+		
+		if(hideElement) {
+			if(!overviewChartMonthDiv.classList.contains('d-none')) {
+				overviewChartMonthDiv.classList.add('d-none');
+			}
+			
+			if(!dateMonthArrowDiv.classList.contains('d-none')) {
+				dateMonthArrowDiv.classList.add('d-none');
+			}
+		} else {
+			if(overviewChartMonthDiv.classList.contains('d-none')) {
+				overviewChartMonthDiv.classList.remove('d-none');
+			}
+			
+			if(dateMonthArrowDiv.classList.contains('d-none')) {
+				dateMonthArrowDiv.classList.remove('d-none');
+			}
+		}
+	}
 	
 });
