@@ -228,10 +228,6 @@ window.onload = function () {
 				url = '/dashboard/settings';
 				color = 'danger';
 			    break;
-			case 'profilePage':
-				url = '/dashboard/profile';
-				color = 'danger';
-			    break;
 			default:
 				swal({
 	                title: "Redirecting Not Possible",
@@ -855,6 +851,21 @@ function minimizeSidebar(){
     	$('.active-pro').removeClass('d-none').addClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){});
     }
 }
+
+// Sidebar hover event if hidden
+$(".sidebar").hover(function() {
+	let activeProClass = document.getElementsByClassName('active-pro')[0].classList;
+	if(1 == md.misc.sidebar_mini_active) {
+		activeProClass.toggle('d-none');
+		activeProClass.toggle('d-block');
+	}
+}, function() {
+	let activeProClass = document.getElementsByClassName('active-pro')[0].classList;
+	if(1 == md.misc.sidebar_mini_active) {
+		activeProClass.toggle('d-none');
+		activeProClass.toggle('d-block');
+	}
+});
 
 // Minimize the decimals to a set variable
 function round(value, decimals) {

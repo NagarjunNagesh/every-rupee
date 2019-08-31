@@ -1543,6 +1543,7 @@ $(document).ready(function(){
 	
 	// Click the up button for year picker
 	document.getElementById("monthPickerUp").addEventListener("click",function(){
+		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
 		removeSelectedIYP();
 		let minusFourDateCache = previousDateYearPicker-5;
 		yearPickerParent[0].innerText = minusFourDateCache;
@@ -1561,6 +1562,7 @@ $(document).ready(function(){
 	
 	// Click the down button for year picker
 	document.getElementById("monthPickerDown").addEventListener("click",function(){
+		let yearPickerParent = document.getElementsByClassName('yearPicker')[0].children;
 		removeSelectedIYP();
 		let plusFourDateCache = nextDateYearPicker+4;
 		yearPickerParent[0].innerText = nextDateYearPicker;
