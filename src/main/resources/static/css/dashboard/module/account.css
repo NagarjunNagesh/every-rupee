@@ -37,7 +37,7 @@
 }
 
 .vertical-center-svg {
-	webkit-transform: translateY(-5%);
+	-webkit-transform: translateY(-5%);
     -ms-transform: translateY(-5%);
     transform: translateY(-5%);
     left: 0;
