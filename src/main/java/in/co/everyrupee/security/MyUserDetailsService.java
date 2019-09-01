@@ -54,7 +54,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	    }
 
 	    return new MyUser(user.get().getEmail(), user.get().getPassword(), getAuthorities(user.get().getRoles()),
-		    user.get().getId(), user.get().getFinancialPortfolioId());
+		    user.get());
 	} catch (final Exception e) {
 	    throw new RuntimeException(e);
 	}

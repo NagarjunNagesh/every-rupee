@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import in.co.everyrupee.pojo.login.Profile;
+
 /**
  * User with Id to be used for user transactions API
  *
@@ -17,13 +19,15 @@ public class MyUser extends org.springframework.security.core.userdetails.User {
     private final int id;
     // Declare financial Portfoli Id
     private final int financialPortfolioId;
+    // Set Name
+    private final String name;
 
-    public MyUser(String email, String password, Collection<? extends GrantedAuthority> authorities, int id,
-	    int financialPortfolioId) {
+    public MyUser(String email, String password, Collection<? extends GrantedAuthority> authorities, Profile myUser) {
 	super(email, password, authorities);
 	// Initialize all the custom attributes here like the following.
-	this.id = id;
-	this.financialPortfolioId = financialPortfolioId;
+	this.id = myUser.getId();
+	this.financialPortfolioId = myUser.getFinancialPortfolioId();
+	this.name = myUser.getName();
     }
 
     /**
@@ -37,5 +41,9 @@ public class MyUser extends org.springframework.security.core.userdetails.User {
 
     public int getFinancialPortfolioId() {
 	return financialPortfolioId;
+    }
+
+    public String getName() {
+	return name;
     }
 }

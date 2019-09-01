@@ -1116,3 +1116,17 @@ progress {
 .ct-series path {
 	fill: transparent;
 }
+
+.sidebar-mini .sidebar:hover .active-pro {
+	display: block;
+}
+
+.svg-vertical-center {
+	-webkit-transform: translateY(-50%);
+  	-ms-transform: translateY(-50%);
+  	transform: translateY(-50%);
+  	left: 0;
+  	right: 0;
+  	margin: auto;
+  	text-align: center;
+}

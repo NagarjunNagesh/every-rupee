@@ -228,10 +228,6 @@ window.onload = function () {
 				url = '/dashboard/settings';
 				color = 'danger';
 			    break;
-			case 'profilePage':
-				url = '/dashboard/profile';
-				color = 'danger';
-			    break;
 			default:
 				swal({
 	                title: "Redirecting Not Possible",
@@ -553,6 +549,21 @@ window.onload = function () {
         	}
 		}
 		
+		// Set Current Month
+		setCurrentMonthAndYID();
+		function setCurrentMonthAndYID() {
+			let overviewHeading = document.getElementById('overviewMonthHeading');
+			let overviewYearHeading = document.getElementsByClassName('overviewYearHeading')[0];
+			
+			let currentDate = new Date();
+			overviewHeading.innerText = months[currentDate.getMonth()];
+			overviewYearHeading.innerText = currentDate.getFullYear();
+		}
+		
+		// Fetch Bank Account Information
+		let bankAccountsInfo = er_a.fetchBankAccountInfo();
+		er_a.populateBankInfo(bankAccountsInfo);
+		
 	});
 	
 }
@@ -855,6 +866,21 @@ function minimizeSidebar(){
     	$('.active-pro').removeClass('d-none').addClass('d-block').animate({ height: '20px' }, 'easeOutQuad', function(){});
     }
 }
+
+// Sidebar hover event if hidden
+$(".sidebar").hover(function() {
+	let activeProClass = document.getElementsByClassName('active-pro')[0].classList;
+	if(1 == md.misc.sidebar_mini_active) {
+		activeProClass.toggle('d-none');
+		activeProClass.toggle('d-block');
+	}
+}, function() {
+	let activeProClass = document.getElementsByClassName('active-pro')[0].classList;
+	if(1 == md.misc.sidebar_mini_active) {
+		activeProClass.toggle('d-none');
+		activeProClass.toggle('d-block');
+	}
+});
 
 // Minimize the decimals to a set variable
 function round(value, decimals) {
