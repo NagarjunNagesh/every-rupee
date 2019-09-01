@@ -1,0 +1,164 @@
+
+// SECURITY: Defining Immutable properties as constants
+const BANK_ACCOUNT_CONSTANTS = {};
+Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
+	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
+	'fetchBankAccountURL': { value: '/', writable: false, configurable: false },
+});
+
+// Account Information display
+document.addEventListener('DOMContentLoaded', function () {
+	// Toggle Account Information
+	document.getElementById("showAccounts").addEventListener("click",function(){
+		let accountPickerClass = document.getElementById('accountPickerWrapper').classList;
+		// If the modal is open
+		if(accountPickerClass.contains('d-none')) {
+			// Add click outside event listener to close the modal
+			document.addEventListener('mouseup', closeShowAccountsModal, false);
+		}
+		// Toggle Account Picker
+		accountPickerClass.toggle('d-none');
+	});
+	
+	// Properly closes the accounts modal and performs show accounts actions.
+	function closeShowAccountsModal(event) {
+		let accountPicker = document.getElementById('accountPickerWrapper');
+		let showAccountsDiv = document.getElementById('showAccounts');
+		if(showAccountsDiv.contains(event.target)) {
+			// Remove event listener once the function performed its task
+			document.removeEventListener('mouseup', closeShowAccountsModal, false);
+		} else if(!accountPicker.contains(event.target)) {
+			// Remove event listener once the function performed its task
+			document.removeEventListener('mouseup', closeShowAccountsModal, false);
+			accountPicker.classList.toggle('d-none');
+		}
+	}
+});
+
+// Custom Functions to fetch all accounts
+er_a = {
+		fetchBankAccountInfo() {
+			$.ajax({
+		          type: "GET",
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.fetchBankAccountURL,
+		          dataType: "json",
+		          success : function(data) {
+		        	return data;  
+		          }
+			});
+		},
+		populateBankInfo(bankAccountsInfo) {
+			// Populate the bank account info
+			if(isEmpty(bankAccountsInfo)) {
+				populateEmptyAccountInfo();
+			}
+		}
+}
+
+// Populate Empty Account Info
+function populateEmptyAccountInfo() {
+	let emptyAccountFragment = document.createDocumentFragment();
+	
+	let firstRow = document.createElement('div');
+	firstRow.classList = 'row';
+	
+	let svgWrapper = document.createElement('div');
+	svgWrapper.classList = 'col-lg-2 svg-vertical-center';
+	
+	let syncSVG = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	syncSVG.setAttribute('width','20');
+	syncSVG.setAttribute('height','20');
+	syncSVG.setAttribute('viewBox','0 0 128 128');
+	
+	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElement.setAttribute('d','M9.2 62.8c-.1 0-.2 0-.2 0-1.7-.1-2.9-1.6-2.8-3.2.5-6.3 2-12.4 4.4-18.1.6-1.5 2.4-2.2 3.9-1.6 1.5.6 2.2 2.4 1.6 3.9-2.2 5.2-3.5 10.6-3.9 16.2C12 61.6 10.7 62.8 9.2 62.8zM117.1 40.6c-.7-1.5-2.4-2.2-4-1.5-1.5.7-2.2 2.4-1.5 4 8.7 19.8 4.5 42.5-10.8 57.8C90.9 110.6 77.9 116 64 116c-11.2 0-21.9-3.5-30.8-10.1l0 0h4.9c1.7 0 3-1.3 3-3s-1.3-3-3-3h-13c-1.7 0-3 1.3-3 3v13c0 1.7 1.3 3 3 3s3-1.3 3-3v-6.3l0 0C38.6 117.8 51.3 122 64 122c14.9 0 29.7-5.7 41-17C122.1 88 126.8 62.7 117.1 40.6zM25.2 25.2c1.1 1.1 2.9 1.2 4.1.1C38.9 16.7 51.1 12 64 12c11.2 0 21.9 3.5 30.8 10.1l0 0-4.8 0c-1.6 0-3.1 1.2-3.2 2.8-.1 1.7 1.3 3.2 3 3.2h13c1.7 0 3-1.3 3-3V12.3c0-1.6-1.2-3.1-2.8-3.2-1.7-.1-3.2 1.3-3.2 3v6.3l0 0C78 1.1 46.3 1.9 25.3 20.8 24 22 24 24 25.2 25.2L25.2 25.2zM11.5 77.69999999999999A2.9 2.9 0 1 0 11.5 83.5 2.9 2.9 0 1 0 11.5 77.69999999999999z');
+	syncSVG.appendChild(pathElement);
+	svgWrapper.appendChild(syncSVG);
+	firstRow.appendChild(svgWrapper);
+	
+	let syncInfo = document.createElement('div');
+	syncInfo.classList = 'col-lg-10 small';
+	
+	let syncTitle = document.createElement('div');
+	syncTitle.innerText = 'Automatically Sync Accounts';
+	syncInfo.appendChild(syncTitle);
+	
+	let syncDescription = document.createElement('div');
+	syncDescription.innerText = 'Automatically import transactions from our more than 2500 banks.';
+	syncInfo.appendChild(syncDescription);
+	firstRow.appendChild(syncInfo);
+	emptyAccountFragment.appendChild(firstRow);
+	
+	
+	let secondRow = document.createElement('div');
+	secondRow.classList = 'row';
+	
+	let svgWrapperTwo = document.createElement('div');
+	svgWrapperTwo.classList = 'col-lg-2 svg-vertical-center';
+	
+	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	syncSVGTwo.setAttribute('width','20');
+	syncSVGTwo.setAttribute('height','20');
+	syncSVGTwo.setAttribute('viewBox','0 0 32 32');
+	
+	
+	let gElement = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+	
+	let pathElementTwo = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElementTwo.setAttribute('d','M 15.507813 2.09375 L 14.09375 3.507813 L 16.617188 6.03125 C 16.410156 6.019531 16.210938 6 16 6 C 13.609375 6 11.417969 6.867188 9.695313 8.28125 L 3.707031 2.292969 L 2.292969 3.707031 L 28.292969 29.707031 L 29.707031 28.292969 L 23.71875 22.304688 C 25.136719 20.582031 26 18.390625 26 16 C 26 14.5 25.699219 13.101563 25.097656 11.902344 L 23.597656 13.402344 C 23.898438 14.199219 24 15.101563 24 16 C 24 17.839844 23.359375 19.535156 22.300781 20.890625 L 11.109375 9.695313 C 12.464844 8.640625 14.160156 8 16 8 C 16.1875 8 16.371094 8.015625 16.558594 8.03125 L 14.09375 10.492188 L 15.507813 11.90625 L 20.414063 7 Z M 7.160156 11.347656 C 6.421875 12.738281 6 14.324219 6 16 C 6 17.5 6.300781 18.898438 6.898438 20.097656 L 8.398438 18.597656 C 8.199219 17.800781 8 16.898438 8 16 C 8 14.878906 8.234375 13.8125 8.65625 12.84375 Z M 16.199219 20.386719 L 11.585938 25 L 16.492188 29.90625 L 17.90625 28.492188 L 15.378906 25.96875 C 15.585938 25.980469 15.792969 26 16 26 C 17.675781 26 19.261719 25.578125 20.652344 24.839844 L 19.15625 23.34375 C 18.1875 23.765625 17.121094 24 16 24 C 15.8125 24 15.628906 23.988281 15.441406 23.972656 L 17.613281 21.800781 Z ');
+	gElement.appendChild(pathElementTwo);
+	syncSVGTwo.appendChild(gElement);
+	svgWrapperTwo.appendChild(syncSVGTwo);
+	secondRow.appendChild(svgWrapperTwo);
+	
+	let tenColTwo = document.createElement('div');
+	tenColTwo.classList = 'col-lg-10 small';
+	
+	let unsyncTitle = document.createElement('div');
+	unsyncTitle.innerText = 'Unsynced Accounts';
+	tenColTwo.appendChild(unsyncTitle);
+	
+	let unsyncDesc = document.createElement('div');
+	unsyncDesc.innerText = 'Start with your current balance and Take control by entering your own transactions.';
+	tenColTwo.appendChild(unsyncDesc);
+	secondRow.appendChild(tenColTwo);
+	emptyAccountFragment.appendChild(secondRow);
+	
+	let rowThree = document.createElement('div');
+	rowThree.classList = 'row';
+	
+	let svgElemWrapThree = document.createElement('div');
+	svgElemWrapThree.classList = 'col-lg-2 svg-vertical-center';
+	
+	let svgElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	svgElemThree.setAttribute('viewBox','0 0 16 16');
+	
+	let pathElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElemThree.setAttribute('d','M0 8C0 12.4183 3.58167 16 8 16C10.1217 16 12.1566 15.1571 13.6569 13.6569C15.1571 12.1566 16 10.1217 16 8C16 3.58167 12.4183 0 8 0C3.58167 0 0 3.58167 0 8ZM1.33337 8.00012C1.33337 4.31824 4.31812 1.3335 8 1.3335C11.6819 1.3335 14.6667 4.31824 14.6667 8.00012C14.6667 11.682 11.6819 14.6669 8 14.6669C4.31812 14.6669 1.33337 11.682 1.33337 8.00012ZM9.05125 5.22826C8.71087 5.39234 8.28912 5.39234 7.94876 5.22822C7.80589 5.15933 7.67966 5.0601 7.57907 4.93824C7.29818 4.59796 7.29818 4.06879 7.57907 3.72851C7.67949 3.60685 7.80546 3.50776 7.94802 3.43888C8.28875 3.27427 8.71124 3.27422 9.05199 3.43879C9.19461 3.50767 9.32062 3.6068 9.42107 3.7285C9.70194 4.06879 9.70194 4.59796 9.42105 4.93824C9.32043 5.06012 9.19417 5.15937 9.05125 5.22826ZM8.04517 11.0911L8.97339 7.58801C9.05212 7.28699 8.98633 6.96667 8.79565 6.72095C8.60486 6.47522 8.31079 6.33203 7.99976 6.3335H7.00342C6.81946 6.33362 6.67029 6.48279 6.67029 6.66687V6.77441C6.67029 6.91077 6.7533 7.03333 6.87976 7.08398C7.20642 7.21497 7.38416 7.56897 7.29382 7.90918L6.36548 11.4124C6.28687 11.7134 6.35266 12.0337 6.54346 12.2794C6.73425 12.5251 7.02832 12.6683 7.33936 12.6669H8.33569C8.51965 12.6667 8.6687 12.5175 8.6687 12.3335V12.2258C8.6687 12.0896 8.58582 11.967 8.45935 11.9164C8.13257 11.7854 7.95483 11.4313 8.04517 11.0911Z');
+	pathElemThree.setAttribute('transform','translate(0 -0.00012207)');
+	svgElemThree.appendChild(pathElemThree);
+	svgElemWrapThree.appendChild(svgElemThree);
+	rowThree.appendChild(svgElemWrapThree);
+	
+	let colTenThree = document.createElement('div');
+	colTenThree.classList = 'col-lg-10 small';
+	
+	let infoTitle = document.createElement('div');
+	infoTitle.innerText = 'Synced or Unsynced Accounts?';
+	colTenThree.appendChild(infoTitle);
+	
+	let infoDescription = document.createElement('div');
+	infoDescription.innerText = 'Know more to help you decide';
+	colTenThree.appendChild(infoDescription);
+	rowThree.appendChild(colTenThree);
+	emptyAccountFragment.appendChild(rowThree);
+	
+	// Append the fragment to the account picker
+	let accountPickerModal = document.getElementById('accountPickerWrapper');
+	// Replace the HTML to empty and then append child
+	while (accountPickerModal.firstChild) {
+		accountPickerModal.removeChild(accountPickerModal.firstChild);
+	}
+	accountPickerModal.appendChild(emptyAccountFragment);
+	
+}

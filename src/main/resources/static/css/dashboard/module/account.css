@@ -1,0 +1,37 @@
+@charset "UTF-8";
+#accountPickerWrapper {
+	top: 4rem;
+    left: 54.35rem;
+    padding: 1rem;
+}
+
+.accountInfoDisplay {
+	position: absolute;
+    top: 5.3rem;
+    right: -1.2rem;
+    left: 1.2rem;
+    min-width: 10rem;
+    height: 18rem;
+    min-height: 18rem;
+    text-align: center;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,.3);
+    border: 1px solid #d9dcdd;
+    border-radius: 5px;
+    background: #fff;
+    z-index: 10;
+}
+
+.accountInfoDisplay:after {
+	content: "";
+    transform: rotate(45deg) translateZ(0);
+    position: absolute;
+    z-index: -1;
+    left: 79%;
+    box-shadow: -1px -1px 0 #d9dcdd;
+    background: #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: -.75rem;
+    top: -.75rem;	
+}

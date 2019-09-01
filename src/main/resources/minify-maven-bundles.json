@@ -6,7 +6,8 @@
             "files": [
                 "/dashboard/custom-dashboard.css",
                 "/fragments/login-popup.css",
-                "/dashboard/build/material-dashboard.css"
+                "/dashboard/build/material-dashboard.css",
+                "/dashboard/module/account.css"
             ]
         },
         {
@@ -34,7 +35,7 @@
                 "/dashboard/sidebar/sidebar.js",
                 "/plugins/sweetalert2.js",
                 "/plugins/chartist.min.js",
-                "/dashboard/account.js"
+                "/dashboard/module/account.js"
             ]
         }
     ]

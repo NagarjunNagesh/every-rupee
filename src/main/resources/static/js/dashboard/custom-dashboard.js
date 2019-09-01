@@ -549,6 +549,21 @@ window.onload = function () {
         	}
 		}
 		
+		// Set Current Month
+		setCurrentMonthAndYID();
+		function setCurrentMonthAndYID() {
+			let overviewHeading = document.getElementById('overviewMonthHeading');
+			let overviewYearHeading = document.getElementsByClassName('overviewYearHeading')[0];
+			
+			let currentDate = new Date();
+			overviewHeading.innerText = months[currentDate.getMonth()];
+			overviewYearHeading.innerText = currentDate.getFullYear();
+		}
+		
+		// Fetch Bank Account Information
+		let bankAccountsInfo = er_a.fetchBankAccountInfo();
+		er_a.populateBankInfo(bankAccountsInfo);
+		
 	});
 	
 }
