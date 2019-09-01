@@ -63,7 +63,7 @@ function populateEmptyAccountInfo() {
 	firstRow.classList = 'row';
 	
 	let svgWrapper = document.createElement('div');
-	svgWrapper.classList = 'col-lg-2 svg-vertical-center';
+	svgWrapper.classList = 'col-lg-2 vertical-center-svg';
 	
 	let syncSVG = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVG.setAttribute('width','20');
@@ -94,7 +94,7 @@ function populateEmptyAccountInfo() {
 	secondRow.classList = 'row';
 	
 	let svgWrapperTwo = document.createElement('div');
-	svgWrapperTwo.classList = 'col-lg-2 svg-vertical-center';
+	svgWrapperTwo.classList = 'col-lg-2 vertical-center-svg';
 	
 	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVGTwo.setAttribute('width','20');
@@ -128,7 +128,7 @@ function populateEmptyAccountInfo() {
 	rowThree.classList = 'row';
 	
 	let svgElemWrapThree = document.createElement('div');
-	svgElemWrapThree.classList = 'col-lg-2 svg-vertical-center';
+	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg';
 	
 	let svgElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	svgElemThree.setAttribute('viewBox','0 0 16 16');

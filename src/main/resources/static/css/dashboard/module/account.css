@@ -35,3 +35,14 @@
     margin-left: -.75rem;
     top: -.75rem;	
 }
+
+.vertical-center-svg {
+	webkit-transform: translateY(-5%);
+    -ms-transform: translateY(-5%);
+    transform: translateY(-5%);
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+}
+}
