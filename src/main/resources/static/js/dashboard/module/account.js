@@ -126,10 +126,10 @@ function populateEmptyAccountInfo() {
 	emptyAccountFragment.appendChild(secondRow);
 	
 	let rowThree = document.createElement('div');
-	rowThree.classList = 'row';
+	rowThree.classList = 'row mt-2 pl-0';
 	
 	let svgElemWrapThree = document.createElement('div');
-	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg';
+	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg pr-2';
 	
 	let svgElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	svgElemThree.setAttribute('viewBox','0 0 16 16');
@@ -142,7 +142,7 @@ function populateEmptyAccountInfo() {
 	rowThree.appendChild(svgElemWrapThree);
 	
 	let colTenThree = document.createElement('div');
-	colTenThree.classList = 'col-lg-10 small';
+	colTenThree.classList = 'pl-0 col-lg-10 small';
 	
 	let infoTitle = document.createElement('div');
 	infoTitle.innerText = 'Synced or Unsynced Accounts?';
