@@ -60,10 +60,10 @@ function populateEmptyAccountInfo() {
 	let emptyAccountFragment = document.createDocumentFragment();
 	
 	let firstRow = document.createElement('div');
-	firstRow.classList = 'row';
+	firstRow.classList = 'px-3 py-3 account-box account-info-color';
 	
 	let svgWrapper = document.createElement('div');
-	svgWrapper.classList = 'col-lg-2 vertical-center-svg';
+	svgWrapper.classList = 'vertical-center-svg';
 	
 	let syncSVG = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVG.setAttribute('width','20');
@@ -77,24 +77,28 @@ function populateEmptyAccountInfo() {
 	firstRow.appendChild(svgWrapper);
 	
 	let syncInfo = document.createElement('div');
-	syncInfo.classList = 'col-lg-10 small';
+	syncInfo.classList = 'font-weight-bold';
 	
 	let syncTitle = document.createElement('div');
 	syncTitle.innerText = 'Automatically Sync Accounts';
 	syncInfo.appendChild(syncTitle);
 	
-	let syncDescription = document.createElement('div');
-	syncDescription.innerText = 'Automatically import transactions from our more than 2500 banks.';
-	syncInfo.appendChild(syncDescription);
 	firstRow.appendChild(syncInfo);
 	emptyAccountFragment.appendChild(firstRow);
 	
+	let separatorRow = document.createElement('div');
+	separatorRow.classList="separator-text"
+		
+	let separatorSpan = document.createElement('span');
+	separatorSpan.innerText = 'or';
+	separatorRow.appendChild(separatorSpan);
+	emptyAccountFragment.appendChild(separatorRow);
 	
 	let secondRow = document.createElement('div');
-	secondRow.classList = 'row';
+	secondRow.classList = 'px-3 py-3 account-box account-info-color';
 	
 	let svgWrapperTwo = document.createElement('div');
-	svgWrapperTwo.classList = 'col-lg-2 vertical-center-svg';
+	svgWrapperTwo.classList = 'vertical-center-svg';
 	
 	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVGTwo.setAttribute('width','20');
@@ -112,15 +116,12 @@ function populateEmptyAccountInfo() {
 	secondRow.appendChild(svgWrapperTwo);
 	
 	let tenColTwo = document.createElement('div');
-	tenColTwo.classList = 'col-lg-10 small';
+	tenColTwo.classList = 'font-weight-bold';
 	
 	let unsyncTitle = document.createElement('div');
 	unsyncTitle.innerText = 'Unsynced Accounts';
 	tenColTwo.appendChild(unsyncTitle);
 	
-	let unsyncDesc = document.createElement('div');
-	unsyncDesc.innerText = 'Start with your current balance and Take control by entering your own transactions.';
-	tenColTwo.appendChild(unsyncDesc);
 	secondRow.appendChild(tenColTwo);
 	emptyAccountFragment.appendChild(secondRow);
 	

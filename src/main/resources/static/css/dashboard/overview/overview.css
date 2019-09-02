@@ -483,6 +483,10 @@
 		width: 7.2rem;
 	}
 	
+	#accountPickerWrapper {
+	    left: 81.18%;
+	}
+	
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
