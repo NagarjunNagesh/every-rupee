@@ -60,7 +60,7 @@ function populateEmptyAccountInfo() {
 	let emptyAccountFragment = document.createDocumentFragment();
 	
 	let firstRow = document.createElement('div');
-	firstRow.classList = 'px-3 py-3 account-box account-info-color';
+	firstRow.classList = 'px-3 py-3 account-box account-info-color mt-2';
 	
 	let svgWrapper = document.createElement('div');
 	svgWrapper.classList = 'vertical-center-svg';
@@ -126,10 +126,10 @@ function populateEmptyAccountInfo() {
 	emptyAccountFragment.appendChild(secondRow);
 	
 	let rowThree = document.createElement('div');
-	rowThree.classList = 'row mt-2 pl-0';
+	rowThree.classList = 'row mx-3 mt-4';
 	
 	let svgElemWrapThree = document.createElement('div');
-	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg pr-2';
+	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg pr-2 pl-2 account-info-color';
 	
 	let svgElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	svgElemThree.setAttribute('viewBox','0 0 16 16');
@@ -145,11 +145,23 @@ function populateEmptyAccountInfo() {
 	colTenThree.classList = 'pl-0 col-lg-10 small';
 	
 	let infoTitle = document.createElement('div');
-	infoTitle.innerText = 'Synced or Unsynced Accounts?';
+	infoTitle.innerText = 'Synced or Unsynced?';
+	infoTitle.classList = 'text-left account-footer-title';
 	colTenThree.appendChild(infoTitle);
 	
 	let infoDescription = document.createElement('div');
-	infoDescription.innerText = 'Know more to help you decide';
+	infoDescription.classList = 'text-left';
+	
+	let knowMore = document.createElement('a');
+	knowMore.href="";
+	knowMore.classList = 'knowMoreAccount account-info-color';
+	knowMore.innerText = 'Know more'
+	infoDescription.appendChild(knowMore);
+	
+	let restOfTheText = document.createElement('span');
+	restOfTheText.innerText = ' to help you decide';
+	infoDescription.appendChild(restOfTheText);
+	
 	colTenThree.appendChild(infoDescription);
 	rowThree.appendChild(colTenThree);
 	emptyAccountFragment.appendChild(rowThree);

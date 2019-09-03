@@ -87,3 +87,12 @@
 	color: #fff;
 	fill: #fff;
 }
+
+.knowMoreAccount:hover {
+	color: #009cc2;
+    font-weight: 700;
+}
+
+.account-footer-title {
+	line-height: 0.9;
+}
