@@ -124,3 +124,12 @@
 .descriptionAccount {
 	color: #88979d;
 }
+
+.accountType {
+	cursor: pointer;
+}
+
+.accountType:hover {
+	background: #009cc2;
+	color: #fff;
+}

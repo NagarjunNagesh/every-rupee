@@ -224,15 +224,15 @@ function unSyncedAccount() {
 	chooseTypeWrapper.classList = "chooseTypeWrapper text-left";
 	
 	let chooseTypeLabel = document.createElement('label');
-	chooseTypeLabel.innerText = 'What is the type of you account?';
+	chooseTypeLabel.innerText = 'What is the type of your account?';
 	chooseTypeWrapper.appendChild(chooseTypeLabel);
-	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
+	
 	
 	let dropdownGroup = document.createElement('div');
-	dropdownGroup.classList = 'btn-group float-right';
+	dropdownGroup.classList = 'btn-group d-md-block d-lg-block';
 	
 	let displaySelected = document.createElement('button');
-	displaySelected.classList = 'btn btn-secondary';
+	displaySelected.classList = 'btn btn-secondary w-85';
 	displaySelected.setAttribute('disabled', 'disabled');
 	displaySelected.innerText = 'Cash';
 	dropdownGroup.appendChild(displaySelected);
@@ -252,8 +252,55 @@ function unSyncedAccount() {
 	let dropdownContentWrap = document.createElement('div');
 	dropdownContentWrap.classList = 'dropdown-menu';
 	
+	// Drop Down Menu
+	let budgetHeading = document.createElement('label');
+	budgetHeading.innerText = 'Budget';
+	dropdownContentWrap.appendChild(budgetHeading);
+	
+	// Savings
+	let savingsAnchor = document.createElement('a');
+	savingsAnchor.classList = 'accountType d-block p-1 small';
+	savingsAnchor.innerText = 'Savings Account';
+	dropdownContentWrap.appendChild(savingsAnchor);
+	
+	// Current
+	let currentAnchor = document.createElement('a');
+	currentAnchor.classList = 'accountType d-block p-1 small';
+	currentAnchor.innerText = 'Current Account';
+	dropdownContentWrap.appendChild(currentAnchor);
+	
+	// Cash
+	let cashAnchor = document.createElement('a');
+	cashAnchor.classList = 'accountType d-block p-1 small';
+	cashAnchor.innerText = 'Cash';
+	dropdownContentWrap.appendChild(cashAnchor);
+	
+	// Assets
+	let assetsAnchor = document.createElement('a');
+	assetsAnchor.classList = 'accountType d-block p-1 small';
+	assetsAnchor.innerText = 'Assets';
+	dropdownContentWrap.appendChild(assetsAnchor);
+	
+	// Drop Down Menu 2
+	let debtHeading = document.createElement('label');
+	debtHeading.innerText = 'Debt';
+	dropdownContentWrap.appendChild(debtHeading);
+	
+	// Credit card
+	let creditCardAnchor = document.createElement('a');
+	creditCardAnchor.classList = 'accountType d-block p-1 small';
+	creditCardAnchor.innerText = 'Credit Card';
+	dropdownContentWrap.appendChild(creditCardAnchor);
+	
+	// Liability
+	let liabilityAnchor = document.createElement('a');
+	liabilityAnchor.classList = 'accountType d-block p-1 small';
+	liabilityAnchor.innerText = 'Liability';
+	dropdownContentWrap.appendChild(liabilityAnchor);
+	
 	dropdownGroup.appendChild(dropdownContentWrap);
-	unsyncedDocumentFragment.appendChild(dropdownGroup);
+	chooseTypeWrapper.appendChild(dropdownGroup);
+	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
 	
 	// Name Of account
 	let accountNameWrapper = document.createElement('div');
