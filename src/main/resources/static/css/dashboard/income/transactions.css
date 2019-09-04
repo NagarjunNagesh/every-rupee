@@ -610,6 +610,13 @@ fildset > label {
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
+@media (min-width:1301px) {
+	#accountPickerWrapper {
+	    left: 81.18%;
+	}
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
 @media (max-width:60em) and (max-height:43.75em) {
 	.card {
 		font-size: .7rem;

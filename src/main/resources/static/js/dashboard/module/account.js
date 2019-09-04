@@ -60,10 +60,10 @@ function populateEmptyAccountInfo() {
 	let emptyAccountFragment = document.createDocumentFragment();
 	
 	let firstRow = document.createElement('div');
-	firstRow.classList = 'row';
+	firstRow.classList = 'px-3 py-3 account-box account-info-color mt-2';
 	
 	let svgWrapper = document.createElement('div');
-	svgWrapper.classList = 'col-lg-2 vertical-center-svg';
+	svgWrapper.classList = 'vertical-center-svg';
 	
 	let syncSVG = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVG.setAttribute('width','20');
@@ -77,24 +77,28 @@ function populateEmptyAccountInfo() {
 	firstRow.appendChild(svgWrapper);
 	
 	let syncInfo = document.createElement('div');
-	syncInfo.classList = 'col-lg-10 small';
+	syncInfo.classList = 'font-weight-bold';
 	
 	let syncTitle = document.createElement('div');
 	syncTitle.innerText = 'Automatically Sync Accounts';
 	syncInfo.appendChild(syncTitle);
 	
-	let syncDescription = document.createElement('div');
-	syncDescription.innerText = 'Automatically import transactions from our more than 2500 banks.';
-	syncInfo.appendChild(syncDescription);
 	firstRow.appendChild(syncInfo);
 	emptyAccountFragment.appendChild(firstRow);
 	
+	let separatorRow = document.createElement('div');
+	separatorRow.classList="separator-text"
+		
+	let separatorSpan = document.createElement('span');
+	separatorSpan.innerText = 'or';
+	separatorRow.appendChild(separatorSpan);
+	emptyAccountFragment.appendChild(separatorRow);
 	
 	let secondRow = document.createElement('div');
-	secondRow.classList = 'row';
+	secondRow.classList = 'px-3 py-3 account-box account-info-color';
 	
 	let svgWrapperTwo = document.createElement('div');
-	svgWrapperTwo.classList = 'col-lg-2 vertical-center-svg';
+	svgWrapperTwo.classList = 'vertical-center-svg';
 	
 	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVGTwo.setAttribute('width','20');
@@ -112,23 +116,20 @@ function populateEmptyAccountInfo() {
 	secondRow.appendChild(svgWrapperTwo);
 	
 	let tenColTwo = document.createElement('div');
-	tenColTwo.classList = 'col-lg-10 small';
+	tenColTwo.classList = 'font-weight-bold';
 	
 	let unsyncTitle = document.createElement('div');
 	unsyncTitle.innerText = 'Unsynced Accounts';
 	tenColTwo.appendChild(unsyncTitle);
 	
-	let unsyncDesc = document.createElement('div');
-	unsyncDesc.innerText = 'Start with your current balance and Take control by entering your own transactions.';
-	tenColTwo.appendChild(unsyncDesc);
 	secondRow.appendChild(tenColTwo);
 	emptyAccountFragment.appendChild(secondRow);
 	
 	let rowThree = document.createElement('div');
-	rowThree.classList = 'row';
+	rowThree.classList = 'row mx-3 mt-4';
 	
 	let svgElemWrapThree = document.createElement('div');
-	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg';
+	svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg pr-2 pl-2 account-info-color';
 	
 	let svgElemThree = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	svgElemThree.setAttribute('viewBox','0 0 16 16');
@@ -141,14 +142,26 @@ function populateEmptyAccountInfo() {
 	rowThree.appendChild(svgElemWrapThree);
 	
 	let colTenThree = document.createElement('div');
-	colTenThree.classList = 'col-lg-10 small';
+	colTenThree.classList = 'pl-0 col-lg-10 small';
 	
 	let infoTitle = document.createElement('div');
-	infoTitle.innerText = 'Synced or Unsynced Accounts?';
+	infoTitle.innerText = 'Synced or Unsynced?';
+	infoTitle.classList = 'text-left account-footer-title';
 	colTenThree.appendChild(infoTitle);
 	
 	let infoDescription = document.createElement('div');
-	infoDescription.innerText = 'Know more to help you decide';
+	infoDescription.classList = 'text-left';
+	
+	let knowMore = document.createElement('a');
+	knowMore.href="";
+	knowMore.classList = 'knowMoreAccount account-info-color';
+	knowMore.innerText = 'Know more'
+	infoDescription.appendChild(knowMore);
+	
+	let restOfTheText = document.createElement('span');
+	restOfTheText.innerText = ' to help you decide';
+	infoDescription.appendChild(restOfTheText);
+	
 	colTenThree.appendChild(infoDescription);
 	rowThree.appendChild(colTenThree);
 	emptyAccountFragment.appendChild(rowThree);

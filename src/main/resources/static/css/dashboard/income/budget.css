@@ -156,18 +156,6 @@
 	background-image: linear-gradient(to top,#ff3479 2px,rgba(156,39,176,0) 2px),linear-gradient(to top,#d2d2d2 1px,rgba(210,210,210,0) 1px);
 }
 
-/** Change the size of the text if the width and height of the screen are more **/
-@media (min-width:60em) and (min-height:43.75em) {
-	
-	.currentMonth {
-		left: 49%;
-	}
-	
-	.previousMonth {
-		left: 54%;
-	}
-}
-
 #budgetChart .ct-chart .ct-series-a .ct-slice-donut-solid {
 	fill: #ff3479;
 	stroke: #fd679a;
@@ -364,4 +352,20 @@
 
 .monthPickerMonthSelected:hover {
 	color: #fff;
+}
+
+/** Change the size of the text if the width and height of the screen are more **/
+@media (min-width:60em) and (min-height:43.75em) {
+	
+	.currentMonth {
+		left: 49%;
+	}
+	
+	.previousMonth {
+		left: 54%;
+	}
+	
+	#accountPickerWrapper {
+	    left: 81.18%;
+	}
 }
