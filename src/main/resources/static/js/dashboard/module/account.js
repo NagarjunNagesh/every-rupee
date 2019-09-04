@@ -59,6 +59,7 @@ er_a = {
 function populateEmptyAccountInfo() {
 	let emptyAccountFragment = document.createDocumentFragment();
 	
+	// First Row
 	let firstRow = document.createElement('div');
 	firstRow.classList = 'px-3 py-3 account-box account-info-color mt-2';
 	
@@ -94,8 +95,10 @@ function populateEmptyAccountInfo() {
 	separatorRow.appendChild(separatorSpan);
 	emptyAccountFragment.appendChild(separatorRow);
 	
+	// Second Row
 	let secondRow = document.createElement('div');
 	secondRow.classList = 'px-3 py-3 account-box account-info-color';
+	secondRow.setAttribute('onclick', "popup.showSwal('input-field')");
 	
 	let svgWrapperTwo = document.createElement('div');
 	svgWrapperTwo.classList = 'vertical-center-svg';
@@ -125,6 +128,7 @@ function populateEmptyAccountInfo() {
 	secondRow.appendChild(tenColTwo);
 	emptyAccountFragment.appendChild(secondRow);
 	
+	// Third Row
 	let rowThree = document.createElement('div');
 	rowThree.classList = 'row mx-3 mt-4';
 	
@@ -174,4 +178,120 @@ function populateEmptyAccountInfo() {
 	}
 	accountPickerModal.appendChild(emptyAccountFragment);
 	
+}
+
+//Swal Sweetalerts
+popup = {
+		showSwal: function(type) {
+			if (type == 'input-field') {
+			    swal({
+			        title: 'Add Unsynced Account',
+			        html: unSyncedAccount(),
+			        confirmButtonClass: 'btn btn-info',
+			        confirmButtonText: 'Create Account',
+			        showCloseButton: true,
+			        buttonsStyling: false
+			    }).then(function(result) {
+			        swal({
+			            type: 'success',
+			            html: 'You entered: <strong>' +
+			                $('#accountName').val() +
+			                '</strong>',
+			            confirmButtonClass: 'btn btn-success',
+			            buttonsStyling: false
+			
+			        })
+			    }).catch(swal.noop)
+			}
+		}
+}
+
+function unSyncedAccount() {
+	let unsyncedDocumentFragment = document.createDocumentFragment();
+	
+	let unsyncFormWrapper = document.createElement('div');
+	unsyncFormWrapper.classList = 'text-left mb-4 mt-2';
+	
+	// Description
+	let description = document.createElement('div');
+	description.classList = 'descriptionAccount';
+	description.innerText = "Let's get your account started! you can always sync it later on.";
+	unsyncFormWrapper.appendChild(description);
+	unsyncedDocumentFragment.appendChild(unsyncFormWrapper);
+	
+	// Choose Type
+	let chooseTypeWrapper = document.createElement('div');
+	chooseTypeWrapper.classList = "chooseTypeWrapper text-left";
+	
+	let chooseTypeLabel = document.createElement('label');
+	chooseTypeLabel.innerText = 'What is the type of you account?';
+	chooseTypeWrapper.appendChild(chooseTypeLabel);
+	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
+	
+	let dropdownGroup = document.createElement('div');
+	dropdownGroup.classList = 'btn-group float-right';
+	
+	let displaySelected = document.createElement('button');
+	displaySelected.classList = 'btn btn-secondary';
+	displaySelected.setAttribute('disabled', 'disabled');
+	displaySelected.innerText = 'Cash';
+	dropdownGroup.appendChild(displaySelected);
+	
+	let dropdownTrigger = document.createElement('button');
+	dropdownTrigger.classList = 'btn btn-info dropdown-toggle dropdown-toggle-split';
+	dropdownTrigger.setAttribute('data-toggle' , 'dropdown');
+	dropdownTrigger.setAttribute('aria-haspopup' , 'true');
+	dropdownTrigger.setAttribute('aria-expanded' , 'false');
+	
+	let toggleSpan = document.createElement('span');
+	toggleSpan.classList = 'sr-only';
+	toggleSpan.innerText = 'Toggle Dropdown';
+	dropdownTrigger.appendChild(toggleSpan);
+	dropdownGroup.appendChild(dropdownTrigger);
+	
+	let dropdownContentWrap = document.createElement('div');
+	dropdownContentWrap.classList = 'dropdown-menu';
+	
+	dropdownGroup.appendChild(dropdownContentWrap);
+	unsyncedDocumentFragment.appendChild(dropdownGroup);
+	
+	// Name Of account
+	let accountNameWrapper = document.createElement('div');
+	accountNameWrapper.setAttribute('data-gramm_editor',"false");
+	accountNameWrapper.classList = 'accountNameWrapper text-left';
+	
+	let accountNameLabel = document.createElement('label');
+	accountNameLabel.innerText = 'Give it a name';
+	accountNameWrapper.appendChild(accountNameLabel);
+	
+	let accountNameInput = document.createElement('input');
+	accountNameInput.id='accountName';
+	accountNameInput.setAttribute('type','text');
+	accountNameInput.setAttribute('autocapitalize','off');
+	accountNameInput.setAttribute('spellcheck','false');
+	accountNameInput.setAttribute('autocorrect','off');
+	accountNameInput.setAttribute('autocorrect','off');
+	accountNameWrapper.appendChild(accountNameInput);
+	unsyncedDocumentFragment.appendChild(accountNameWrapper);
+	
+	// Account Balance
+	let accountBalWrapper = document.createElement('div');
+	accountBalWrapper.classList = 'accountBalWrapper text-left';
+	
+	
+	let accountBalLabel = document.createElement('label');
+	accountBalLabel.innerText = 'What is your account balance?';
+	accountBalWrapper.appendChild(accountBalLabel);
+	
+	let accountBalInput = document.createElement('input');
+	accountBalInput.id='accountBal';
+	accountBalInput.setAttribute('type','text');
+	accountBalInput.setAttribute('autocapitalize','off');
+	accountBalInput.setAttribute('spellcheck','false');
+	accountBalInput.setAttribute('autocorrect','off');
+	accountBalInput.setAttribute('autocorrect','off');
+	accountBalWrapper.appendChild(accountBalInput);
+	unsyncedDocumentFragment.appendChild(accountBalWrapper);
+	
+    return unsyncedDocumentFragment;
 }

@@ -94,3 +94,33 @@
 .account-footer-title {
 	line-height: 0.9;
 }
+
+#accountName, #accountBal {
+	border: 2px solid #88979d;
+	font-size: 1em;
+	margin-bottom: .5em;
+	padding: .5em;
+	width: 100%;
+	border-radius: .3em;
+}
+
+.chooseTypeWrapper label, .accountBalWrapper label, .accountNameWrapper label {
+	display: block;
+	font-weight: 700;
+	padding: .3em 0 .1em;
+	width: 100%;
+	color: #383e41;
+}
+
+#accountName:focus, #accountBal:focus {
+	border: 2px solid #009cc2;
+}
+
+.overview-dashboard .swal2-popup .swal2-title {
+	color: #999;
+	font-size: 1.4rem;
+}
+
+.descriptionAccount {
+	color: #88979d;
+}
