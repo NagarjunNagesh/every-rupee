@@ -7,7 +7,11 @@ Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 });
 
 // Account Information display
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function(){
+	
+	const accountTypeConst = ['Savings Account','Current Account','Cash','Assets','Credit Card','Liability'];
+	Object.freeze(accountTypeConst);
+	Object.seal(accountTypeConst);
 	// Toggle Account Information
 	document.getElementById("showAccounts").addEventListener("click",function(){
 		let accountPickerClass = document.getElementById('accountPickerWrapper').classList;
@@ -33,6 +37,41 @@ document.addEventListener('DOMContentLoaded', function () {
 			accountPicker.classList.toggle('d-none');
 		}
 	}
+	
+	// Click any drop down menu
+	$(document).on('click', ".accountType", function() {
+		let selectedAT = this.innerText;
+		
+		if(!includesStr(accountTypeConst,selectedAT)) {
+			// TODO highlight account with error
+			return;
+		}
+		
+		document.getElementsByClassName('accountChosen')[0].innerText = selectedAT;
+	});
+	
+	// Click on Add unsynced account 
+	$(document).on('click', "#unsyncedAccountWrap", function() {
+		// Show Sweet Alert
+		swal({
+	        title: 'Add Unsynced Account',
+	        html: unSyncedAccount(),
+	        confirmButtonClass: 'btn btn-info',
+	        confirmButtonText: 'Create Account',
+	        showCloseButton: true,
+	        buttonsStyling: false
+	    }).then(function(result) {
+	        swal({
+	            type: 'success',
+	            html: 'You entered: <strong>' +
+	                $('#accountName').val() +
+	                '</strong>',
+	            confirmButtonClass: 'btn btn-success',
+	            buttonsStyling: false
+	
+	        })
+	    }).catch(swal.noop)
+	});
 });
 
 // Custom Functions to fetch all accounts
@@ -82,6 +121,7 @@ function populateEmptyAccountInfo() {
 	
 	let syncTitle = document.createElement('div');
 	syncTitle.innerText = 'Automatically Sync Accounts';
+	syncTitle.classList = 'noselect';
 	syncInfo.appendChild(syncTitle);
 	
 	firstRow.appendChild(syncInfo);
@@ -97,8 +137,8 @@ function populateEmptyAccountInfo() {
 	
 	// Second Row
 	let secondRow = document.createElement('div');
+	secondRow.id = 'unsyncedAccountWrap'
 	secondRow.classList = 'px-3 py-3 account-box account-info-color';
-	secondRow.setAttribute('onclick', "popup.showSwal('input-field')");
 	
 	let svgWrapperTwo = document.createElement('div');
 	svgWrapperTwo.classList = 'vertical-center-svg';
@@ -123,6 +163,7 @@ function populateEmptyAccountInfo() {
 	
 	let unsyncTitle = document.createElement('div');
 	unsyncTitle.innerText = 'Unsynced Accounts';
+	unsyncTitle.classList = 'noselect';
 	tenColTwo.appendChild(unsyncTitle);
 	
 	secondRow.appendChild(tenColTwo);
@@ -180,32 +221,6 @@ function populateEmptyAccountInfo() {
 	
 }
 
-//Swal Sweetalerts
-popup = {
-		showSwal: function(type) {
-			if (type == 'input-field') {
-			    swal({
-			        title: 'Add Unsynced Account',
-			        html: unSyncedAccount(),
-			        confirmButtonClass: 'btn btn-info',
-			        confirmButtonText: 'Create Account',
-			        showCloseButton: true,
-			        buttonsStyling: false
-			    }).then(function(result) {
-			        swal({
-			            type: 'success',
-			            html: 'You entered: <strong>' +
-			                $('#accountName').val() +
-			                '</strong>',
-			            confirmButtonClass: 'btn btn-success',
-			            buttonsStyling: false
-			
-			        })
-			    }).catch(swal.noop)
-			}
-		}
-}
-
 function unSyncedAccount() {
 	let unsyncedDocumentFragment = document.createDocumentFragment();
 	
@@ -232,7 +247,7 @@ function unSyncedAccount() {
 	dropdownGroup.classList = 'btn-group d-md-block d-lg-block';
 	
 	let displaySelected = document.createElement('button');
-	displaySelected.classList = 'btn btn-secondary w-85';
+	displaySelected.classList = 'btn btn-secondary w-85 accountChosen';
 	displaySelected.setAttribute('disabled', 'disabled');
 	displaySelected.innerText = 'Cash';
 	dropdownGroup.appendChild(displaySelected);
@@ -249,56 +264,60 @@ function unSyncedAccount() {
 	dropdownTrigger.appendChild(toggleSpan);
 	dropdownGroup.appendChild(dropdownTrigger);
 	
+	let dropdownMenu = document.createElement('div');
+	dropdownMenu.classList = 'dropdown-menu';
+	
 	let dropdownContentWrap = document.createElement('div');
-	dropdownContentWrap.classList = 'dropdown-menu';
+	dropdownContentWrap.classList = 'm-2';
 	
 	// Drop Down Menu
 	let budgetHeading = document.createElement('label');
-	budgetHeading.innerText = 'Budget';
+	budgetHeading.innerText = 'Saving';
 	dropdownContentWrap.appendChild(budgetHeading);
 	
 	// Savings
 	let savingsAnchor = document.createElement('a');
-	savingsAnchor.classList = 'accountType d-block p-1 small';
+	savingsAnchor.classList = 'accountType d-block px-3 py-1 small';
 	savingsAnchor.innerText = 'Savings Account';
 	dropdownContentWrap.appendChild(savingsAnchor);
 	
 	// Current
 	let currentAnchor = document.createElement('a');
-	currentAnchor.classList = 'accountType d-block p-1 small';
+	currentAnchor.classList = 'accountType d-block px-3 py-1 small';
 	currentAnchor.innerText = 'Current Account';
 	dropdownContentWrap.appendChild(currentAnchor);
 	
 	// Cash
 	let cashAnchor = document.createElement('a');
-	cashAnchor.classList = 'accountType d-block p-1 small';
+	cashAnchor.classList = 'accountType d-block px-3 py-1 small';
 	cashAnchor.innerText = 'Cash';
 	dropdownContentWrap.appendChild(cashAnchor);
 	
 	// Assets
 	let assetsAnchor = document.createElement('a');
-	assetsAnchor.classList = 'accountType d-block p-1 small';
+	assetsAnchor.classList = 'accountType d-block px-3 py-1 small';
 	assetsAnchor.innerText = 'Assets';
 	dropdownContentWrap.appendChild(assetsAnchor);
 	
 	// Drop Down Menu 2
 	let debtHeading = document.createElement('label');
-	debtHeading.innerText = 'Debt';
+	debtHeading.innerText = 'Borrowing';
+	debtHeading.classList = 'mt-2';
 	dropdownContentWrap.appendChild(debtHeading);
 	
 	// Credit card
 	let creditCardAnchor = document.createElement('a');
-	creditCardAnchor.classList = 'accountType d-block p-1 small';
+	creditCardAnchor.classList = 'accountType d-block px-3 py-1 small';
 	creditCardAnchor.innerText = 'Credit Card';
 	dropdownContentWrap.appendChild(creditCardAnchor);
 	
 	// Liability
 	let liabilityAnchor = document.createElement('a');
-	liabilityAnchor.classList = 'accountType d-block p-1 small';
+	liabilityAnchor.classList = 'accountType d-block px-3 py-1 small';
 	liabilityAnchor.innerText = 'Liability';
 	dropdownContentWrap.appendChild(liabilityAnchor);
-	
-	dropdownGroup.appendChild(dropdownContentWrap);
+	dropdownMenu.appendChild(dropdownContentWrap);
+	dropdownGroup.appendChild(dropdownMenu);
 	chooseTypeWrapper.appendChild(dropdownGroup);
 	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
 	
