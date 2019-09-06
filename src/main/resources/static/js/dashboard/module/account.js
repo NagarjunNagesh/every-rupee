@@ -81,7 +81,6 @@ $(document).ready(function(){
 		let accountBalErr = document.getElementById('accountBalErr').classList;
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
 		let accountTypeECL = document.getElementById('accountTypeErr').classList;
-		let selectedAT = document.getElementsByClassName('accountChosen')[0].innerText;
 		
 		// If regex test is not valid
 		if(!regexForFloat.test(accBlnce)) {
@@ -113,7 +112,7 @@ $(document).ready(function(){
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
 	        buttonsStyling: false
-	    }).then(function(result) {
+	    }).then(function() {
 	        swal({
 	            type: 'success',
 	            html: 'You entered: <strong>' +
