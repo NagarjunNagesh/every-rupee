@@ -1130,3 +1130,7 @@ progress {
   	margin: auto;
   	text-align: center;
 }
+
+.w-85 {
+	width: 85%;
+}

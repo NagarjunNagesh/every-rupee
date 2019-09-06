@@ -7,10 +7,15 @@ Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 });
 
 // Account Information display
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function(){
+	
+	const accountTypeConst = ['Savings Account','Current Account','Cash','Assets','Credit Card','Liability'];
+	Object.freeze(accountTypeConst);
+	Object.seal(accountTypeConst);
 	// Toggle Account Information
 	document.getElementById("showAccounts").addEventListener("click",function(){
 		let accountPickerClass = document.getElementById('accountPickerWrapper').classList;
+		
 		// If the modal is open
 		if(accountPickerClass.contains('d-none')) {
 			// Add click outside event listener to close the modal
@@ -18,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 		// Toggle Account Picker
 		accountPickerClass.toggle('d-none');
+		
 	});
 	
 	// Properly closes the accounts modal and performs show accounts actions.
@@ -33,6 +39,97 @@ document.addEventListener('DOMContentLoaded', function () {
 			accountPicker.classList.toggle('d-none');
 		}
 	}
+	
+	// Click any drop down menu
+	$(document).on('click', ".accountType", function() {
+		let selectedAT = this.innerText;
+		let accountTypeECL = document.getElementById('accountTypeErr').classList;
+		let changeClrBtn = document.getElementsByClassName('changeBtnClr')[0].classList;
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		let accountBalErr = document.getElementById('accountBalErr').classList;
+		let accBalance = document.getElementById('accountBal').value;
+		
+		// Set Text
+		document.getElementsByClassName('accountChosen')[0].innerText = selectedAT;
+		
+		// If the account Type is not in the selected
+		if(!includesStr(accountTypeConst,selectedAT)) {
+			accountTypeECL.remove('d-none');
+			changeClrBtn.remove('btn-info');
+			changeClrBtn.add('btn-danger');
+			accCfrmBtn.setAttribute('disabled','disabled');
+			return;
+		}
+		
+		// Display no error if the account type is valid
+		if(!accountTypeECL.contains('d-none')) {
+			accountTypeECL.add('d-none');
+			changeClrBtn.remove('btn-danger');
+			changeClrBtn.add('btn-info');
+		}
+		
+		// Enable confirm button
+		if(accountTypeECL.contains('d-none') && accountBalErr.contains('d-none') && regexForFloat.test(accBalance) && includesStr(accountTypeConst,selectedAT)) {
+			accCfrmBtn.removeAttribute('disabled');
+		}
+		
+	});
+	
+	// Account balance check
+	$(document).on('focusout', "#accountBal", function() {
+		let accBlnce = this.value;
+		let accountBalErr = document.getElementById('accountBalErr').classList;
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		let accountTypeECL = document.getElementById('accountTypeErr').classList;
+		
+		// If regex test is not valid
+		if(!regexForFloat.test(accBlnce)) {
+			accountBalErr.remove('d-none');
+			accCfrmBtn.setAttribute('disabled','disabled');
+			return;
+		} 
+		
+		// Display no error if the account type is valid
+		if(!accountBalErr.contains('d-none')) {
+			accountBalErr.add('d-none');
+		}
+		
+		// Enable confirm button
+		if(accountTypeECL.contains('d-none') && accountBalErr.contains('d-none')  && regexForFloat.test(accBlnce)) {
+			accCfrmBtn.removeAttribute('disabled');
+		}
+		
+	});
+	
+	
+	// Click on Add unsynced account 
+	$(document).on('click', "#unsyncedAccountWrap", function() {
+		// Show Sweet Alert
+		swal({
+	        title: 'Add Unsynced Account',
+	        html: unSyncedAccount(),
+	        confirmButtonClass: 'btn btn-info',
+	        confirmButtonText: 'Create Account',
+	        showCloseButton: true,
+	        buttonsStyling: false
+	    }).then(function() {
+	        swal({
+	            type: 'success',
+	            html: 'You entered: <strong>' +
+	                $('#accountName').val() +
+	                '</strong>',
+	            confirmButtonClass: 'btn btn-success',
+	            buttonsStyling: false
+	
+	        })
+	    }).catch(swal.noop)
+		
+		// Disable confirmation button 
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		if(!accCfrmBtn.disabled) {
+			accCfrmBtn.setAttribute('disabled','disabled');
+		}
+	});
 });
 
 // Custom Functions to fetch all accounts
@@ -59,6 +156,7 @@ er_a = {
 function populateEmptyAccountInfo() {
 	let emptyAccountFragment = document.createDocumentFragment();
 	
+	// First Row
 	let firstRow = document.createElement('div');
 	firstRow.classList = 'px-3 py-3 account-box account-info-color mt-2';
 	
@@ -81,6 +179,7 @@ function populateEmptyAccountInfo() {
 	
 	let syncTitle = document.createElement('div');
 	syncTitle.innerText = 'Automatically Sync Accounts';
+	syncTitle.classList = 'noselect';
 	syncInfo.appendChild(syncTitle);
 	
 	firstRow.appendChild(syncInfo);
@@ -94,7 +193,9 @@ function populateEmptyAccountInfo() {
 	separatorRow.appendChild(separatorSpan);
 	emptyAccountFragment.appendChild(separatorRow);
 	
+	// Second Row
 	let secondRow = document.createElement('div');
+	secondRow.id = 'unsyncedAccountWrap'
 	secondRow.classList = 'px-3 py-3 account-box account-info-color';
 	
 	let svgWrapperTwo = document.createElement('div');
@@ -120,11 +221,13 @@ function populateEmptyAccountInfo() {
 	
 	let unsyncTitle = document.createElement('div');
 	unsyncTitle.innerText = 'Unsynced Accounts';
+	unsyncTitle.classList = 'noselect';
 	tenColTwo.appendChild(unsyncTitle);
 	
 	secondRow.appendChild(tenColTwo);
 	emptyAccountFragment.appendChild(secondRow);
 	
+	// Third Row
 	let rowThree = document.createElement('div');
 	rowThree.classList = 'row mx-3 mt-4';
 	
@@ -174,4 +277,159 @@ function populateEmptyAccountInfo() {
 	}
 	accountPickerModal.appendChild(emptyAccountFragment);
 	
+}
+
+function unSyncedAccount() {
+	let unsyncedDocumentFragment = document.createDocumentFragment();
+	
+	let unsyncFormWrapper = document.createElement('div');
+	unsyncFormWrapper.classList = 'text-left mb-4 mt-2';
+	
+	// Description
+	let description = document.createElement('div');
+	description.classList = 'descriptionAccount';
+	description.innerText = "Let's get your account started! you can always sync it later on.";
+	unsyncFormWrapper.appendChild(description);
+	unsyncedDocumentFragment.appendChild(unsyncFormWrapper);
+	
+	// Choose Type
+	let chooseTypeWrapper = document.createElement('div');
+	chooseTypeWrapper.classList = "chooseTypeWrapper text-left";
+	
+	let chooseTypeLabel = document.createElement('label');
+	chooseTypeLabel.innerText = 'What is the type of your account?';
+	chooseTypeWrapper.appendChild(chooseTypeLabel);
+	
+	
+	let dropdownGroup = document.createElement('div');
+	dropdownGroup.classList = 'btn-group d-md-block d-lg-block';
+	
+	let displaySelected = document.createElement('button');
+	displaySelected.classList = 'btn btn-secondary w-85 accountChosen';
+	displaySelected.setAttribute('disabled', 'disabled');
+	displaySelected.innerText = 'Cash';
+	dropdownGroup.appendChild(displaySelected);
+	
+	let dropdownTrigger = document.createElement('button');
+	dropdownTrigger.classList = 'changeBtnClr btn btn-info dropdown-toggle dropdown-toggle-split';
+	dropdownTrigger.setAttribute('data-toggle' , 'dropdown');
+	dropdownTrigger.setAttribute('aria-haspopup' , 'true');
+	dropdownTrigger.setAttribute('aria-expanded' , 'false');
+	
+	let toggleSpan = document.createElement('span');
+	toggleSpan.classList = 'sr-only';
+	toggleSpan.innerText = 'Toggle Dropdown';
+	dropdownTrigger.appendChild(toggleSpan);
+	dropdownGroup.appendChild(dropdownTrigger);
+	
+	let dropdownMenu = document.createElement('div');
+	dropdownMenu.classList = 'dropdown-menu';
+	
+	let dropdownContentWrap = document.createElement('div');
+	dropdownContentWrap.classList = 'm-2';
+	
+	// Drop Down Menu
+	let budgetHeading = document.createElement('label');
+	budgetHeading.innerText = 'Saving';
+	dropdownContentWrap.appendChild(budgetHeading);
+	
+	// Savings
+	let savingsAnchor = document.createElement('a');
+	savingsAnchor.classList = 'accountType d-block px-3 py-1 small';
+	savingsAnchor.innerText = 'Savings Account';
+	dropdownContentWrap.appendChild(savingsAnchor);
+	
+	// Current
+	let currentAnchor = document.createElement('a');
+	currentAnchor.classList = 'accountType d-block px-3 py-1 small';
+	currentAnchor.innerText = 'Current Account';
+	dropdownContentWrap.appendChild(currentAnchor);
+	
+	// Cash
+	let cashAnchor = document.createElement('a');
+	cashAnchor.classList = 'accountType d-block px-3 py-1 small';
+	cashAnchor.innerText = 'Cash';
+	dropdownContentWrap.appendChild(cashAnchor);
+	
+	// Assets
+	let assetsAnchor = document.createElement('a');
+	assetsAnchor.classList = 'accountType d-block px-3 py-1 small';
+	assetsAnchor.innerText = 'Assets';
+	dropdownContentWrap.appendChild(assetsAnchor);
+	
+	// Drop Down Menu 2
+	let debtHeading = document.createElement('label');
+	debtHeading.innerText = 'Borrowing';
+	debtHeading.classList = 'mt-2';
+	dropdownContentWrap.appendChild(debtHeading);
+	
+	// Credit card
+	let creditCardAnchor = document.createElement('a');
+	creditCardAnchor.classList = 'accountType d-block px-3 py-1 small';
+	creditCardAnchor.innerText = 'Credit Card';
+	dropdownContentWrap.appendChild(creditCardAnchor);
+	
+	// Liability
+	let liabilityAnchor = document.createElement('a');
+	liabilityAnchor.classList = 'accountType d-block px-3 py-1 small';
+	liabilityAnchor.innerText = 'Liability';
+	dropdownContentWrap.appendChild(liabilityAnchor);
+	dropdownMenu.appendChild(dropdownContentWrap);
+	dropdownGroup.appendChild(dropdownMenu);
+	chooseTypeWrapper.appendChild(dropdownGroup);
+	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
+	
+	// Error Div for account type
+	let accountTypeError = document.createElement('div');
+	accountTypeError.id = 'accountTypeErr';
+	accountTypeError.classList = 'd-none text-danger text-left small mb-2 noselect';
+	accountTypeError.innerText = 'Account type is not valid';
+	unsyncedDocumentFragment.appendChild(accountTypeError);
+	
+	// Name Of account
+	let accountNameWrapper = document.createElement('div');
+	accountNameWrapper.setAttribute('data-gramm_editor',"false");
+	accountNameWrapper.classList = 'accountNameWrapper text-left';
+	
+	let accountNameLabel = document.createElement('label');
+	accountNameLabel.innerText = 'Give it a name';
+	accountNameWrapper.appendChild(accountNameLabel);
+	
+	let accountNameInput = document.createElement('input');
+	accountNameInput.id='accountName';
+	accountNameInput.setAttribute('type','text');
+	accountNameInput.setAttribute('autocapitalize','off');
+	accountNameInput.setAttribute('spellcheck','false');
+	accountNameInput.setAttribute('autocorrect','off');
+	accountNameInput.setAttribute('autocorrect','off');
+	accountNameWrapper.appendChild(accountNameInput);
+	unsyncedDocumentFragment.appendChild(accountNameWrapper);
+	
+	// Account Balance
+	let accountBalWrapper = document.createElement('div');
+	accountBalWrapper.classList = 'accountBalWrapper text-left';
+	
+	
+	let accountBalLabel = document.createElement('label');
+	accountBalLabel.innerText = 'What is your account balance?';
+	accountBalWrapper.appendChild(accountBalLabel);
+	
+	let accountBalInput = document.createElement('input');
+	accountBalInput.id='accountBal';
+	accountBalInput.setAttribute('type','text');
+	accountBalInput.setAttribute('autocapitalize','off');
+	accountBalInput.setAttribute('spellcheck','false');
+	accountBalInput.setAttribute('autocorrect','off');
+	accountBalInput.setAttribute('autocorrect','off');
+	accountBalWrapper.appendChild(accountBalInput);
+	unsyncedDocumentFragment.appendChild(accountBalWrapper);
+	
+	// Error Div for account bal
+	let accountBalErr = document.createElement('div');
+	accountBalErr.id = 'accountBalErr';
+	accountBalErr.classList = 'd-none text-danger text-left small mb-2 noselect';
+	accountBalErr.innerText = 'Account balance can contain only numbers and dot.';
+	unsyncedDocumentFragment.appendChild(accountBalErr);
+	
+    return unsyncedDocumentFragment;
 }
