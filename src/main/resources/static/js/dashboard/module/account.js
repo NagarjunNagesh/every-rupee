@@ -15,6 +15,7 @@ $(document).ready(function(){
 	// Toggle Account Information
 	document.getElementById("showAccounts").addEventListener("click",function(){
 		let accountPickerClass = document.getElementById('accountPickerWrapper').classList;
+		
 		// If the modal is open
 		if(accountPickerClass.contains('d-none')) {
 			// Add click outside event listener to close the modal
@@ -22,6 +23,7 @@ $(document).ready(function(){
 		}
 		// Toggle Account Picker
 		accountPickerClass.toggle('d-none');
+		
 	});
 	
 	// Properly closes the accounts modal and performs show accounts actions.
@@ -42,20 +44,64 @@ $(document).ready(function(){
 	$(document).on('click', ".accountType", function() {
 		let selectedAT = this.innerText;
 		let accountTypeECL = document.getElementById('accountTypeErr').classList;
+		let changeClrBtn = document.getElementsByClassName('changeBtnClr')[0].classList;
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		let accountBalErr = document.getElementById('accountBalErr').classList;
+		let accBalance = document.getElementById('accountBal').value;
 		
+		// Set Text
+		document.getElementsByClassName('accountChosen')[0].innerText = selectedAT;
+		
+		// If the account Type is not in the selected
 		if(!includesStr(accountTypeConst,selectedAT)) {
-			accountTypeECL.toggle('d-none');
+			accountTypeECL.remove('d-none');
+			changeClrBtn.remove('btn-info');
+			changeClrBtn.add('btn-danger');
+			accCfrmBtn.setAttribute('disabled','disabled');
 			return;
 		}
 		
 		// Display no error if the account type is valid
 		if(!accountTypeECL.contains('d-none')) {
-			accountTypeECL.toggle('d-none');
+			accountTypeECL.add('d-none');
+			changeClrBtn.remove('btn-danger');
+			changeClrBtn.add('btn-info');
 		}
 		
+		// Enable confirm button
+		if(accountTypeECL.contains('d-none') && accountBalErr.contains('d-none') && regexForFloat.test(accBalance) && includesStr(accountTypeConst,selectedAT)) {
+			accCfrmBtn.removeAttribute('disabled');
+		}
 		
-		document.getElementsByClassName('accountChosen')[0].innerText = selectedAT;
 	});
+	
+	// Account balance check
+	$(document).on('focusout', "#accountBal", function() {
+		let accBlnce = this.value;
+		let accountBalErr = document.getElementById('accountBalErr').classList;
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		let accountTypeECL = document.getElementById('accountTypeErr').classList;
+		let selectedAT = document.getElementsByClassName('accountChosen')[0].innerText;
+		
+		// If regex test is not valid
+		if(!regexForFloat.test(accBlnce)) {
+			accountBalErr.remove('d-none');
+			accCfrmBtn.setAttribute('disabled','disabled');
+			return;
+		} 
+		
+		// Display no error if the account type is valid
+		if(!accountBalErr.contains('d-none')) {
+			accountBalErr.add('d-none');
+		}
+		
+		// Enable confirm button
+		if(accountTypeECL.contains('d-none') && accountBalErr.contains('d-none')  && regexForFloat.test(accBlnce)) {
+			accCfrmBtn.removeAttribute('disabled');
+		}
+		
+	});
+	
 	
 	// Click on Add unsynced account 
 	$(document).on('click', "#unsyncedAccountWrap", function() {
@@ -78,6 +124,12 @@ $(document).ready(function(){
 	
 	        })
 	    }).catch(swal.noop)
+		
+		// Disable confirmation button 
+		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
+		if(!accCfrmBtn.disabled) {
+			accCfrmBtn.setAttribute('disabled','disabled');
+		}
 	});
 });
 
@@ -260,7 +312,7 @@ function unSyncedAccount() {
 	dropdownGroup.appendChild(displaySelected);
 	
 	let dropdownTrigger = document.createElement('button');
-	dropdownTrigger.classList = 'btn btn-info dropdown-toggle dropdown-toggle-split';
+	dropdownTrigger.classList = 'changeBtnClr btn btn-info dropdown-toggle dropdown-toggle-split';
 	dropdownTrigger.setAttribute('data-toggle' , 'dropdown');
 	dropdownTrigger.setAttribute('aria-haspopup' , 'true');
 	dropdownTrigger.setAttribute('aria-expanded' , 'false');
@@ -331,8 +383,8 @@ function unSyncedAccount() {
 	// Error Div for account type
 	let accountTypeError = document.createElement('div');
 	accountTypeError.id = 'accountTypeErr';
-	accountTypeError.classList = 'd-none text-danger text-left small mb-2';
-	accountTypeError.innerText = 'Account Type is not valid';
+	accountTypeError.classList = 'd-none text-danger text-left small mb-2 noselect';
+	accountTypeError.innerText = 'Account type is not valid';
 	unsyncedDocumentFragment.appendChild(accountTypeError);
 	
 	// Name Of account
@@ -372,6 +424,13 @@ function unSyncedAccount() {
 	accountBalInput.setAttribute('autocorrect','off');
 	accountBalWrapper.appendChild(accountBalInput);
 	unsyncedDocumentFragment.appendChild(accountBalWrapper);
+	
+	// Error Div for account bal
+	let accountBalErr = document.createElement('div');
+	accountBalErr.id = 'accountBalErr';
+	accountBalErr.classList = 'd-none text-danger text-left small mb-2 noselect';
+	accountBalErr.innerText = 'Account balance can contain only numbers and dot.';
+	unsyncedDocumentFragment.appendChild(accountBalErr);
 	
     return unsyncedDocumentFragment;
 }
