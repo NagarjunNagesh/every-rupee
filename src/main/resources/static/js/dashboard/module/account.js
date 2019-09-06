@@ -41,11 +41,18 @@ $(document).ready(function(){
 	// Click any drop down menu
 	$(document).on('click', ".accountType", function() {
 		let selectedAT = this.innerText;
+		let accountTypeECL = document.getElementById('accountTypeErr').classList;
 		
 		if(!includesStr(accountTypeConst,selectedAT)) {
-			// TODO highlight account with error
+			accountTypeECL.toggle('d-none');
 			return;
 		}
+		
+		// Display no error if the account type is valid
+		if(!accountTypeECL.contains('d-none')) {
+			accountTypeECL.toggle('d-none');
+		}
+		
 		
 		document.getElementsByClassName('accountChosen')[0].innerText = selectedAT;
 	});
@@ -320,6 +327,13 @@ function unSyncedAccount() {
 	dropdownGroup.appendChild(dropdownMenu);
 	chooseTypeWrapper.appendChild(dropdownGroup);
 	unsyncedDocumentFragment.appendChild(chooseTypeWrapper);
+	
+	// Error Div for account type
+	let accountTypeError = document.createElement('div');
+	accountTypeError.id = 'accountTypeErr';
+	accountTypeError.classList = 'd-none text-danger text-left small mb-2';
+	accountTypeError.innerText = 'Account Type is not valid';
+	unsyncedDocumentFragment.appendChild(accountTypeError);
 	
 	// Name Of account
 	let accountNameWrapper = document.createElement('div');
