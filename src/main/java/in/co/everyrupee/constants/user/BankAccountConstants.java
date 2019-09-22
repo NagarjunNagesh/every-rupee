@@ -9,4 +9,6 @@ public class BankAccountConstants {
     public static final String FINANCIAL_PORTFOLIO_ID = "financial_portfolio_id";
     public static final String USER_ID = "user_id";
     public static final String BANK_ACCOUNT_CACHE = "bankAccountCache";
+    public static final String BANK_ACCOUNT_NAME_PARAM = "bankAccountName";
+    public static final String LINKED_ACCOUNT_PARAM = "linked";
 }

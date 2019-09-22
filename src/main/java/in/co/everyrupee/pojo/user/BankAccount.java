@@ -40,6 +40,7 @@ public class BankAccount {
     @Column(name = BankAccountConstants.BANK_ACCOUNT_ID)
     private int id;
 
+    @NotNull
     @Column(name = BankAccountConstants.BANK_ACCOUNT_NAME)
     @Size(max = 300)
     private String bankAccountName;
@@ -47,7 +48,6 @@ public class BankAccount {
     @Column(name = BankAccountConstants.LINKED_ACCOUNT, columnDefinition = "boolean default false")
     private boolean linked;
 
-    @NotNull
     @Column(name = BankAccountConstants.BANK_ACCOUNT_NUMBER)
     @Size(max = 60)
     private String bankAccountNumber;

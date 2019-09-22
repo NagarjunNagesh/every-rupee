@@ -4,6 +4,7 @@ const BANK_ACCOUNT_CONSTANTS = {};
 Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
 	'fetchBankAccountURL': { value: '/', writable: false, configurable: false },
+	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false }
 });
 
 // Account Information display
@@ -76,7 +77,7 @@ $(document).ready(function(){
 	});
 	
 	// Account balance check
-	$(document).on('focusout', "#accountBal", function() {
+	$(document).on('mouseup', "#accountBal", function() {
 		let accBlnce = this.value;
 		let accountBalErr = document.getElementById('accountBalErr').classList;
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
@@ -89,7 +90,7 @@ $(document).ready(function(){
 			return;
 		} 
 		
-		// Display no error if the account type is valid
+		// Display no error if the account bal is valid
 		if(!accountBalErr.contains('d-none')) {
 			accountBalErr.add('d-none');
 		}
@@ -111,17 +112,33 @@ $(document).ready(function(){
 	        confirmButtonClass: 'btn btn-info',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
-	        buttonsStyling: false
+	        buttonsStyling: false,
+	        customClass: {
+	        	  container: 'my-account-unsync-class',
+	        	  closeButton: 'unsync-close-button-class',
+	        	  confirmButton: 'unsync-confirm-button-class'
+	        }
 	    }).then(function() {
-	        swal({
-	            type: 'success',
-	            html: 'You entered: <strong>' +
-	                $('#accountName').val() +
-	                '</strong>',
-	            confirmButtonClass: 'btn btn-success',
-	            buttonsStyling: false
-	
-	        })
+	    	$.ajax({
+		          type: "POST",
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl + currentUser.financialPortfolioId,
+		          dataType: "json",
+		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		          data : values,
+		          async: false,
+		          success: function(userBudget){
+		        	  
+		          },
+		          error: function(thrownError) {
+		        	  var responseError = JSON.parse(thrownError.responseText);
+		        	  if(responseError.error.includes("Unauthorized")){
+		        		  er.sessionExpiredSwal(thrownError);
+		        	  } else{
+		        		  showNotification('Unable to add the account at this moment. Please try again!','top','center','danger');
+		        	  }
+		        	  
+		          }
+	    	});
 	    }).catch(swal.noop)
 		
 		// Disable confirmation button 
@@ -130,6 +147,7 @@ $(document).ready(function(){
 			accCfrmBtn.setAttribute('disabled','disabled');
 		}
 	});
+	
 });
 
 // Custom Functions to fetch all accounts
