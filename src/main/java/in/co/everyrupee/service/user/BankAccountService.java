@@ -41,7 +41,7 @@ public class BankAccountService implements IBankAccountService {
     @CacheEvict(key = "#pFinancialPortfolioId")
     public BankAccount addNewBankAccount(Integer pFinancialPortfolioId, MultiValueMap<String, String> formData) {
 
-	if (ERStringUtils.isNotBlank(formData.getFirst(BankAccountConstants.LINKED_ACCOUNT))) {
+	if (ERStringUtils.isBlank(formData.getFirst(BankAccountConstants.LINKED_ACCOUNT))) {
 	    throw new InvalidAttributeValueException("addNewBankAccount", BankAccountConstants.LINKED_ACCOUNT, null);
 	}
 

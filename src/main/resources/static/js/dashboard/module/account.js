@@ -106,40 +106,49 @@ $(document).ready(function(){
 	// Click on Add unsynced account 
 	$(document).on('click', "#unsyncedAccountWrap", function() {
 		// Show Sweet Alert
-		swal({
+		Swal.fire({
 	        title: 'Add Unsynced Account',
 	        html: unSyncedAccount(),
-	        confirmButtonClass: 'btn btn-info',
+	        inputAttributes: {
+	            autocapitalize: 'on'
+	        },
+	        confirmButtonClass: 'createAccount btn btn-info',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
-	        buttonsStyling: false
-	    }).then(function() {
-	    	// Populate the JSOn form data
-	    	var values = {};
-			values['linked'] = 'false';
-			values['bankAccountName'] = document.getElementById('accountName').value;
-			values['accountBalance'] = document.getElementById('accountBal').value;
-			
-			// AJAX call for adding a new unlinked Account
-	    	$.ajax({
-		          type: "POST",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl,
-		          dataType: "json",
-		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-		          data : values,
-		          success: function(userBudget){
-		        	  
-		          },
-		          error: function(thrownError) {
-		        	  var responseError = JSON.parse(thrownError.responseText);
-		        	  if(responseError.error.includes("Unauthorized")){
-		        		  er.sessionExpiredSwal(thrownError);
-		        	  } else{
-		        		  showNotification('Unable to add the account at this moment. Please try again!','top','center','danger');
-		        	  }
-		        	  
-		          }
-	    	});
+	        buttonsStyling: false,
+	        closeOnConfirm: false,
+	        showLoaderOnConfirm: true,
+	        allowOutsideClick: () => !Swal.isLoading()
+	    }).then(function(isConfirm) {
+	    	// If confirm button is clicked
+	    	if(isConfirm) {
+	    		// Populate the JSOn form data
+		    	var values = {};
+				values['linked'] = 'false';
+				values['bankAccountName'] = document.getElementById('accountName').value;
+				values['accountBalance'] = document.getElementById('accountBal').value;
+				
+				// AJAX call for adding a new unlinked Account
+		    	$.ajax({
+			          type: "POST",
+			          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl,
+			          dataType: "json",
+			          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			          data : values,
+			          success: function(){
+			        	  showNotification('Unsynced account "' + values['bankAccountName'] + '" has been created successfully','top','center','success');
+			          },
+			          error: function(thrownError) {
+			        	  var responseError = JSON.parse(thrownError.responseText);
+			        	  if(responseError.error.includes("Unauthorized")){
+			        		  er.sessionExpiredSwal(thrownError);
+			        	  } else{
+			        		  showNotification('Unable to add the account at this moment. Please try again!','top','center','danger');
+			        	  }
+			        	  
+			          }
+		    	});
+	    	}
 	    }).catch(swal.noop)
 		
 		// Disable confirmation button 
