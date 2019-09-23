@@ -52,6 +52,7 @@ public class BankAccountService implements IBankAccountService {
 	newAccount.setFinancialPortfolioId(pFinancialPortfolioId);
 	newAccount.setUserId(profileService.findUserByEmail(user.getUsername()).get().getId());
 	newAccount.setBankAccountName(formData.getFirst(BankAccountConstants.BANK_ACCOUNT_NAME_PARAM));
+	newAccount.setAccountBalance(Double.parseDouble(formData.getFirst(BankAccountConstants.ACCOUNT_BALANCE_PARAM)));
 	return bankAccountRepository.save(newAccount);
     }
 

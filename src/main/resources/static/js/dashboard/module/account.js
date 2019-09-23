@@ -3,7 +3,7 @@
 const BANK_ACCOUNT_CONSTANTS = {};
 Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
-	'fetchBankAccountURL': { value: '/', writable: false, configurable: false },
+	'backslash': { value: '/', writable: false, configurable: false },
 	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false }
 });
 
@@ -77,7 +77,7 @@ $(document).ready(function(){
 	});
 	
 	// Account balance check
-	$(document).on('mouseup', "#accountBal", function() {
+	$(document).on('keyup', "#accountBal", function() {
 		let accBlnce = this.value;
 		let accountBalErr = document.getElementById('accountBalErr').classList;
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
@@ -112,20 +112,21 @@ $(document).ready(function(){
 	        confirmButtonClass: 'btn btn-info',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
-	        buttonsStyling: false,
-	        customClass: {
-	        	  container: 'my-account-unsync-class',
-	        	  closeButton: 'unsync-close-button-class',
-	        	  confirmButton: 'unsync-confirm-button-class'
-	        }
+	        buttonsStyling: false
 	    }).then(function() {
+	    	// Populate the JSOn form data
+	    	var values = {};
+			values['linked'] = 'false';
+			values['bankAccountName'] = document.getElementById('accountName').value;
+			values['accountBalance'] = document.getElementById('accountBal').value;
+			
+			// AJAX call for adding a new unlinked Account
 	    	$.ajax({
 		          type: "POST",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl + currentUser.financialPortfolioId,
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl,
 		          dataType: "json",
 		          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 		          data : values,
-		          async: false,
 		          success: function(userBudget){
 		        	  
 		          },
@@ -155,7 +156,7 @@ er_a = {
 		fetchBankAccountInfo() {
 			$.ajax({
 		          type: "GET",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.fetchBankAccountURL,
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.backslash,
 		          dataType: "json",
 		          success : function(data) {
 		        	return data;  

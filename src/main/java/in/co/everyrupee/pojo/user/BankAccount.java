@@ -60,6 +60,10 @@ public class BankAccount {
     @Column(name = BankAccountConstants.USER_ID)
     private Integer userId;
 
+    @NotNull
+    @Column(name = BankAccountConstants.ACCOUNT_BALANCE)
+    private double accountBalance;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.CREATION_DATE)
@@ -116,6 +120,14 @@ public class BankAccount {
 
     public void setUserId(Integer userId) {
 	this.userId = userId;
+    }
+
+    public double getAccountBalance() {
+	return accountBalance;
+    }
+
+    public void setAccountBalance(double accountBalance) {
+	this.accountBalance = accountBalance;
     }
 
 }
