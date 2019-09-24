@@ -11,6 +11,7 @@ Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 $(document).ready(function(){
 	
 	const accountTypeConst = ['Savings Account','Current Account','Cash','Assets','Credit Card','Liability'];
+	const accountTypeUCConst = ['SAVINGS ACCOUNT','CURRENT ACCOUNT','CASH','ASSETS','CREDIT CARD','LIABILITY'];
 	Object.freeze(accountTypeConst);
 	Object.seal(accountTypeConst);
 	// Toggle Account Information
@@ -115,18 +116,22 @@ $(document).ready(function(){
 	        confirmButtonClass: 'createAccount btn btn-info',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
-	        buttonsStyling: false,
-	        closeOnConfirm: false,
-	        showLoaderOnConfirm: true,
-	        allowOutsideClick: () => !Swal.isLoading()
-	    }).then(function(isConfirm) {
+	        buttonsStyling: false
+	    }).then(function(result) {
 	    	// If confirm button is clicked
-	    	if(isConfirm) {
-	    		// Populate the JSOn form data
+	    	if (result.value) {
+	    		// Populate the JSON form data
 		    	var values = {};
 				values['linked'] = 'false';
 				values['bankAccountName'] = document.getElementById('accountName').value;
 				values['accountBalance'] = document.getElementById('accountBal').value;
+				values['accountType'] = document.getElementsByClassName('accountChosen')[0].innerText;
+				
+				// Check if the account type is valid (Upper Case)
+				if(!includesStr(accountTypeUCConst,values['accountType'])) {
+					 showNotification('Invalid account type. Please try again!','top','center','danger');
+					 return;
+				}
 				
 				// AJAX call for adding a new unlinked Account
 		    	$.ajax({
@@ -145,11 +150,10 @@ $(document).ready(function(){
 			        	  } else{
 			        		  showNotification('Unable to add the account at this moment. Please try again!','top','center','danger');
 			        	  }
-			        	  
 			          }
 		    	});
 	    	}
-	    }).catch(swal.noop)
+	    });
 		
 		// Disable confirmation button 
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
@@ -167,17 +171,59 @@ er_a = {
 		          type: "GET",
 		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.backslash,
 		          dataType: "json",
-		          success : function(data) {
-		        	return data;  
+		          success : function(bankAccountList) {
+		        	  er_a.populateBankInfo(bankAccountList);
+		          },
+		          error: function(thrownError) {
+		        	  var responseError = JSON.parse(thrownError.responseText);
+		        	  if(responseError.error.includes("Unauthorized")){
+		        		  er.sessionExpiredSwal(thrownError);
+		        	  } else{
+		        		  showNotification('Unable to fetch the accounts linked with this profile. Please refresh to try again!','top','center','danger');
+		        	  }
 		          }
 			});
 		},
 		populateBankInfo(bankAccountsInfo) {
-			// Populate the bank account info
+			// Populate empty bank account info
 			if(isEmpty(bankAccountsInfo)) {
 				populateEmptyAccountInfo();
+				return;
 			}
+			
+			// Populate the bank account info
+			populateAccountInfo(bankAccountsInfo);
 		}
+}
+
+// Populate bank account info
+function populateAccountInfo(bankAccountsInfo) {
+	let maxLength = bankAccountsInfo.length > 2 ? 2 : bankAccountsInfo.length;
+	let selectedAccountP = false;
+	
+	// Always print the default first
+	for(let i = 0; i < maxLength; i++) {
+		if(bankAccountsInfo[i].selectedAccount) {
+			populateBankAccountInfo(bankAccountsInfo[i]);
+			selectedAccountP = true;
+			break;
+		}
+	}
+	
+	// Print one less if the default is printed.
+	if(selectedAccountP) {
+		maxLength--;
+	}
+	
+	// Populate the rest of the bank account
+	for(let i = 0; i < maxLength; i++) {
+		populateBankAccountInfo(bankAccountsInfo[i]);
+	}
+}
+
+// Populate one Bank account info
+function populateBankAccountInfo(bankAccount) {
+	console.log(bankAccount);
 }
 
 // Populate Empty Account Info

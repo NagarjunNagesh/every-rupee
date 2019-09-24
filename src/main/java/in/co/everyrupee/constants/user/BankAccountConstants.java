@@ -13,5 +13,9 @@ public class BankAccountConstants {
     public static final String BANK_ACCOUNT_NAME_PARAM = "bankAccountName";
     public static final String LINKED_ACCOUNT_PARAM = "linked";
     public static final String ACCOUNT_BALANCE_PARAM = "accountBalance";
+    public static final String ACCOUNT_TYPE = "account_type";
+    public static final String ACCOUNT_TYPE_COLUMN_DEFINITION = "varchar(64) default 'CASH'";
+    public static final String ACCOUNT_TYPE_PARAM = "accountType";
+    public static final String SELECTED_ACCOUNT = "selected_account";
 
 }

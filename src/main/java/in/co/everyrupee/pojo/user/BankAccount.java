@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,6 +50,9 @@ public class BankAccount {
     @Column(name = BankAccountConstants.LINKED_ACCOUNT, columnDefinition = "boolean default false")
     private boolean linked;
 
+    @Column(name = BankAccountConstants.SELECTED_ACCOUNT, columnDefinition = "boolean default false")
+    private boolean selectedAccount;
+
     @Column(name = BankAccountConstants.BANK_ACCOUNT_NUMBER)
     @Size(max = 60)
     private String bankAccountNumber;
@@ -73,6 +78,11 @@ public class BankAccount {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.MODIFICATION_DATE)
     private Date modifyDate;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = BankAccountConstants.ACCOUNT_TYPE, columnDefinition = BankAccountConstants.ACCOUNT_TYPE_COLUMN_DEFINITION)
+    private AccountType accountType;
 
     public int getId() {
 	return id;
@@ -128,6 +138,22 @@ public class BankAccount {
 
     public void setAccountBalance(double accountBalance) {
 	this.accountBalance = accountBalance;
+    }
+
+    public AccountType getAccountType() {
+	return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+	this.accountType = accountType;
+    }
+
+    public boolean isSelectedAccount() {
+	return selectedAccount;
+    }
+
+    public void setSelectedAccount(boolean selectedAccount) {
+	this.selectedAccount = selectedAccount;
     }
 
 }

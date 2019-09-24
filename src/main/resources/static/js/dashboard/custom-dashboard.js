@@ -560,9 +560,8 @@ window.onload = function () {
 			overviewYearHeading.innerText = currentDate.getFullYear();
 		}
 		
-		// Fetch Bank Account Information
-		let bankAccountsInfo = er_a.fetchBankAccountInfo();
-		er_a.populateBankInfo(bankAccountsInfo);
+		// Fetch Bank Account Information and populate
+		er_a.fetchBankAccountInfo();
 		
 	});
 	

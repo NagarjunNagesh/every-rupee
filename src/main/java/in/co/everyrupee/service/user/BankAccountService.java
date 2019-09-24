@@ -14,6 +14,7 @@ import org.springframework.util.MultiValueMap;
 
 import in.co.everyrupee.constants.user.BankAccountConstants;
 import in.co.everyrupee.exception.InvalidAttributeValueException;
+import in.co.everyrupee.pojo.user.AccountType;
 import in.co.everyrupee.pojo.user.BankAccount;
 import in.co.everyrupee.repository.user.BankAccountRepository;
 import in.co.everyrupee.service.login.ProfileService;
@@ -53,6 +54,9 @@ public class BankAccountService implements IBankAccountService {
 	newAccount.setUserId(profileService.findUserByEmail(user.getUsername()).get().getId());
 	newAccount.setBankAccountName(formData.getFirst(BankAccountConstants.BANK_ACCOUNT_NAME_PARAM));
 	newAccount.setAccountBalance(Double.parseDouble(formData.getFirst(BankAccountConstants.ACCOUNT_BALANCE_PARAM)));
+	// Replace all space in the text to without space
+	newAccount.setAccountType(
+		AccountType.valueOf(formData.getFirst(BankAccountConstants.ACCOUNT_TYPE_PARAM).replaceAll("\\s+", "")));
 	return bankAccountRepository.save(newAccount);
     }
 
