@@ -201,20 +201,6 @@ function populateAccountInfo(bankAccountsInfo) {
 	let maxLength = bankAccountsInfo.length > 2 ? 2 : bankAccountsInfo.length;
 	let selectedAccountP = false;
 	
-	// Always print the default first
-	for(let i = 0; i < maxLength; i++) {
-		if(bankAccountsInfo[i].selectedAccount) {
-			populateBankAccountInfo(bankAccountsInfo[i]);
-			selectedAccountP = true;
-			break;
-		}
-	}
-	
-	// Print one less if the default is printed.
-	if(selectedAccountP) {
-		maxLength--;
-	}
-	
 	// Populate the rest of the bank account
 	for(let i = 0; i < maxLength; i++) {
 		populateBankAccountInfo(bankAccountsInfo[i]);

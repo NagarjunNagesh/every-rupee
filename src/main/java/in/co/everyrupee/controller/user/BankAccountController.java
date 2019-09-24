@@ -34,18 +34,41 @@ public class BankAccountController {
     @Autowired
     private ProfileService profileService;
 
-    // Get All User Budgets
+    /**
+     * Get All Bank Accounts
+     * 
+     * @param userPrincipal
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<BankAccount> getAllBankAccounts(Principal userPrincipal) {
 	Integer financialPortfolioId = profileService.validateUser(userPrincipal);
 	return getBankAccountService().getAllBankAccounts(financialPortfolioId);
     }
 
-    // Post Add New account
+    /**
+     * Post Add New account
+     * 
+     * @param userPrincipal
+     * @param formData
+     * @return
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public BankAccount addNewBankAccount(Principal userPrincipal, @RequestBody MultiValueMap<String, String> formData) {
 	Integer pFinancialPortfolioId = getProfileService().validateUser(userPrincipal);
 	return getBankAccountService().addNewBankAccount(pFinancialPortfolioId, formData);
+    }
+
+    /**
+     * Get All User Budgets
+     * 
+     * @param userPrincipal
+     * @return
+     */
+    @RequestMapping(value = "/preview", method = RequestMethod.GET)
+    public List<BankAccount> previewBankAccounts(Principal userPrincipal) {
+	Integer financialPortfolioId = profileService.validateUser(userPrincipal);
+	return getBankAccountService().previewBankAccounts(financialPortfolioId);
     }
 
     public ProfileService getProfileService() {
