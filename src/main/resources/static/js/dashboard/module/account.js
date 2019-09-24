@@ -3,13 +3,15 @@
 const BANK_ACCOUNT_CONSTANTS = {};
 Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
-	'fetchBankAccountURL': { value: '/', writable: false, configurable: false },
+	'backslash': { value: '/', writable: false, configurable: false },
+	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false }
 });
 
 // Account Information display
 $(document).ready(function(){
 	
 	const accountTypeConst = ['Savings Account','Current Account','Cash','Assets','Credit Card','Liability'];
+	const accountTypeUCConst = ['SAVINGS ACCOUNT','CURRENT ACCOUNT','CASH','ASSETS','CREDIT CARD','LIABILITY'];
 	Object.freeze(accountTypeConst);
 	Object.seal(accountTypeConst);
 	// Toggle Account Information
@@ -76,7 +78,7 @@ $(document).ready(function(){
 	});
 	
 	// Account balance check
-	$(document).on('focusout', "#accountBal", function() {
+	$(document).on('keyup', "#accountBal", function() {
 		let accBlnce = this.value;
 		let accountBalErr = document.getElementById('accountBalErr').classList;
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
@@ -89,7 +91,7 @@ $(document).ready(function(){
 			return;
 		} 
 		
-		// Display no error if the account type is valid
+		// Display no error if the account bal is valid
 		if(!accountBalErr.contains('d-none')) {
 			accountBalErr.add('d-none');
 		}
@@ -105,24 +107,53 @@ $(document).ready(function(){
 	// Click on Add unsynced account 
 	$(document).on('click', "#unsyncedAccountWrap", function() {
 		// Show Sweet Alert
-		swal({
+		Swal.fire({
 	        title: 'Add Unsynced Account',
 	        html: unSyncedAccount(),
-	        confirmButtonClass: 'btn btn-info',
+	        inputAttributes: {
+	            autocapitalize: 'on'
+	        },
+	        confirmButtonClass: 'createAccount btn btn-info',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
 	        buttonsStyling: false
-	    }).then(function() {
-	        swal({
-	            type: 'success',
-	            html: 'You entered: <strong>' +
-	                $('#accountName').val() +
-	                '</strong>',
-	            confirmButtonClass: 'btn btn-success',
-	            buttonsStyling: false
-	
-	        })
-	    }).catch(swal.noop)
+	    }).then(function(result) {
+	    	// If confirm button is clicked
+	    	if (result.value) {
+	    		// Populate the JSON form data
+		    	var values = {};
+				values['linked'] = 'false';
+				values['bankAccountName'] = document.getElementById('accountName').value;
+				values['accountBalance'] = document.getElementById('accountBal').value;
+				values['accountType'] = document.getElementsByClassName('accountChosen')[0].innerText;
+				
+				// Check if the account type is valid (Upper Case)
+				if(!includesStr(accountTypeUCConst,values['accountType'])) {
+					 showNotification('Invalid account type. Please try again!','top','center','danger');
+					 return;
+				}
+				
+				// AJAX call for adding a new unlinked Account
+		    	$.ajax({
+			          type: "POST",
+			          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountAddUrl,
+			          dataType: "json",
+			          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			          data : values,
+			          success: function(){
+			        	  showNotification('Unsynced account "' + values['bankAccountName'] + '" has been created successfully','top','center','success');
+			          },
+			          error: function(thrownError) {
+			        	  var responseError = JSON.parse(thrownError.responseText);
+			        	  if(responseError.error.includes("Unauthorized")){
+			        		  er.sessionExpiredSwal(thrownError);
+			        	  } else{
+			        		  showNotification('Unable to add the account at this moment. Please try again!','top','center','danger');
+			        	  }
+			          }
+		    	});
+	    	}
+	    });
 		
 		// Disable confirmation button 
 		let accCfrmBtn = document.getElementsByClassName('swal2-confirm')[0];
@@ -130,6 +161,7 @@ $(document).ready(function(){
 			accCfrmBtn.setAttribute('disabled','disabled');
 		}
 	});
+	
 });
 
 // Custom Functions to fetch all accounts
@@ -137,19 +169,61 @@ er_a = {
 		fetchBankAccountInfo() {
 			$.ajax({
 		          type: "GET",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.fetchBankAccountURL,
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.backslash,
 		          dataType: "json",
-		          success : function(data) {
-		        	return data;  
+		          success : function(bankAccountList) {
+		        	  er_a.populateBankInfo(bankAccountList);
+		          },
+		          error: function(thrownError) {
+		        	  var responseError = JSON.parse(thrownError.responseText);
+		        	  if(responseError.error.includes("Unauthorized")){
+		        		  er.sessionExpiredSwal(thrownError);
+		        	  } else{
+		        		  showNotification('Unable to fetch the accounts linked with this profile. Please refresh to try again!','top','center','danger');
+		        	  }
 		          }
 			});
 		},
 		populateBankInfo(bankAccountsInfo) {
-			// Populate the bank account info
+			// Populate empty bank account info
 			if(isEmpty(bankAccountsInfo)) {
 				populateEmptyAccountInfo();
+				return;
 			}
+			
+			// Populate the bank account info
+			populateAccountInfo(bankAccountsInfo);
 		}
+}
+
+// Populate bank account info
+function populateAccountInfo(bankAccountsInfo) {
+	let maxLength = bankAccountsInfo.length > 2 ? 2 : bankAccountsInfo.length;
+	let selectedAccountP = false;
+	
+	// Always print the default first
+	for(let i = 0; i < maxLength; i++) {
+		if(bankAccountsInfo[i].selectedAccount) {
+			populateBankAccountInfo(bankAccountsInfo[i]);
+			selectedAccountP = true;
+			break;
+		}
+	}
+	
+	// Print one less if the default is printed.
+	if(selectedAccountP) {
+		maxLength--;
+	}
+	
+	// Populate the rest of the bank account
+	for(let i = 0; i < maxLength; i++) {
+		populateBankAccountInfo(bankAccountsInfo[i]);
+	}
+}
+
+// Populate one Bank account info
+function populateBankAccountInfo(bankAccount) {
+	console.log(bankAccount);
 }
 
 // Populate Empty Account Info
