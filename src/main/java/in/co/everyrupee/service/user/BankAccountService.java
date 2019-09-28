@@ -78,8 +78,7 @@ public class BankAccountService implements IBankAccountService {
 	int count = 0;
 	for (BankAccount bankAccount : linkedBA) {
 	    // Fetches the first four accounts for preview
-	    count++;
-	    if (count >= 4) {
+	    if (count >= 3) {
 		break;
 	    }
 
@@ -95,6 +94,7 @@ public class BankAccountService implements IBankAccountService {
 	    }
 
 	    selectedBA.add(bankAccount);
+	    count++;
 	}
 
 	return selectedBA;

@@ -140,7 +140,43 @@
 	position: absolute;
     left: 41%;
     top: 40%;
-} 
+}
+
+.bARow:hover {
+    background-color: #f2f5f7;
+}
+
+.bAAmount, .bAName, .bAIcon {
+	border-top: 1px solid #f6f6f6;
+	color: #5d7079;
+}
+
+.bAHeading {
+	color: #9f9fa5;
+}
+
+.bARow {
+	cursor: pointer;
+}
+
+.bARow:hover .bAIcon {
+	color: #00bcd4;
+}
+
+.bAFooter {
+	position: absolute;
+    bottom: 0.5rem;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.manageBA {
+	position: absolute;
+    bottom: 15.3rem;
+    right: 0.4rem;
+}
 
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
@@ -149,4 +185,14 @@
 	    left: 79.1%;
 	}
 	
+	.bAName {
+	    font-size: 1rem;
+	}
+}
+
+/** Change the size of the text if the width and height of the screen are less **/
+@media (max-width:1300px) {
+	.bAName {
+	    font-size: 0.7rem;
+	}
 }

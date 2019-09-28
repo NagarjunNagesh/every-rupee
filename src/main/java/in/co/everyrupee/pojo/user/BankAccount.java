@@ -19,6 +19,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.constants.user.BankAccountConstants;
 
@@ -59,10 +62,12 @@ public class BankAccount {
 
     @NotNull
     @Column(name = BankAccountConstants.FINANCIAL_PORTFOLIO_ID)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private Integer financialPortfolioId;
 
     @NotNull
     @Column(name = BankAccountConstants.USER_ID)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private Integer userId;
 
     @NotNull
@@ -72,11 +77,13 @@ public class BankAccount {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.CREATION_DATE)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private Date createDate;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.MODIFICATION_DATE)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private Date modifyDate;
 
     @NotNull

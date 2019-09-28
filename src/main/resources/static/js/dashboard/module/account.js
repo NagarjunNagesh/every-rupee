@@ -4,7 +4,8 @@ const BANK_ACCOUNT_CONSTANTS = {};
 Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
 	'backslash': { value: '/', writable: false, configurable: false },
-	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false }
+	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false },
+	'bankAccountPreviewUrl' : { value: '/preview', writable: false, configurable: false }
 });
 
 // Account Information display
@@ -169,7 +170,7 @@ er_a = {
 		fetchBankAccountInfo() {
 			$.ajax({
 		          type: "GET",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.backslash,
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountPreviewUrl,
 		          dataType: "json",
 		          success : function(bankAccountList) {
 		        	  er_a.populateBankInfo(bankAccountList);
@@ -198,18 +199,75 @@ er_a = {
 
 // Populate bank account info
 function populateAccountInfo(bankAccountsInfo) {
-	let maxLength = bankAccountsInfo.length > 2 ? 2 : bankAccountsInfo.length;
 	let selectedAccountP = false;
+	let bAFragment = document.createDocumentFragment();
 	
+	// Bank Account Heading
+	let bAHRow = document.createElement('div');
+	bAHRow.classList = 'row';
+	
+	let bAHeading = document.createElement('h4');
+	bAHeading.classList = 'bAHeading text-left pl-3 pr-0 col-lg-7 font-weight-bold';
+	bAHeading.innerText = 'All Accounts';
+	bAHRow.appendChild(bAHeading);
+	
+	let bAManage = document.createElement('a');
+	bAManage.classList = 'text-info text-right col-lg-5 pr-3 manageBA';
+	bAManage.innerText = 'manage';
+	bAHRow.appendChild(bAManage);
+	bAFragment.appendChild(bAHRow);
+
 	// Populate the rest of the bank account
-	for(let i = 0; i < maxLength; i++) {
-		populateBankAccountInfo(bankAccountsInfo[i]);
+	console.log(bankAccountsInfo.length);
+	for(let i = 0, length = bankAccountsInfo.length; i < length; i++) {
+		bAFragment.appendChild(populateBankAccountInfo(bankAccountsInfo[i]));
 	}
+	
+	// Bank Account Footer
+	let bAFooter = document.createElement('button');
+	bAFooter.classList = 'bAFooter btn-sm btn btn-info btn-round';
+	bAFooter.innerHTML = '<i class="material-icons pr-2">add_circle_outline</i> Add Account';
+	bAFragment.appendChild(bAFooter);
+	
+	
+	// Append the fragment to the account picker
+	let accountPickerModal = document.getElementById('accountPickerWrapper');
+	// Replace the HTML to empty and then append child
+	while (accountPickerModal.firstChild) {
+		accountPickerModal.removeChild(accountPickerModal.firstChild);
+	}
+	accountPickerModal.appendChild(bAFragment);
 }
 
 // Populate one Bank account info
 function populateBankAccountInfo(bankAccount) {
-	console.log(bankAccount);
+	let wrapperRow = document.createElement('div');
+	wrapperRow.classList = 'row bARow';
+	
+	// Link Icon
+	let linkIcon = document.createElement('i');
+	linkIcon.classList = 'col-lg-2 material-icons py-2 bAIcon';
+	
+	if(bankAccount.linkecd) {
+		linkIcon.innerText = 'link';
+	} else {
+		linkIcon.innerText = 'link_off';
+	}
+	wrapperRow.appendChild(linkIcon);
+	
+	// Bank Account Name
+	let bAName = document.createElement('div');
+	bAName.classList = 'col-lg-5 text-left bAName py-2';
+	bAName.innerText = bankAccount.bankAccountName;
+	wrapperRow.appendChild(bAName);
+	
+	// Bank Account Balance
+	let bABalance = document.createElement('div');
+	bABalance.classList = 'col-lg-5 text-right font-weight-bold py-2 bAAmount';
+	bABalance.innerText = currentCurrencyPreference + formatNumber(bankAccount.accountBalance, currentUser.locale);
+	wrapperRow.appendChild(bABalance);
+	
+	return wrapperRow;
 }
 
 // Populate Empty Account Info
@@ -265,7 +323,6 @@ function populateEmptyAccountInfo() {
 	syncSVGTwo.setAttribute('width','20');
 	syncSVGTwo.setAttribute('height','20');
 	syncSVGTwo.setAttribute('viewBox','0 0 32 32');
-	
 	
 	let gElement = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 	
