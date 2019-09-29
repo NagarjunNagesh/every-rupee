@@ -190,6 +190,18 @@
     right: 0.4rem;
 }
 
+.arrowWrapBA {
+	position: absolute;
+    top: 40%;
+    left: 0.2rem;
+}
+
+.arrowWrapBA i {
+	font-size: 1.3rem;
+	color: #b7b3b3;
+	cursor: pointer;
+}
+
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
 	

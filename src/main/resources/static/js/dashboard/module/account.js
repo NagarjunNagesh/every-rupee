@@ -188,13 +188,20 @@ $(document).ready(function(){
 	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 	          data : values,
 	          success: function(){
-	        	  let bARows = document.getElementsByClassName('bARow');
+	        	  // Remove Selected Account
+	        	  for(let i = 0, length = bankAccountPreview.length; i < length; i++) {
+	        		  if(bankAccountPreview[i].id == bankAccountPreview[Number(position)-1].id) {
+	        			  bankAccountPreview[i].selectedAccount = true;
+	        		  }
+	        	  }
 	        	  
+	        	  let bARows = document.getElementsByClassName('bARow');
 	        	  // Remove class from list
 	        	  for(let i = 0, length = bARows.length; i < length; i++) {
 	        		  let rowElem = bARows[i];
 	        		  if(rowElem.classList.contains('selectedBA')) {
 	        			  rowElem.classList.remove('selectedBA');
+	        			  bankAccountPreview[i].selectedAccount = false;
 	        		  }
 	        	  }
 	        	  
@@ -214,8 +221,31 @@ $(document).ready(function(){
 	
 	// Click Add Account button
 	$('#accountPickerWrapper').on('click', ".bAFooter", function() {
+		// Account Picker Wrapper
+		let accountPickerModal = document.getElementById('accountPickerWrapper');
+		
 		// Populate add options while clicking add account
 		populateEmptyAccountInfo();
+		// Append Back Arrow
+		let arrowFrag = document.createDocumentFragment();
+		
+		let arrowWrapper = document.createElement('div');
+		arrowWrapper.classList = 'arrowWrapBA';
+		
+		let arrowIcon = document.createElement('i');
+		arrowIcon.classList = 'material-icons';
+		arrowIcon.innerText = 'keyboard_arrow_left';
+		arrowWrapper.appendChild(arrowIcon);
+		arrowFrag.appendChild(arrowWrapper);
+		
+		// Append to Account Element 
+		accountPickerModal.appendChild(arrowFrag);
+	});
+	
+	// Click Back Button
+	$('#accountPickerWrapper').on('click', ".arrowWrapBA", function() {
+		// Bank Account Preview
+		er_a.populateBankInfo(bankAccountPreview);
 	});
 });
 
