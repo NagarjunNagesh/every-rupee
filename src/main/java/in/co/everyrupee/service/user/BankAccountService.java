@@ -1,7 +1,9 @@
 package in.co.everyrupee.service.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -58,6 +60,63 @@ public class BankAccountService implements IBankAccountService {
 	newAccount.setAccountType(
 		AccountType.valueOf(formData.getFirst(BankAccountConstants.ACCOUNT_TYPE_PARAM).replaceAll("\\s+", "")));
 	return bankAccountRepository.save(newAccount);
+    }
+
+    @Override
+    public List<BankAccount> previewBankAccounts(Integer financialPortfolioId) {
+	List<BankAccount> linkedBA = getAllBankAccounts(financialPortfolioId);
+	List<BankAccount> selectedBA = new ArrayList<BankAccount>();
+
+	// Fetch the first selected account
+	for (BankAccount bankAccount : linkedBA) {
+	    if (bankAccount.isSelectedAccount()) {
+		selectedBA.add(bankAccount);
+		break;
+	    }
+	}
+
+	int count = 0;
+	for (BankAccount bankAccount : linkedBA) {
+	    // Fetches the first four accounts for preview
+	    if (count >= 3) {
+		break;
+	    }
+
+	    // If there is none selected then set the first one as selected
+	    if (CollectionUtils.isEmpty(selectedBA)) {
+		bankAccount.setSelectedAccount(true);
+		// Saves the bank account as selected and stores the result in the selectedBA
+		selectedBA.add(bankAccountRepository.save(bankAccount));
+		continue;
+	    } else if (selectedBA.get(0).getId() == bankAccount.getId()) {
+		// If the bank account is already present in the object (selectedBA)
+		continue;
+	    }
+
+	    selectedBA.add(bankAccount);
+	    count++;
+	}
+
+	return selectedBA;
+    }
+
+    @Override
+    public void selectAccount(Integer pFinancialPortfolioId, MultiValueMap<String, String> formData) {
+	String bankAccountId = formData.getFirst(BankAccountConstants.BANK_ACCOUNT_ID);
+	String selectedAccount = formData.getFirst(BankAccountConstants.SELECTED_ACCOUNT_PARAM);
+
+	List<BankAccount> bankAccountList = bankAccountRepository.findAll();
+
+	// Convert bank account to selected
+	for (BankAccount bankAccount : bankAccountList) {
+	    if (bankAccount.getId() == Integer.parseInt(bankAccountId)) {
+		bankAccount.setSelectedAccount(Boolean.parseBoolean(selectedAccount));
+		bankAccountRepository.save(bankAccount);
+	    } else if (bankAccount.isSelectedAccount()) {
+		bankAccount.setSelectedAccount(false);
+		bankAccountRepository.save(bankAccount);
+	    }
+	}
     }
 
 }

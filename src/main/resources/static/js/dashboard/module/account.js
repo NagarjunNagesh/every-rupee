@@ -4,16 +4,24 @@ const BANK_ACCOUNT_CONSTANTS = {};
 Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'bankAccountUrl': { value: '/api/bankaccount', writable: false, configurable: false },
 	'backslash': { value: '/', writable: false, configurable: false },
-	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false }
+	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false },
+	'bankAccountPreviewUrl' : { value: '/preview', writable: false, configurable: false },
+	'bankAccountSelectUrl' : { value: '/select', writable: false, configurable: false }
 });
+let unsyncSVG = unsyncSVGFc();
+let syncSVG = syncSVGFc();
+// Constants for reference
+let bankAccountPreview = '';
 
 // Account Information display
 $(document).ready(function(){
-	
+
 	const accountTypeConst = ['Savings Account','Current Account','Cash','Assets','Credit Card','Liability'];
-	const accountTypeUCConst = ['SAVINGS ACCOUNT','CURRENT ACCOUNT','CASH','ASSETS','CREDIT CARD','LIABILITY'];
 	Object.freeze(accountTypeConst);
 	Object.seal(accountTypeConst);
+	const accountTypeUCConst = ['SAVINGS ACCOUNT','CURRENT ACCOUNT','CASH','ASSETS','CREDIT CARD','LIABILITY'];
+	Object.freeze(accountTypeUCConst);
+	Object.seal(accountTypeUCConst);
 	// Toggle Account Information
 	document.getElementById("showAccounts").addEventListener("click",function(){
 		let accountPickerClass = document.getElementById('accountPickerWrapper').classList;
@@ -162,6 +170,83 @@ $(document).ready(function(){
 		}
 	});
 	
+	// Click on an account to select
+	$('#accountPickerWrapper').on('click', ".bARow", function() {
+		let position = lastElement(splitElement(this.id,'-'));
+		let currentElem = this;
+		
+		// Populate the JSON form data
+    	var values = {};
+		values['id'] = bankAccountPreview[Number(position)-1].id;
+		values['selectedAccount'] = 'true';
+		
+		// AJAX call for adding a new unlinked Account
+    	$.ajax({
+	          type: "POST",
+	          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountSelectUrl,
+	          dataType: "json",
+	          contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	          data : values,
+	          success: function(){
+	        	  // Remove Selected Account
+	        	  for(let i = 0, length = bankAccountPreview.length; i < length; i++) {
+	        		  if(bankAccountPreview[i].id == bankAccountPreview[Number(position)-1].id) {
+	        			  bankAccountPreview[i].selectedAccount = true;
+	        		  }
+	        	  }
+	        	  
+	        	  let bARows = document.getElementsByClassName('bARow');
+	        	  // Remove class from list
+	        	  for(let i = 0, length = bARows.length; i < length; i++) {
+	        		  let rowElem = bARows[i];
+	        		  if(rowElem.classList.contains('selectedBA')) {
+	        			  rowElem.classList.remove('selectedBA');
+	        			  bankAccountPreview[i].selectedAccount = false;
+	        		  }
+	        	  }
+	        	  
+	        	  currentElem.classList.add('selectedBA');
+	          },
+	          error: function(thrownError) {
+	        	  var responseError = JSON.parse(thrownError.responseText);
+	        	  if(responseError.error.includes("Unauthorized")){
+	        		  er.sessionExpiredSwal(thrownError);
+	        	  } else{
+	        		  showNotification('Unable to select the account at this moment. Please try again!','top','center','danger');
+	        	  }
+	          }
+    	});
+    	
+	});
+	
+	// Click Add Account button
+	$('#accountPickerWrapper').on('click', ".bAFooter", function() {
+		// Account Picker Wrapper
+		let accountPickerModal = document.getElementById('accountPickerWrapper');
+		
+		// Populate add options while clicking add account
+		populateEmptyAccountInfo();
+		// Append Back Arrow
+		let arrowFrag = document.createDocumentFragment();
+		
+		let arrowWrapper = document.createElement('div');
+		arrowWrapper.classList = 'arrowWrapBA';
+		
+		let arrowIcon = document.createElement('i');
+		arrowIcon.classList = 'material-icons';
+		arrowIcon.innerText = 'keyboard_arrow_left';
+		arrowWrapper.appendChild(arrowIcon);
+		arrowFrag.appendChild(arrowWrapper);
+		
+		// Append to Account Element 
+		accountPickerModal.appendChild(arrowFrag);
+	});
+	
+	// Click Back Button
+	$('#accountPickerWrapper').on('click', ".arrowWrapBA", function() {
+		// Bank Account Preview
+		er_a.populateBankInfo(bankAccountPreview);
+	});
 });
 
 // Custom Functions to fetch all accounts
@@ -169,9 +254,12 @@ er_a = {
 		fetchBankAccountInfo() {
 			$.ajax({
 		          type: "GET",
-		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.backslash,
+		          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountPreviewUrl,
 		          dataType: "json",
 		          success : function(bankAccountList) {
+		        	  // Assign value to constant
+		        	  bankAccountPreview = bankAccountList;
+		        	  
 		        	  er_a.populateBankInfo(bankAccountList);
 		          },
 		          error: function(thrownError) {
@@ -198,32 +286,80 @@ er_a = {
 
 // Populate bank account info
 function populateAccountInfo(bankAccountsInfo) {
-	let maxLength = bankAccountsInfo.length > 2 ? 2 : bankAccountsInfo.length;
-	let selectedAccountP = false;
+	let bAFragment = document.createDocumentFragment();
 	
-	// Always print the default first
-	for(let i = 0; i < maxLength; i++) {
-		if(bankAccountsInfo[i].selectedAccount) {
-			populateBankAccountInfo(bankAccountsInfo[i]);
-			selectedAccountP = true;
-			break;
-		}
-	}
+	// Bank Account Heading
+	let bAHRow = document.createElement('div');
+	bAHRow.classList = 'row';
 	
-	// Print one less if the default is printed.
-	if(selectedAccountP) {
-		maxLength--;
-	}
+	let bAHeading = document.createElement('h4');
+	bAHeading.classList = 'bAHeading text-left pl-3 pr-0 col-lg-7 font-weight-bold';
+	bAHeading.innerText = 'All Accounts';
+	bAHRow.appendChild(bAHeading);
 	
+	let bAManage = document.createElement('a');
+	bAManage.classList = 'text-info text-right col-lg-5 pr-3 manageBA';
+	bAManage.innerText = 'manage';
+	bAHRow.appendChild(bAManage);
+	bAFragment.appendChild(bAHRow);
+
 	// Populate the rest of the bank account
-	for(let i = 0; i < maxLength; i++) {
-		populateBankAccountInfo(bankAccountsInfo[i]);
+	for(let i = 0, length = bankAccountsInfo.length; i < length; i++) {
+		let count = i + 1;
+		bAFragment.appendChild(populateBankAccountInfo(bankAccountsInfo[i], count));
 	}
+	
+	// Bank Account Footer
+	let bAFooter = document.createElement('button');
+	bAFooter.classList = 'bAFooter btn-sm btn btn-info btn-round';
+	bAFooter.innerHTML = '<i class="material-icons pr-2">add_circle_outline</i> Add Account';
+	bAFragment.appendChild(bAFooter);
+	
+	
+	// Append the fragment to the account picker
+	let accountPickerModal = document.getElementById('accountPickerWrapper');
+	// Replace the HTML to empty and then append child
+	while (accountPickerModal.firstChild) {
+		accountPickerModal.removeChild(accountPickerModal.firstChild);
+	}
+	accountPickerModal.appendChild(bAFragment);
 }
 
 // Populate one Bank account info
-function populateBankAccountInfo(bankAccount) {
-	console.log(bankAccount);
+function populateBankAccountInfo(bankAccount, count) {
+	let wrapperRow = document.createElement('div');
+	wrapperRow.classList = 'row bARow';
+	wrapperRow.id = 'bAR-' + count;
+	
+	// If Selected then highlight account
+	if(bankAccount.selectedAccount) {
+		wrapperRow.classList.add('selectedBA');
+	}
+	
+	// Link Icon
+	let wrapperSVG = document.createElement('div');
+	wrapperSVG.classList = 'col-lg-2 py-2 bAIcon';
+	
+	if(bankAccount.linked) {
+		syncSVG = cloneElementAndAppend(wrapperSVG, syncSVG);
+	} else {
+		unsyncSVG = cloneElementAndAppend(wrapperSVG, unsyncSVG);
+	}
+	wrapperRow.appendChild(wrapperSVG);
+	
+	// Bank Account Name
+	let bAName = document.createElement('div');
+	bAName.classList = 'col-lg-5 text-left bAName py-2';
+	bAName.innerText = bankAccount.bankAccountName;
+	wrapperRow.appendChild(bAName);
+	
+	// Bank Account Balance
+	let bABalance = document.createElement('div');
+	bABalance.classList = 'col-lg-5 text-right font-weight-bold py-2 bAAmount';
+	bABalance.innerText = currentCurrencyPreference + formatNumber(bankAccount.accountBalance, currentUser.locale);
+	wrapperRow.appendChild(bABalance);
+	
+	return wrapperRow;
 }
 
 // Populate Empty Account Info
@@ -279,7 +415,6 @@ function populateEmptyAccountInfo() {
 	syncSVGTwo.setAttribute('width','20');
 	syncSVGTwo.setAttribute('height','20');
 	syncSVGTwo.setAttribute('viewBox','0 0 32 32');
-	
 	
 	let gElement = document.createElementNS("http://www.w3.org/2000/svg", 'g');
 	
@@ -506,4 +641,35 @@ function unSyncedAccount() {
 	unsyncedDocumentFragment.appendChild(accountBalErr);
 	
     return unsyncedDocumentFragment;
+}
+
+// Build an SVG for SYNC image
+function syncSVGFc() {
+	let syncSVG = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	syncSVG.setAttribute('width','20');
+	syncSVG.setAttribute('height','20');
+	syncSVG.setAttribute('viewBox','0 0 128 128');
+	
+	let pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElement.setAttribute('d','M9.2 62.8c-.1 0-.2 0-.2 0-1.7-.1-2.9-1.6-2.8-3.2.5-6.3 2-12.4 4.4-18.1.6-1.5 2.4-2.2 3.9-1.6 1.5.6 2.2 2.4 1.6 3.9-2.2 5.2-3.5 10.6-3.9 16.2C12 61.6 10.7 62.8 9.2 62.8zM117.1 40.6c-.7-1.5-2.4-2.2-4-1.5-1.5.7-2.2 2.4-1.5 4 8.7 19.8 4.5 42.5-10.8 57.8C90.9 110.6 77.9 116 64 116c-11.2 0-21.9-3.5-30.8-10.1l0 0h4.9c1.7 0 3-1.3 3-3s-1.3-3-3-3h-13c-1.7 0-3 1.3-3 3v13c0 1.7 1.3 3 3 3s3-1.3 3-3v-6.3l0 0C38.6 117.8 51.3 122 64 122c14.9 0 29.7-5.7 41-17C122.1 88 126.8 62.7 117.1 40.6zM25.2 25.2c1.1 1.1 2.9 1.2 4.1.1C38.9 16.7 51.1 12 64 12c11.2 0 21.9 3.5 30.8 10.1l0 0-4.8 0c-1.6 0-3.1 1.2-3.2 2.8-.1 1.7 1.3 3.2 3 3.2h13c1.7 0 3-1.3 3-3V12.3c0-1.6-1.2-3.1-2.8-3.2-1.7-.1-3.2 1.3-3.2 3v6.3l0 0C78 1.1 46.3 1.9 25.3 20.8 24 22 24 24 25.2 25.2L25.2 25.2zM11.5 77.69999999999999A2.9 2.9 0 1 0 11.5 83.5 2.9 2.9 0 1 0 11.5 77.69999999999999z');
+	syncSVG.appendChild(pathElement);
+	
+	return syncSVG;
+}
+
+// Builds an SVG for unsync image
+function unsyncSVGFc() {
+	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	syncSVGTwo.setAttribute('width','20');
+	syncSVGTwo.setAttribute('height','20');
+	syncSVGTwo.setAttribute('viewBox','0 0 32 32');
+	
+	let gElement = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+	
+	let pathElementTwo = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElementTwo.setAttribute('d','M 15.507813 2.09375 L 14.09375 3.507813 L 16.617188 6.03125 C 16.410156 6.019531 16.210938 6 16 6 C 13.609375 6 11.417969 6.867188 9.695313 8.28125 L 3.707031 2.292969 L 2.292969 3.707031 L 28.292969 29.707031 L 29.707031 28.292969 L 23.71875 22.304688 C 25.136719 20.582031 26 18.390625 26 16 C 26 14.5 25.699219 13.101563 25.097656 11.902344 L 23.597656 13.402344 C 23.898438 14.199219 24 15.101563 24 16 C 24 17.839844 23.359375 19.535156 22.300781 20.890625 L 11.109375 9.695313 C 12.464844 8.640625 14.160156 8 16 8 C 16.1875 8 16.371094 8.015625 16.558594 8.03125 L 14.09375 10.492188 L 15.507813 11.90625 L 20.414063 7 Z M 7.160156 11.347656 C 6.421875 12.738281 6 14.324219 6 16 C 6 17.5 6.300781 18.898438 6.898438 20.097656 L 8.398438 18.597656 C 8.199219 17.800781 8 16.898438 8 16 C 8 14.878906 8.234375 13.8125 8.65625 12.84375 Z M 16.199219 20.386719 L 11.585938 25 L 16.492188 29.90625 L 17.90625 28.492188 L 15.378906 25.96875 C 15.585938 25.980469 15.792969 26 16 26 C 17.675781 26 19.261719 25.578125 20.652344 24.839844 L 19.15625 23.34375 C 18.1875 23.765625 17.121094 24 16 24 C 15.8125 24 15.628906 23.988281 15.441406 23.972656 L 17.613281 21.800781 Z ');
+	gElement.appendChild(pathElementTwo);
+	syncSVGTwo.appendChild(gElement);
+	
+	return syncSVGTwo
 }
