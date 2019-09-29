@@ -146,9 +146,21 @@
     background-color: #f2f5f7;
 }
 
+.selectedBA {
+	background-color: #f2f5f7;
+}
+
+.selectedBA .bAIcon path{
+	fill: #00bcd4;
+}
+
 .bAAmount, .bAName, .bAIcon {
 	border-top: 1px solid #f6f6f6;
 	color: #5d7079;
+}
+
+.bAIcon path {
+	fill: #5d7079;
 }
 
 .bAHeading {
@@ -159,8 +171,8 @@
 	cursor: pointer;
 }
 
-.bARow:hover .bAIcon {
-	color: #00bcd4;
+.bARow:hover .bAIcon path{
+	fill: #00bcd4;
 }
 
 .bAFooter {

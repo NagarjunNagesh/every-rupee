@@ -100,4 +100,23 @@ public class BankAccountService implements IBankAccountService {
 	return selectedBA;
     }
 
+    @Override
+    public void selectAccount(Integer pFinancialPortfolioId, MultiValueMap<String, String> formData) {
+	String bankAccountId = formData.getFirst(BankAccountConstants.BANK_ACCOUNT_ID);
+	String selectedAccount = formData.getFirst(BankAccountConstants.SELECTED_ACCOUNT_PARAM);
+
+	List<BankAccount> bankAccountList = bankAccountRepository.findAll();
+
+	// Convert bank account to selected
+	for (BankAccount bankAccount : bankAccountList) {
+	    if (bankAccount.getId() == Integer.parseInt(bankAccountId)) {
+		bankAccount.setSelectedAccount(Boolean.parseBoolean(selectedAccount));
+		bankAccountRepository.save(bankAccount);
+	    } else if (bankAccount.isSelectedAccount()) {
+		bankAccount.setSelectedAccount(false);
+		bankAccountRepository.save(bankAccount);
+	    }
+	}
+    }
+
 }

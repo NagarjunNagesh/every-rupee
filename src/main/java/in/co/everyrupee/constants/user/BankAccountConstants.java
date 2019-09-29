@@ -17,5 +17,6 @@ public class BankAccountConstants {
     public static final String ACCOUNT_TYPE_COLUMN_DEFINITION = "varchar(64) default 'CASH'";
     public static final String ACCOUNT_TYPE_PARAM = "accountType";
     public static final String SELECTED_ACCOUNT = "selected_account";
+    public static final String SELECTED_ACCOUNT_PARAM = "selectedAccount";
 
 }

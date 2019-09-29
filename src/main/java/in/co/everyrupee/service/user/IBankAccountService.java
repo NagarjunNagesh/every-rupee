@@ -31,4 +31,13 @@ public interface IBankAccountService {
      * @return
      */
     public List<BankAccount> previewBankAccounts(Integer financialPortfolioId);
+
+    /**
+     * Select Account
+     * 
+     * @param pFinancialPortfolioId
+     * @param formData
+     * @return
+     */
+    public void selectAccount(Integer pFinancialPortfolioId, MultiValueMap<String, String> formData);
 }
