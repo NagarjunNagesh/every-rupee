@@ -286,7 +286,6 @@ er_a = {
 
 // Populate bank account info
 function populateAccountInfo(bankAccountsInfo) {
-	let selectedAccountP = false;
 	let bAFragment = document.createDocumentFragment();
 	
 	// Bank Account Heading
