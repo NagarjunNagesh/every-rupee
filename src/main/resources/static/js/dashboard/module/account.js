@@ -503,8 +503,8 @@ $(document).ready(function(){
 		}
 		
 		// Remove know more if present
-		if(accountPickerWrapper.contains('knowMore')) {
-			accountPickerWrapper.remove('knowMore');
+		if(accountPickerModal.classList.contains('knowMore')) {
+			accountPickerModal.classList.remove('knowMore');
 		}
 	});
 });
