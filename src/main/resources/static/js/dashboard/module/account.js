@@ -459,10 +459,7 @@ $(document).ready(function(){
 		// Append Back Arrow
 		let arrowWrapper = document.createElement('div');
 		arrowWrapper.classList = 'arrowWrapKM btn-info btn-round btn-sm btn';
-		
-		let arrowIcon = document.createElement('i');
-		arrowIcon.classList = 'material-icons';
-		arrowIcon.innerText = 'keyboard_arrow_left';
+		arrowWrapper.innerText = 'Back';
 		arrowWrapper.appendChild(arrowIcon);
 		knowMoreFrag.appendChild(arrowWrapper);
 		
