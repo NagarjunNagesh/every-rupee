@@ -45,18 +45,10 @@ $(document).ready(function(){
 		if(showAccountsDiv.contains(event.target)) {
 			// Remove event listener once the function performed its task
 			document.removeEventListener('mouseup', closeShowAccountsModal, false);
-			// Remove know more if present
-			if(accountPicker.classList.contains('knowMore')) {
-				accountPicker.classList.remove('knowMore');
-			}
 		} else if(!accountPicker.contains(event.target)) {
 			// Remove event listener once the function performed its task
 			document.removeEventListener('mouseup', closeShowAccountsModal, false);
 			accountPicker.classList.toggle('d-none');
-			// Remove know more if present
-			if(accountPicker.classList.contains('knowMore')) {
-				accountPicker.classList.remove('knowMore');
-			}
 		}
 		
 	}
@@ -239,11 +231,6 @@ $(document).ready(function(){
 		// Close the popup
 		accountPickerWrapper.add('d-none');
 		
-		// Remove know more if present
-		if(accountPickerWrapper.contains('knowMore')) {
-			accountPickerWrapper.remove('knowMore');
-		}
-		
 		// Remove event listener once the function performed its task
 		document.removeEventListener('mouseup', closeShowAccountsModal, false);
 	}
@@ -292,7 +279,7 @@ $(document).ready(function(){
 		
 		// Heading
 		let headingWrap = document.createElement('div');
-		headingWrap.classList = 'row';
+		headingWrap.classList = 'row aKMTitle';
 		
 		let svgElemWrapThree = document.createElement('div');
 		svgElemWrapThree.classList = 'col-lg-2 vertical-center-svg px-2 account-info-color infoAO';
@@ -308,14 +295,14 @@ $(document).ready(function(){
 		headingWrap.appendChild(svgElemWrapThree);
 		
 		let headingElem = document.createElement('h4');
-		headingElem.classList = 'col-lg-10 accOptions text-left pb-2';
+		headingElem.classList = 'col-lg-10 accOptions text-left pb-2 mb-0';
 		headingElem.innerText = 'Account Types';
 		headingWrap.appendChild(headingElem);
 		knowMoreFrag.appendChild(headingWrap);
 		
 		// Account Info Description
 		let accountInfoDesc = document.createElement('div');
-		accountInfoDesc.classList = 'accInfoDesc text-left small mt-2';
+		accountInfoDesc.classList = 'accInfoDesc text-left small mt-3';
 		accountInfoDesc.innerText = 'You will always have the option to unsync or sync the accounts at any time.';
 		knowMoreFrag.appendChild(accountInfoDesc);
 		
@@ -359,12 +346,12 @@ $(document).ready(function(){
 		
 		let titleSC1 = document.createElement('div');
 		titleSC1.classList = 'd-lg-table-cell';
-		titleSC1.innerText = 'Synced';
+		titleSC1.innerText = 'Sync';
 		firstTableRow.appendChild(titleSC1);
 		
 		let titlsTC1 = document.createElement('div');
 		titlsTC1.classList = 'd-lg-table-cell';
-		titlsTC1.innerText = 'Unsynced';
+		titlsTC1.innerText = 'Unsync';
 		firstTableRow.appendChild(titlsTC1);
 		tableInfo.appendChild(firstTableRow);
 		
@@ -374,16 +361,16 @@ $(document).ready(function(){
 		
 		let emptyFC2 = document.createElement('div');
 		emptyFC2.innerText = 'Import from a file*';
-		emptyFC2.classList = 'd-lg-table-cell';
+		emptyFC2.classList = 'd-lg-table-cell pt-2 text-left';
 		secondTableRow.appendChild(emptyFC2);
 		
 		let titleSC2 = document.createElement('div');
-		titleSC2.classList = 'd-lg-table-cell';
+		titleSC2.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titleSC2, tickIconSVG);
 		secondTableRow.appendChild(titleSC2);
 		
 		let titlsTC2 = document.createElement('div');
-		titlsTC2.classList = 'd-lg-table-cell';
+		titlsTC2.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titlsTC2, tickIconSVG);
 		secondTableRow.appendChild(titlsTC2);
 		tableInfo.appendChild(secondTableRow);
@@ -394,16 +381,16 @@ $(document).ready(function(){
 		
 		let emptyFC3 = document.createElement('div');
 		emptyFC3.innerText = 'Manual Entry';
-		emptyFC3.classList = 'd-lg-table-cell';
+		emptyFC3.classList = 'd-lg-table-cell pt-2 text-left';
 		ThirdTableRow.appendChild(emptyFC3);
 		
 		let titleSC3 = document.createElement('div');
-		titleSC3.classList = 'd-lg-table-cell';
+		titleSC3.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titleSC3, tickIconSVG);
 		ThirdTableRow.appendChild(titleSC3);
 		
 		let titlsTC3 = document.createElement('div');
-		titlsTC3.classList = 'd-lg-table-cell';
+		titlsTC3.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titlsTC3, tickIconSVG);
 		ThirdTableRow.appendChild(titlsTC3);
 		tableInfo.appendChild(ThirdTableRow);
@@ -414,16 +401,16 @@ $(document).ready(function(){
 		
 		let emptyFC4 = document.createElement('div');
 		emptyFC4.innerText = 'International Availability*';
-		emptyFC4.classList = 'd-lg-table-cell';
+		emptyFC4.classList = 'd-lg-table-cell pt-2 text-left';
 		FourthTableRow.appendChild(emptyFC4);
 		
 		let titleSC4 = document.createElement('div');
-		titleSC4.classList = 'd-lg-table-cell';
+		titleSC4.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titleSC4, tickIconSVG);
 		FourthTableRow.appendChild(titleSC4);
 		
 		let titlsTC4 = document.createElement('div');
-		titlsTC4.classList = 'd-lg-table-cell';
+		titlsTC4.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titlsTC4, tickIconSVG);
 		FourthTableRow.appendChild(titlsTC4);
 		tableInfo.appendChild(FourthTableRow);
@@ -434,16 +421,16 @@ $(document).ready(function(){
 		
 		let emptyFC5 = document.createElement('div');
 		emptyFC5.innerText = 'Mobile Apps Avilability';
-		emptyFC5.classList = 'd-lg-table-cell';
+		emptyFC5.classList = 'd-lg-table-cell pt-2 text-left';
 		FifthTableRow.appendChild(emptyFC5);
 		
 		let titleSC5 = document.createElement('div');
-		titleSC5.classList = 'd-lg-table-cell';
+		titleSC5.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titleSC5, tickIconSVG);
 		FifthTableRow.appendChild(titleSC5);
 		
 		let titlsTC5 = document.createElement('div');
-		titlsTC5.classList = 'd-lg-table-cell';
+		titlsTC5.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titlsTC5, tickIconSVG);
 		FifthTableRow.appendChild(titlsTC5);
 		tableInfo.appendChild(FifthTableRow);
@@ -454,20 +441,30 @@ $(document).ready(function(){
 		
 		let emptyFC6 = document.createElement('div');
 		emptyFC6.innerText = 'Connect To Your Financial Institution';
-		emptyFC6.classList = 'd-lg-table-cell';
+		emptyFC6.classList = 'd-lg-table-cell pt-2 text-left';
 		SixthTableRow.appendChild(emptyFC6);
 		
 		let titleSC6 = document.createElement('div');
-		titleSC6.classList = 'd-lg-table-cell';
+		titleSC6.classList = 'd-lg-table-cell pt-2';
 		tickIconSVG = cloneElementAndAppend(titleSC6, tickIconSVG);
 		SixthTableRow.appendChild(titleSC6);
 		
 		let titlsTC6 = document.createElement('div');
-		titlsTC6.classList = 'd-lg-table-cell';
+		titlsTC6.classList = 'd-lg-table-cell pt-2';
 		SixthTableRow.appendChild(titlsTC6);
 		tableInfo.appendChild(SixthTableRow);
 		tableReponsive.appendChild(tableInfo);
 		knowMoreFrag.appendChild(tableReponsive);
+		
+		// Append Back Arrow
+		let arrowWrapper = document.createElement('div');
+		arrowWrapper.classList = 'arrowWrapKM btn-info btn-round btn-sm btn';
+		
+		let arrowIcon = document.createElement('i');
+		arrowIcon.classList = 'material-icons';
+		arrowIcon.innerText = 'keyboard_arrow_left';
+		arrowWrapper.appendChild(arrowIcon);
+		knowMoreFrag.appendChild(arrowWrapper);
 		
 		// Replace the HTML to empty and then append child
 		while (accountPickerModal.firstChild) {
@@ -478,6 +475,38 @@ $(document).ready(function(){
 		accountPickerModal.classList.add('knowMore');
 		accountPickerModal.appendChild(knowMoreFrag);
 	}
+	
+	// Back Arrow Click
+	$('#accountPickerWrapper').on('click', ".arrowWrapKM", function() {
+		// Account Picker Wrapper
+		let accountPickerModal = document.getElementById('accountPickerWrapper');
+		
+		// Populate add options while clicking add account
+		populateEmptyAccountInfo();
+		
+		// If bank account is present then display back button
+		if(isNotEmpty(bankAccountPreview)) {
+			// Append Back Arrow
+			let arrowFrag = document.createDocumentFragment();
+			
+			let arrowWrapper = document.createElement('div');
+			arrowWrapper.classList = 'arrowWrapBA';
+			
+			let arrowIcon = document.createElement('i');
+			arrowIcon.classList = 'material-icons';
+			arrowIcon.innerText = 'keyboard_arrow_left';
+			arrowWrapper.appendChild(arrowIcon);
+			arrowFrag.appendChild(arrowWrapper);
+			
+			// Append to Account Element 
+			accountPickerModal.appendChild(arrowFrag);
+		}
+		
+		// Remove know more if present
+		if(accountPickerWrapper.contains('knowMore')) {
+			accountPickerWrapper.remove('knowMore');
+		}
+	});
 });
 
 // Custom Functions to fetch all accounts

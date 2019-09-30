@@ -208,7 +208,7 @@
 	color: #9f9fa5;
 }
 
-.infoAO, .accOptions {
+.aKMTitle {
 	border-bottom: 1px solid #f6f6f6;
 }
 
@@ -228,9 +228,15 @@
 }
 
 #accountPickerWrapper.knowMore {
-	height: 35rem;
+	height: 27rem;
 	transition: height 0.25s ease-in;
 	color: #5d7079;
+}
+
+.arrowWrapKM {
+    position: absolute;
+    top: 91%;
+    left: 1rem;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
