@@ -351,7 +351,7 @@ $(document).ready(function(){
 		
 		// Table First Row
 		let firstTableRow = document.createElement('div');
-		firstTableRow.classList = 'd-lg-table-row pt-2';
+		firstTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC1 = document.createElement('div');
 		emptyFC1.classList = 'd-lg-table-cell';
@@ -370,7 +370,7 @@ $(document).ready(function(){
 		
 		// Table Second Row 
 		let secondTableRow = document.createElement('div');
-		secondTableRow.classList = 'd-lg-table-row pt-2';
+		secondTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC2 = document.createElement('div');
 		emptyFC2.innerText = 'Import from a file*';
@@ -390,7 +390,7 @@ $(document).ready(function(){
 		
 		// Table Third Row
 		let ThirdTableRow = document.createElement('div');
-		ThirdTableRow.classList = 'd-lg-table-row pt-2';
+		ThirdTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC3 = document.createElement('div');
 		emptyFC3.innerText = 'Manual Entry';
@@ -410,7 +410,7 @@ $(document).ready(function(){
 		
 		// Table Fourth Row
 		let FourthTableRow = document.createElement('div');
-		FourthTableRow.classList = 'd-lg-table-row pt-2';
+		FourthTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC4 = document.createElement('div');
 		emptyFC4.innerText = 'International Availability*';
@@ -430,7 +430,7 @@ $(document).ready(function(){
 		
 		// Table Fifth Row
 		let FifthTableRow = document.createElement('div');
-		FifthTableRow.classList = 'd-lg-table-row pt-2';
+		FifthTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC5 = document.createElement('div');
 		emptyFC5.innerText = 'Mobile Apps Avilability';
@@ -450,7 +450,7 @@ $(document).ready(function(){
 		
 		// Table Six Row
 		let SixthTableRow = document.createElement('div');
-		SixthTableRow.classList = 'd-lg-table-row pt-2';
+		SixthTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC6 = document.createElement('div');
 		emptyFC6.innerText = 'Connect To Your Financial Institution';
