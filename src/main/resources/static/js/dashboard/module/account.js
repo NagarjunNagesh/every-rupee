@@ -331,7 +331,7 @@ $(document).ready(function(){
 		
 		// Third Table Head
 		let thirdTableHead = document.createElement('div');
-		secTableHead.classList = 'w-20 d-lg-table-cell';
+		thirdTableHead.classList = 'w-20 d-lg-table-cell';
 		unsyncSVG = cloneElementAndAppend(thirdTableHead, unsyncSVG);
 		tableHeading.appendChild(thirdTableHead);
 		tableInfo.appendChild(tableHeading);
@@ -355,22 +355,42 @@ $(document).ready(function(){
 		firstTableRow.appendChild(titlsTC1);
 		tableInfo.appendChild(firstTableRow);
 		
+		// Table Six Row
+		let SixthTableRow = document.createElement('div');
+		SixthTableRow.classList = 'd-lg-table-row';
+		
+		let emptyFC6 = document.createElement('div');
+		emptyFC6.innerText = 'Connect to your Financial Institution';
+		emptyFC6.classList = 'd-lg-table-cell pt-2 text-left align-middle';
+		SixthTableRow.appendChild(emptyFC6);
+		
+		let titleSC6 = document.createElement('div');
+		titleSC6.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
+		tickIconSVG = cloneElementAndAppend(titleSC6, tickIconSVG);
+		SixthTableRow.appendChild(titleSC6);
+		
+		let titlsTC6 = document.createElement('div');
+		titlsTC6.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
+		titlsTC6.appendChild(xMark());
+		SixthTableRow.appendChild(titlsTC6);
+		tableInfo.appendChild(SixthTableRow);
+		
 		// Table Second Row 
 		let secondTableRow = document.createElement('div');
 		secondTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC2 = document.createElement('div');
-		emptyFC2.innerText = 'Import from a file*';
-		emptyFC2.classList = 'd-lg-table-cell pt-2 text-left';
+		emptyFC2.innerText = 'Import from a file *';
+		emptyFC2.classList = 'd-lg-table-cell pt-2 text-left align-middle';
 		secondTableRow.appendChild(emptyFC2);
 		
 		let titleSC2 = document.createElement('div');
-		titleSC2.classList = 'd-lg-table-cell pt-2';
+		titleSC2.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titleSC2, tickIconSVG);
 		secondTableRow.appendChild(titleSC2);
 		
 		let titlsTC2 = document.createElement('div');
-		titlsTC2.classList = 'd-lg-table-cell pt-2';
+		titlsTC2.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titlsTC2, tickIconSVG);
 		secondTableRow.appendChild(titlsTC2);
 		tableInfo.appendChild(secondTableRow);
@@ -380,17 +400,17 @@ $(document).ready(function(){
 		ThirdTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC3 = document.createElement('div');
-		emptyFC3.innerText = 'Manual Entry';
-		emptyFC3.classList = 'd-lg-table-cell pt-2 text-left';
+		emptyFC3.innerText = 'Manually Enter Transactions';
+		emptyFC3.classList = 'd-lg-table-cell pt-2 text-left align-middle';
 		ThirdTableRow.appendChild(emptyFC3);
 		
 		let titleSC3 = document.createElement('div');
-		titleSC3.classList = 'd-lg-table-cell pt-2';
+		titleSC3.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titleSC3, tickIconSVG);
 		ThirdTableRow.appendChild(titleSC3);
 		
 		let titlsTC3 = document.createElement('div');
-		titlsTC3.classList = 'd-lg-table-cell pt-2';
+		titlsTC3.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titlsTC3, tickIconSVG);
 		ThirdTableRow.appendChild(titlsTC3);
 		tableInfo.appendChild(ThirdTableRow);
@@ -400,17 +420,17 @@ $(document).ready(function(){
 		FourthTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC4 = document.createElement('div');
-		emptyFC4.innerText = 'International Availability*';
-		emptyFC4.classList = 'd-lg-table-cell pt-2 text-left';
+		emptyFC4.innerText = 'International Availability *';
+		emptyFC4.classList = 'd-lg-table-cell pt-2 text-left align-middle';
 		FourthTableRow.appendChild(emptyFC4);
 		
 		let titleSC4 = document.createElement('div');
-		titleSC4.classList = 'd-lg-table-cell pt-2';
+		titleSC4.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titleSC4, tickIconSVG);
 		FourthTableRow.appendChild(titleSC4);
 		
 		let titlsTC4 = document.createElement('div');
-		titlsTC4.classList = 'd-lg-table-cell pt-2';
+		titlsTC4.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titlsTC4, tickIconSVG);
 		FourthTableRow.appendChild(titlsTC4);
 		tableInfo.appendChild(FourthTableRow);
@@ -420,39 +440,20 @@ $(document).ready(function(){
 		FifthTableRow.classList = 'd-lg-table-row';
 		
 		let emptyFC5 = document.createElement('div');
-		emptyFC5.innerText = 'Mobile Apps Avilability';
-		emptyFC5.classList = 'd-lg-table-cell pt-2 text-left';
+		emptyFC5.innerText = 'Mobile Apps Availability';
+		emptyFC5.classList = 'd-lg-table-cell pt-2 text-left align-middle';
 		FifthTableRow.appendChild(emptyFC5);
 		
 		let titleSC5 = document.createElement('div');
-		titleSC5.classList = 'd-lg-table-cell pt-2';
+		titleSC5.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titleSC5, tickIconSVG);
 		FifthTableRow.appendChild(titleSC5);
 		
 		let titlsTC5 = document.createElement('div');
-		titlsTC5.classList = 'd-lg-table-cell pt-2';
+		titlsTC5.classList = 'd-lg-table-cell pt-2 f6x3BckGrd align-middle';
 		tickIconSVG = cloneElementAndAppend(titlsTC5, tickIconSVG);
 		FifthTableRow.appendChild(titlsTC5);
 		tableInfo.appendChild(FifthTableRow);
-		
-		// Table Six Row
-		let SixthTableRow = document.createElement('div');
-		SixthTableRow.classList = 'd-lg-table-row';
-		
-		let emptyFC6 = document.createElement('div');
-		emptyFC6.innerText = 'Connect To Your Financial Institution';
-		emptyFC6.classList = 'd-lg-table-cell pt-2 text-left';
-		SixthTableRow.appendChild(emptyFC6);
-		
-		let titleSC6 = document.createElement('div');
-		titleSC6.classList = 'd-lg-table-cell pt-2';
-		tickIconSVG = cloneElementAndAppend(titleSC6, tickIconSVG);
-		SixthTableRow.appendChild(titleSC6);
-		
-		let titlsTC6 = document.createElement('div');
-		titlsTC6.classList = 'd-lg-table-cell pt-2';
-		SixthTableRow.appendChild(titlsTC6);
-		tableInfo.appendChild(SixthTableRow);
 		tableReponsive.appendChild(tableInfo);
 		knowMoreFrag.appendChild(tableReponsive);
 		
@@ -460,7 +461,6 @@ $(document).ready(function(){
 		let arrowWrapper = document.createElement('div');
 		arrowWrapper.classList = 'arrowWrapKM btn-info btn-round btn-sm btn';
 		arrowWrapper.innerText = 'Back';
-		arrowWrapper.appendChild(arrowIcon);
 		knowMoreFrag.appendChild(arrowWrapper);
 		
 		// Replace the HTML to empty and then append child
@@ -470,6 +470,10 @@ $(document).ready(function(){
 		
 		// Expand account picker and append child
 		accountPickerModal.classList.add('knowMore');
+		// For easing the height with transition
+		if(accountPickerModal.classList.contains('heightEI')) {
+			accountPickerModal.classList.remove('heightEI');
+		}
 		accountPickerModal.appendChild(knowMoreFrag);
 	}
 	
@@ -502,6 +506,8 @@ $(document).ready(function(){
 		// Remove know more if present
 		if(accountPickerModal.classList.contains('knowMore')) {
 			accountPickerModal.classList.remove('knowMore');
+			// For easing the height with transition
+			accountPickerModal.classList.add('heightEI');
 		}
 	});
 });
@@ -928,7 +934,7 @@ function unsyncSVGFc() {
 	gElement.appendChild(pathElementTwo);
 	syncSVGTwo.appendChild(gElement);
 	
-	return syncSVGTwo
+	return syncSVGTwo;
 }
 
 // Build a tick icon
@@ -951,4 +957,20 @@ function tickIcon() {
 	syncSVG.appendChild(pathElement1);
 	
 	return syncSVG;
+}
+
+function xMark() {
+	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	syncSVGTwo.setAttribute('x','0px');
+	syncSVGTwo.setAttribute('y','0px');
+	syncSVGTwo.setAttribute('width','15');
+	syncSVGTwo.setAttribute('height','15');
+	syncSVGTwo.setAttribute('viewBox','0 0 50 50');
+	
+	let pathElementTwo = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+	pathElementTwo.setAttribute('class', 'xWithRed');
+	pathElementTwo.setAttribute('d','M31.202,25l13.63-20.445c0.204-0.307,0.224-0.701,0.05-1.026S44.369,3,44,3h-7.34c-0.327,0-0.634,0.16-0.821,0.429L25,19 L14.16,3.429C13.973,3.16,13.667,3,13.34,3H6C5.631,3,5.292,3.203,5.118,3.528s-0.154,0.72,0.05,1.026L18.798,25L5.168,45.445 c-0.204,0.307-0.224,0.701-0.05,1.026S5.631,47,6,47h7.34c0.327,0,0.634-0.16,0.821-0.429L25,31l10.84,15.571 C36.027,46.84,36.333,47,36.66,47H44c0.369,0,0.708-0.203,0.882-0.528s0.154-0.72-0.05-1.026L31.202,25z');
+	syncSVGTwo.appendChild(pathElementTwo);
+	
+	return syncSVGTwo;
 }

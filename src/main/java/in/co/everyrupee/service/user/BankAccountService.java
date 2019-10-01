@@ -1,6 +1,7 @@
 package in.co.everyrupee.service.user;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -75,6 +76,9 @@ public class BankAccountService implements IBankAccountService {
 	    }
 	}
 
+	// Sort the list of bank accounts by number of times selected
+	linkedBA.sort(Comparator.comparing(BankAccount::getNumberOfTimesSelected).reversed());
+
 	int count = 0;
 	for (BankAccount bankAccount : linkedBA) {
 	    // Fetches the first four accounts for preview
@@ -111,6 +115,7 @@ public class BankAccountService implements IBankAccountService {
 	for (BankAccount bankAccount : bankAccountList) {
 	    if (bankAccount.getId() == Integer.parseInt(bankAccountId)) {
 		bankAccount.setSelectedAccount(Boolean.parseBoolean(selectedAccount));
+		bankAccount.setNumberOfTimesSelected(bankAccount.getNumberOfTimesSelected() + 1);
 		bankAccountRepository.save(bankAccount);
 	    } else if (bankAccount.isSelectedAccount()) {
 		bankAccount.setSelectedAccount(false);
