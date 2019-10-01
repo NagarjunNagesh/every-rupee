@@ -6,7 +6,8 @@ Object.defineProperties(BANK_ACCOUNT_CONSTANTS, {
 	'backslash': { value: '/', writable: false, configurable: false },
 	'bankAccountAddUrl' : { value: '/add', writable: false, configurable: false },
 	'bankAccountPreviewUrl' : { value: '/preview', writable: false, configurable: false },
-	'bankAccountSelectUrl' : { value: '/select', writable: false, configurable: false }
+	'bankAccountSelectUrl' : { value: '/select', writable: false, configurable: false },
+	'bankAccountCategorizeUrl' : { value: '/categorize', writable: false, configurable: false },
 });
 let unsyncSVG = unsyncSVGFc();
 let syncSVG = syncSVGFc();
@@ -510,6 +511,26 @@ $(document).ready(function(){
 			accountPickerModal.classList.add('heightEI');
 		}
 	});
+	
+	// Click View All 
+	$('#accountPickerWrapper').on('click', ".manageBA", function() {
+		$.ajax({
+	          type: "GET",
+	          url: BANK_ACCOUNT_CONSTANTS.bankAccountUrl + BANK_ACCOUNT_CONSTANTS.bankAccountCategorizeUrl,
+	          dataType: "json",
+	          success: function(categorizeBankAccount){
+	        	  console.log(categorizeBankAccount);
+	          },
+	          error: function(thrownError) {
+	        	  var responseError = JSON.parse(thrownError.responseText);
+	        	  if(responseError.error.includes("Unauthorized")){
+	        		  er.sessionExpiredSwal(thrownError);
+	        	  } else{
+	        		  showNotification('Unable to fetch the accounts linked with this profile. Please refresh to try again!','top','center','danger');
+	        	  }
+	          }
+		});
+	});
 });
 
 // Custom Functions to fetch all accounts
@@ -562,7 +583,7 @@ function populateAccountInfo(bankAccountsInfo) {
 	
 	let bAManage = document.createElement('a');
 	bAManage.classList = 'text-info text-right col-lg-5 pr-3 manageBA';
-	bAManage.innerText = 'manage';
+	bAManage.innerText = 'view all';
 	bAHRow.appendChild(bAManage);
 	bAFragment.appendChild(bAHRow);
 

@@ -2,6 +2,8 @@ package in.co.everyrupee.controller.user;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -85,6 +87,18 @@ public class BankAccountController {
 	getBankAccountService().selectAccount(pFinancialPortfolioId, formData);
 
 	return new GenericResponse("success");
+    }
+
+    /**
+     * Categorize the bank account
+     * 
+     * @param userPrincipal
+     * @return
+     */
+    @RequestMapping(value = "/categorize", method = RequestMethod.GET)
+    public Map<String, Set<BankAccount>> categorizeBankAccount(Principal userPrincipal) {
+	Integer pFinancialPortfolioId = getProfileService().validateUser(userPrincipal);
+	return getBankAccountService().categorizeBankAccount(pFinancialPortfolioId);
     }
 
     public ProfileService getProfileService() {

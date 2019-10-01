@@ -1,6 +1,8 @@
 package in.co.everyrupee.service.user;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.util.MultiValueMap;
 
@@ -40,4 +42,12 @@ public interface IBankAccountService {
      * @return
      */
     public void selectAccount(Integer pFinancialPortfolioId, MultiValueMap<String, String> formData);
+
+    /**
+     * Categorize Bank Account
+     * 
+     * @param pFinancialPortfolioId
+     * @return
+     */
+    public Map<String, Set<BankAccount>> categorizeBankAccount(Integer pFinancialPortfolioId);
 }

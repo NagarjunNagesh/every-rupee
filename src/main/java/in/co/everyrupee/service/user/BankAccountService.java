@@ -2,7 +2,11 @@ package in.co.everyrupee.service.user;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +126,25 @@ public class BankAccountService implements IBankAccountService {
 		bankAccountRepository.save(bankAccount);
 	    }
 	}
+    }
+
+    @Override
+    public Map<String, Set<BankAccount>> categorizeBankAccount(Integer pFinancialPortfolioId) {
+	List<BankAccount> bankAccountList = getAllBankAccounts(pFinancialPortfolioId);
+	Map<String, Set<BankAccount>> categorizeBankAccount = new HashMap<String, Set<BankAccount>>();
+
+	for (BankAccount bankAccount : bankAccountList) {
+	    Set<BankAccount> bankAccountSet = new HashSet<BankAccount>();
+
+	    if (categorizeBankAccount.keySet().contains(bankAccount.getAccountType().getType())) {
+		bankAccountSet = categorizeBankAccount.get(bankAccount.getAccountType().getType());
+	    }
+
+	    bankAccountSet.add(bankAccount);
+	    categorizeBankAccount.put(bankAccount.getAccountType().getType(), bankAccountSet);
+	}
+
+	return categorizeBankAccount;
     }
 
 }
