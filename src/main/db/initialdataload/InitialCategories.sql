@@ -24,4 +24,5 @@ insert into every_rupee.category (category_id, category_name, parent_category) V
 insert into every_rupee.category (category_id, category_name, parent_category) VALUES (22, "Insurance Payout", 2);
 insert into every_rupee.category (category_id, category_name, parent_category) VALUES (23, "Salary", 2);
 insert into every_rupee.category (category_id, category_name, parent_category) VALUES (24, "Other", 2);
+commit;
 
