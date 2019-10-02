@@ -18,5 +18,6 @@ public class BankAccountConstants {
     public static final String ACCOUNT_TYPE_PARAM = "accountType";
     public static final String SELECTED_ACCOUNT = "selected_account";
     public static final String SELECTED_ACCOUNT_PARAM = "selectedAccount";
+    public static final String NUMBER_OF_TIMES_SELECTED = "number_of_times_selected";
 
 }

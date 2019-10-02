@@ -77,19 +77,23 @@ public class BankAccount {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.CREATION_DATE)
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @JsonProperty(access = Access.AUTO)
     private Date createDate;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DashboardConstants.MODIFICATION_DATE)
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @JsonProperty(access = Access.AUTO)
     private Date modifyDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = BankAccountConstants.ACCOUNT_TYPE, columnDefinition = BankAccountConstants.ACCOUNT_TYPE_COLUMN_DEFINITION)
     private AccountType accountType;
+
+    @Column(name = BankAccountConstants.NUMBER_OF_TIMES_SELECTED, columnDefinition = "int default 0")
+    @JsonProperty(access = Access.AUTO)
+    private int numberOfTimesSelected;
 
     public int getId() {
 	return id;
@@ -161,6 +165,14 @@ public class BankAccount {
 
     public void setSelectedAccount(boolean selectedAccount) {
 	this.selectedAccount = selectedAccount;
+    }
+
+    public int getNumberOfTimesSelected() {
+	return numberOfTimesSelected;
+    }
+
+    public void setNumberOfTimesSelected(int numberOfTimesSelected) {
+	this.numberOfTimesSelected = numberOfTimesSelected;
     }
 
 }

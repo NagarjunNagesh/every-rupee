@@ -20,6 +20,8 @@
     border-radius: 5px;
     background: #fff;
     z-index: 10;
+    transition: height 0.25s ease-out;
+	transition: width 0.25s ease-out;
 }
 
 .accountInfoDisplay:after {
@@ -200,6 +202,62 @@
 	font-size: 1.3rem;
 	color: #b7b3b3;
 	cursor: pointer;
+}
+
+.accOptions {
+	color: #9f9fa5;
+}
+
+.aKMTitle {
+	border-bottom: 1px solid #f6f6f6;
+}
+
+.infoAO svg {
+	width: 1.1rem;
+	height: 1.1rem;
+}
+
+.tableHeadingDiv {
+	display: table-header-group;
+    text-transform: capitalize;
+    color: #8e999e;
+}
+
+.tableHeadingDiv svg, .tickPath1 {
+	fill: #00bcd4;
+}
+
+#accountPickerWrapper.knowMore {
+	height: 28rem;
+	transition: height 0.25s ease-in;
+	color: #5d7079;
+}
+
+.aKMTitle, .accInfoDesc, #accountPickerWrapper .table-responsive, .arrowWrapKM {
+	animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s; /* Firefox */
+    -webkit-animation: fadeIn 1s; /* Safari and Chrome */
+    -o-animation: fadeIn 1s; /* Opera */
+}
+
+#accountPickerWrapper.heightEI {
+	transition: height 0.25s ease-in;
+}
+
+.arrowWrapKM {
+    position: absolute;
+    top: 91%;
+    left: 1rem;
+}
+
+.f6x3BckGrd {
+	background: #f6f6f6;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+}
+
+.xWithRed {
+	fill: #e45c5c;
 }
 
 /** Change the size of the text if the width and height of the screen are less **/
