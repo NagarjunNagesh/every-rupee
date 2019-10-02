@@ -69,7 +69,7 @@ $(document).ready(function(){
 		// If the account Type is not in the selected
 		if(!includesStr(accountTypeConst,selectedAT)) {
 			accountTypeECL.remove('d-none');
-			changeClrBtn.remove('btn-info');
+			changeClrBtn.remove('btn-dynamic-color');
 			changeClrBtn.add('btn-danger');
 			accCfrmBtn.setAttribute('disabled','disabled');
 			return;
@@ -79,7 +79,7 @@ $(document).ready(function(){
 		if(!accountTypeECL.contains('d-none')) {
 			accountTypeECL.add('d-none');
 			changeClrBtn.remove('btn-danger');
-			changeClrBtn.add('btn-info');
+			changeClrBtn.add('btn-dynamic-color');
 		}
 		
 		// Enable confirm button
@@ -125,7 +125,7 @@ $(document).ready(function(){
 	        inputAttributes: {
 	            autocapitalize: 'on'
 	        },
-	        confirmButtonClass: 'createAccount btn btn-info',
+	        confirmButtonClass: 'createAccount btn btn-dynamic-color',
 	        confirmButtonText: 'Create Account',
 	        showCloseButton: true,
 	        buttonsStyling: false
@@ -460,7 +460,7 @@ $(document).ready(function(){
 		
 		// Append Back Arrow
 		let arrowWrapper = document.createElement('div');
-		arrowWrapper.classList = 'arrowWrapKM btn-info btn-round btn-sm btn';
+		arrowWrapper.classList = 'arrowWrapKM btn-round btn-sm btn btn-dynamic-color';
 		arrowWrapper.innerText = 'Back';
 		knowMoreFrag.appendChild(arrowWrapper);
 		
@@ -578,11 +578,11 @@ function populateAccountInfo(bankAccountsInfo) {
 	
 	let bAHeading = document.createElement('h4');
 	bAHeading.classList = 'bAHeading text-left pl-3 pr-0 col-lg-7 font-weight-bold';
-	bAHeading.innerText = 'All Accounts';
+	bAHeading.innerText = 'Accounts';
 	bAHRow.appendChild(bAHeading);
 	
 	let bAManage = document.createElement('a');
-	bAManage.classList = 'text-info text-right col-lg-5 pr-3 manageBA';
+	bAManage.classList = 'text-right col-lg-5 pr-3 manageBA text-dynamic-color';
 	bAManage.innerText = 'view all';
 	bAHRow.appendChild(bAManage);
 	bAFragment.appendChild(bAHRow);
@@ -595,7 +595,7 @@ function populateAccountInfo(bankAccountsInfo) {
 	
 	// Bank Account Footer
 	let bAFooter = document.createElement('button');
-	bAFooter.classList = 'bAFooter btn-sm btn btn-info btn-round';
+	bAFooter.classList = 'bAFooter btn-sm btn btn-round btn-dynamic-color';
 	bAFooter.innerHTML = '<i class="material-icons pr-2">add_circle_outline</i> Add Account';
 	bAFragment.appendChild(bAFooter);
 	
@@ -804,7 +804,7 @@ function unSyncedAccount() {
 	dropdownGroup.appendChild(displaySelected);
 	
 	let dropdownTrigger = document.createElement('button');
-	dropdownTrigger.classList = 'changeBtnClr btn btn-info dropdown-toggle dropdown-toggle-split';
+	dropdownTrigger.classList = 'changeBtnClr btn btn-dynamic-color dropdown-toggle dropdown-toggle-split';
 	dropdownTrigger.setAttribute('data-toggle' , 'dropdown');
 	dropdownTrigger.setAttribute('aria-haspopup' , 'true');
 	dropdownTrigger.setAttribute('aria-expanded' , 'false');

@@ -1,16 +1,14 @@
 @charset "UTF-8";
 #accountPickerWrapper {
-	top: 4rem;
-    left: 54.35rem;
+	top: 110%;
+    left: -312%;
     padding: 1rem;
 }
 
 .accountInfoDisplay {
 	position: absolute;
-    top: 5.3rem;
-    right: -1.2rem;
-    left: 1.2rem;
-    min-width: 10rem;
+    min-width: 15rem;
+    width: 18rem;
     height: 18rem;
     min-height: 18rem;
     text-align: center;
@@ -48,10 +46,6 @@
     text-align: center;
 }
 
-.account-info-color {
-	color: #009cc2;
-	fill: #009cc2;
-}
 
 .separator-text {
 	border-bottom: 1px solid rgba(0,0,0,.15);
@@ -72,7 +66,6 @@
 }
 
 .account-box {
-	background: rgba(0,156,194,.1);
     border-radius: .25rem;
     cursor: pointer;
     height: 5rem;
@@ -82,15 +75,12 @@
     width: 100%;
 }
 
-.account-box:hover {
-	background: #009cc2;
-	color: #fff;
-	fill: #fff;
+.knowMoreAccount:hover {
+    font-weight: 700;
 }
 
-.knowMoreAccount:hover {
-	color: #009cc2;
-    font-weight: 700;
+.arrowWrapBA:hover i {
+    color: #655959;
 }
 
 .account-footer-title {
@@ -152,10 +142,6 @@
 	background-color: #f2f5f7;
 }
 
-.selectedBA .bAIcon path{
-	fill: #00bcd4;
-}
-
 .bAAmount, .bAName, .bAIcon {
 	border-top: 1px solid #f6f6f6;
 	color: #5d7079;
@@ -173,9 +159,6 @@
 	cursor: pointer;
 }
 
-.bARow:hover .bAIcon path{
-	fill: #00bcd4;
-}
 
 .bAFooter {
 	position: absolute;
@@ -190,6 +173,7 @@
 	position: absolute;
     bottom: 15.3rem;
     right: 0.4rem;
+    cursor: pointer;
 }
 
 .arrowWrapBA {
@@ -223,10 +207,6 @@
     color: #8e999e;
 }
 
-.tableHeadingDiv svg, .tickPath1 {
-	fill: #00bcd4;
-}
-
 #accountPickerWrapper.knowMore {
 	height: 28rem;
 	transition: height 0.25s ease-in;
@@ -256,16 +236,8 @@
 	border-right: 1px solid #fff;
 }
 
-.xWithRed {
-	fill: #e45c5c;
-}
-
 /** Change the size of the text if the width and height of the screen are less **/
 @media (min-width:1301px) {
-	
-	#accountPickerWrapper {
-	    left: 79.1%;
-	}
 	
 	.bAName {
 	    font-size: 1rem;

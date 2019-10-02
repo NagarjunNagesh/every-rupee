@@ -95,3 +95,20 @@ function formatLargeCurrencies(value) {
 	
 	return value;
 }
+
+function calcPage() {
+	// Fetch the current active sidebar
+	let sideBarId = currentActiveSideBar.id;
+	
+	if(isEqual(sideBarId, CUSTOM_DASHBOARD_CONSTANTS.overviewDashboardId)) {
+		return 'info';
+	} else if(isEqual(sideBarId, CUSTOM_DASHBOARD_CONSTANTS.transactionDashboardId)) {
+		return 'success';
+	} else if (isEqual(sideBarId, CUSTOM_DASHBOARD_CONSTANTS.budgetDashboardId)) {
+		return 'rose';
+	} else if (isEqual(sideBarId, CUSTOM_DASHBOARD_CONSTANTS.goalDashboardId)) {
+		return 'warning';
+	}
+	
+	return 'info';
+}
