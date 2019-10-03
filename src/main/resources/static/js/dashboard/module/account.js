@@ -520,6 +520,28 @@ $(document).ready(function(){
 	          dataType: "json",
 	          success: function(categorizeBankAccount){
 	        	  console.log(categorizeBankAccount);
+	        	  let bAFragment = document.createDocumentFragment();
+		          // Fetch all the key set for the result
+	        	  let resultKeySet = Object.keys(categorizeBankAccount)
+	        	  for(let countGrouped = 0, lengthArray = resultKeySet.length; countGrouped < lengthArray; countGrouped++) {
+	        		  let key = resultKeySet[countGrouped];
+	             	  let value = categorizeBankAccount[key];
+	             	  bAFragment.appendChild(populateBAHead(value));
+	             	  let valueElementKeySet = Object.keys(value)
+	             	  for(let count = 0, length = valueElementKeySet.length; count < length; count++) {
+	             		  let subKey = valueElementKeySet[count];
+	     				  let subValue = value[subKey];
+	     				  bAFragment.appendChild(populateBankAccountInfo(subValue, count));
+	             	  }
+	        	  }
+	        	  
+	        	  // Append the fragment to the account picker
+	        	  let accountPickerModal = document.getElementById('accountPickerWrapper');
+	        	  // Replace the HTML to empty and then append child
+	        	  while (accountPickerModal.firstChild) {
+	        		  accountPickerModal.removeChild(accountPickerModal.firstChild);
+	        	  }
+	        	  accountPickerModal.appendChild(bAFragment);
 	          },
 	          error: function(thrownError) {
 	        	  var responseError = JSON.parse(thrownError.responseText);
@@ -980,6 +1002,7 @@ function tickIcon() {
 	return syncSVG;
 }
 
+// Build an X with SVG
 function xMark() {
 	let syncSVGTwo = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	syncSVGTwo.setAttribute('x','0px');
@@ -994,4 +1017,14 @@ function xMark() {
 	syncSVGTwo.appendChild(pathElementTwo);
 	
 	return syncSVGTwo;
+}
+
+// Build head for view all
+function populateBAHead(headValue) {
+	let divHead = document.createElement('div');
+	divHead.classList = '';
+	divHead.innerText = headValue;
+	
+	return divHead;
+	
 }
