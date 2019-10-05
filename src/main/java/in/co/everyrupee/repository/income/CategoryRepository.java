@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import in.co.everyrupee.pojo.income.Category;
-import in.co.everyrupee.pojo.income.UserTransaction;
 
 /**
  * Reference category repository
@@ -16,9 +15,7 @@ import in.co.everyrupee.pojo.income.UserTransaction;
  *
  */
 @Repository
-public interface CategoryRepository extends JpaRepository<UserTransaction, Integer> {
-    List<UserTransaction> findByCategoryId(Integer userId);
-
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("select c from Category c")
     List<Category> fetchAllCategories();
 
