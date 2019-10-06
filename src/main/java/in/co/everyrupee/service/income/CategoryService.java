@@ -21,40 +21,40 @@ import in.co.everyrupee.utils.ERStringUtils;
 @Service
 public class CategoryService implements ICategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
 
-    @Override
-    @Cacheable(DashboardConstants.Category.CATEGORY_CACHE_NAME)
-    public List<Category> fetchCategories() {
-	List<Category> categoriesList = categoryRepository.fetchAllCategories();
+	@Override
+	@Cacheable(value = DashboardConstants.Category.CATEGORY_CACHE_NAME, key = "#root.method.name")
+	public List<Category> fetchCategories() {
+		List<Category> categoriesList = categoryRepository.fetchAllCategories();
 
-	if (CollectionUtils.isEmpty(categoriesList)) {
-	    throw new ResourceNotFoundException("Category", "categories", "all");
-	}
-	return categoriesList;
-    }
-
-    @Override
-    @Cacheable(DashboardConstants.Category.CATEGORY_INCOME_OR_NOT)
-    public Boolean categoryIncome(int categoryId) {
-	List<Category> categoriesList = categoryRepository.fetchAllCategories();
-
-	if (CollectionUtils.isEmpty(categoriesList)) {
-	    throw new ResourceNotFoundException("Category", "categories", "all");
+		if (CollectionUtils.isEmpty(categoriesList)) {
+			throw new ResourceNotFoundException("Category", "categories", "all");
+		}
+		return categoriesList;
 	}
 
-	Optional<Category> category = categoriesList.stream().filter(x -> categoryId == x.getCategoryId()).findFirst();
+	@Override
+	@Cacheable(value = DashboardConstants.Category.CATEGORY_INCOME_OR_NOT, key = "#root.method.name")
+	public Boolean categoryIncome(int categoryId) {
+		List<Category> categoriesList = categoryRepository.fetchAllCategories();
 
-	if (category.isPresent()) {
-	    Category currentCategory = category.get();
-	    if (ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), GenericConstants.INCOME_CATEGORY)) {
-		return true;
-	    }
-	    return false;
+		if (CollectionUtils.isEmpty(categoriesList)) {
+			throw new ResourceNotFoundException("Category", "categories", "all");
+		}
+
+		Optional<Category> category = categoriesList.stream().filter(x -> categoryId == x.getCategoryId()).findFirst();
+
+		if (category.isPresent()) {
+			Category currentCategory = category.get();
+			if (ERStringUtils.equalsIgnoreCase(currentCategory.getParentCategory(), GenericConstants.INCOME_CATEGORY)) {
+				return true;
+			}
+			return false;
+		}
+
+		return null;
 	}
-
-	return null;
-    }
 
 }
