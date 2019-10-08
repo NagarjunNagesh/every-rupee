@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PostPersist;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
+import in.co.everyrupee.constants.income.DashboardConstants;
 import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 
 /**
@@ -37,7 +39,8 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 public class Profile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = DashboardConstants.ID_SEQ)
+    @SequenceGenerator(name = DashboardConstants.ID_SEQ, sequenceName = DashboardConstants.ID_SEQ, allocationSize = 100)
     @Column(name = ProfileServiceConstants.User.USER_ID)
     private int id;
     @Column(name = ProfileServiceConstants.User.EMAIL)

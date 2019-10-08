@@ -63,7 +63,7 @@ public class GenericConstants {
     public static final String ROLES_QUERY_APPLICATION_PROPERTIES = "${spring.queries.roles-query}";
 
     // Mailing
-    public static final String FROM_EMAIL = "support@everyrupee.co.in";
+    public static final String FROM_EMAIL = "nagarjun_nagesh@outlook.com";
     public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
     public static final String USER_REGISTERED_SUCCESSFULLY_SUBJECT = "User Registered Successfully";
     public static final String PASSWORD_RESET_BODY = "To reset your password, click the link below:\n";
