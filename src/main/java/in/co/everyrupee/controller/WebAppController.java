@@ -14,6 +14,12 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 import in.co.everyrupee.pojo.login.Profile;
 import in.co.everyrupee.security.core.userdetails.MyUser;
 
+/**
+ * Web application controller
+ * 
+ * @author nagarjun
+ *
+ */
 @Controller
 public class WebAppController {
 

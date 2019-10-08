@@ -134,7 +134,7 @@
     top: 40%;
 }
 
-.bARow:hover {
+.bARow:hover, .bAAllRow:hover {
     background-color: #f2f5f7;
 }
 
@@ -142,12 +142,12 @@
 	background-color: #f2f5f7;
 }
 
-.bAAmount, .bAName, .bAIcon {
+.bAAmount, .bAName, .bAIcon, .bAAllIcon, .bAAllName, .bAAllAmount {
 	border-top: 1px solid #f6f6f6;
 	color: #5d7079;
 }
 
-.bAIcon path {
+.bAIcon path, .bAAllIcon path {
 	fill: #5d7079;
 }
 
@@ -155,7 +155,7 @@
 	color: #9f9fa5;
 }
 
-.bARow {
+.bARow, .bAAllRow {
 	cursor: pointer;
 }
 
@@ -192,7 +192,7 @@
 	color: #9f9fa5;
 }
 
-.aKMTitle {
+.aKMTitle, .headVAWrap {
 	border-bottom: 1px solid #f6f6f6;
 }
 

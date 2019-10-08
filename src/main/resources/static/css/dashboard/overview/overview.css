@@ -474,7 +474,7 @@
 }
 
 /** Account Picker **/
-.selectedBA .bAIcon path, .bARow:hover .bAIcon path, .tableHeadingDiv svg, .tickPath1, .account-info-color, .knowMoreAccount:hover  {
+.selectedBA .bAIcon path, .bARow:hover .bAIcon path, .tableHeadingDiv svg, .tickPath1, .account-info-color, .knowMoreAccount:hover, .bAAllRow:hover .bAAllIcon path  {
 	fill: #00bcd4;
 	color: #009cc2;
 }
