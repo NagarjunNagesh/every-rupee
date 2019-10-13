@@ -53,150 +53,150 @@ import in.co.everyrupee.constants.profile.ProfileServiceConstants;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String SOCIAL_LOGIN_ERROR_MESSAGE = "User logging in with Social Login with client id = ";
+	private static final String SOCIAL_LOGIN_ERROR_MESSAGE = "User logging in with Social Login with client id = ";
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private DataSource dataSource;
+	@Autowired
+	private DataSource dataSource;
 
-    @Value(GenericConstants.PROFILE_QUERY_APPLICATION_PROPERTIES)
-    private String profileQuery;
+	@Value(GenericConstants.PROFILE_QUERY_APPLICATION_PROPERTIES)
+	private String profileQuery;
 
-    @Value(GenericConstants.ROLES_QUERY_APPLICATION_PROPERTIES)
-    private String rolesQuery;
+	@Value(GenericConstants.ROLES_QUERY_APPLICATION_PROPERTIES)
+	private String rolesQuery;
 
-    @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
+	@Autowired
+	private OAuth2ClientContext oauth2ClientContext;
 
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 
-    @Bean
-    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_CLIENT)
-    public AuthorizationCodeResourceDetails google() {
-	return new AuthorizationCodeResourceDetails();
-    }
+	@Bean
+	@ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_CLIENT)
+	public AuthorizationCodeResourceDetails google() {
+		return new AuthorizationCodeResourceDetails();
+	}
 
-    @Bean
-    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_CLIENT)
-    public AuthorizationCodeResourceDetails facebook() {
-	return new AuthorizationCodeResourceDetails();
-    }
+	@Bean
+	@ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_CLIENT)
+	public AuthorizationCodeResourceDetails facebook() {
+		return new AuthorizationCodeResourceDetails();
+	}
 
-    @Bean
-    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_RESOURCE)
-    public ResourceServerProperties facebookResource() {
-	return new ResourceServerProperties();
-    }
+	@Bean
+	@ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_FACEBOOK_RESOURCE)
+	public ResourceServerProperties facebookResource() {
+		return new ResourceServerProperties();
+	}
 
-    @Bean
-    @ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_RESOURCE)
-    public ResourceServerProperties googleResource() {
-	return new ResourceServerProperties();
-    }
+	@Bean
+	@ConfigurationProperties(ProfileServiceConstants.SECURITY_OAUTH2_GOOGLE_RESOURCE)
+	public ResourceServerProperties googleResource() {
+		return new ResourceServerProperties();
+	}
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * Generic Filter to identity Google & Facebook login
-     * 
-     * @param loginUrl
-     * @param userInfoUri
-     * @param resourceDetails
-     * @return
-     */
-    private Filter ssoFilter(String loginUrl, String userInfoUri, AuthorizationCodeResourceDetails resourceDetails) {
-	OAuth2ClientAuthenticationProcessingFilter socialFilter = new OAuth2ClientAuthenticationProcessingFilter(
-		loginUrl);
-	OAuth2RestTemplate socialTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
-	socialFilter.setRestTemplate(socialTemplate);
-	socialFilter.setTokenServices(new UserInfoTokenServices(userInfoUri, resourceDetails.getClientId()));
-	logger.info(loginUrl + SOCIAL_LOGIN_ERROR_MESSAGE + resourceDetails.getClientId());
-	return socialFilter;
-    }
+	/**
+	 * Generic Filter to identity Google & Facebook login
+	 * 
+	 * @param loginUrl
+	 * @param userInfoUri
+	 * @param resourceDetails
+	 * @return
+	 */
+	private Filter ssoFilter(String loginUrl, String userInfoUri, AuthorizationCodeResourceDetails resourceDetails) {
+		OAuth2ClientAuthenticationProcessingFilter socialFilter = new OAuth2ClientAuthenticationProcessingFilter(
+				loginUrl);
+		OAuth2RestTemplate socialTemplate = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);
+		socialFilter.setRestTemplate(socialTemplate);
+		socialFilter.setTokenServices(new UserInfoTokenServices(userInfoUri, resourceDetails.getClientId()));
+		logger.info(loginUrl + SOCIAL_LOGIN_ERROR_MESSAGE + resourceDetails.getClientId());
+		return socialFilter;
+	}
 
-    /**
-     * A filter to consolidate both the filters into one.
-     * 
-     * @return
-     */
-    private Filter ssoFilter() {
-	// TODO store the users authenticated to the DATABASE
-	List<Filter> filters = new ArrayList<>();
-	filters.add(ssoFilter(GenericConstants.GOOGLE_SOCIAL_LOGIN_URL, googleResource().getUserInfoUri(), google()));
-	filters.add(
-		ssoFilter(GenericConstants.FACEBOOK_SOCIAL_LOGIN_URL, facebookResource().getUserInfoUri(), facebook()));
+	/**
+	 * A filter to consolidate both the filters into one.
+	 * 
+	 * @return
+	 */
+	private Filter ssoFilter() {
+		// TODO store the users authenticated to the DATABASE
+		List<Filter> filters = new ArrayList<>();
+		filters.add(ssoFilter(GenericConstants.GOOGLE_SOCIAL_LOGIN_URL, googleResource().getUserInfoUri(), google()));
+		filters.add(
+				ssoFilter(GenericConstants.FACEBOOK_SOCIAL_LOGIN_URL, facebookResource().getUserInfoUri(), facebook()));
 
-	CompositeFilter filter = new CompositeFilter();
-	filter.setFilters(filters);
-	return filter;
-    }
+		CompositeFilter filter = new CompositeFilter();
+		filter.setFilters(filters);
+		return filter;
+	}
 
-    /**
-     * Configure the Spring boot to use the authentication provider created by us.
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	auth.authenticationProvider(authProvider()).jdbcAuthentication().usersByUsernameQuery(profileQuery)
-		.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource);
-    }
+	/**
+	 * Configure the Spring boot to use the authentication provider created by us.
+	 */
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authProvider()).jdbcAuthentication().usersByUsernameQuery(profileQuery)
+				.authoritiesByUsernameQuery(rolesQuery).dataSource(dataSource);
+	}
 
-    /**
-     * Configure oauth 2 for google and facebook login
-     * 
-     * @param filter
-     * @return
-     */
-    @Bean
-    public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(
-	    OAuth2ClientContextFilter filter) {
-	FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<OAuth2ClientContextFilter>();
-	registration.setFilter(filter);
-	registration.setOrder(-100);
-	return registration;
-    }
+	/**
+	 * Configure oauth 2 for google and facebook login
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	@Bean
+	public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(
+			OAuth2ClientContextFilter filter) {
+		FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<OAuth2ClientContextFilter>();
+		registration.setFilter(filter);
+		registration.setOrder(-100);
+		return registration;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 
-	http.authorizeRequests().antMatchers(GenericConstants.DASHBOARD_CONFIG_URL).authenticated()
-		.antMatchers(GenericConstants.ADMIN_SECURITY_CONFIG_URL)
-		.hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest().permitAll().and().csrf().disable()
-		.formLogin().loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
-		.defaultSuccessUrl(GenericConstants.DASHBOARD_HOME_URL).failureHandler(authenticationFailureHandler)
-		.usernameParameter(ProfileServiceConstants.User.EMAIL)
-		.passwordParameter(ProfileServiceConstants.User.PASSWORD).and().logout()
-		.logoutRequestMatcher(new AntPathRequestMatcher(GenericConstants.LOGOUT_URL))
-		.logoutSuccessUrl(GenericConstants.HOME_URL).and().exceptionHandling()
-		.accessDeniedPage(GenericConstants.LOGIN_ACCESS_DENIED_URL).and()
-		.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class).formLogin()
-		.loginPage(GenericConstants.LOGIN_URL);
-    }
+		http.authorizeRequests().antMatchers(GenericConstants.DASHBOARD_CONFIG_URL).authenticated()
+				.antMatchers(GenericConstants.ADMIN_SECURITY_CONFIG_URL)
+				.hasAuthority(ProfileServiceConstants.Role.ADMIN_ROLE).anyRequest().permitAll().and().csrf().disable()
+				.formLogin().loginPage(GenericConstants.LOGIN_URL).failureUrl(GenericConstants.LOGIN_ERROR_URL)
+				.defaultSuccessUrl(GenericConstants.DASHBOARD_HOME_URL).failureHandler(authenticationFailureHandler)
+				.usernameParameter(ProfileServiceConstants.User.EMAIL)
+				.passwordParameter(ProfileServiceConstants.User.PASSWORD).and().logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher(GenericConstants.LOGOUT_URL))
+				.logoutSuccessUrl(GenericConstants.HOME_URL).and().exceptionHandling()
+				.accessDeniedPage(GenericConstants.LOGIN_ACCESS_DENIED_URL).and()
+				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class).formLogin()
+				.loginPage(GenericConstants.LOGIN_URL);
+	}
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-	web.ignoring().antMatchers(GenericConstants.RESOURCES_ANT_MATCHER, GenericConstants.STATIC_ANT_MATCHER,
-		GenericConstants.CSS_ANT_MATCHER, GenericConstants.JS_ANT_MATCHER, GenericConstants.IMG_ANT_MATCHER);
-    }
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers(GenericConstants.RESOURCES_ANT_MATCHER, GenericConstants.STATIC_ANT_MATCHER,
+				GenericConstants.CSS_ANT_MATCHER, GenericConstants.JS_ANT_MATCHER, GenericConstants.IMG_ANT_MATCHER);
+	}
 
-    // beans
+	// beans
 
-    /**
-     * Adding Authentication handler for login to prevent brute force login
-     * 
-     * @return
-     */
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-	final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-	authProvider.setUserDetailsService(userDetailsService);
-	authProvider.setPasswordEncoder(bCryptPasswordEncoder);
-	return authProvider;
-    }
+	/**
+	 * Adding Authentication handler for login to prevent brute force login
+	 * 
+	 * @return
+	 */
+	@Bean
+	public DaoAuthenticationProvider authProvider() {
+		final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(bCryptPasswordEncoder);
+		return authProvider;
+	}
 
 }
