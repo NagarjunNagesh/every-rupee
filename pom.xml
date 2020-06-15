@@ -20,7 +20,7 @@
 		<oauth2.version>2.3.6.RELEASE</oauth2.version>
 		<autoconfigure.version>2.1.3.RELEASE</autoconfigure.version>
 		<passay.version>1.4.0</passay.version>
-		<apache-collections.version>4.0</apache-collections.version>
+		<apache-collections.version>4.1</apache-collections.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <minify-maven-plugin.version>1.7.6</minify-maven-plugin.version>
